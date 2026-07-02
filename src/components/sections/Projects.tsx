@@ -18,7 +18,7 @@ const projects = [
     description:
       'Vortex a real-time network topology & observability system. It turns raw traffic into a live, interactive map of your entire infrastructure.FrontEnd Only',
     tags: ['Next js' , 'CSS' , 'Higgsfield MCP'],
-    link: 'https://vortex-7mqz-echoplex.vercel.app/',
+    link: 'https://vortex12.vercel.app/',
     status: 'Live',
   },
 
