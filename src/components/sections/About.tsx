@@ -3,9 +3,9 @@ import FadeIn from '@/components/ui/FadeIn'
 import { StaggerContainer, StaggerItem } from '@/components/ui/Stagger'
 
 const interests = [
-  'AI & LLM Systems', 'Cloud Operations', 'Customer Experience',
-  'Web3 Ecosystems', 'Automation & Tooling', 'Community Building',
-  'Content & Storytelling', 'Emerging Technology',
+  'AI & LLMs', 'Operations', 'Customer Experience',
+  'Front End Dev','Web3 Ecosystems', 'Automation & Tooling', 'Community Building',
+  'Content', 'Emerging Technology',
 ]
 
 const languages = [
