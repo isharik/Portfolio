@@ -12,6 +12,16 @@ const projects = [
     link: 'https://pharos-octobot-by-echo.streamlit.app/',
     status: 'Live',
   },
+
+  {
+    title: 'Vortex',
+    description:
+      'Vortex a real-time network topology & observability system. It turns raw traffic into a live, interactive map of your entire infrastructure.FrontEnd Only',
+    tags: ['Next js' , 'CSS' , 'Higgsfield MCP'],
+    link: 'https://vortex-7mqz-echoplex.vercel.app/',
+    status: 'Live',
+  },
+
   {
     title: 'Web3 Ecosystem Content Library',
     description:
