@@ -52,8 +52,8 @@ export default function Hero() {
             </motion.p>
 
             <motion.p {...fadeUp(0.35)} className="text-sm text-[var(--text-muted)] leading-relaxed mb-10 max-w-xl">
-              BE in Computer Science · 4+ years across AI, cloud, customer support & Web3 ecosystems ·
-              Previously at Deloitte, KodeKloud, Datamark
+              Computer Science Grad· 3+ years across AI, cloud, customer support & Web3 ecosystems ·
+              Previously at Datamark ,Deloitte, KodeKloud.
             </motion.p>
 
             {/* CTAs */}
