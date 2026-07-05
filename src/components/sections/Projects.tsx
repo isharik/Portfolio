@@ -12,14 +12,21 @@ const projects = [
     link: 'https://pharos-octobot-by-echo.streamlit.app/',
     status: 'Live',
   },
-
+  {
+    title: 'Pulse OS',
+    description:
+      'Pulse OS is an AI-powered Business Operating System designed to bring everything a business needs into one unified workspace.',
+    tags: [ 'Nextjs 15' , 'TypeScript', 'Tailwind', 'CSS' , 'Framer Motion', 'AI'],
+    link: 'https://x.com/isharik99/status/2073390275557474504',
+    status: 'WIP',
+  },
   {
     title: 'Vortex',
     description:
-      'Vortex a real-time network topology & observability system. It turns raw traffic into a live, interactive map of your entire infrastructure.FrontEnd Only',
+      'Vortex a real-time network topology & observability system. It turns raw traffic into a live, interactive map of your entire infrastructure.Front End Only',
     tags: ['Next js' , 'CSS' , 'Higgsfield MCP'],
     link: 'https://vortex12.vercel.app/',
-    status: 'Live',
+    status: 'UI UX Live',
   },
 
   {
