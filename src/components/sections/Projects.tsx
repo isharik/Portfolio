@@ -17,8 +17,8 @@ const projects = [
     description:
       'Pulse OS is an AI-powered Business Operating System designed to bring everything a business needs into one unified workspace.',
     tags: [ 'Nextjs 15' , 'TypeScript', 'Tailwind', 'CSS' , 'Framer Motion', 'AI'],
-    link: 'https://x.com/isharik99/status/2073390275557474504',
-    status: 'WIP',
+    link: 'https://pulse-os-one.vercel.app/',
+    status: 'Live',
   },
   {
     title: 'Vortex',
