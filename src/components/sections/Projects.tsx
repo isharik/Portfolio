@@ -7,7 +7,7 @@ const projects = [
   {
     title: 'Pharos Octobot',
     description:
-      'An AI-powered assistant built for the Pharos Network ecosystem. Users can query protocol data, explore ecosystem resources, and interact with Pharos documentation through a conversational interface. Built with Python and Streamlit.',
+      'The AI Financial Copilot for the Pharos Ecosystem',
     tags: ['Python', 'Streamlit', 'AI', 'Web3', 'Pharos Network'],
     link: 'https://pharos-octobot-by-echo.streamlit.app/',
     status: 'Live',
@@ -21,12 +21,12 @@ const projects = [
     status: 'Live',
   },
   {
-    title: 'Vortex',
+    title: 'Prosper Atlas',
     description:
-      'Vortex a real-time network topology & observability system. It turns raw traffic into a live, interactive map of your entire infrastructure.Front End Only',
-    tags: ['Next js' , 'CSS' , 'Higgsfield MCP'],
-    link: 'https://vortex12.vercel.app/',
-    status: 'UI UX Live',
+      'Performance Market for Liquid Alpha.',
+    tags: ['Next js' , 'CSS' , 'Nitter'],
+    link: 'https://prosper-atlas-echoplex.vercel.app/',
+    status: 'Live',
   },
 
   {
