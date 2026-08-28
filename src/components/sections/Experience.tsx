@@ -22,6 +22,25 @@ const experiences = [
     current: true,
   },
   {
+    role: 'AI & Robotics Trainer',
+    company: 'Micro1',
+    companyDesc: 'AI training and talent platform',
+    period: 'May 2025 – Present',
+    type: 'Full-time · Remote',
+    description:
+      'Train and evaluate AI systems through structured data annotation, reinforcement learning workflows, and robotics-focused tasks. Apply technical and system administration knowledge to support high-quality AI training and evaluation processes.',
+    highlights: [
+     'Perform data annotation and quality evaluation for AI training datasets',
+     'Contribute to RLHF workflows by providing structured feedback on AI-generated outputs',
+     'Work on robotics-focused training and evaluation tasks',
+     'Use Python for AI-related tasks, data processing, and technical workflows',
+     'Apply system administration knowledge to support technical AI training environments',
+   ],
+   tags: ['RLHF', 'Data Annotation', 'Robotics', 'Python', 'Certified System Administrator'],
+   current: true,
+  },
+
+  {
     role: 'Customer Support Specialist — Interpretation Services',
     company: 'Datamark',
     companyDesc: 'Business process outsourcing & customer experience firm',
