@@ -1,26 +1,47 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
 type Theme = 'light' | 'dark'
-const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void }>({ theme: 'light', toggleTheme: () => {} })
+type ThemeCtx = { theme: Theme; toggleTheme: () => void }
+
+const ThemeContext = createContext<ThemeCtx>({ theme: 'dark', toggleTheme: () => {} })
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>('dark')
 
+  // Sync with the class the inline head script already applied (avoids flash)
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null
-    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    const initial = stored || preferred
-    setTheme(initial)
-    document.documentElement.classList.toggle('dark', initial === 'dark')
+    const isDark = document.documentElement.classList.contains('dark')
+    setTheme(isDark ? 'dark' : 'light')
   }, [])
 
-  const toggleTheme = () => {
-    const next = theme === 'light' ? 'dark' : 'light'
-    setTheme(next)
-    localStorage.setItem('theme', next)
-    document.documentElement.classList.toggle('dark', next === 'dark')
-  }
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark'
+      const root = document.documentElement
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      const apply = () => {
+        root.classList.toggle('dark', next === 'dark')
+        try {
+          localStorage.setItem('theme', next)
+        } catch {}
+      }
+
+      // View Transitions give a single GPU-composited crossfade of the whole
+      // page instead of animating color on every element (which janks).
+      const startVT = (document as unknown as {
+        startViewTransition?: (cb: () => void) => void
+      }).startViewTransition
+
+      if (!reduce && typeof startVT === 'function') {
+        startVT.call(document, apply)
+      } else {
+        apply()
+      }
+      return next
+    })
+  }, [])
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 }

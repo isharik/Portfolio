@@ -1,52 +1,84 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
+import { SoundProvider } from '@/components/ui/SoundProvider'
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-display' })
+const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
+
+const SITE = 'https://sharikhussain.dev'
+const TITLE = 'Sharik Fataing — LLM Evaluator & AI Operations'
+const DESCRIPTION =
+  'Computer-science graduate working where technology meets people — LLM evaluation, cloud administration, customer operations, and Web3 ecosystems. Pharos Network storyteller.'
 
 export const metadata: Metadata = {
-  title: 'Sharik Fataing — AI Operations & Technology Professional',
-  description:
-    'Technology professional operating at the intersection of AI evaluation, cloud systems, customer experience, and emerging technology ecosystems.',
-  keywords: ['Sharik Fataing', 'AI Operations', 'LLM Evaluation', 'Customer Support', 'Cloud Administration', 'Pharos Network', 'Web3'],
+  metadataBase: new URL(SITE),
+  title: TITLE,
+  description: DESCRIPTION,
+  keywords: [
+    'Sharik Fataing',
+    'LLM Evaluation',
+    'AI Operations',
+    'AI Quality Assurance',
+    'Cloud Administration',
+    'Customer Support',
+    'Pharos Network',
+    'Web3',
+  ],
   authors: [{ name: 'Sharik Fataing' }],
-  metadataBase: new URL('https://sharikhussain.dev'),
+  creator: 'Sharik Fataing',
+  alternates: { canonical: SITE },
   openGraph: {
     type: 'website',
-    title: 'Sharik Fataing — AI Operations & Technology Professional',
-    description: 'Technology professional at the intersection of AI, operations, and emerging technologies.',
+    url: SITE,
     siteName: 'Sharik Fataing',
+    title: TITLE,
+    description: DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@isharik99',
-    title: 'Sharik Fataing — AI Operations & Technology Professional',
+    title: TITLE,
+    description: DESCRIPTION,
   },
   robots: { index: true, follow: true },
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f7f7f8' },
+    { media: '(prefers-color-scheme: dark)', color: '#08080a' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+}
+
+const themeScript = `document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark')}catch(e){document.documentElement.classList.add('dark')}`
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Sharik Fataing',
+  jobTitle: 'LLM Evaluator & AI Operations Professional',
+  url: SITE,
+  email: 'sharikhussain99@gmail.com',
+  address: { '@type': 'PostalAddress', addressRegion: 'Jammu & Kashmir', addressCountry: 'IN' },
+  sameAs: ['https://github.com/isharik', 'https://linkedin.com/in/sharikhussain1', 'https://twitter.com/isharik99'],
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
       <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `try{const t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark')}catch(e){}`
-        }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Person',
-            name: 'Sharik Fataing',
-            jobTitle: 'LLM Evaluator & AI Operations Professional',
-            url: 'https://sharikhussain.dev',
-            email: 'sharikhussain99@gmail.com',
-            sameAs: ['https://linkedin.com/in/sharikhussain1', 'https://twitter.com/isharik99'],
-          })
-        }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className={inter.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body>
+        <ThemeProvider>
+          <SoundProvider>{children}</SoundProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

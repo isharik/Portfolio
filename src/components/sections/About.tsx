@@ -1,99 +1,94 @@
 'use client'
-import FadeIn from '@/components/ui/FadeIn'
-import { StaggerContainer, StaggerItem } from '@/components/ui/Stagger'
+import { Brain, Cloud, Headset, Globe, PenTool, Workflow, GraduationCap } from 'lucide-react'
+import GlassCard from '@/components/ui/GlassCard'
+import { Reveal, RevealItem } from '@/components/ui/Reveal'
+import { profile, languages, credentials } from '@/lib/content'
 
-const interests = [
-  'AI & LLMs', 'Operations', 'Customer Experience',
-  'Front End Dev','Web3 Ecosystems', 'Automation & Tooling', 'Community Building',
-  'Content', 'Emerging Technology',
-]
-
-const languages = [
-  { lang: 'English', level: 'Native' },
-  { lang: 'Hindi', level: 'Native' },
-  { lang: 'Urdu', level: 'Native' },
-  { lang: 'Kashmiri', level: 'Conversational' },
+const focus = [
+  { icon: Brain, label: 'AI & LLM Evaluation', note: 'Structured QA & RLHF feedback' },
+  { icon: Cloud, label: 'Cloud & Systems', note: 'AWS administration & incident response' },
+  { icon: Headset, label: 'Customer Operations', note: 'Real-time, high-stakes support' },
+  { icon: Globe, label: 'Web3 Ecosystems', note: '3+ years across L1 communities' },
+  { icon: PenTool, label: 'Content & Storytelling', note: 'Pharos Network storyteller' },
+  { icon: Workflow, label: 'Automation', note: 'Zapier & Albato workflows' },
 ]
 
 export default function About() {
   return (
-    <section id="about" className="py-24 px-6 bg-[var(--bg-secondary)]">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-start">
-
+    <section id="about" className="relative px-5 py-24 sm:px-6 sm:py-32">
+      <div className="mx-auto max-w-content">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          {/* Left: narrative */}
           <div>
-            <FadeIn>
-              <p className="section-label mb-4">About</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] tracking-tight mb-6 leading-tight">
-                Bridging AI precision with human-centered operations
+            <p className="eyebrow mb-4">About</p>
+            <Reveal>
+              <h2 className="text-display-sm font-display font-semibold text-fg">
+                Bridging AI precision with human-centered operations.
               </h2>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <div className="space-y-4 text-[var(--text-muted)] leading-relaxed text-sm md:text-base">
+              <div className="mt-6 space-y-4 text-base leading-relaxed text-fg-muted">
+                <p>{profile.intro}</p>
                 <p>
-                  I hold a Bachelor of Computer Science from MIET Jammu & Kashmir and have spent the past
-                  four years building experience across AI evaluation, cloud infrastructure, customer
-                  operations, and technology community work.
-                </p>
-                <p>
-                  Currently I evaluate large language model outputs at <strong className="text-[var(--text)]">Invisible Technologies</strong>,
-                  providing structured quality feedback that shapes how AI systems improve. Before that,
-                  I spent a full year as a System Administrator at <strong className="text-[var(--text)]">KodeKloud</strong>, handling
-                  AWS-based cloud infrastructure and technical incident resolution in a fully remote environment.
-                </p>
-                <p>
-                  I spent over three years actively participating in blockchain ecosystems — joining community
-                  programs, hackathons, governance initiatives, and content campaigns across multiple chains.
-                  That work evolved into my current role as a selected <strong className="text-[var(--text)]">Storyteller for Pharos Network</strong>,
-                  where I create content and shape the ecosystem narrative heading into mainnet.
-                </p>
-                <p>
-                  I work well in distributed, async, and technically complex environments. I bring
-                  reliability, clarity, and genuine curiosity to every role I take on.
+                  I work well in distributed, async, and technically complex environments — bringing
+                  reliability, clarity, and genuine curiosity to every role. Whether it&apos;s calibrating an
+                  LLM&apos;s output, resolving a customer&apos;s issue, or explaining a protocol to a new community,
+                  the throughline is the same: make the complex dependable.
                 </p>
               </div>
-            </FadeIn>
-          </div>
+            </Reveal>
 
-          <div>
-            <FadeIn delay={0.15}>
-              <p className="section-label mb-5">Areas of focus</p>
-              <StaggerContainer className="flex flex-wrap gap-2 mb-10">
-                {interests.map((item) => (
-                  <StaggerItem key={item}>
-                    <span className="px-3 py-1.5 text-xs border border-[var(--border)] text-[var(--text-muted)] rounded-full bg-[var(--card)] hover:border-primary hover:text-primary transition-all duration-200 cursor-default inline-block">
-                      {item}
-                    </span>
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
-            </FadeIn>
-
-            <FadeIn delay={0.25}>
-              <p className="section-label mb-4">Education</p>
-              <div className="p-5 rounded-xl border border-[var(--border)] bg-[var(--card)] mb-6 card-lift hover:border-primary/30">
-                <div className="font-semibold text-[var(--text)] mb-1">Bachelor of Computer Science</div>
-                <div className="text-sm text-[var(--text-muted)] mb-2">MIET · Jammu & Kashmir · 2019 – 2023</div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full font-medium">GPA 3.1 / 4.0</span>
-                </div>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={0.3}>
-              <p className="section-label mb-4">Languages</p>
-              <div className="grid grid-cols-2 gap-3">
+            {/* Languages */}
+            <Reveal delay={0.1} className="mt-10">
+              <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-fg-subtle">Languages</p>
+              <div className="flex flex-wrap gap-2">
                 {languages.map(({ lang, level }) => (
-                  <div key={lang} className="flex items-center justify-between p-3 rounded-lg border border-[var(--border)] bg-[var(--card)] card-lift hover:border-primary/20">
-                    <div className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      <span className="text-sm text-[var(--text)] font-medium">{lang}</span>
-                    </div>
-                    <span className="text-xs text-[var(--text-muted)]">{level}</span>
+                  <div
+                    key={lang}
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5 text-sm"
+                  >
+                    <span className="text-fg">{lang}</span>
+                    <span className="text-fg-subtle">·</span>
+                    <span className="text-xs text-fg-muted">{level}</span>
                   </div>
                 ))}
               </div>
-            </FadeIn>
+            </Reveal>
+          </div>
+
+          {/* Right: focus grid + credentials */}
+          <div>
+            <Reveal stagger={0.06} className="grid gap-3 sm:grid-cols-2">
+              {focus.map(({ icon: Icon, label, note }) => (
+                <RevealItem key={label}>
+                  <GlassCard interactive className="h-full p-5">
+                    <Icon size={18} className="text-accent" />
+                    <div className="mt-4 text-sm font-medium text-fg">{label}</div>
+                    <div className="mt-1 text-xs leading-relaxed text-fg-muted">{note}</div>
+                  </GlassCard>
+                </RevealItem>
+              ))}
+            </Reveal>
+
+            <Reveal delay={0.1} className="mt-4 space-y-2.5">
+              {credentials.map((c) => (
+                <div
+                  key={c.title}
+                  className="surface-card flex items-center gap-4 rounded-xl p-4"
+                >
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
+                    <GraduationCap size={17} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-medium text-fg">{c.title}</div>
+                    <div className="truncate text-xs text-fg-muted">
+                      {c.org} · {c.period}
+                    </div>
+                  </div>
+                  <div className="hidden shrink-0 rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted sm:block">
+                    {c.note}
+                  </div>
+                </div>
+              ))}
+            </Reveal>
           </div>
         </div>
       </div>
