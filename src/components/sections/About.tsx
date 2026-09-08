@@ -28,7 +28,7 @@ export default function About() {
               <div className="mt-6 space-y-4 text-base leading-relaxed text-fg-muted">
                 <p>{profile.intro}</p>
                 <p>
-                  I work well in distributed, async, and technically complex environments — bringing
+                  I work well in distributed, async, and technically complex environments, bringing
                   reliability, clarity, and genuine curiosity to every role. Whether it&apos;s calibrating an
                   LLM&apos;s output, resolving a customer&apos;s issue, or explaining a protocol to a new community,
                   the throughline is the same: make the complex dependable.

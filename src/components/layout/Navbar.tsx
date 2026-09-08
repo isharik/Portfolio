@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import ThemeToggle from '@/components/ui/ThemeToggle'
+import LampToggle from '@/components/ui/LampToggle'
 import SoundToggle from '@/components/ui/SoundToggle'
 import { navLinks, profile } from '@/lib/content'
 import { cn } from '@/lib/utils'
@@ -105,7 +105,6 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <SoundToggle />
-          <ThemeToggle />
           <a
             href="#contact"
             onClick={(e) => go(e, '#contact')}
@@ -113,6 +112,7 @@ export default function Navbar() {
           >
             Get in touch
           </a>
+          <LampToggle />
           <button
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}

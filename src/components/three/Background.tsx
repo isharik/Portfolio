@@ -1,73 +1,64 @@
-'use client'
-import { useEffect, useRef } from 'react'
+import type React from 'react'
+
+// Skewed streak masks (shared with the intro's pattern)
+const STREAKS = [
+  'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(0,0,0) 20%, rgba(0,0,0,0) 36%, rgb(0,0,0) 55%, rgba(0,0,0,0.13) 67%, rgb(0,0,0) 78%, rgba(0,0,0,0) 97%)',
+  'linear-gradient(90deg, rgba(0,0,0,0) 11%, rgb(0,0,0) 25%, rgba(0,0,0,0.55) 41%, rgba(0,0,0,0.13) 67%, rgb(0,0,0) 78%, rgba(0,0,0,0) 97%)',
+  'linear-gradient(90deg, rgba(0,0,0,0) 9%, rgb(0,0,0) 20%, rgba(0,0,0,0.55) 28%, rgba(0,0,0,0.424) 40%, rgb(0,0,0) 48%, rgba(0,0,0,0.267) 54%, rgba(0,0,0,0.13) 78%, rgb(0,0,0) 88%, rgba(0,0,0,0) 97%)',
+  'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(0,0,0) 17%, rgba(0,0,0,0.55) 26%, rgb(0,0,0) 35%, rgba(0,0,0,0) 47%, rgba(0,0,0,0.13) 69%, rgb(0,0,0) 79%, rgba(0,0,0,0) 97%)',
+  'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(0,0,0) 20%, rgba(0,0,0,0.55) 27%, rgb(0,0,0) 42%, rgba(0,0,0,0) 48%, rgba(0,0,0,0.13) 67%, rgb(0,0,0) 74%, rgb(0,0,0) 82%, rgba(0,0,0,0.47) 88%, rgba(0,0,0,0) 97%)',
+]
+
+const BASE_MASK =
+  'radial-gradient(125% 100% at 0% 0%, rgb(0,0,0) 0%, rgba(0,0,0,0.224) 88.2883%, rgba(0,0,0,0) 100%)'
 
 /**
- * Ambient background: fine grid + a cursor-following spotlight + two slow
- * aurora blobs. CSS-driven and lightweight — no render loop, no WebGL.
- * The spotlight only tracks the pointer on fine-pointer (desktop) devices
- * and is disabled under prefers-reduced-motion.
+ * App-wide ambient background: the same charcoal→black (dark) / soft-light
+ * pattern as the intro, themed via tokens so text stays readable in both
+ * modes. CSS-only — no WebGL, no render loop.
  */
 export default function Background() {
-  const spotRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = spotRef.current
-    if (!el) return
-    const R = 460 // half of the 920px spot box; centers the gradient on the point
-    const place = (x: number, y: number) => {
-      el.style.transform = `translate3d(${x - R}px, ${y - R}px, 0)`
-    }
-
-    // Match the old default resting position (≈ 50% / 30%)
-    place(window.innerWidth / 2, window.innerHeight * 0.3)
-
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (!fine || reduce) return
-
-    let raf = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      px = e.clientX
-      py = e.clientY
-      if (raf) return
-      raf = requestAnimationFrame(() => {
-        place(px, py) // transform-only update: no repaint
-        raf = 0
-      })
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-bg" />
+      {/* Base gradient */}
+      <div className="absolute inset-0" style={{ background: 'var(--pattern-base)' }} />
 
-      {/* aurora blobs */}
-      <div
-        className="bg-aurora left-[-10%] top-[-15%] h-[55vh] w-[55vh]"
-        style={{ background: 'radial-gradient(circle, var(--aurora-1), transparent 65%)', animation: 'drift-a 22s ease-in-out infinite' }}
-      />
-      <div
-        className="bg-aurora right-[-12%] top-[10%] h-[50vh] w-[50vh]"
-        style={{ background: 'radial-gradient(circle, var(--aurora-2), transparent 65%)', animation: 'drift-b 26s ease-in-out infinite' }}
-      />
+      {/* Skewed streaks, concentrated top-left */}
+      <div className="app-streaks absolute inset-0" style={{ mask: BASE_MASK, WebkitMask: BASE_MASK }}>
+        {STREAKS.map((m, i) => (
+          <div
+            key={i}
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(var(--pattern-streak) 0%, transparent 100%)',
+              mask: m,
+              WebkitMask: m,
+              transform: 'skewX(45deg)',
+            }}
+          />
+        ))}
+      </div>
 
-      {/* fine grid, masked to fade toward the bottom */}
-      <div className="bg-grid absolute inset-0" />
-
-      {/* cursor spotlight: pre-painted gradient moved by transform only */}
-      <div ref={spotRef} className="bg-spot" />
-
-      {/* legibility vignette */}
+      {/* Dot grid */}
       <div
         className="absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 30%, transparent 45%, var(--bg) 92%)' }}
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, var(--pattern-dot) 1px, transparent 0)',
+          backgroundSize: '20px 20px',
+          opacity: 0.5,
+        }}
+      />
+
+      {/* Slow breathing glow */}
+      <div
+        className="app-glow absolute inset-0"
+        style={{ background: 'radial-gradient(circle at 50% 38%, var(--pattern-glow), transparent 60%)' }}
+      />
+
+      {/* Legibility vignette toward the theme background */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'radial-gradient(ellipse 92% 80% at 50% 35%, transparent 45%, var(--bg) 95%)' }}
       />
     </div>
   )

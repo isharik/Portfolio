@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ArrowUpRight, Github, Dot, Download } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -9,18 +10,31 @@ import { cn } from '@/lib/utils'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
-function ProjectVisual({ accent, index }: { accent: string; index: number }) {
+function ProjectVisual({
+  image,
+  accent,
+  index,
+  sizes,
+}: {
+  image: string | null
+  accent: string
+  index: number
+  sizes: string
+}) {
   return (
-    <div className="relative h-full w-full overflow-hidden">
-      <div
-        className="absolute inset-0"
-        style={{ background: `linear-gradient(135deg, ${accent})` }}
-      />
-      <div className="absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-      <span className="absolute bottom-4 right-5 font-mono text-6xl font-bold text-white/25">
-        {String(index + 1).padStart(2, '0')}
-      </span>
+    <div className="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">
+      {image ? (
+        <Image src={image} alt="" fill sizes={sizes} className="object-cover object-top" />
+      ) : (
+        <>
+          <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${accent})` }} />
+          <div className="absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px]" />
+          <span className="absolute bottom-3 right-4 font-mono text-5xl font-bold text-white/25">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </>
+      )}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
     </div>
   )
 }
@@ -65,7 +79,7 @@ export default function Projects() {
                   transition={{ duration: 0.4, ease: OUT }}
                   className="absolute inset-0"
                 >
-                  <ProjectVisual accent={p.accent} index={active} />
+                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" />
                 </motion.div>
               </AnimatePresence>
               <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-black/30 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
@@ -147,7 +161,7 @@ export default function Projects() {
                 )}
               >
                 <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg">
-                  <ProjectVisual accent={proj.accent} index={i} />
+                  <ProjectVisual image={proj.image} accent={proj.accent} index={i} sizes="80px" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">

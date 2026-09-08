@@ -4,10 +4,10 @@
  */
 
 export const profile = {
-  name: 'Sharik Fataing',
-  initials: 'SF',
+  name: 'Sharik',
+  initials: 'S',
   role: 'LLM Evaluator & AI Operations',
-  location: 'Jammu & Kashmir, India',
+  location: 'India',
   availability: 'Open to remote roles',
   email: 'sharikhussain99@gmail.com',
   phone: '+91 60056 22259',
@@ -161,7 +161,8 @@ export type Project = {
   link: string | null
   repo: string | null
   status: 'Live' | 'Ongoing' | 'Internal'
-  accent: string // gradient stops for the project visual
+  accent: string // gradient stops — used as a fallback / tint behind the thumbnail
+  image: string | null // /projects/*.jpg screenshot of the live home screen
 }
 
 export const projects: Project[] = [
@@ -175,6 +176,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#f5b301, #dd7d0a',
+    image: '/projects/proxima.jpg',
   },
   {
     title: 'Pharos Octobot',
@@ -186,6 +188,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#6d5bd6, #b15bd6',
+    image: '/projects/octobot.jpg',
   },
   {
     title: 'Pulse OS',
@@ -197,6 +200,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#5b8bd6, #5bd6c9',
+    image: '/projects/pulseos.jpg',
   },
   {
     title: 'Prosper Atlas',
@@ -208,6 +212,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#d69b5b, #d6675b',
+    image: '/projects/prosper.jpg',
   },
   {
     title: 'Web3 Content Library',
@@ -219,6 +224,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Ongoing',
     accent: '#5bd67e, #5bc9d6',
+    image: null,
   },
   {
     title: 'AI Evaluation Playbooks',
@@ -230,6 +236,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Internal',
     accent: '#8a8a94, #b6b6c0',
+    image: null,
   },
 ]
 
@@ -299,8 +306,8 @@ export const languages = [
 
 export const credentials = [
   {
-    title: 'B.Sc. Computer Science',
-    org: 'MIET · Jammu & Kashmir',
+    title: 'B.E. Computer Science',
+    org: 'MIET · India',
     period: '2019 — 2023',
     note: 'GPA 3.1 / 4.0',
   },

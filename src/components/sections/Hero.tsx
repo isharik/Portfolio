@@ -19,13 +19,22 @@ export default function Hero() {
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center justify-center px-5 py-28 sm:px-6">
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
-        {/* Avatar */}
+        {/* Avatar — squarish, minimal rounded frame */}
         <div className="rise relative" style={rise(0.05)}>
-          <div className="absolute -inset-4 rounded-full bg-accent-soft blur-2xl" aria-hidden />
-          <div className="relative h-36 w-36 overflow-hidden rounded-full border border-border shadow-[0_16px_48px_-14px_rgba(0,0,0,0.6)] ring-1 ring-[var(--accent-soft)] sm:h-44 sm:w-44">
-            <Image src={profile.photo} alt={`${profile.name}, ${profile.role}`} fill priority sizes="176px" className="object-cover object-top" />
+          <div className="absolute -inset-5 rounded-[28px] bg-accent-soft opacity-70 blur-2xl" aria-hidden />
+          <div className="relative overflow-hidden rounded-[20px] border border-border bg-surface p-1.5 shadow-[0_18px_50px_-16px_rgba(0,0,0,0.6)]">
+            <div className="relative h-48 w-40 overflow-hidden rounded-[15px] sm:h-56 sm:w-48">
+              <Image
+                src={profile.photo}
+                alt={`${profile.name}, ${profile.role}`}
+                fill
+                priority
+                sizes="192px"
+                className="object-cover object-top"
+              />
+            </div>
           </div>
-          <span className="absolute bottom-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-bg">
+          <span className="absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-bg">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-bg" />
           </span>
         </div>

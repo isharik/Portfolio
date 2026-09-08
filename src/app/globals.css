@@ -23,6 +23,11 @@
   --spot: rgba(91, 91, 214, 0.09);
   --aurora-1: rgba(91, 91, 214, 0.16);
   --aurora-2: rgba(120, 120, 220, 0.12);
+  /* App-wide pattern background (light) */
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #ffffff 0%, #edeff3 60%, #e7e9ef 100%);
+  --pattern-streak: rgba(91, 91, 214, 0.07);
+  --pattern-dot: rgba(28, 28, 42, 0.3);
+  --pattern-glow: rgba(91, 91, 214, 0.1);
 
   /* Glass */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -55,6 +60,11 @@
   --spot: rgba(139, 139, 245, 0.1);
   --aurora-1: rgba(91, 91, 214, 0.22);
   --aurora-2: rgba(139, 139, 245, 0.16);
+  /* App-wide pattern background (dark) — cyan streaks matching the intro */
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #17171c 0%, #050506 62%, #000000 100%);
+  --pattern-streak: rgba(0, 207, 255, 0.15);
+  --pattern-dot: rgba(255, 255, 255, 0.42);
+  --pattern-glow: rgba(0, 207, 255, 0.1);
 
   --glass-bg: rgba(20, 20, 26, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
@@ -90,7 +100,7 @@ body {
    API (see ThemeProvider). No per-element color animation, so it stays smooth. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.42s;
+  animation-duration: 0.26s;
   animation-timing-function: var(--ease-out);
   mix-blend-mode: normal;
 }
@@ -198,6 +208,93 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .bg-aurora { animation: none !important; }
   .bg-spot { display: none; }
+}
+
+/* Preloader overlay: only shown when JS is present, so no-JS visitors are
+   never trapped behind it (the .js class is set in <head> before first paint). */
+.preloader-root {
+  display: none;
+}
+html.js .preloader-root {
+  display: block;
+}
+
+/* Living background for the intro. Higher specificity + !important so these
+   keep animating even under the global prefers-reduced-motion reset — the
+   intro is an explicitly-requested, short, skippable flourish. */
+/* center-scale + shimmer: never exposes an edge (unlike translate) */
+@keyframes pl-streaks {
+  0%, 100% { transform: scale(1); opacity: 0.68; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+/* pan the tiling via background-position — seamless, no edge gap */
+@keyframes pl-dots {
+  from { background-position: 0 0; }
+  to { background-position: 20px 20px; }
+}
+@keyframes pl-glow {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate(2.5%, 3.5%) scale(1.16); opacity: 1; }
+}
+.preloader-root .alive-streaks {
+  animation: pl-streaks 11s ease-in-out infinite !important;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.preloader-root .alive-dots {
+  animation: pl-dots 6s linear infinite !important;
+}
+.preloader-root .alive-glow {
+  animation: pl-glow 9s ease-in-out infinite !important;
+  will-change: transform, opacity;
+}
+@keyframes pl-greet-in {
+  from { opacity: 0; transform: scale(0.9); filter: blur(6px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+.preloader-root .pl-greet-in {
+  animation: pl-greet-in 0.75s var(--ease-out) both !important;
+}
+
+/* App background — gently alive (kept subtle; runs even under reduced motion
+   because the aliveness is requested, but it is slow and low-amplitude). */
+.app-glow {
+  animation: pl-glow 20s ease-in-out infinite !important;
+  will-change: transform, opacity;
+}
+@keyframes app-shimmer {
+  0%, 100% { opacity: 0.78; }
+  50% { opacity: 1; }
+}
+.app-streaks {
+  animation: app-shimmer 13s ease-in-out infinite !important;
+  will-change: opacity;
+}
+
+/* Postcards (Skills) — scattered, straighten & lift on hover */
+.postcard {
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: center;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .postcard:hover {
+    transform: rotate(0deg) translateY(-8px) scale(1.02);
+    z-index: 5;
+  }
+}
+
+/* Lamp pull-chain: metallic beaded chain */
+.bead-chain {
+  width: 5px;
+  background-image: radial-gradient(circle at 50% 50%, #c7cad4 0 1.7px, rgba(0, 0, 0, 0) 2.2px);
+  background-size: 5px 6px;
+  background-repeat: repeat-y;
+  background-position: center top;
+}
+:root:not([data-theme='light']) .bead-chain,
+.dark .bead-chain {
+  background-image: radial-gradient(circle at 50% 50%, #8a8e9c 0 1.7px, rgba(0, 0, 0, 0) 2.2px);
 }
 
 /* ---- CSS mount entrance (no framer initial => no hydration mismatch) ---- */
