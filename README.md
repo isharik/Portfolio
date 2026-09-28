@@ -1,4 +1,4 @@
-# Sharik Fataing — Portfolio
+# Sharik — Portfolio
 
 A premium, interactive portfolio built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**. Light + dark mode, a CSS grid/aurora/spotlight background, a master–detail experience section, a project album, and a "Book a call" contact flow.
 
