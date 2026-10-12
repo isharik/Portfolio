@@ -59,7 +59,6 @@ export default function Navbar() {
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4"
     >
       <nav
-        data-avatar-gaze
         className={cn(
           'flex w-full max-w-content items-center justify-between rounded-full px-4 py-2 transition-[background,border-color,box-shadow,backdrop-filter] duration-300 ease-out sm:px-5',
           scrolled ? 'glass' : 'border border-transparent'
