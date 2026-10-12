@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import { type CSSProperties } from 'react'
+import { type CSSProperties, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
@@ -10,33 +10,49 @@ const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `$
 
 export default function Hero() {
   const reduce = useReducedMotion()
+  const [portraitStyle, setPortraitStyle] = useState<CSSProperties>({})
 
   const go = (e: React.MouseEvent, href: string) => {
     e.preventDefault()
     document.querySelector(href)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
   }
 
+  const tiltPortrait = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (reduce) return
+    const box = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - box.left) / box.width - 0.5
+    const y = (e.clientY - box.top) / box.height - 0.5
+    setPortraitStyle({ transform: `rotateX(${-y * 12}deg) rotateY(${x * 12}deg) translateZ(12px) scale(1.025)` })
+  }
+
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center justify-center px-5 py-28 sm:px-6">
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
-        {/* Avatar — squarish, minimal rounded frame */}
-        <div className="rise relative" style={rise(0.05)}>
-          <div className="absolute -inset-5 rounded-[28px] bg-accent-soft opacity-70 blur-2xl" aria-hidden />
-          <div className="relative overflow-hidden rounded-[20px] border border-border bg-surface p-1.5 shadow-[0_18px_50px_-16px_rgba(0,0,0,0.6)]">
-            <div className="relative h-48 w-40 overflow-hidden rounded-[15px] sm:h-56 sm:w-48">
+        {/* Frameless, transparent portrait with pointer-driven depth. */}
+        <div className="rise portrait-stage" style={rise(0.05)}>
+          <button
+            type="button"
+            className="portrait-tilt relative block h-52 w-52 cursor-pointer border-0 bg-transparent p-0 sm:h-64 sm:w-64"
+            aria-label="Interactive profile portrait"
+            onPointerMove={tiltPortrait}
+            onPointerLeave={() => setPortraitStyle({})}
+            onClick={(e) => {
+              e.currentTarget.classList.remove('portrait-clicked')
+              void e.currentTarget.offsetWidth
+              e.currentTarget.classList.add('portrait-clicked')
+            }}
+          >
+            <div className="relative h-full w-full" style={portraitStyle}>
               <Image
                 src={profile.photo}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
-                sizes="192px"
-                className="object-cover object-top"
+                sizes="(max-width: 640px) 208px, 256px"
+                className="object-contain"
               />
             </div>
-          </div>
-          <span className="absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-bg">
-            <span className="h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-bg" />
-          </span>
+          </button>
         </div>
 
         {/* Status */}
