@@ -20,7 +20,7 @@ export const profile = {
   summary:
     "I work at the human edge of technology, in customer support and experience, and I test how well AI actually answers. Live ticket or model output, the goal stays the same: make the tech work for real people. These days I also write and create content for the Pharos Network.",
   intro:
-    'Currently a QA Specialist and LLM Evaluator at Invisible Technologies and an AI & Robotics Trainer at Micro1, with 3+ years across cloud administration, customer operations, and Web3 ecosystems. Selected as a Storyteller for Pharos Network.',
+    'Currently an AI & QA Specialist at Invisible Technologies and an AI & Robotics Trainer at Micro1, I bring 3+ years of experience across cloud operations, customer experience, and Web3. I was also selected as a Content Creator and Storyteller for Pharos Network.',
 } as const
 
 export const booking = {

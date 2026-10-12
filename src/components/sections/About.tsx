@@ -28,10 +28,10 @@ export default function About() {
               <div className="mt-6 space-y-4 text-base leading-relaxed text-fg-muted">
                 <p>{profile.intro}</p>
                 <p>
-                  I work well in distributed, async, and technically complex environments, bringing
-                  reliability, clarity, and genuine curiosity to every role. Whether it&apos;s calibrating an
-                  LLM&apos;s output, resolving a customer&apos;s issue, or explaining a protocol to a new community,
-                  the throughline is the same: make the complex dependable.
+                  I thrive in distributed, async, and technically demanding environments—combining reliability,
+                  clarity, and curiosity in every role. Whether calibrating LLM outputs, resolving customer issues,
+                  or making new protocols accessible to a community, I focus on one thing: making complex systems
+                  dependable for the people who rely on them.
                 </p>
               </div>
             </Reveal>
