@@ -152,7 +152,7 @@ export default function InteractivePortrait({ src, alt }: Props) {
       <button
         ref={buttonRef}
         type="button"
-        className="portrait-tilt relative block h-60 w-56 cursor-pointer border-0 bg-transparent p-0 sm:h-72 sm:w-64"
+        className="portrait-tilt relative block h-72 w-64 cursor-pointer border-0 bg-transparent p-0 sm:h-80 sm:w-72"
         aria-label="Click profile portrait to say hello"
         onPointerMove={handleMove}
         onPointerLeave={reset}
@@ -164,7 +164,7 @@ export default function InteractivePortrait({ src, alt }: Props) {
         }}
       >
         <div ref={surfaceRef} className="portrait-surface relative h-full w-full">
-          <Image src={src} alt={alt} fill priority sizes="(max-width: 640px) 224px, 256px" className="object-contain portrait-image" />
+          <Image src={src} alt={alt} fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-image" />
           <canvas ref={canvasRef} aria-hidden className="portrait-dots absolute inset-0 h-full w-full" />
         </div>
         <span className="portrait-invite" aria-hidden>Say hello <span>↖</span></span>

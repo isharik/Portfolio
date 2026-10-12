@@ -174,7 +174,6 @@ body {
    transform, so the dot artwork feels dimensional without re-rendering it. */
 .portrait-stage {
   perspective: 850px;
-  padding-bottom: 1.75rem;
 }
 .portrait-tilt {
   transform-style: preserve-3d;
@@ -196,9 +195,8 @@ body {
 .portrait-invite {
   position: absolute;
   z-index: 6;
-  left: 50%;
-  bottom: -0.25rem;
-  transform: translateX(-50%);
+  left: calc(100% + 0.5rem);
+  bottom: 1.1rem;
   width: max-content;
   color: var(--fg-subtle);
   font-family: var(--font-mono), monospace;
@@ -212,6 +210,14 @@ body {
   color: var(--accent);
   font-size: 0.9rem;
   animation: portrait-invite-nudge 2.6s var(--ease-in-out) infinite;
+}
+@media (max-width: 639px) {
+  .portrait-stage { padding-bottom: 2rem; }
+  .portrait-invite {
+    left: 50%;
+    bottom: -1.25rem;
+    transform: translateX(-50%);
+  }
 }
 @keyframes portrait-invite-nudge {
   0%, 100% { transform: translate(0, 0); }
