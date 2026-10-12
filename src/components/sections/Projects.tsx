@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ArrowUpRight, Github, Dot, Download } from 'lucide-react'
@@ -16,17 +16,27 @@ function ProjectVisual({
   index,
   sizes,
   imageFit = 'cover',
+  fullSize = false,
 }: {
   image: string | null
   accent: string
   index: number
   sizes: string
   imageFit?: 'cover' | 'contain'
+  fullSize?: boolean
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">
       {image ? (
-        <Image src={image} alt="" fill sizes={sizes} className={imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'} />
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes={sizes}
+          priority={fullSize}
+          unoptimized={fullSize}
+          className={imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'}
+        />
       ) : (
         <>
           <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${accent})` }} />
@@ -44,7 +54,33 @@ function ProjectVisual({
 export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
+  const selectionRequest = useRef(0)
   const p = projects[active]
+
+  const selectProject = (next: number) => {
+    if (next === active) return
+    const request = ++selectionRequest.current
+    const image = projects[next].image
+    const commit = () => {
+      if (request === selectionRequest.current) setActive(next)
+    }
+    if (!image) {
+      commit()
+      return
+    }
+
+    // Keep the current panel in place until the next full-size image has decoded.
+    const preload = new window.Image()
+    preload.onload = () => {
+      if ('decode' in preload) {
+        preload.decode().then(commit, commit)
+      } else {
+        commit()
+      }
+    }
+    preload.onerror = commit
+    preload.src = image
+  }
 
   return (
     <section id="projects" className="relative px-5 py-24 sm:px-6 sm:py-32">
@@ -75,13 +111,13 @@ export default function Projects() {
               <AnimatePresence initial={false}>
                 <motion.div
                   key={active}
-                  initial={{ opacity: 0, filter: reduce ? 'none' : 'blur(6px)', scale: 1.02 }}
+                  initial={{ opacity: 0, filter: 'none', scale: reduce ? 1 : 1.01 }}
                   animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
-                  exit={{ opacity: 0, filter: reduce ? 'none' : 'blur(6px)' }}
-                  transition={{ duration: 0.4, ease: OUT }}
+                  exit={{ opacity: 0, filter: 'none', scale: reduce ? 1 : 0.99 }}
+                  transition={{ duration: 0.5, ease: OUT }}
                   className="absolute inset-0"
                 >
-                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" imageFit={p.imageFit} />
+                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" imageFit={p.imageFit} fullSize />
                 </motion.div>
               </AnimatePresence>
               <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-black/30 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
@@ -154,7 +190,7 @@ export default function Projects() {
                 key={proj.title}
                 role="tab"
                 aria-selected={active === i}
-                onClick={() => setActive(i)}
+                onClick={() => selectProject(i)}
                 className={cn(
                   'group flex items-center gap-4 rounded-2xl border p-3 text-left transition-[border-color,background-color,transform] duration-200 ease-out active:scale-[0.99]',
                   active === i

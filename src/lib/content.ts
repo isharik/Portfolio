@@ -190,7 +190,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#6d5bd6, #b15bd6',
-    image: '/projects/octobot.png',
+    image: '/projects/octobot-v2.png',
     imageFit: 'contain',
   },
   {
