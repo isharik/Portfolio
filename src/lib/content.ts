@@ -255,14 +255,14 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    label: 'Cloud & Systems',
+    label: 'Coding & Development',
     skills: [
-      'AWS Cloud Administration',
-      'System Administration',
-      'Incident Response',
-      'Operational Reporting',
-      'Technical Troubleshooting',
-      'Infrastructure Monitoring',
+      'Python',
+      'JavaScript',
+      'TypeScript',
+      'HTML & CSS',
+      'React & Next.js',
+      'Web Development',
     ],
   },
   {
