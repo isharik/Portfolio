@@ -179,14 +179,40 @@ body {
   transform-style: preserve-3d;
   -webkit-tap-highlight-color: transparent;
 }
-.portrait-tilt > div {
+.portrait-surface {
   transform-style: preserve-3d;
-  transition: transform 180ms var(--ease-out), filter 180ms var(--ease-out);
+  transition: transform 180ms var(--ease-out), filter 180ms var(--ease-out), brightness 180ms var(--ease-out);
   will-change: transform;
 }
-.portrait-tilt:hover > div,
-.portrait-tilt:focus-visible > div {
-  filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.2));
+.portrait-image {
+  filter: brightness(1.13) contrast(1.04) drop-shadow(0 15px 18px rgba(0, 0, 0, 0.16));
+}
+.portrait-dots {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.portrait-dot-cursor {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(139, 139, 245, 0.26), 0 0 16px rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .portrait-tilt:hover {
+    cursor: none;
+  }
+  .portrait-tilt:hover .portrait-surface,
+  .portrait-tilt:focus-visible .portrait-surface {
+    filter: brightness(1.06);
+  }
 }
 .portrait-tilt:focus-visible {
   outline-offset: 8px;
@@ -197,7 +223,7 @@ body {
   45% { transform: scale(0.94); }
   70% { transform: scale(1.04); }
 }
-.portrait-clicked > div {
+.portrait-clicked .portrait-surface {
   animation: portrait-click 380ms var(--ease-out);
 }
 
