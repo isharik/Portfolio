@@ -68,7 +68,7 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
-    role: 'LLM Evaluator / QA Specialist',
+    role: 'AI & QA Specialist',
     company: 'Invisible Technologies',
     companyDesc: 'AI operations & human-in-the-loop services',
     period: 'Jul 2025 — Present',
@@ -105,7 +105,7 @@ export const experiences: Experience[] = [
     role: 'Customer Support Specialist',
     company: 'Datamark',
     companyDesc: 'BPO & customer experience — interpretation services',
-    period: 'Mar 2025 — May 2025',
+    period: 'Mar 2025 — May 2026',
     type: 'Full-time · Remote',
     current: false,
     description:
