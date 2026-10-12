@@ -9,7 +9,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variab
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
 
 const SITE = 'https://sharikhussain.dev'
-const TITLE = 'Sharik Fataing — LLM Evaluator & AI Operations'
+const TITLE = 'Sharik — LLM Evaluator & AI Operations'
 const DESCRIPTION =
   'Computer-science graduate working where technology meets people — LLM evaluation, cloud administration, customer operations, and Web3 ecosystems. Pharos Network storyteller.'
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   keywords: [
-    'Sharik Fataing',
+    'Sharik',
     'LLM Evaluation',
     'AI Operations',
     'AI Quality Assurance',
@@ -27,13 +27,13 @@ export const metadata: Metadata = {
     'Pharos Network',
     'Web3',
   ],
-  authors: [{ name: 'Sharik Fataing' }],
-  creator: 'Sharik Fataing',
+  authors: [{ name: 'Sharik' }],
+  creator: 'Sharik',
   alternates: { canonical: SITE },
   openGraph: {
     type: 'website',
     url: SITE,
-    siteName: 'Sharik Fataing',
+    siteName: 'Sharik',
     title: TITLE,
     description: DESCRIPTION,
   },
@@ -60,7 +60,7 @@ const themeScript = `document.documentElement.classList.add('js');try{var t=loca
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'Sharik Fataing',
+  name: 'Sharik',
   jobTitle: 'LLM Evaluator & AI Operations Professional',
   url: SITE,
   email: 'sharikhussain99@gmail.com',
