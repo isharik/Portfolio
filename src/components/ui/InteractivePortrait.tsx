@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 type Dot = { u: number; v: number; size: number; phase: number }
@@ -11,12 +11,17 @@ type Props = {
   alt: string
 }
 
+const greetings = ['Hi there!', 'Hello — nice to meet you.', 'Let’s get to know each other.', 'Let’s connect.']
+
 /** A transparent portrait whose sampled halftone dots scatter around the pointer. */
 export default function InteractivePortrait({ src, alt }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLSpanElement>(null)
+  const leftEyeRef = useRef<HTMLSpanElement>(null)
+  const rightEyeRef = useRef<HTMLSpanElement>(null)
+  const [greetingIndex, setGreetingIndex] = useState<number | null>(null)
   const reduce = useReducedMotion()
 
   useEffect(() => {
@@ -133,6 +138,32 @@ export default function InteractivePortrait({ src, alt }: Props) {
     }
   }, [reduce, src])
 
+  useEffect(() => {
+    if (reduce) return
+
+    const resetEyes = () => {
+      leftEyeRef.current?.style.setProperty('transform', 'translate(0, 0)')
+      rightEyeRef.current?.style.setProperty('transform', 'translate(0, 0)')
+    }
+    const followNavigation = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Element) || !target.closest('[data-avatar-gaze]')) {
+        resetEyes()
+        return
+      }
+      const portrait = buttonRef.current?.getBoundingClientRect()
+      if (!portrait) return
+      const x = Math.max(-3.5, Math.min(3.5, (event.clientX - (portrait.left + portrait.width / 2)) / 42))
+      const y = Math.max(-2.5, Math.min(2.5, (event.clientY - (portrait.top + portrait.height / 2)) / 58))
+      const position = `translate(${x}px, ${y}px)`
+      leftEyeRef.current?.style.setProperty('transform', position)
+      rightEyeRef.current?.style.setProperty('transform', position)
+    }
+
+    window.addEventListener('pointermove', followNavigation, { passive: true })
+    return () => window.removeEventListener('pointermove', followNavigation)
+  }, [reduce])
+
   const handleMove = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (reduce) return
     const box = event.currentTarget.getBoundingClientRect()
@@ -161,13 +192,21 @@ export default function InteractivePortrait({ src, alt }: Props) {
           event.currentTarget.classList.remove('portrait-clicked')
           void event.currentTarget.offsetWidth
           event.currentTarget.classList.add('portrait-clicked')
+          setGreetingIndex((current) => (current === null ? 0 : (current + 1) % greetings.length))
         }}
       >
         <div ref={surfaceRef} className="portrait-surface relative h-full w-full">
           <Image src={src} alt={alt} fill priority sizes="(max-width: 640px) 224px, 256px" className="object-contain portrait-image" />
           <canvas ref={canvasRef} aria-hidden className="portrait-dots absolute inset-0 h-full w-full" />
+          <span ref={leftEyeRef} aria-hidden className="portrait-eye portrait-eye-left" />
+          <span ref={rightEyeRef} aria-hidden className="portrait-eye portrait-eye-right" />
         </div>
         <span ref={cursorRef} aria-hidden className="portrait-dot-cursor" />
+        {greetingIndex !== null && (
+          <span className="portrait-greeting" role="status" aria-live="polite">
+            {greetings[greetingIndex]}
+          </span>
+        )}
       </button>
     </div>
   )
