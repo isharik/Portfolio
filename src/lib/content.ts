@@ -162,7 +162,8 @@ export type Project = {
   repo: string | null
   status: 'Live' | 'Ongoing' | 'Internal'
   accent: string // gradient stops — used as a fallback / tint behind the thumbnail
-  image: string | null // /projects/*.jpg screenshot of the live home screen
+  image: string | null // local /projects/* thumbnail
+  imageFit?: 'cover' | 'contain'
 }
 
 export const projects: Project[] = [
@@ -177,6 +178,7 @@ export const projects: Project[] = [
     status: 'Live',
     accent: '#f5b301, #dd7d0a',
     image: '/projects/proxima.png',
+    imageFit: 'contain',
   },
   {
     title: 'Pharos Octobot',

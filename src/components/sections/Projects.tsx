@@ -15,16 +15,18 @@ function ProjectVisual({
   accent,
   index,
   sizes,
+  imageFit = 'cover',
 }: {
   image: string | null
   accent: string
   index: number
   sizes: string
+  imageFit?: 'cover' | 'contain'
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">
       {image ? (
-        <Image src={image} alt="" fill sizes={sizes} className="object-cover object-top" />
+        <Image src={image} alt="" fill sizes={sizes} className={imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'} />
       ) : (
         <>
           <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${accent})` }} />
@@ -79,7 +81,7 @@ export default function Projects() {
                   transition={{ duration: 0.4, ease: OUT }}
                   className="absolute inset-0"
                 >
-                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" />
+                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" imageFit={p.imageFit} />
                 </motion.div>
               </AnimatePresence>
               <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-black/30 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
@@ -161,7 +163,7 @@ export default function Projects() {
                 )}
               >
                 <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg">
-                  <ProjectVisual image={proj.image} accent={proj.accent} index={i} sizes="80px" />
+                  <ProjectVisual image={proj.image} accent={proj.accent} index={i} sizes="80px" imageFit={proj.imageFit} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
