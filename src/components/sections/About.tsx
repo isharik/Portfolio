@@ -1,12 +1,12 @@
 'use client'
-import { Brain, Cloud, Headset, Globe, PenTool, Workflow, GraduationCap } from 'lucide-react'
+import { Brain, Code2, Headset, Globe, PenTool, Workflow, GraduationCap, ExternalLink } from 'lucide-react'
 import GlassCard from '@/components/ui/GlassCard'
 import { Reveal, RevealItem } from '@/components/ui/Reveal'
 import { profile, languages, credentials } from '@/lib/content'
 
 const focus = [
   { icon: Brain, label: 'AI & LLM Evaluation', note: 'Structured QA & RLHF feedback' },
-  { icon: Cloud, label: 'Cloud & Systems', note: 'AWS administration & incident response' },
+  { icon: Code2, label: 'Coding & Development', note: 'Python, JavaScript, TypeScript & modern web apps' },
   { icon: Headset, label: 'Customer Operations', note: 'Real-time, high-stakes support' },
   { icon: Globe, label: 'Web3 Ecosystems', note: '3+ years across L1 communities' },
   { icon: PenTool, label: 'Content & Storytelling', note: 'Pharos Network storyteller' },
@@ -69,25 +69,41 @@ export default function About() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-4 space-y-2.5">
-              {credentials.map((c) => (
-                <div
-                  key={c.title}
-                  className="surface-card flex items-center gap-4 rounded-xl p-4"
-                >
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-                    <GraduationCap size={17} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-fg">{c.title}</div>
-                    <div className="truncate text-xs text-fg-muted">
-                      {c.org} · {c.period}
+              {credentials.map((c) => {
+                const card = (
+                  <>
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
+                      <GraduationCap size={17} />
                     </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-fg">{c.title}</div>
+                      <div className="truncate text-xs text-fg-muted">
+                        {c.org} · {c.period}
+                      </div>
+                    </div>
+                    <div className="hidden shrink-0 items-center gap-1 rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted sm:flex">
+                      {c.note} {c.href && <ExternalLink size={11} aria-hidden />}
+                    </div>
+                  </>
+                )
+
+                return c.href ? (
+                  <a
+                    key={c.title}
+                    href={c.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="surface-card flex items-center gap-4 rounded-xl p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[var(--accent)]"
+                    aria-label={`Verify ${c.title}`}
+                  >
+                    {card}
+                  </a>
+                ) : (
+                  <div key={c.title} className="surface-card flex items-center gap-4 rounded-xl p-4">
+                    {card}
                   </div>
-                  <div className="hidden shrink-0 rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted sm:block">
-                    {c.note}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </Reveal>
           </div>
         </div>
