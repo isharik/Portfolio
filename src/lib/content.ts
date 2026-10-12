@@ -176,7 +176,7 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#f5b301, #dd7d0a',
-    image: '/projects/proxima.jpg',
+    image: '/projects/proxima.png',
   },
   {
     title: 'Pharos Octobot',
