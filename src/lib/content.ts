@@ -215,7 +215,8 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#d69b5b, #d6675b',
-    image: '/projects/prosper.jpg',
+    image: '/projects/prosper.png',
+    imageFit: 'contain',
   },
   {
     title: 'Web3 Content Library',
