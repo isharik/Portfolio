@@ -203,7 +203,8 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#5b8bd6, #5bd6c9',
-    image: '/projects/pulseos.jpg',
+    image: '/projects/pulseos.png',
+    imageFit: 'contain',
   },
   {
     title: 'Prosper Atlas',

@@ -72,7 +72,7 @@ export default function Projects() {
           {/* Featured panel */}
           <div className="glass overflow-hidden rounded-3xl">
             <div className="relative aspect-[16/10] w-full sm:aspect-[2/1]">
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence initial={false}>
                 <motion.div
                   key={active}
                   initial={{ opacity: 0, filter: reduce ? 'none' : 'blur(6px)', scale: 1.02 }}
