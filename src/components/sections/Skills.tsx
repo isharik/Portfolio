@@ -15,7 +15,7 @@ export default function Skills() {
         <SectionHeading eyebrow="Skills" title="Tools, capabilities, and craft" description="The practical skills I use to turn complex work into dependable outcomes." />
 
         <Reveal className="mt-12">
-          <div className="skills-postcard-board overflow-hidden rounded-2xl border border-border bg-surface/75 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.55)]">
+          <div className="skills-postcard-board overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_18px_50px_-28px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-dashed border-border px-5 py-4 sm:px-6">
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-subtle">Postcards from the toolbox</span>
               <span className="font-mono text-[10px] text-accent">{skillGroups.flatMap((group) => group.skills).length} stamps</span>

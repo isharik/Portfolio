@@ -20,7 +20,7 @@ function ProjectVisual({ project, index }: { project: Project; index: number }) 
           alt=""
           fill
           sizes="(min-width: 1024px) 48vw, (min-width: 640px) 65vw, 88vw"
-          className={project.imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'}
+          className="object-cover object-center"
         />
       ) : (
         <>
@@ -65,7 +65,11 @@ export default function Projects() {
               const actualIndex = projects.indexOf(project)
               return (
                 <button key={project.title} type="button" role="tab" aria-selected={actualIndex === active} aria-label={`Show ${project.title}`} onClick={() => setActive(actualIndex)} className={cn('project-rail-panel', railIndex === 0 && 'project-rail-panel-active')}>
-                  <ProjectVisual project={project} index={actualIndex} />
+                  {railIndex === 0 ? (
+                    <motion.div key={project.title} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.42, ease: OUT }} className="absolute inset-0">
+                      <ProjectVisual project={project} index={actualIndex} />
+                    </motion.div>
+                  ) : <ProjectVisual project={project} index={actualIndex} />}
                   {railIndex === 0 && <span className="absolute bottom-5 left-5 font-mono text-xs font-semibold text-white drop-shadow-sm">{project.title}</span>}
                 </button>
               )

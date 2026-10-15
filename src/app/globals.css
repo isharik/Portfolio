@@ -394,7 +394,7 @@ html.js .preloader-root {
 }
 
 /* The six nostalgic postcards share a single board, with continuous dividers. */
-.skills-postcard { border-bottom: 1px solid var(--border); }
+.skills-postcard { border-bottom: 1px solid var(--border); background: var(--surface); }
 .skills-postcard:last-child { border-bottom: 0; }
 @media (min-width: 640px) {
   .skills-postcard:nth-child(even) { border-left: 1px solid var(--border); }
