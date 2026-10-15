@@ -363,6 +363,51 @@ html.js .preloader-root {
 }
 .app-streaks { opacity: 0.86; }
 
+/* Project strip: one expansive project with a deliberate run of preview slats.
+   Images stay mounted during selection, preventing the prior image flash. */
+.project-rail {
+  display: flex;
+  gap: 0.75rem;
+  height: clamp(15rem, 32vw, 21rem);
+  overflow: hidden;
+}
+.project-rail-panel {
+  position: relative;
+  flex: 0 0 1.4rem;
+  min-width: 1.4rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--surface-muted);
+  cursor: pointer;
+  transition: flex-basis 560ms var(--ease-out), filter 280ms ease;
+}
+.project-rail-panel:hover { filter: brightness(1.06); }
+.project-rail-panel-active { flex-basis: min(48vw, 34rem); }
+.project-rail-panel:nth-child(2) { flex-basis: min(24vw, 18rem); }
+.project-rail-panel:nth-child(3) { flex-basis: min(13vw, 10rem); }
+.project-rail-panel-active:nth-child(1) { flex-basis: min(48vw, 34rem); }
+@media (max-width: 639px) {
+  .project-rail { height: 15rem; gap: 0.6rem; }
+  .project-rail-panel-active { flex-basis: min(82vw, 28rem); }
+  .project-rail-panel:nth-child(2) { flex-basis: 4.5rem; }
+  .project-rail-panel:nth-child(3) { flex-basis: 1.2rem; }
+}
+
+/* The six nostalgic postcards share a single board, with continuous dividers. */
+.skills-postcard { border-bottom: 1px solid var(--border); }
+.skills-postcard:last-child { border-bottom: 0; }
+@media (min-width: 640px) {
+  .skills-postcard:nth-child(even) { border-left: 1px solid var(--border); }
+  .skills-postcard:nth-last-child(-n + 2) { border-bottom: 0; }
+}
+@media (min-width: 1024px) {
+  .skills-postcard { border-bottom: 1px solid var(--border); }
+  .skills-postcard:nth-child(3n + 2),
+  .skills-postcard:nth-child(3n + 3) { border-left: 1px solid var(--border); }
+  .skills-postcard:nth-child(3n + 1) { border-left: 0; }
+  .skills-postcard:nth-last-child(-n + 3) { border-bottom: 0; }
+}
+
 /* Lamp pull-chain: metallic beaded chain */
 .bead-chain {
   width: 5px;

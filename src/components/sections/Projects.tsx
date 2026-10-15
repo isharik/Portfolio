@@ -1,52 +1,35 @@
 'use client'
-import { useRef, useState } from 'react'
+
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { ArrowUpRight, Github, Dot, Download } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
-import { projects, profile } from '@/lib/content'
+import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
-function ProjectVisual({
-  image,
-  accent,
-  index,
-  sizes,
-  imageFit = 'cover',
-  fullSize = false,
-}: {
-  image: string | null
-  accent: string
-  index: number
-  sizes: string
-  imageFit?: 'cover' | 'contain'
-  fullSize?: boolean
-}) {
+function ProjectVisual({ project, index }: { project: Project; index: number }) {
   return (
     <div className="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">
-      {image ? (
+      {project.image ? (
         <Image
-          src={image}
+          src={project.image}
           alt=""
           fill
-          sizes={sizes}
-          priority={fullSize}
-          unoptimized={fullSize}
-          className={imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'}
+          sizes="(min-width: 1024px) 48vw, (min-width: 640px) 65vw, 88vw"
+          className={project.imageFit === 'contain' ? 'object-contain' : 'object-cover object-top'}
         />
       ) : (
         <>
-          <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${accent})` }} />
-          <div className="absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px]" />
-          <span className="absolute bottom-3 right-4 font-mono text-5xl font-bold text-white/25">
-            {String(index + 1).padStart(2, '0')}
-          </span>
+          <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${project.accent})` }} />
+          <div className="absolute inset-0 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px]" />
+          <span className="absolute bottom-5 right-5 font-mono text-5xl font-bold text-white/25">{String(index + 1).padStart(2, '0')}</span>
         </>
       )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
     </div>
   )
 }
@@ -54,169 +37,56 @@ function ProjectVisual({
 export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
-  const selectionRequest = useRef(0)
-  const p = projects[active]
-
-  const selectProject = (next: number) => {
-    if (next === active) return
-    const request = ++selectionRequest.current
-    const image = projects[next].image
-    const commit = () => {
-      if (request === selectionRequest.current) setActive(next)
-    }
-    if (!image) {
-      commit()
-      return
-    }
-
-    // Keep the current panel in place until the next full-size image has decoded.
-    const preload = new window.Image()
-    preload.onload = () => {
-      if ('decode' in preload) {
-        preload.decode().then(commit, commit)
-      } else {
-        commit()
-      }
-    }
-    preload.onerror = commit
-    preload.src = image
-  }
+  const activeProject = projects[active]
+  const rail = useMemo(() => [...projects.slice(active), ...projects.slice(0, active)], [active])
+  const step = (direction: number) => setActive((current) => (current + direction + projects.length) % projects.length)
 
   return (
     <section id="projects" className="relative px-5 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-content">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHeading
-            eyebrow="Projects"
-            title="Built in my free time"
-            description="The products, tools, and experiments I make when nobody's assigning them, just for the fun of shipping something real. Every one of these is live."
-          />
+          <SectionHeading eyebrow="Projects" title="Built in my free time" description="The products, tools, and experiments I make when nobody's assigning them, just for the fun of shipping something real. Every one of these is live." />
           {profile.resume && (
-            <a
-              href={profile.resume}
-              download="Sharik-Hussain-Resume.pdf"
-              className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-border bg-surface/40 px-4 py-2 text-sm font-medium text-fg transition-colors duration-200 hover:border-border-strong hover:bg-surface/70 sm:self-auto"
-            >
+            <a href={profile.resume} download="Sharik-Hussain-Resume.pdf" className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-border bg-surface/40 px-4 py-2 text-sm font-medium text-fg transition-colors duration-200 hover:border-border-strong hover:bg-surface/70 sm:self-auto">
               <Download size={15} className="text-fg-muted transition-colors group-hover:text-accent" />
-              Résumé
-              <span className="font-mono text-[10px] text-fg-subtle">PDF</span>
+              Résumé <span className="font-mono text-[10px] text-fg-subtle">PDF</span>
             </a>
           )}
         </div>
 
-        <Reveal delay={0.1} className="mt-12 grid gap-4 lg:grid-cols-[1.4fr_1fr] lg:gap-6">
-          {/* Featured panel */}
-          <div className="glass overflow-hidden rounded-3xl">
-            <div className="relative aspect-[16/10] w-full sm:aspect-[2/1]">
-              <AnimatePresence initial={false}>
-                <motion.div
-                  key={active}
-                  initial={{ opacity: 0, filter: 'none', scale: reduce ? 1 : 1.01 }}
-                  animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
-                  exit={{ opacity: 0, filter: 'none', scale: reduce ? 1 : 0.99 }}
-                  transition={{ duration: 0.5, ease: OUT }}
-                  className="absolute inset-0"
-                >
-                  <ProjectVisual image={p.image} accent={p.accent} index={active} sizes="(min-width:1024px) 58vw, 100vw" imageFit={p.imageFit} fullSize />
-                </motion.div>
-              </AnimatePresence>
-              <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-black/30 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
-                {p.status}
-              </span>
-            </div>
-
-            <div className="p-6 sm:p-7">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={active}
-                  initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.35, ease: OUT }}
-                >
-                  <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-accent">
-                    {p.tagline}
-                  </div>
-                  <h3 className="mt-2 font-display text-2xl font-semibold text-fg">{p.title}</h3>
-                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-fg-muted">{p.description}</p>
-
-                  <div className="mt-5 flex flex-wrap gap-1.5">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-md border border-border bg-surface/50 px-2 py-1 font-mono text-[10px] text-fg-muted"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {p.link && (
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-[var(--accent-fg)] transition-[filter,transform] duration-200 hover:brightness-110 active:scale-95"
-                      >
-                        Visit live <ArrowUpRight size={15} />
-                      </a>
-                    )}
-                    {p.repo && (
-                      <a
-                        href={p.repo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-fg transition-colors hover:border-border-strong"
-                      >
-                        <Github size={15} /> Code
-                      </a>
-                    )}
-                    {!p.link && !p.repo && (
-                      <span className="inline-flex items-center gap-1 text-sm text-fg-subtle">
-                        <Dot size={16} /> Internal / not public
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+        <Reveal delay={0.1} className="mt-12">
+          <div className="mb-4 flex justify-end gap-2">
+            <button type="button" aria-label="Previous project" onClick={() => step(-1)} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted"><ArrowLeft size={18} /></button>
+            <button type="button" aria-label="Next project" onClick={() => step(1)} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted"><ArrowRight size={18} /></button>
           </div>
 
-          {/* Album list */}
-          <div className="flex flex-col gap-2.5" role="tablist" aria-label="Project list">
-            {projects.map((proj, i) => (
-              <button
-                key={proj.title}
-                role="tab"
-                aria-selected={active === i}
-                onClick={() => selectProject(i)}
-                className={cn(
-                  'group flex items-center gap-4 rounded-2xl border p-3 text-left transition-[border-color,background-color,transform] duration-200 ease-out active:scale-[0.99]',
-                  active === i
-                    ? 'border-[var(--border-strong)] bg-surface'
-                    : 'border-border bg-surface/40 hover:border-border-strong hover:bg-surface/70'
-                )}
-              >
-                <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg">
-                  <ProjectVisual image={proj.image} accent={proj.accent} index={i} sizes="80px" imageFit={proj.imageFit} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-fg">{proj.title}</span>
-                  </div>
-                  <div className="truncate text-xs text-fg-muted">{proj.tagline}</div>
-                </div>
-                <ArrowUpRight
-                  size={16}
-                  className={cn(
-                    'shrink-0 transition-[opacity,transform] duration-200',
-                    active === i ? 'text-accent opacity-100' : 'text-fg-subtle opacity-0 group-hover:opacity-100'
-                  )}
-                />
-              </button>
-            ))}
+          <div className="project-rail" role="tablist" aria-label="Featured projects">
+            {rail.map((project, railIndex) => {
+              const actualIndex = projects.indexOf(project)
+              return (
+                <button key={project.title} type="button" role="tab" aria-selected={actualIndex === active} aria-label={`Show ${project.title}`} onClick={() => setActive(actualIndex)} className={cn('project-rail-panel', railIndex === 0 && 'project-rail-panel-active')}>
+                  <ProjectVisual project={project} index={actualIndex} />
+                  {railIndex === 0 && <span className="absolute bottom-5 left-5 font-mono text-xs font-semibold text-white drop-shadow-sm">{project.title}</span>}
+                </button>
+              )
+            })}
           </div>
+
+          <motion.article key={activeProject.title} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }} className="mt-7 grid gap-5 rounded-2xl border border-border bg-surface/45 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-6">
+            <div>
+              <div className="font-mono text-[11px] uppercase tracking-widest text-accent">{activeProject.tagline}</div>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-fg">{activeProject.title}</h3>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-muted">{activeProject.description}</p>
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {activeProject.tags.map((tag) => <span key={tag} className="rounded-md border border-border bg-surface/50 px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3 sm:justify-end">
+              {activeProject.link && <a href={activeProject.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-[var(--accent-fg)] transition-[filter,transform] duration-200 hover:brightness-110 active:scale-95">Visit live <ArrowUpRight size={15} /></a>}
+              {activeProject.repo && <a href={activeProject.repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-fg transition-colors hover:border-border-strong"><Github size={15} /> Code</a>}
+              {!activeProject.link && !activeProject.repo && <span className="inline-flex items-center gap-1 text-sm text-fg-subtle"><Dot size={16} /> Internal / not public</span>}
+            </div>
+          </motion.article>
         </Reveal>
       </div>
     </section>
