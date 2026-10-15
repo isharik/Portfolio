@@ -1,6 +1,5 @@
 import Preloader from '@/components/ui/Preloader'
 import Background from '@/components/three/Background'
-import ScrollFade from '@/components/ui/ScrollFade'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/sections/Hero'
@@ -20,21 +19,11 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <ScrollFade>
-          <About />
-        </ScrollFade>
-        <ScrollFade>
-          <Experience />
-        </ScrollFade>
-        <ScrollFade>
-          <Projects />
-        </ScrollFade>
-        <ScrollFade>
-          <Skills />
-        </ScrollFade>
-        <ScrollFade>
-          <Contact />
-        </ScrollFade>
+        <About />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Contact />
       </main>
       <Footer />
     </>

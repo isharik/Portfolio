@@ -184,13 +184,15 @@ body {
   transition: transform 180ms var(--ease-out), filter 180ms var(--ease-out), brightness 180ms var(--ease-out);
   will-change: transform;
 }
-.portrait-image {
-  filter: brightness(1.13) contrast(1.04) drop-shadow(0 15px 18px rgba(0, 0, 0, 0.16));
+.portrait-reference {
+  opacity: 0.2;
+  filter: brightness(1.08) contrast(1.04) drop-shadow(0 15px 18px rgba(0, 0, 0, 0.16));
 }
 .portrait-dots {
   pointer-events: none;
   mix-blend-mode: screen;
   z-index: 2;
+  filter: drop-shadow(0 10px 16px rgba(91, 91, 214, 0.18));
 }
 .portrait-invite {
   position: absolute;
@@ -354,31 +356,12 @@ html.js .preloader-root {
 
 /* App background — gently alive (kept subtle; runs even under reduced motion
    because the aliveness is requested, but it is slow and low-amplitude). */
-.app-glow {
-  animation: pl-glow 20s ease-in-out infinite !important;
-  will-change: transform, opacity;
-}
+.app-glow { opacity: 0.82; }
 @keyframes app-shimmer {
   0%, 100% { opacity: 0.78; }
   50% { opacity: 1; }
 }
-.app-streaks {
-  animation: app-shimmer 13s ease-in-out infinite !important;
-  will-change: opacity;
-}
-
-/* Postcards (Skills) — scattered, straighten & lift on hover */
-.postcard {
-  transform: rotate(var(--rot, 0deg));
-  transform-origin: center;
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .postcard:hover {
-    transform: rotate(0deg) translateY(-8px) scale(1.02);
-    z-index: 5;
-  }
-}
+.app-streaks { opacity: 0.86; }
 
 /* Lamp pull-chain: metallic beaded chain */
 .bead-chain {

@@ -9,7 +9,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variab
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
 
 const SITE = 'https://sharikhussain.dev'
-const TITLE = 'Sharik — LLM Evaluator & AI Operations'
+const TITLE = 'Sharik'
 const DESCRIPTION =
   'Computer-science graduate working where technology meets people — LLM evaluation, cloud administration, customer operations, and Web3 ecosystems. Pharos Network storyteller.'
 

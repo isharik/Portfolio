@@ -13,12 +13,12 @@ export const profile = {
   phone: '+91 60056 22259',
   photo: '/profile.png',
   resume: '/resume.pdf', // served from public/; used by Contact + Projects download links
-  eyebrow: 'CUSTOMER SUPPORT · CX · AI EVALUATION',
+  eyebrow: 'CUSTOMER SUPPORT · CONTENT · AI',
   // Headline is split so the accent word can be styled separately
   headlineLead: 'The human in',
   headlineAccent: "AI’s loop.",
   summary:
-    "I work at the human edge of technology, in customer support and experience, and I test how well AI actually answers. Live ticket or model output, the goal stays the same: make the tech work for real people. These days I also write and create content for the Pharos Network.",
+    "I work across customer support, content, and AI—helping people, communities, and products communicate clearly. From resolving real-time customer issues to creating content for emerging ecosystems and supporting AI workflows, I make complex technology easier to understand and use.",
   intro:
     'Currently an AI & QA Specialist at Invisible Technologies and an AI & Robotics Trainer at Micro1, I bring 3+ years of experience across cloud operations, customer experience, and Web3. I was also selected as a Content Creator and Storyteller for Pharos Network.',
 } as const

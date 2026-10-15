@@ -4,16 +4,16 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
-type Dot = { u: number; v: number; size: number; phase: number }
+type Dot = { u: number; v: number; depth: number; radius: number; phase: number }
 
-type Props = {
-  src: string
-  alt: string
-}
+type Props = { src: string; alt: string }
 
 const greetings = ['Hi there 👋', 'Hello — nice to meet you ✨', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
 
-/** A transparent portrait whose sampled halftone dots scatter around the pointer. */
+/**
+ * A source-image-derived particle sculpture. The editable dot model is kept in
+ * memory and only redraws while responding to the pointer or settling home.
+ */
 export default function InteractivePortrait({ src, alt }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -25,15 +25,16 @@ export default function InteractivePortrait({ src, alt }: Props) {
     const canvas = canvasRef.current
     const target = buttonRef.current
     if (!canvas || !target) return
-    const context = canvas.getContext('2d')
+    const context = canvas.getContext('2d', { alpha: true })
     if (!context) return
 
-    const source = new window.Image()
-    const pointer = { x: -1000, y: -1000, active: false }
+    const pointer = { x: 0, y: 0, yaw: 0, pitch: 0, active: false }
     let dots: Dot[] = []
+    let strength = 0
     let frame = 0
+    let running = false
 
-    const paint = (time: number) => {
+    const draw = (time: number) => {
       const bounds = target.getBoundingClientRect()
       const density = Math.min(window.devicePixelRatio || 1, 2)
       const width = Math.round(bounds.width * density)
@@ -45,38 +46,59 @@ export default function InteractivePortrait({ src, alt }: Props) {
 
       context.setTransform(density, 0, 0, density, 0, 0)
       context.clearRect(0, 0, bounds.width, bounds.height)
-      context.fillStyle = '#ffffff'
-      context.globalAlpha = pointer.active ? 0.96 : 0.54
+      strength += ((pointer.active ? 1 : 0) - strength) * 0.13
+      const yaw = pointer.yaw * strength
+      const pitch = pointer.pitch * strength
+      const sinYaw = Math.sin(yaw)
+      const cosYaw = Math.cos(yaw)
+      const sinPitch = Math.sin(pitch)
+      const centerX = bounds.width / 2
+      const centerY = bounds.height / 2
+      const radius = 86
 
       for (const dot of dots) {
-        const x = dot.u * bounds.width
-        const y = dot.v * bounds.height
+        const localX = (dot.u - 0.5) * bounds.width
+        const localY = (dot.v - 0.5) * bounds.height
+        const rotatedX = localX * cosYaw + dot.depth * sinYaw * 34
+        const rotatedDepth = dot.depth * cosYaw - localX * sinYaw / 34
+        const rotatedY = localY * Math.cos(pitch) - rotatedDepth * sinPitch * 15
+        let x = centerX + rotatedX
+        let y = centerY + rotatedY
         const dx = x - pointer.x
         const dy = y - pointer.y
         const distance = Math.hypot(dx, dy)
-        const radius = 92
-        const force = pointer.active && distance < radius ? (1 - distance / radius) ** 1.8 : 0
+        const influence = pointer.active && distance < radius ? (1 - distance / radius) ** 2 : 0
         const unitX = distance ? dx / distance : 1
         const unitY = distance ? dy / distance : 0
-        const ripple = force * Math.sin(time / 92 + dot.phase) * 4
-        const radial = force * 25 + ripple
-        const orbit = force * Math.sin(time / 145 + dot.phase) * 9
+        const ripple = influence * Math.sin(time / 100 + dot.phase) * 3.5
+        const swirl = influence * Math.cos(time / 140 + dot.phase) * 7
+        x += unitX * (influence * 19 + ripple) - unitY * swirl
+        y += unitY * (influence * 19 + ripple) + unitX * swirl
 
+        context.globalAlpha = 0.4 + (dot.depth + 1) * 0.22 + influence * 0.3
+        context.fillStyle = '#ffffff'
         context.beginPath()
-        context.arc(
-          x + unitX * radial - unitY * orbit,
-          y + unitY * radial + unitX * orbit,
-          dot.size + force * 0.95,
-          0,
-          Math.PI * 2
-        )
+        context.arc(x, y, dot.radius + influence * 0.9, 0, Math.PI * 2)
         context.fill()
       }
-      frame = window.requestAnimationFrame(paint)
+
+      if (pointer.active || strength > 0.012) {
+        frame = window.requestAnimationFrame(draw)
+      } else {
+        running = false
+      }
     }
 
+    const schedule = () => {
+      if (!running) {
+        running = true
+        frame = window.requestAnimationFrame(draw)
+      }
+    }
+
+    const source = new window.Image()
     source.onload = () => {
-      const sampleWidth = 216
+      const sampleWidth = 172
       const sampleHeight = Math.round((source.naturalHeight / source.naturalWidth) * sampleWidth)
       const sampler = document.createElement('canvas')
       sampler.width = sampleWidth
@@ -89,62 +111,64 @@ export default function InteractivePortrait({ src, alt }: Props) {
 
       for (let y = 0; y < sampleHeight; y += step) {
         for (let x = 0; x < sampleWidth; x += step) {
-          let brightest = 0
+          let brightness = 0
           let alpha = 0
           for (let yy = y; yy < Math.min(y + step, sampleHeight); yy += 1) {
             for (let xx = x; xx < Math.min(x + step, sampleWidth); xx += 1) {
               const index = (yy * sampleWidth + xx) * 4
-              const brightness = (pixels[index] + pixels[index + 1] + pixels[index + 2]) / 3
-              brightest = Math.max(brightest, brightness)
+              brightness = Math.max(brightness, (pixels[index] + pixels[index + 1] + pixels[index + 2]) / 3)
               alpha = Math.max(alpha, pixels[index + 3])
             }
           }
-          if (alpha > 150 && brightest > 155) {
+          if (alpha > 140 && brightness > 150) {
             dots.push({
               u: (x + step / 2) / sampleWidth,
               v: (y + step / 2) / sampleHeight,
-              size: 0.45 + (brightest / 255) * 0.72,
-              phase: x * 0.19 + y * 0.13,
+              depth: (brightness / 255 - 0.5) * 2,
+              radius: 0.5 + (brightness / 255) * 0.75,
+              phase: x * 0.18 + y * 0.11,
             })
           }
         }
       }
-      frame = window.requestAnimationFrame(paint)
+      schedule()
     }
     source.src = src
 
-    const moveDots = (event: PointerEvent) => {
+    const move = (event: PointerEvent) => {
       if (reduce) return
       const bounds = target.getBoundingClientRect()
       pointer.x = event.clientX - bounds.left
       pointer.y = event.clientY - bounds.top
+      pointer.yaw = ((pointer.x / bounds.width) - 0.5) * 0.34
+      pointer.pitch = ((pointer.y / bounds.height) - 0.5) * -0.22
       pointer.active = true
+      schedule()
     }
-    const resetDots = () => {
+    const leave = () => {
       pointer.active = false
-      pointer.x = -1000
-      pointer.y = -1000
+      schedule()
     }
-    target.addEventListener('pointermove', moveDots)
-    target.addEventListener('pointerleave', resetDots)
+    const resize = () => schedule()
+    const observer = new ResizeObserver(resize)
+    observer.observe(target)
+    target.addEventListener('pointermove', move, { passive: true })
+    target.addEventListener('pointerleave', leave)
 
     return () => {
-      target.removeEventListener('pointermove', moveDots)
-      target.removeEventListener('pointerleave', resetDots)
+      observer.disconnect()
+      target.removeEventListener('pointermove', move)
+      target.removeEventListener('pointerleave', leave)
       window.cancelAnimationFrame(frame)
     }
   }, [reduce, src])
 
-  const handleMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+  const tilt = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (reduce) return
-    const box = event.currentTarget.getBoundingClientRect()
-    const x = (event.clientX - box.left) / box.width - 0.5
-    const y = (event.clientY - box.top) / box.height - 0.5
-    surfaceRef.current?.style.setProperty('transform', `rotateX(${-y * 10}deg) rotateY(${x * 10}deg) translateZ(14px) scale(1.02)`)
-  }
-
-  const reset = () => {
-    surfaceRef.current?.style.removeProperty('transform')
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5
+    surfaceRef.current?.style.setProperty('transform', `rotateX(${-y * 8}deg) rotateY(${x * 8}deg) translateZ(12px)`)
   }
 
   return (
@@ -154,25 +178,16 @@ export default function InteractivePortrait({ src, alt }: Props) {
         type="button"
         className="portrait-tilt relative block h-72 w-64 cursor-pointer border-0 bg-transparent p-0 sm:h-80 sm:w-72"
         aria-label="Click profile portrait to say hello"
-        onPointerMove={handleMove}
-        onPointerLeave={reset}
-        onClick={(event) => {
-          event.currentTarget.classList.remove('portrait-clicked')
-          void event.currentTarget.offsetWidth
-          event.currentTarget.classList.add('portrait-clicked')
-          setGreetingIndex((current) => (current === null ? 0 : (current + 1) % greetings.length))
-        }}
+        onPointerMove={tilt}
+        onPointerLeave={() => surfaceRef.current?.style.removeProperty('transform')}
+        onClick={() => setGreetingIndex((current) => (current === null ? 0 : (current + 1) % greetings.length))}
       >
         <div ref={surfaceRef} className="portrait-surface relative h-full w-full">
-          <Image src={src} alt={alt} fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-image" />
+          <Image src={src} alt={alt} fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-reference" />
           <canvas ref={canvasRef} aria-hidden className="portrait-dots absolute inset-0 h-full w-full" />
         </div>
         <span className="portrait-invite" aria-hidden>Say hello <span>↖</span></span>
-        {greetingIndex !== null && (
-          <span className="portrait-greeting" role="status" aria-live="polite">
-            {greetings[greetingIndex]}
-          </span>
-        )}
+        {greetingIndex !== null && <span className="portrait-greeting" role="status" aria-live="polite">{greetings[greetingIndex]}</span>}
       </button>
     </div>
   )

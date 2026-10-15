@@ -27,7 +27,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === 'undefined') return null
     if (!ctxRef.current) {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-      if (AC) ctxRef.current = new AC()
+      if (AC) ctxRef.current = new AC({ latencyHint: 'interactive' })
     }
     const ctx = ctxRef.current
     if (ctx && ctx.state === 'suspended') void ctx.resume()
