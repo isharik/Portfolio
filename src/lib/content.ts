@@ -57,6 +57,7 @@ export const focusAreas = [
 export type Experience = {
   role: string
   company: string
+  logo: string
   companyDesc: string
   period: string
   type: string
@@ -70,6 +71,7 @@ export const experiences: Experience[] = [
   {
     role: 'AI & QA Specialist',
     company: 'Invisible Technologies',
+    logo: '/logos/invisible.png',
     companyDesc: 'AI operations & human-in-the-loop services',
     period: 'Jul 2025 — Present',
     type: 'Full-time · Remote',
@@ -87,6 +89,7 @@ export const experiences: Experience[] = [
   {
     role: 'AI & Robotics Trainer',
     company: 'Micro1',
+    logo: '/logos/micro1.png',
     companyDesc: 'AI training & talent platform',
     period: 'May 2025 — Present',
     type: 'Full-time · Remote',
@@ -104,6 +107,7 @@ export const experiences: Experience[] = [
   {
     role: 'Customer Support Specialist',
     company: 'Datamark',
+    logo: '/logos/datamark.jpg',
     companyDesc: 'BPO & customer experience — interpretation services',
     period: 'Mar 2025 — May 2026',
     type: 'Full-time · Remote',
@@ -121,6 +125,7 @@ export const experiences: Experience[] = [
   {
     role: 'System Administrator',
     company: 'KodeKloud',
+    logo: '/logos/kodekloud.png',
     companyDesc: 'DevOps & cloud engineering training platform',
     period: 'Jan 2024 — Dec 2024',
     type: 'Full-time · Remote',
@@ -138,6 +143,7 @@ export const experiences: Experience[] = [
   {
     role: 'Technology Consultant Intern',
     company: 'Deloitte',
+    logo: '/logos/deloitte.ico',
     companyDesc: 'Global professional services & consulting',
     period: 'May 2020 — Sep 2020',
     type: 'Internship · Remote',

@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Check } from 'lucide-react'
+import Image from 'next/image'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
@@ -65,8 +66,13 @@ export default function Experience() {
                       transition={{ type: 'spring', stiffness: 400, damping: 34 }}
                     />
                   )}
-                  <div className={cn('text-sm font-medium transition-colors', on ? 'text-fg' : 'text-fg-muted group-hover:text-fg')}>
-                    {e.company}
+                  <div className="flex items-center gap-2.5">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white p-1 shadow-sm dark:bg-white/90">
+                      <Image src={e.logo} alt="" width={20} height={20} className="h-5 w-5 object-contain" unoptimized />
+                    </span>
+                    <div className={cn('text-sm font-medium transition-colors', on ? 'text-fg' : 'text-fg-muted group-hover:text-fg')}>
+                      {e.company}
+                    </div>
                   </div>
                   <div className="mt-0.5 hidden text-xs text-fg-subtle lg:block">{e.role}</div>
                   <div className="mt-0.5 font-mono text-[10px] text-fg-subtle">{e.period}</div>
@@ -88,7 +94,12 @@ export default function Experience() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h3 className="font-display text-xl font-semibold text-fg">{exp.role}</h3>
-                    <div className="mt-1 text-sm font-medium text-accent">{exp.company}</div>
+                    <div className="mt-2 flex items-center gap-2.5 text-sm font-medium text-accent">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white p-1 shadow-sm dark:bg-white/90">
+                        <Image src={exp.logo} alt={`${exp.company} logo`} width={22} height={22} className="h-[22px] w-[22px] object-contain" unoptimized />
+                      </span>
+                      {exp.company}
+                    </div>
                     <div className="mt-0.5 text-xs text-fg-muted">{exp.companyDesc}</div>
                   </div>
                   {exp.current && (
