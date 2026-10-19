@@ -185,17 +185,16 @@ body {
   will-change: transform;
 }
 .portrait-reference {
-  opacity: 0.34;
-  filter: brightness(1.18) contrast(1.12) drop-shadow(0 15px 18px rgba(0, 0, 0, 0.16));
+  opacity: 0.08;
+  filter: none;
 }
-.dark .portrait-reference { opacity: 0.26; }
+.dark .portrait-reference { opacity: 0.2; }
 .portrait-dots {
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   z-index: 2;
-  filter: drop-shadow(0 5px 9px rgba(38, 53, 92, 0.18));
+  filter: none;
 }
-.dark .portrait-dots { filter: drop-shadow(0 7px 12px rgba(91, 181, 214, 0.24)); }
 .portrait-invite {
   position: absolute;
   z-index: 6;
@@ -337,20 +336,13 @@ html.js .preloader-root {
   50% { transform: translate(2.5%, 3.5%) scale(1.16); opacity: 1; }
 }
 .preloader-root .alive-streaks {
-  animation: pl-streaks 11s ease-in-out infinite !important;
-  transform-origin: center;
-  will-change: transform, opacity;
+  opacity: 0.75;
 }
-.preloader-root .alive-dots {
-  animation: pl-dots 6s linear infinite !important;
-}
-.preloader-root .alive-glow {
-  animation: pl-glow 9s ease-in-out infinite !important;
-  will-change: transform, opacity;
-}
+.preloader-root .alive-dots { background-position: 0 0; }
+.preloader-root .alive-glow { opacity: 0.85; }
 @keyframes pl-greet-in {
-  from { opacity: 0; transform: scale(0.9); filter: blur(6px); }
-  to { opacity: 1; transform: scale(1); filter: blur(0); }
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 .preloader-root .pl-greet-in {
   animation: pl-greet-in 0.75s var(--ease-out) both !important;

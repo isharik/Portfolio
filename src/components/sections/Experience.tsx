@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import Image from 'next/image'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -83,14 +83,12 @@ export default function Experience() {
 
           {/* Detail */}
           <div className="glass min-h-[420px] rounded-2xl p-6 sm:p-8">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, filter: reduce ? 'none' : 'blur(5px)', y: reduce ? 0 : 8 }}
-                animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                exit={{ opacity: 0, filter: reduce ? 'none' : 'blur(5px)' }}
-                transition={{ duration: 0.35, ease: OUT }}
-              >
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduce ? 0 : 0.24, ease: OUT }}
+            >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h3 className="font-display text-xl font-semibold text-fg">{exp.role}</h3>
@@ -131,8 +129,7 @@ export default function Experience() {
                     </span>
                   ))}
                 </div>
-              </motion.div>
-            </AnimatePresence>
+            </motion.div>
           </div>
         </Reveal>
       </div>

@@ -23,7 +23,7 @@ const GREETINGS = [
   'Salaam',
 ]
 const FIRST_HOLD = 950 // opening "Hello" lingers
-const STEP = 250 // then a steady, cinematic flow
+const STEP = 320 // steady flow with enough time for each clean fade
 
 /**
  * Full-screen intro: a deliberate opening greeting, then one smooth flow
@@ -77,8 +77,8 @@ export default function Preloader() {
         <motion.div
           className="preloader-root fixed inset-0 z-[100] cursor-pointer select-none"
           initial={false}
-          exit={{ opacity: 0, filter: 'blur(12px)', scale: 1.03 }}
-          transition={{ duration: 0.65, ease: OUT }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.38, ease: OUT }}
           onClick={() => setVisible(false)}
           onMouseMove={onMove}
           role="status"
@@ -92,10 +92,10 @@ export default function Preloader() {
                   <AnimatePresence initial={false}>
                     <motion.span
                       key={index}
-                      initial={{ opacity: 0, y: 24, scale: 0.92, filter: 'blur(9px)' }}
-                      animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: -24, scale: 1.05, filter: 'blur(9px)' }}
-                      transition={{ duration: 0.34, ease: OUT }}
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 1 }}
+                      transition={{ duration: 0.2, ease: OUT }}
                       className="absolute inset-0 flex items-center justify-center text-center font-display font-bold tracking-tight text-white"
                       style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
                     >
