@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
-import { DarkGradientBg } from '@/components/ui/elegant-dark-pattern'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
@@ -22,23 +21,16 @@ const GREETINGS = [
   'Vanakkam',
   'Salaam',
 ]
-const FIRST_HOLD = 950 // opening "Hello" lingers
-const STEP = 320 // steady flow with enough time for each clean fade
+const FIRST_HOLD = 760
+const STEP = 300
 
 /**
- * Full-screen intro: a deliberate opening greeting, then one smooth flow
- * through the world's languages over the living dark pattern, before it
- * crossfades out to reveal the page. Requested, one-time, skippable.
+ * Lightweight, skippable greeting sequence. Static backdrop and opacity-only
+ * text transitions avoid the expensive layered movement of the old intro.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
-
-  // gentle mouse parallax on the greeting
-  const mx = useMotionValue(0)
-  const my = useMotionValue(0)
-  const px = useSpring(mx, { stiffness: 110, damping: 22, mass: 0.5 })
-  const py = useSpring(my, { stiffness: 110, damping: 22, mass: 0.5 })
 
   // Lock scroll only while the intro is visible; restore the moment it hides.
   useEffect(() => {
@@ -55,7 +47,7 @@ export default function Preloader() {
     let timer = window.setTimeout(function tick() {
       idx += 1
       if (idx >= GREETINGS.length) {
-        timer = window.setTimeout(() => setVisible(false), 560)
+        timer = window.setTimeout(() => setVisible(false), 420)
         return
       }
       setIndex(idx)
@@ -63,11 +55,6 @@ export default function Preloader() {
     }, FIRST_HOLD)
     return () => window.clearTimeout(timer)
   }, [])
-
-  const onMove = (e: React.MouseEvent) => {
-    mx.set(((e.clientX - window.innerWidth / 2) / window.innerWidth) * 26)
-    my.set(((e.clientY - window.innerHeight / 2) / window.innerHeight) * 26)
-  }
 
   const progress = ((index + 1) / GREETINGS.length) * 100
 
@@ -78,31 +65,27 @@ export default function Preloader() {
           className="preloader-root fixed inset-0 z-[100] cursor-pointer select-none"
           initial={false}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.38, ease: OUT }}
+          transition={{ duration: 0.28, ease: OUT }}
           onClick={() => setVisible(false)}
-          onMouseMove={onMove}
           role="status"
           aria-label="Loading"
         >
-          <DarkGradientBg>
+          <div className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(ellipse_at_50%_42%,#17202d_0%,#080b11_48%,#030406_100%)]">
             <div className="relative flex min-h-screen w-full flex-col items-center justify-center px-6">
-              {/* cinematic entrance for the opening greeting */}
-              <div className="pl-greet-in relative flex h-40 w-full items-center justify-center">
-                <motion.div style={{ x: px, y: py }} className="absolute inset-0 flex items-center justify-center">
-                  <AnimatePresence initial={false}>
-                    <motion.span
-                      key={index}
-                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 1 }}
-                      transition={{ duration: 0.2, ease: OUT }}
-                      className="absolute inset-0 flex items-center justify-center text-center font-display font-bold tracking-tight text-white"
-                      style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
-                    >
-                      {GREETINGS[index]}
-                    </motion.span>
-                  </AnimatePresence>
-                </motion.div>
+              <div className="relative flex h-40 w-full items-center justify-center">
+                <AnimatePresence initial={false}>
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.17, ease: 'easeInOut' }}
+                    className="absolute inset-0 flex items-center justify-center text-center font-display font-bold tracking-tight text-white"
+                    style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
+                  >
+                    {GREETINGS[index]}
+                  </motion.span>
+                </AnimatePresence>
               </div>
 
               {/* fill line + skip hint */}
@@ -110,13 +93,13 @@ export default function Preloader() {
                 <div className="h-px w-44 overflow-hidden rounded-full bg-white/15">
                   <div
                     className="h-full rounded-full bg-white/70"
-                    style={{ width: `${progress}%`, transition: 'width 0.4s cubic-bezier(0.23,1,0.32,1)' }}
+                    style={{ width: `${progress}%`, transition: 'width 0.28s cubic-bezier(0.2,0.75,0.25,1)' }}
                   />
                 </div>
                 <p className="font-mono text-[11px] tracking-wide text-white/40">click anywhere to skip</p>
               </div>
             </div>
-          </DarkGradientBg>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

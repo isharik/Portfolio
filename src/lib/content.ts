@@ -11,7 +11,7 @@ export const profile = {
   availability: 'Open to remote roles',
   email: 'sharikhussain99@gmail.com',
   phone: '+91 60056 22259',
-  photo: '/profile.png',
+  photo: '/profile-clean.png',
   resume: '/resume.pdf', // served from public/; used by Contact + Projects download links
   eyebrow: 'CUSTOMER SUPPORT · CONTENT · AI',
   // Headline is split so the accent word can be styled separately
