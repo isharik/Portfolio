@@ -33,6 +33,8 @@ export default function InteractivePortrait({ src, alt }: Props) {
     let strength = 0
     let frame = 0
     let running = false
+    let visible = true
+    let imageAspect = 0.75
 
     const draw = (time: number) => {
       const bounds = target.getBoundingClientRect()
@@ -54,11 +56,13 @@ export default function InteractivePortrait({ src, alt }: Props) {
       const sinPitch = Math.sin(pitch)
       const centerX = bounds.width / 2
       const centerY = bounds.height / 2
+      const imageHeight = Math.min(bounds.height, bounds.width / imageAspect)
+      const imageWidth = imageHeight * imageAspect
       const radius = 86
 
       for (const dot of dots) {
-        const localX = (dot.u - 0.5) * bounds.width
-        const localY = (dot.v - 0.5) * bounds.height
+        const localX = (dot.u - 0.5) * imageWidth
+        const localY = (dot.v - 0.5) * imageHeight
         const rotatedX = localX * cosYaw + dot.depth * sinYaw * 34
         const rotatedDepth = dot.depth * cosYaw - localX * sinYaw / 34
         const rotatedY = localY * Math.cos(pitch) - rotatedDepth * sinPitch * 15
@@ -72,17 +76,19 @@ export default function InteractivePortrait({ src, alt }: Props) {
         const unitY = distance ? dy / distance : 0
         const ripple = influence * Math.sin(time / 100 + dot.phase) * 3.5
         const swirl = influence * Math.cos(time / 140 + dot.phase) * 7
-        x += unitX * (influence * 19 + ripple) - unitY * swirl
-        y += unitY * (influence * 19 + ripple) + unitX * swirl
+        const idleX = visible ? Math.sin(time / 1500 + dot.phase) * 0.65 : 0
+        const idleY = visible ? Math.cos(time / 1700 + dot.phase * 0.8) * 0.65 : 0
+        x += unitX * (influence * 22 + ripple) - unitY * swirl + idleX
+        y += unitY * (influence * 22 + ripple) + unitX * swirl + idleY
 
-        context.globalAlpha = 0.4 + (dot.depth + 1) * 0.22 + influence * 0.3
+        context.globalAlpha = Math.min(1, 0.74 + (dot.depth + 1) * 0.13 + influence * 0.18 + (visible ? (Math.sin(time / 520 + dot.phase) + 1) * 0.035 : 0))
         context.fillStyle = '#ffffff'
         context.beginPath()
-        context.arc(x, y, dot.radius + influence * 0.9, 0, Math.PI * 2)
+        context.arc(x, y, dot.radius + influence * 1.1, 0, Math.PI * 2)
         context.fill()
       }
 
-      if (pointer.active || strength > 0.012) {
+      if (visible || pointer.active || strength > 0.012) {
         frame = window.requestAnimationFrame(draw)
       } else {
         running = false
@@ -98,7 +104,8 @@ export default function InteractivePortrait({ src, alt }: Props) {
 
     const source = new window.Image()
     source.onload = () => {
-      const sampleWidth = 172
+      imageAspect = source.naturalWidth / source.naturalHeight
+      const sampleWidth = 180
       const sampleHeight = Math.round((source.naturalHeight / source.naturalWidth) * sampleWidth)
       const sampler = document.createElement('canvas')
       sampler.width = sampleWidth
@@ -107,7 +114,7 @@ export default function InteractivePortrait({ src, alt }: Props) {
       if (!samplerContext) return
       samplerContext.drawImage(source, 0, 0, sampleWidth, sampleHeight)
       const pixels = samplerContext.getImageData(0, 0, sampleWidth, sampleHeight).data
-      const step = 4
+      const step = 3
 
       for (let y = 0; y < sampleHeight; y += step) {
         for (let x = 0; x < sampleWidth; x += step) {
@@ -120,12 +127,12 @@ export default function InteractivePortrait({ src, alt }: Props) {
               alpha = Math.max(alpha, pixels[index + 3])
             }
           }
-          if (alpha > 140 && brightness > 150) {
+          if (alpha > 140 && brightness > 135) {
             dots.push({
               u: (x + step / 2) / sampleWidth,
               v: (y + step / 2) / sampleHeight,
               depth: (brightness / 255 - 0.5) * 2,
-              radius: 0.5 + (brightness / 255) * 0.75,
+              radius: 0.75 + (brightness / 255) * 0.7,
               phase: x * 0.18 + y * 0.11,
             })
           }
@@ -152,11 +159,21 @@ export default function InteractivePortrait({ src, alt }: Props) {
     const resize = () => schedule()
     const observer = new ResizeObserver(resize)
     observer.observe(target)
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible) schedule()
+      else if (!pointer.active) {
+        window.cancelAnimationFrame(frame)
+        running = false
+      }
+    }, { threshold: 0.05 })
+    visibilityObserver.observe(target)
     target.addEventListener('pointermove', move, { passive: true })
     target.addEventListener('pointerleave', leave)
 
     return () => {
       observer.disconnect()
+      visibilityObserver.disconnect()
       target.removeEventListener('pointermove', move)
       target.removeEventListener('pointerleave', leave)
       window.cancelAnimationFrame(frame)
