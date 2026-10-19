@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
-type Dot = { u: number; v: number; depth: number; radius: number; phase: number }
+type Dot = { u: number; v: number; depth: number; radius: number; phase: number; offsetX: number; offsetY: number }
 
 type Props = { src: string; alt: string }
 
@@ -35,6 +35,7 @@ export default function InteractivePortrait({ src, alt }: Props) {
     let running = false
     let visible = true
     let imageAspect = 0.75
+    let dotColor = ''
 
     const draw = (time: number) => {
       const bounds = target.getBoundingClientRect()
@@ -48,6 +49,8 @@ export default function InteractivePortrait({ src, alt }: Props) {
 
       context.setTransform(density, 0, 0, density, 0, 0)
       context.clearRect(0, 0, bounds.width, bounds.height)
+      const nextDotColor = document.documentElement.classList.contains('dark') ? '#f7fbff' : '#26355c'
+      if (nextDotColor !== dotColor) dotColor = nextDotColor
       strength += ((pointer.active ? 1 : 0) - strength) * 0.13
       const yaw = pointer.yaw * strength
       const pitch = pointer.pitch * strength
@@ -58,7 +61,8 @@ export default function InteractivePortrait({ src, alt }: Props) {
       const centerY = bounds.height / 2
       const imageHeight = Math.min(bounds.height, bounds.width / imageAspect)
       const imageWidth = imageHeight * imageAspect
-      const radius = 86
+      const radius = 104
+      const interactionScale = reduce ? 0.62 : 1
 
       for (const dot of dots) {
         const localX = (dot.u - 0.5) * imageWidth
@@ -74,15 +78,19 @@ export default function InteractivePortrait({ src, alt }: Props) {
         const influence = pointer.active && distance < radius ? (1 - distance / radius) ** 2 : 0
         const unitX = distance ? dx / distance : 1
         const unitY = distance ? dy / distance : 0
-        const ripple = influence * Math.sin(time / 100 + dot.phase) * 3.5
-        const swirl = influence * Math.cos(time / 140 + dot.phase) * 7
-        const idleX = visible ? Math.sin(time / 1500 + dot.phase) * 0.65 : 0
-        const idleY = visible ? Math.cos(time / 1700 + dot.phase * 0.8) * 0.65 : 0
-        x += unitX * (influence * 22 + ripple) - unitY * swirl + idleX
-        y += unitY * (influence * 22 + ripple) + unitX * swirl + idleY
+        const ripple = influence * Math.sin(time / 100 + dot.phase) * 4 * interactionScale
+        const swirl = influence * Math.cos(time / 140 + dot.phase) * 10 * interactionScale
+        const idleX = visible ? Math.sin(time / 1500 + dot.phase) * 0.8 : 0
+        const idleY = visible ? Math.cos(time / 1700 + dot.phase * 0.8) * 0.8 : 0
+        const targetOffsetX = unitX * (influence * 36 * interactionScale + ripple) - unitY * swirl + idleX
+        const targetOffsetY = unitY * (influence * 36 * interactionScale + ripple) + unitX * swirl + idleY
+        dot.offsetX += (targetOffsetX - dot.offsetX) * 0.22
+        dot.offsetY += (targetOffsetY - dot.offsetY) * 0.22
+        x += dot.offsetX
+        y += dot.offsetY
 
         context.globalAlpha = Math.min(1, 0.74 + (dot.depth + 1) * 0.13 + influence * 0.18 + (visible ? (Math.sin(time / 520 + dot.phase) + 1) * 0.035 : 0))
-        context.fillStyle = '#ffffff'
+        context.fillStyle = dotColor
         context.beginPath()
         context.arc(x, y, dot.radius + influence * 1.1, 0, Math.PI * 2)
         context.fill()
@@ -134,6 +142,8 @@ export default function InteractivePortrait({ src, alt }: Props) {
               depth: (brightness / 255 - 0.5) * 2,
               radius: 0.75 + (brightness / 255) * 0.7,
               phase: x * 0.18 + y * 0.11,
+              offsetX: 0,
+              offsetY: 0,
             })
           }
         }
@@ -143,12 +153,12 @@ export default function InteractivePortrait({ src, alt }: Props) {
     source.src = src
 
     const move = (event: PointerEvent) => {
-      if (reduce) return
       const bounds = target.getBoundingClientRect()
       pointer.x = event.clientX - bounds.left
       pointer.y = event.clientY - bounds.top
-      pointer.yaw = ((pointer.x / bounds.width) - 0.5) * 0.34
-      pointer.pitch = ((pointer.y / bounds.height) - 0.5) * -0.22
+      const interactionScale = reduce ? 0.62 : 1
+      pointer.yaw = ((pointer.x / bounds.width) - 0.5) * 0.42 * interactionScale
+      pointer.pitch = ((pointer.y / bounds.height) - 0.5) * -0.3 * interactionScale
       pointer.active = true
       schedule()
     }

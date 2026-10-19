@@ -67,7 +67,7 @@ export default function Experience() {
                     />
                   )}
                   <div className="flex items-center gap-2.5">
-                    <span className="grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white p-1 shadow-sm dark:bg-white/90">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm">
                       <Image src={e.logo} alt="" width={20} height={20} className="h-5 w-5 object-contain" unoptimized />
                     </span>
                     <div className={cn('text-sm font-medium transition-colors', on ? 'text-fg' : 'text-fg-muted group-hover:text-fg')}>
@@ -95,7 +95,7 @@ export default function Experience() {
                   <div>
                     <h3 className="font-display text-xl font-semibold text-fg">{exp.role}</h3>
                     <div className="mt-2 flex items-center gap-2.5 text-sm font-medium text-accent">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white p-1 shadow-sm dark:bg-white/90">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm">
                         <Image src={exp.logo} alt={`${exp.company} logo`} width={22} height={22} className="h-[22px] w-[22px] object-contain" unoptimized />
                       </span>
                       {exp.company}

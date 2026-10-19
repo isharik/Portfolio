@@ -185,15 +185,17 @@ body {
   will-change: transform;
 }
 .portrait-reference {
-  opacity: 0.42;
+  opacity: 0.34;
   filter: brightness(1.18) contrast(1.12) drop-shadow(0 15px 18px rgba(0, 0, 0, 0.16));
 }
+.dark .portrait-reference { opacity: 0.26; }
 .portrait-dots {
   pointer-events: none;
   mix-blend-mode: screen;
   z-index: 2;
-  filter: drop-shadow(0 10px 16px rgba(91, 181, 214, 0.24));
+  filter: drop-shadow(0 5px 9px rgba(38, 53, 92, 0.18));
 }
+.dark .portrait-dots { filter: drop-shadow(0 7px 12px rgba(91, 181, 214, 0.24)); }
 .portrait-invite {
   position: absolute;
   z-index: 6;
