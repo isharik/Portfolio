@@ -181,7 +181,10 @@ body {
 .portrait-surface {
   transition: transform 240ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
-.portrait-light-image { display: block; }
+.portrait-light-image {
+  display: block;
+  filter: brightness(0) saturate(100%) drop-shadow(0 0 1px var(--portrait-edge));
+}
 .portrait-dark-image { display: none; }
 .dark .portrait-light-image { display: none; }
 .dark .portrait-dark-image {

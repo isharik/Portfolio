@@ -19,7 +19,7 @@ export default function InteractivePortrait({ src, alt }: Props) {
         onClick={() => setGreetingIndex((current) => (current === null ? 0 : (current + 1) % greetings.length))}
       >
         <span className="portrait-surface absolute inset-0 block">
-          <Image src="/profile.jpg" alt={alt} fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-light-image" />
+          <Image src="/profile-clean.png" alt={alt} fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-light-image" />
           <Image src={src} alt="" fill priority sizes="(max-width: 640px) 256px, 288px" className="object-contain portrait-dark-image" aria-hidden="true" />
         </span>
         <span className="portrait-invite" aria-hidden>Say hello <span>↖</span></span>
