@@ -21,8 +21,8 @@ const GREETINGS = [
   'Vanakkam',
   'Salaam',
 ]
-const FIRST_HOLD = 760
-const STEP = 300
+const FIRST_HOLD = 520
+const STEP = 250
 
 /**
  * Lightweight, skippable greeting sequence. Static backdrop and opacity-only
@@ -47,7 +47,7 @@ export default function Preloader() {
     let timer = window.setTimeout(function tick() {
       idx += 1
       if (idx >= GREETINGS.length) {
-        timer = window.setTimeout(() => setVisible(false), 420)
+        timer = window.setTimeout(() => setVisible(false), 340)
         return
       }
       setIndex(idx)
@@ -65,7 +65,7 @@ export default function Preloader() {
           className="preloader-root fixed inset-0 z-[100] cursor-pointer select-none"
           initial={false}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.28, ease: OUT }}
+          transition={{ duration: 0.24, ease: OUT }}
           onClick={() => setVisible(false)}
           role="status"
           aria-label="Loading"
@@ -79,7 +79,7 @@ export default function Preloader() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.17, ease: 'easeInOut' }}
+                    transition={{ duration: 0.2, ease: OUT }}
                     className="absolute inset-0 flex items-center justify-center text-center font-display font-bold tracking-tight text-white"
                     style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
                   >
@@ -93,7 +93,7 @@ export default function Preloader() {
                 <div className="h-px w-44 overflow-hidden rounded-full bg-white/15">
                   <div
                     className="h-full rounded-full bg-white/70"
-                    style={{ width: `${progress}%`, transition: 'width 0.28s cubic-bezier(0.2,0.75,0.25,1)' }}
+                    style={{ width: `${progress}%`, transition: 'width 0.22s cubic-bezier(0.2,0.75,0.25,1)' }}
                   />
                 </div>
                 <p className="font-mono text-[11px] tracking-wide text-white/40">click anywhere to skip</p>
