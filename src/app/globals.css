@@ -183,8 +183,9 @@ body {
 }
 .portrait-reference {
   opacity: 1;
-  filter: drop-shadow(0 0 1px var(--portrait-edge));
+  filter: brightness(0) saturate(100%) drop-shadow(0 0 1px var(--portrait-edge));
 }
+.dark .portrait-reference { filter: drop-shadow(0 0 1px var(--portrait-edge)); }
 .portrait-invite {
   position: absolute;
   z-index: 6;
@@ -302,32 +303,19 @@ html.js .preloader-root {
   display: block;
 }
 
-/* Living background for the intro. Higher specificity + !important so these
-   keep animating even under the global prefers-reduced-motion reset — the
-   intro is an explicitly-requested, short, skippable flourish. */
-/* center-scale + shimmer: never exposes an edge (unlike translate) */
-@keyframes pl-streaks {
-  0%, 100% { transform: scale(1); opacity: 0.68; }
-  50% { transform: scale(1.05); opacity: 1; }
-}
-/* pan the tiling via background-position — seamless, no edge gap */
-@keyframes pl-dots {
-  from { background-position: 0 0; }
-  to { background-position: 20px 20px; }
-}
-@keyframes pl-glow {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-  50% { transform: translate(2.5%, 3.5%) scale(1.16); opacity: 1; }
-}
-
-/* App background — gently alive (kept subtle; runs even under reduced motion
-   because the aliveness is requested, but it is slow and low-amplitude). */
+/* App background — subtle and static outside the welcome screen. */
 .app-glow { opacity: 0.82; }
 @keyframes app-shimmer {
   0%, 100% { opacity: 0.78; }
   50% { opacity: 1; }
 }
 .app-streaks { opacity: 0.86; }
+.preloader-root .app-streaks { animation: app-shimmer 18s ease-in-out infinite; }
+.preloader-root .app-glow { animation: app-shimmer 14s ease-in-out infinite reverse; }
+@media (prefers-reduced-motion: reduce) {
+  .preloader-root .app-streaks,
+  .preloader-root .app-glow { animation: none; }
+}
 
 /* Project strip: one expansive project with a deliberate run of preview slats.
    Images stay mounted during selection, preventing the prior image flash. */

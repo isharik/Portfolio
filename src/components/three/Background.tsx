@@ -13,13 +13,12 @@ const BASE_MASK =
   'radial-gradient(125% 100% at 0% 0%, rgb(0,0,0) 0%, rgba(0,0,0,0.224) 88.2883%, rgba(0,0,0,0) 100%)'
 
 /**
- * App-wide ambient background: the same charcoal→black (dark) / soft-light
- * pattern as the intro, themed via tokens so text stays readable in both
- * modes. CSS-only — no WebGL, no render loop.
+ * App-wide ambient background. The overlay option reuses this exact theme-aware
+ * treatment behind the welcome screen. CSS-only — no WebGL or render loop.
  */
-export default function Background() {
+export default function Background({ overlay = false }: { overlay?: boolean } = {}) {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div aria-hidden className={overlay ? 'pointer-events-none absolute inset-0 z-0 overflow-hidden' : 'pointer-events-none fixed inset-0 -z-10 overflow-hidden'}>
       {/* Base gradient */}
       <div className="absolute inset-0" style={{ background: 'var(--pattern-base)' }} />
 

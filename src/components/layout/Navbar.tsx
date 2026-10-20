@@ -17,14 +17,23 @@ export default function Navbar() {
   // Scroll state: glass after 20px, hide when scrolling down past the hero
   useEffect(() => {
     let last = window.scrollY
+    let frame = 0
     const onScroll = () => {
-      const y = window.scrollY
-      setScrolled(y > 20)
-      setHidden(y > last && y > 400 && !open)
-      last = y
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        const y = window.scrollY
+        setScrolled(y > 20)
+        const shouldHide = y > last && y > 400 && !open
+        setHidden(shouldHide)
+        last = y
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [open])
 
   // Active section via IntersectionObserver

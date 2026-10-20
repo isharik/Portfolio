@@ -41,8 +41,8 @@ export default function MagneticButton({
   const ref = useRef<HTMLDivElement>(null)
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
-  const x = useSpring(mx, { stiffness: 220, damping: 18, mass: 0.4 })
-  const y = useSpring(my, { stiffness: 220, damping: 18, mass: 0.4 })
+  const x = useSpring(mx, { stiffness: 320, damping: 30, mass: 0.28 })
+  const y = useSpring(my, { stiffness: 320, damping: 30, mass: 0.28 })
 
   const handleMove = (e: React.MouseEvent) => {
     if (reduce || !ref.current) return
