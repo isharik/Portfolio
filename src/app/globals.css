@@ -336,7 +336,10 @@ html.js .preloader-root {
   gap: 0.75rem;
   height: clamp(15rem, 32vw, 21rem);
   overflow: hidden;
+  opacity: 1;
+  transition: opacity 360ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
+.project-rail-fading { opacity: 0; }
 .project-rail-panel {
   position: relative;
   flex: 0 0 1.4rem;
@@ -345,7 +348,7 @@ html.js .preloader-root {
   border-radius: 0.75rem;
   background: var(--surface-muted);
   cursor: pointer;
-  transition: flex-basis 380ms var(--ease-out), filter 200ms ease-out;
+  transition: flex-basis 420ms cubic-bezier(0.2, 0.75, 0.25, 1), filter 200ms ease-out;
 }
 .project-rail-panel:hover { filter: brightness(1.06); }
 .project-rail-panel-active { flex-basis: min(48vw, 34rem); }

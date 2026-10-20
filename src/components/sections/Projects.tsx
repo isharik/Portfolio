@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
@@ -37,9 +37,36 @@ function ProjectVisual({ project, index }: { project: Project; index: number }) 
 export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
+  const [switchPhase, setSwitchPhase] = useState<'idle' | 'out' | 'in'>('idle')
+  const fadeOutTimer = useRef<number | null>(null)
+  const fadeInTimer = useRef<number | null>(null)
   const activeProject = projects[active]
   const rail = useMemo(() => [...projects.slice(active), ...projects.slice(0, active)], [active])
-  const step = (direction: number) => setActive((current) => (current + direction + projects.length) % projects.length)
+
+  useEffect(() => () => {
+    if (fadeOutTimer.current !== null) window.clearTimeout(fadeOutTimer.current)
+    if (fadeInTimer.current !== null) window.clearTimeout(fadeInTimer.current)
+  }, [])
+
+  const selectProject = (nextIndex: number) => {
+    if (nextIndex === active && switchPhase === 'idle') return
+    if (fadeOutTimer.current !== null) window.clearTimeout(fadeOutTimer.current)
+    if (fadeInTimer.current !== null) window.clearTimeout(fadeInTimer.current)
+    if (reduce) {
+      setActive(nextIndex)
+      setSwitchPhase('idle')
+      return
+    }
+
+    setSwitchPhase('out')
+    fadeOutTimer.current = window.setTimeout(() => {
+      setActive(nextIndex)
+      setSwitchPhase('in')
+      fadeInTimer.current = window.setTimeout(() => setSwitchPhase('idle'), 440)
+    }, 220)
+  }
+
+  const step = (direction: number) => selectProject((active + direction + projects.length) % projects.length)
 
   return (
     <section id="projects" className="relative px-5 py-24 sm:px-6 sm:py-32">
@@ -56,15 +83,15 @@ export default function Projects() {
 
         <Reveal delay={0.1} className="mt-12">
           <div className="mb-4 flex justify-end gap-2">
-            <button type="button" aria-label="Previous project" onClick={() => step(-1)} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted"><ArrowLeft size={18} /></button>
-            <button type="button" aria-label="Next project" onClick={() => step(1)} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted"><ArrowRight size={18} /></button>
+            <button type="button" aria-label="Previous project" onClick={() => step(-1)} disabled={switchPhase !== 'idle'} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted disabled:cursor-wait"><ArrowLeft size={18} /></button>
+            <button type="button" aria-label="Next project" onClick={() => step(1)} disabled={switchPhase !== 'idle'} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted disabled:cursor-wait"><ArrowRight size={18} /></button>
           </div>
 
-          <div className="project-rail" role="tablist" aria-label="Featured projects">
+          <div className={cn('project-rail', switchPhase === 'out' && 'project-rail-fading')} role="tablist" aria-label="Featured projects">
             {rail.map((project, railIndex) => {
               const actualIndex = projects.indexOf(project)
               return (
-                <button key={project.title} type="button" role="tab" aria-selected={actualIndex === active} aria-label={`Show ${project.title}`} onClick={() => setActive(actualIndex)} className={cn('project-rail-panel', railIndex === 0 && 'project-rail-panel-active')}>
+                <button key={project.title} type="button" role="tab" aria-selected={actualIndex === active} aria-label={`Show ${project.title}`} onClick={() => selectProject(actualIndex)} disabled={switchPhase !== 'idle'} className={cn('project-rail-panel', railIndex === 0 && 'project-rail-panel-active')}>
                   {railIndex === 0 ? (
                     <motion.div key={project.title} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.42, ease: OUT }} className="absolute inset-0">
                       <ProjectVisual project={project} index={actualIndex} />
@@ -76,7 +103,7 @@ export default function Projects() {
             })}
           </div>
 
-          <motion.article key={activeProject.title} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }} className="mt-7 grid gap-5 rounded-2xl border border-border bg-surface/45 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-6">
+          <motion.article initial={false} animate={{ opacity: switchPhase === 'out' ? 0 : 1, y: switchPhase === 'in' ? [4, 0] : 0 }} transition={{ duration: switchPhase === 'out' ? 0.2 : 0.34, ease: OUT }} className="mt-7 grid gap-5 rounded-2xl border border-border bg-surface/45 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-6">
             <div>
               <div className="font-mono text-[11px] uppercase tracking-widest text-accent">{activeProject.tagline}</div>
               <h3 className="mt-2 font-display text-2xl font-semibold text-fg">{activeProject.title}</h3>
