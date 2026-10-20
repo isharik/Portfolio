@@ -178,12 +178,23 @@ body {
 .portrait-tilt {
   -webkit-tap-highlight-color: transparent;
 }
+.portrait-tilt::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 4% 2%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 48%, #111827 0%, #111827 34%, rgba(17, 24, 39, 0.88) 48%, rgba(17, 24, 39, 0) 76%);
+  opacity: 0.92;
+}
+.dark .portrait-tilt::before { opacity: 0; }
 .portrait-surface {
+  z-index: 1;
   transition: transform 240ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 .portrait-reference {
   opacity: 1;
-  filter: brightness(0) saturate(100%) drop-shadow(0 0 1px var(--portrait-edge));
+  filter: drop-shadow(0 0 1px var(--portrait-edge));
 }
 .dark .portrait-reference { filter: drop-shadow(0 0 1px var(--portrait-edge)); }
 .portrait-invite {

@@ -28,7 +28,7 @@ export default function Footer() {
               <span className="font-display text-sm font-semibold text-fg">{profile.name}</span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-fg-muted">
-              {profile.role} · {profile.location}
+              Customer Support &amp; AI · {profile.location}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
