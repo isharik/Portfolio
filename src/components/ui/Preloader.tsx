@@ -7,20 +7,20 @@ const OUT = [0.23, 1, 0.32, 1] as const
 
 // "Hello" around the world (native script where it reads well)
 const GREETINGS = [
-  'Hello',
-  'नमस्ते',
-  'Hola',
-  'Bonjour',
-  'Ciao',
-  'こんにちは',
-  '你好',
-  '안녕하세요',
-  'مرحبا',
-  'Olá',
-  'Hallo',
-  'Привет',
-  'Vanakkam',
-  'Salaam',
+  'Hello 👋',
+  'नमस्ते 🙏',
+  'Hola ☀️',
+  'Bonjour 🥐',
+  'Ciao 🤌',
+  'こんにちは 🌸',
+  '你好 🏮',
+  '안녕하세요 💜',
+  'مرحبا 🌙',
+  'Olá 🎉',
+  'Hallo 🌷',
+  'Привет ❄️',
+  'Vanakkam 🌺',
+  'Salaam ✨',
 ]
 const FIRST_HOLD = 640
 const STEP = 340
