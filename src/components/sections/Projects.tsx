@@ -14,14 +14,17 @@ function ProjectPreview({ project, index, active }: { project: Project; index: n
     <div className="project-showcase-preview">
       <div className="project-showcase-screen">
         {project.image ? (
-          <Image
-            src={project.image}
-            alt={`${project.title} project preview`}
-            fill
-            sizes="(min-width: 1024px) 48vw, (min-width: 640px) 60vw, 94vw"
-            priority={active}
-            className={cn('project-showcase-image', project.imageFit === 'contain' ? 'object-contain' : 'object-cover')}
-          />
+          <>
+            {project.imageFit === 'contain' && <Image src={project.image} alt="" fill sizes="(min-width: 1024px) 48vw, (min-width: 640px) 60vw, 94vw" className="project-showcase-image-backdrop" aria-hidden="true" />}
+            <Image
+              src={project.image}
+              alt={`${project.title} project preview`}
+              fill
+              sizes="(min-width: 1024px) 48vw, (min-width: 640px) 60vw, 94vw"
+              priority={active}
+              className={cn('project-showcase-image', project.imageFit === 'contain' ? 'object-contain' : 'object-cover')}
+            />
+          </>
         ) : (
           <div className="project-showcase-placeholder">
             <span className="project-showcase-placeholder-index">{String(index + 1).padStart(2, '0')}</span>
@@ -77,9 +80,9 @@ export default function Projects() {
                 const depth = direction > 0
                   ? (index - active + projects.length) % projects.length
                   : (active - index + projects.length) % projects.length
-                const stackX = ((index * 37 + 11) % 49) - 24
-                const stackY = 8 + ((index * 19 + 3) % 13) + depth * 3
-                const stackTilt = ((index * 17 + 5) % 17) - 8
+                const stackX = ((index * 37 + 11) % 81) - 40
+                const stackY = 5 + ((index * 19 + 3) % 25) + depth * 4
+                const stackTilt = ((index * 17 + 5) % 27) - 13
                 const stackSide = index % 2 === 0 ? -1 : 1
                 return (
                   <motion.div

@@ -31,8 +31,13 @@ export default function ParticleTitle({ lead, accent }: Props) {
     let finished = false
     let started = false
     let welcomeComplete = false
+    let cycling = false
+    let currentProgress = 1
+    let cycleTimer: number | null = null
 
     const paint = (progress: number) => {
+      currentProgress = clamp(progress)
+      progress = currentProgress
       ctx.clearRect(0, 0, width, height)
       const styles = getComputedStyle(document.documentElement)
       const ink = styles.getPropertyValue('--fg').trim() || '#16161a'
@@ -52,6 +57,32 @@ export default function ParticleTitle({ lead, accent }: Props) {
       ctx.globalAlpha = 1
     }
 
+    const animateBetween = (from: number, to: number, duration: number, onComplete: () => void) => {
+      const phaseStart = performance.now()
+      const tick = (now: number) => {
+        if (document.hidden) { frame = 0; paint(1); cycling = false; return }
+        const t = clamp((now - phaseStart) / duration)
+        const eased = t * t * (3 - 2 * t)
+        paint(from + (to - from) * eased)
+        if (t < 1) frame = requestAnimationFrame(tick)
+        else { frame = 0; onComplete() }
+      }
+      frame = requestAnimationFrame(tick)
+    }
+
+    const scheduleDustLoop = () => {
+      if (reducedMotion.matches || document.hidden || !finished || !welcomeComplete || cycleTimer !== null) return
+      cycleTimer = window.setTimeout(() => {
+        cycleTimer = null
+        cycling = true
+        // Let the assembled heading remain comfortably readable between dust passes.
+        animateBetween(1, 0, 1050, () => animateBetween(0, 1, 1450, () => {
+          cycling = false
+          scheduleDustLoop()
+        }))
+      }, 6200)
+    }
+
     const animate = (now: number) => {
       frame = 0
       const progress = clamp((now - startTime) / ASSEMBLY_DURATION)
@@ -60,6 +91,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
       else {
         finished = true
         paint(1)
+        scheduleDustLoop()
       }
     }
 
@@ -166,12 +198,15 @@ export default function ParticleTitle({ lead, accent }: Props) {
       const shouldAnimate = welcomeComplete && !started && !finished && !reducedMotion.matches
       if (frame) cancelAnimationFrame(frame)
       frame = 0
+      if (cycleTimer !== null) window.clearTimeout(cycleTimer)
+      cycleTimer = null
+      cycling = false
       drawTitle(shouldAnimate)
       if (wasAnimating && !reducedMotion.matches && !finished) {
         startTime = performance.now() - progress * ASSEMBLY_DURATION
         paint(progress)
         frame = requestAnimationFrame(animate)
-      }
+      } else if (finished) scheduleDustLoop()
     })
     resizeObserver.observe(wrap)
 
@@ -197,14 +232,23 @@ export default function ParticleTitle({ lead, accent }: Props) {
     const themeObserver = new MutationObserver(() => paint(finished ? 1 : clamp((performance.now() - startTime) / ASSEMBLY_DURATION)))
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
     const onVisible = () => {
-      if (document.hidden) return
+      if (document.hidden) {
+        if (frame) cancelAnimationFrame(frame)
+        frame = 0
+        if (cycleTimer !== null) window.clearTimeout(cycleTimer)
+        cycleTimer = null
+        if (cycling) { cycling = false; paint(1) }
+        return
+      }
       if (!started && !finished) startWhenVisible()
       else if (started && !finished && !frame) frame = requestAnimationFrame(animate)
+      else if (finished) scheduleDustLoop()
     }
     document.addEventListener('visibilitychange', onVisible)
 
     return () => {
       if (frame) cancelAnimationFrame(frame)
+      if (cycleTimer !== null) window.clearTimeout(cycleTimer)
       visibility.disconnect()
       themeObserver.disconnect()
       resizeObserver.disconnect()
