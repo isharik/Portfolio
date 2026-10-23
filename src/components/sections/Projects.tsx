@@ -37,6 +37,7 @@ function ProjectPreview({ project, index, active }: { project: Project; index: n
 export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
+  const [direction, setDirection] = useState(1)
   const activeProject = projects[active]
 
   useEffect(() => {
@@ -49,7 +50,10 @@ export default function Projects() {
     })
   }, [])
 
-  const step = (turn: number) => setActive((current) => (current + turn + projects.length) % projects.length)
+  const step = (turn: number) => {
+    setDirection(turn)
+    setActive((current) => (current + turn + projects.length) % projects.length)
+  }
 
   return (
     <section id="projects" className="relative px-5 py-24 sm:px-6 sm:py-32">
@@ -68,25 +72,28 @@ export default function Projects() {
             <div className="project-showcase-visual" aria-label={`${activeProject.title} preview`}>
               {projects.map((project, index) => {
                 const isActive = index === active
-                const forward = (index - active + projects.length) % projects.length
-                const signedDepth = forward > projects.length / 2 ? forward - projects.length : forward
-                const depth = Math.abs(signedDepth)
-                // Stable per-card angles give the deck the reference's tilted stack
-                // without generating a new random pose on every render.
-                const restingAngle = signedDepth * 1.15 + (((index * 13 + 7) % 7) - 3) * 0.35
+                // Order the deck in the direction of travel so the next card is
+                // visibly waiting behind the current one, then animate it forward.
+                const depth = direction > 0
+                  ? (index - active + projects.length) % projects.length
+                  : (active - index + projects.length) % projects.length
+                const stackX = ((index * 37 + 11) % 49) - 24
+                const stackY = 8 + ((index * 19 + 3) % 13) + depth * 3
+                const stackTilt = ((index * 17 + 5) % 17) - 8
+                const stackSide = index % 2 === 0 ? -1 : 1
                 return (
                   <motion.div
                     key={project.title}
                     className="project-showcase-page"
                     aria-hidden={!isActive}
-                    style={{ zIndex: isActive ? 999 : projects.length - depth, transformOrigin: '50% 82%' }}
+                    style={{ zIndex: isActive ? 999 : projects.length - depth, transformOrigin: '50% 82%', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                     initial={false}
                     animate={isActive
-                      ? { opacity: 1, scale: 1, z: 0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: reduce ? 0 : [0, -18, 0] }
-                      : { opacity: 0.7, scale: 1 - depth * 0.022, z: -depth * 42, rotate: restingAngle, rotateX: 1.5 + depth * 0.35, rotateY: signedDepth * 2.4, x: signedDepth * 9, y: depth * 7 }}
+                      ? { opacity: 1, scale: 1, z: 0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: reduce ? 0 : [0, -24, 0] }
+                      : { opacity: depth > 3 ? 0.62 : 0.82, scale: Math.max(0.84, 1 - depth * 0.026), z: -depth * 54, rotate: stackTilt, rotateX: reduce ? 0 : 2 + depth * 0.7, rotateY: reduce ? 0 : stackSide * (5 + depth), x: stackX, y: stackY }}
                     transition={reduce
-                      ? { duration: 0 }
-                      : { type: 'spring', stiffness: 115, damping: 23, mass: 0.82 }}
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : { type: 'spring', stiffness: 95, damping: 20, mass: 0.85 }}
                   >
                     <ProjectPreview project={project} index={index} active={isActive} />
                   </motion.div>
