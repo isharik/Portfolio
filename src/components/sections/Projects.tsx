@@ -2,24 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
-const PAGE_TURN = { duration: 0.58, ease: [0.22, 0.72, 0.18, 1] as const }
-const pageTurnVariants = {
-  enter: (turn: number) => ({ opacity: 0.7, rotateY: turn > 0 ? 76 : -76, x: turn > 0 ? 20 : -20 }),
-  center: { opacity: 1, rotateY: 0, x: 0 },
-  exit: (turn: number) => ({ opacity: 0.68, rotateY: turn > 0 ? -76 : 76, x: turn > 0 ? -20 : 20 }),
-}
-const reducedPageVariants = {
-  enter: { opacity: 1 },
-  center: { opacity: 1 },
-  exit: { opacity: 0 },
-}
+const PAGE_TURN = { duration: 0.38, ease: [0.32, 0.72, 0.18, 1] as const }
 
 function ProjectPreview({ project, index, active }: { project: Project; index: number; active: boolean }) {
   return (
@@ -52,8 +42,9 @@ export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState(1)
-  const [isAnimating, setIsAnimating] = useState(false)
-  const detailTimer = useRef<number | null>(null)
+  const [flipPhase, setFlipPhase] = useState<'idle' | 'out' | 'in'>('idle')
+  const pendingIndex = useRef<number | null>(null)
+  const isAnimating = flipPhase !== 'idle'
   const activeProject = projects[active]
 
   useEffect(() => {
@@ -64,18 +55,23 @@ export default function Projects() {
       image.src = project.image
       image.decode?.().catch(() => undefined)
     })
-    return () => {
-      if (detailTimer.current !== null) window.clearTimeout(detailTimer.current)
-    }
   }, [])
 
   const selectProject = (nextIndex: number, turnDirection: number) => {
     if (nextIndex === active || isAnimating) return
     setDirection(turnDirection)
-    setIsAnimating(true)
-    setActive(nextIndex)
-    if (detailTimer.current !== null) window.clearTimeout(detailTimer.current)
-    detailTimer.current = window.setTimeout(() => setIsAnimating(false), reduce ? 0 : 640)
+    pendingIndex.current = nextIndex
+    setFlipPhase('out')
+  }
+
+  const finishTurn = () => {
+    if (flipPhase === 'out' && pendingIndex.current !== null) {
+      setActive(pendingIndex.current)
+      pendingIndex.current = null
+      setFlipPhase('in')
+    } else if (flipPhase === 'in') {
+      setFlipPhase('idle')
+    }
   }
 
   const step = (turn: number) => selectProject((active + turn + projects.length) % projects.length, turn)
@@ -95,21 +91,19 @@ export default function Projects() {
         <Reveal delay={0.1} className="mt-12">
           <div className="project-showcase" aria-label="Featured project">
             <div className="project-showcase-visual" aria-label={`${activeProject.title} preview`}>
-              <AnimatePresence initial={false} custom={direction} mode="sync">
-                <motion.div
-                  key={activeProject.title}
-                  className="project-showcase-page"
-                  custom={direction}
-                  variants={reduce ? reducedPageVariants : pageTurnVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={reduce ? { duration: 0 } : PAGE_TURN}
-                  style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', backfaceVisibility: 'hidden' }}
-                >
-                  <ProjectPreview project={activeProject} index={active} active />
-                </motion.div>
-              </AnimatePresence>
+              <motion.div
+                key={activeProject.title}
+                className="project-showcase-page"
+                initial={flipPhase === 'in' && !reduce ? { rotateY: direction > 0 ? 82 : -82, x: direction > 0 ? 18 : -18, opacity: 0.8 } : false}
+                animate={flipPhase === 'out' && !reduce
+                  ? { rotateY: direction > 0 ? -82 : 82, x: direction > 0 ? -18 : 18, opacity: 0.78 }
+                  : { rotateY: 0, x: 0, opacity: 1 }}
+                transition={reduce ? { duration: 0 } : PAGE_TURN}
+                onAnimationComplete={finishTurn}
+                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', backfaceVisibility: 'hidden' }}
+              >
+                <ProjectPreview project={activeProject} index={active} active />
+              </motion.div>
             </div>
 
             <article className={cn('project-showcase-details', isAnimating && 'is-changing')} aria-live="polite" aria-atomic="true">

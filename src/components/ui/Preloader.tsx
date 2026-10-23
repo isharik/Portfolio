@@ -42,6 +42,14 @@ export default function Preloader() {
     }
   }, [visible])
 
+  // Start the hero particle assembly as the welcome overlay finishes leaving,
+  // so visitors actually see the headline form instead of missing it behind it.
+  useEffect(() => {
+    if (visible) return
+    const timer = window.setTimeout(() => window.dispatchEvent(new Event('portfolio:welcome-complete')), 300)
+    return () => window.clearTimeout(timer)
+  }, [visible])
+
   // One clean timeline: hold "Hello", then flow, then exit. (setTimeout chain,
   // so the first word never double-fires.)
   useEffect(() => {

@@ -309,7 +309,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   opacity: 0.32;
 }
 .recruiter-art-hello {
-  position: absolute; z-index: 2; top: 50%; right: 20px; display: inline-flex;
+  position: absolute; z-index: 2; top: 68%; left: 142px; display: inline-flex;
   align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; transform: translateY(-50%);
   border: 1px solid rgba(30, 30, 38, 0.14); border-radius: 999px;
   background: rgba(255, 255, 255, 0.64); color: #29292f;
@@ -320,7 +320,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-art-hello span { transition: transform 180ms ease; }
 .recruiter-art-hello:hover span { transform: translate(2px, -2px); }
 .recruiter-art-greeting {
-  position: absolute; z-index: 4; top: 9px; right: 9px; max-width: calc(100% - 18px);
+  position: absolute; z-index: 4; top: 35%; left: 142px; max-width: calc(100% - 154px);
   padding: 0.42rem 0.62rem; border: 1px solid rgba(30, 30, 38, 0.12);
   border-radius: 11px 11px 3px 11px; background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 6px 18px rgba(25, 25, 30, 0.12); color: #25252b;
@@ -328,13 +328,13 @@ html.js .particle-title.is-ready .particle-title-semantic {
 }
 @keyframes recruiter-greeting-in { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .recruiter-art-avatar {
-  position: absolute; z-index: 1; top: 50%; left: 50%; width: 104px; height: 134px;
-  overflow: hidden; padding: 0; transform: translate(-50%, -50%);
+  position: absolute; z-index: 1; top: 50%; left: 18px; width: 108px; height: 144px;
+  overflow: hidden; padding: 0; transform: translateY(-50%);
   border: 1px solid rgba(35, 35, 42, 0.14); border-radius: 15px;
   background: #fff; cursor: pointer;
   transition: transform 260ms var(--ease-out), box-shadow 260ms ease;
 }
-.recruiter-art-avatar:hover { transform: translate(-50%, -52%) scale(1.02); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); }
+.recruiter-art-avatar:hover { transform: translateY(-52%) scale(1.02); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); }
 .recruiter-art-avatar img { object-fit: contain; }
 .recruiter-player-heading { display: flex; align-items: center; gap: 10px; min-width: 0; margin-top: 15px; }
 .recruiter-player-copy {
@@ -525,7 +525,7 @@ html.js .preloader-root {
 
 /* Single featured-project spread, following the supplied two-column reference. */
 .project-showcase { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
-.project-showcase-visual { position: relative; min-width: 0; min-height: 18rem; aspect-ratio: 1.38; perspective: 1400px; }
+.project-showcase-visual { position: relative; min-width: 0; min-height: 18rem; aspect-ratio: 1.38; perspective: 900px; }
 .project-showcase-page { position: absolute; inset: 0; transform-style: preserve-3d; }
 .project-showcase-preview { position: absolute; inset: 0; isolation: isolate; }
 .project-showcase-backdrop { position: absolute; inset: 3% 4% 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface-muted); }

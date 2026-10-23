@@ -30,6 +30,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
     let dpr = 1
     let finished = false
     let started = false
+    let welcomeComplete = false
 
     const paint = (progress: number) => {
       ctx.clearRect(0, 0, width, height)
@@ -164,7 +165,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
     resizeObserver.observe(wrap)
 
     const startWhenVisible = () => {
-      if (started || finished) return
+      if (started || finished || !welcomeComplete) return
       if (reducedMotion.matches) { drawTitle(false); return }
       if (document.hidden) return
       started = true
@@ -172,6 +173,11 @@ export default function ParticleTitle({ lead, accent }: Props) {
       frame = requestAnimationFrame(animate)
     }
     drawTitle(false)
+    const onWelcomeComplete = () => {
+      welcomeComplete = true
+      startWhenVisible()
+    }
+    window.addEventListener('portfolio:welcome-complete', onWelcomeComplete)
     // The first draw establishes the scattered dots; reveal them when the heading enters view.
     const visibility = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) startWhenVisible()
@@ -192,6 +198,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
       themeObserver.disconnect()
       resizeObserver.disconnect()
       document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('portfolio:welcome-complete', onWelcomeComplete)
     }
   }, [accent, lead])
 
