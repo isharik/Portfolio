@@ -19,9 +19,9 @@ export default function Hero() {
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center justify-center px-5 py-28 sm:px-6">
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
-        {/* Frameless, transparent portrait with pointer-driven depth. */}
+        {/* Clean anime avatar badge on transparency. */}
         <div className="rise" style={rise(0.05)}>
-          <InteractivePortrait src={profile.photo} alt={`${profile.name}, ${profile.role}`} />
+          <InteractivePortrait alt="Minimal anime avatar" />
         </div>
 
         {/* Status */}

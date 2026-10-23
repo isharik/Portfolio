@@ -33,7 +33,7 @@ All copy lives in one file — **`src/lib/content.ts`**. Update `profile`, `expe
 
 ## Profile photo
 
-Replace `public/profile.jpg` with your photo (keep the filename), or change `profile.photo` in `src/lib/content.ts`. It's loaded responsively via `next/image`.
+The home avatar is the transparent anime badge at `public/anime-avatar.png`.
 
 ## Resume button (optional)
 
