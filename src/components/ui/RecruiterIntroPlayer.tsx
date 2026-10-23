@@ -77,11 +77,13 @@ export default function RecruiterIntroPlayer() {
         onEnded={() => setPlaying(false)}
         onError={() => setError(true)}
       />
+      <span className="recruiter-player-doodle" aria-hidden="true">☺</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="120px" />
         </button>
+        <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
         <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
         <span className="recruiter-art-sticker recruiter-art-sticker-two" aria-hidden="true">🎧</span>
         <span className="recruiter-cd" aria-hidden="true"><i /></span>

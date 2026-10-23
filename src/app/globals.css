@@ -280,6 +280,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 /* Album-art intro player: intentional cover artwork, with a transparent,
    theme-aware glass player surface around it. */
 .recruiter-player {
+  position: relative;
   width: min(100%, 350px);
   padding: 24px 20px 26px;
   border: 1px solid var(--glass-border);
@@ -312,6 +313,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   content: '';
   opacity: 0.32;
 }
+.recruiter-player-doodle { position: absolute; z-index: 2; top: 3px; right: 23px; color: var(--fg-subtle); font-family: var(--font-display), sans-serif; font-size: 18px; line-height: 1; transform: rotate(12deg); }
 .recruiter-art-hello {
   position: absolute; z-index: 2; top: 68%; left: 142px; display: inline-flex;
   align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; transform: translateY(-50%);
@@ -340,12 +342,15 @@ html.js .particle-title.is-ready .particle-title-semantic {
 }
 .recruiter-art-avatar:hover { transform: translateY(-52%) scale(1.02); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); }
 .recruiter-art-avatar img { object-fit: contain; }
+.recruiter-avatar-doodle { position: absolute; z-index: 4; top: 31px; left: 11px; display: grid; width: 25px; height: 25px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); box-shadow: 0 3px 9px rgba(0,0,0,.14); font-size: 14px; transform: rotate(-10deg); transition: transform 220ms var(--ease-out); }
+.recruiter-album-art:hover .recruiter-avatar-doodle { transform: rotate(8deg) translateY(-2px); }
 .recruiter-art-sticker { position: absolute; z-index: 2; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
 .recruiter-art-sticker-one { top: 18px; left: 144px; color: var(--accent); font-size: 22px; transform: rotate(-12deg); animation: recruiter-sticker-float 3.6s ease-in-out infinite; }
 .recruiter-art-sticker-two { right: 18px; bottom: 24px; width: 27px; height: 27px; border: 1px solid var(--glass-border); border-radius: 9px; background: color-mix(in srgb, var(--surface) 82%, transparent); font-size: 14px; transform: rotate(8deg); animation: recruiter-sticker-float 4.2s ease-in-out -1.2s infinite; }
-.recruiter-cd { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; width: 48px; aspect-ratio: 1; place-items: center; border: 1px solid rgba(255,255,255,.48); border-radius: 50%; background: repeating-radial-gradient(circle at center, transparent 0 3px, rgba(255,255,255,.17) 3.5px 4px), conic-gradient(from 18deg, #dce0e7, #8e93a0, #f2f3f5, #777d8b, #e4e7ed, #9fa4b0, #dce0e7); box-shadow: 0 5px 16px rgba(0,0,0,.2), inset 0 1px 4px rgba(255,255,255,.75); animation: recruiter-cd-spin 7s linear infinite; }
-.recruiter-cd::before { position: absolute; inset: 7px; border: 1px solid rgba(30,34,44,.18); border-radius: 50%; content: ''; }
-.recruiter-cd i { width: 9px; aspect-ratio: 1; border: 2px solid rgba(49,54,68,.42); border-radius: 50%; background: color-mix(in srgb, var(--surface) 80%, #858b9a); box-shadow: 0 0 0 2px rgba(255,255,255,.6); }
+.recruiter-cd { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; width: 48px; aspect-ratio: 1; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; background: repeating-radial-gradient(circle at center, transparent 0 3px, rgba(255,255,255,.12) 3.5px 4px), conic-gradient(from 0deg, #181a1f, #777b82 22deg, #24262b 61deg, #a3a6ac 88deg, #1b1d22 129deg, #656970 166deg, #202227 210deg, #92959b 244deg, #17191e 290deg, #555960 326deg, #181a1f); box-shadow: 0 5px 16px rgba(0,0,0,.3), inset 0 1px 4px rgba(255,255,255,.28); animation: recruiter-cd-spin 7s linear infinite; will-change: transform; }
+.recruiter-cd::before { position: absolute; inset: 7px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; content: ''; }
+.recruiter-cd::after { position: absolute; inset: 1px; border-radius: 50%; background: conic-gradient(from 12deg, transparent 0deg 240deg, rgba(255,255,255,.42) 270deg, rgba(255,255,255,.08) 302deg, transparent 326deg); content: ''; }
+.recruiter-cd i { position: relative; z-index: 1; width: 9px; aspect-ratio: 1; border: 2px solid rgba(28,30,35,.72); border-radius: 50%; background: #b7bac0; box-shadow: 0 0 0 2px rgba(220,222,226,.75); }
 @keyframes recruiter-cd-spin { to { transform: rotate(360deg); } }
 @keyframes recruiter-sticker-float { 50% { translate: 0 -4px; } }
 .recruiter-player-heading { display: flex; align-items: center; gap: 10px; min-width: 0; margin-top: 22px; }
@@ -472,7 +477,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
   font-size: 11px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .recruiter-player, .recruiter-art-avatar, .recruiter-cd, .recruiter-art-sticker { animation: none; transition: none; }
+  .recruiter-player, .recruiter-art-avatar, .recruiter-art-sticker { animation: none; transition: none; }
+  .recruiter-cd { animation: recruiter-cd-spin 28s linear infinite; }
   .recruiter-player:hover { transform: none; }
   .recruiter-wave.is-playing i { animation: none; transform: scaleY(0.8); }
   .particle-title-canvas { transition: none; }
@@ -544,12 +550,12 @@ html.js .preloader-root {
 /* Single featured-project spread, following the supplied two-column reference. */
 .project-showcase { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
 .project-showcase-visual { position: relative; min-width: 0; min-height: 18rem; aspect-ratio: 1.38; perspective: 900px; }
-.project-showcase-page { position: absolute; inset: 0; overflow: hidden; border-radius: 1rem; transform-style: preserve-3d; cursor: pointer; }
+.project-showcase-page { position: absolute; inset: 0; overflow: hidden; border-radius: 1rem; background: var(--surface); transform-style: preserve-3d; cursor: pointer; }
 .project-showcase-page[aria-hidden="true"] { pointer-events: none; }
-.project-showcase-preview { position: absolute; inset: 0; isolation: isolate; }
-.project-showcase-screen { position: absolute; inset: 0 0 5%; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 1rem; background: transparent; box-shadow: 0 22px 64px rgba(0, 0, 0, 0.18); }
+.project-showcase-preview { position: absolute; inset: 0; isolation: isolate; background: var(--surface); }
+.project-showcase-screen { position: absolute; inset: 0 0 5%; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 1rem; background: var(--surface); box-shadow: 0 22px 64px rgba(0, 0, 0, 0.18); }
 .project-showcase-image { transition: transform 700ms var(--ease-out); }
-.project-showcase-image-backdrop { z-index: 0; object-fit: cover; transform: scale(1.08); filter: blur(20px) saturate(0.82); opacity: 0.46; }
+.project-showcase-image-backdrop { z-index: 0; object-fit: cover; transform: scale(1.08); filter: blur(20px) saturate(0.82); opacity: 1; }
 .project-showcase-image { z-index: 1; }
 .project-showcase-screen:hover .project-showcase-image { transform: scale(1.018); }
 .project-showcase-placeholder { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(145deg, var(--surface-muted), var(--elevated)); color: var(--fg); font-size: clamp(1.5rem, 3vw, 2.3rem); font-weight: 600; }
@@ -579,9 +585,9 @@ html.js .preloader-root {
 /* Individual toolbox postcards with a subtle Windows XP-era UI cue. */
 .skills-postcard { background: var(--surface); }
 .skills-postcard-titlebar {
-  background: linear-gradient(180deg, #4a9af0 0%, #2778df 16%, #1261c9 86%, #0e55b8 100%);
-  box-shadow: inset 0 1px rgba(255,255,255,.55), inset 0 -1px rgba(0,31,94,.28);
-  text-shadow: 0 1px 1px rgba(0,28,82,.45);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, white) 0%, color-mix(in srgb, var(--surface) 90%, var(--fg)) 100%);
+  box-shadow: inset 0 1px rgba(255,255,255,.5), inset 0 -1px var(--border);
+  color: var(--fg);
 }
 .skills-window-close {
   display: grid;
@@ -589,16 +595,16 @@ html.js .preloader-root {
   height: 21px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(255,255,255,.8);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: linear-gradient(180deg, #ffb69d, #e65a40 54%, #ca321f);
-  box-shadow: inset 0 1px rgba(255,255,255,.75), 0 1px 2px rgba(0,0,0,.22);
-  color: white;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, white), color-mix(in srgb, var(--surface) 86%, var(--fg)) 54%, color-mix(in srgb, var(--surface) 78%, var(--fg)));
+  box-shadow: inset 0 1px rgba(255,255,255,.75), 0 1px 2px rgba(0,0,0,.16);
+  color: var(--fg-muted);
   font-family: Arial, sans-serif;
   font-size: 17px;
   font-weight: 700;
   line-height: 1;
-  text-shadow: 0 1px rgba(90,0,0,.5);
+  text-shadow: 0 1px rgba(255,255,255,.5);
 }
 .skills-postcard-body { background: var(--surface); box-shadow: inset 0 1px rgba(255,255,255,.24); }
 .skills-postcard-tag { background: color-mix(in srgb, var(--surface) 90%, var(--fg)); }

@@ -93,7 +93,7 @@ export default function Projects() {
                     initial={false}
                     animate={isActive
                       ? { opacity: 1, scale: 1, z: 0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: reduce ? 0 : [0, -24, 0] }
-                      : { opacity: depth > 3 ? 0.62 : 0.82, scale: Math.max(0.84, 1 - depth * 0.026), z: -depth * 54, rotate: stackTilt, rotateX: reduce ? 0 : 2 + depth * 0.7, rotateY: reduce ? 0 : stackSide * (5 + depth), x: stackX, y: stackY }}
+                      : { opacity: 1, scale: Math.max(0.84, 1 - depth * 0.026), z: -depth * 54, rotate: stackTilt, rotateX: reduce ? 0 : 2 + depth * 0.7, rotateY: reduce ? 0 : stackSide * (5 + depth), x: stackX, y: stackY }}
                     transition={reduce
                       ? { duration: 0.28, ease: 'easeOut' }
                       : { type: 'spring', stiffness: 95, damping: 20, mass: 0.85 }}
