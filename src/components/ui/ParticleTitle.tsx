@@ -125,12 +125,12 @@ export default function ParticleTitle({ lead, accent }: Props) {
       let seed = 8341
       const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
       dots = points.map((point) => {
-        const angle = random() * Math.PI * 2
-        const distance = 22 + random() * Math.min(110, width * 0.18)
+        const direction = random() < 0.5 ? -1 : 1
+        const distance = 34 + random() * Math.min(180, width * 0.3)
         return {
           ...point,
-          sx: point.x + Math.cos(angle) * distance,
-          sy: point.y + Math.sin(angle) * distance,
+          sx: direction < 0 ? -distance : width + distance,
+          sy: point.y + (random() - 0.5) * Math.min(100, height * 0.7),
           radius: 0.8 + random() * 0.62,
           delay: random(),
         }

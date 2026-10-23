@@ -3,7 +3,6 @@ import { type CSSProperties } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
-import InteractivePortrait from '@/components/ui/InteractivePortrait'
 import ParticleTitle from '@/components/ui/ParticleTitle'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
 import { profile } from '@/lib/content'
@@ -26,10 +25,6 @@ export default function Hero() {
         </div>
 
         <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="rise hero-portrait" style={rise(0.04)}>
-            <InteractivePortrait alt="Minimal anime avatar" />
-          </div>
-
           <div className="rise mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1" style={rise(0.2)}>
             <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
             <span className="font-mono text-[11px] tracking-wide text-fg-muted">{profile.availability}</span>
