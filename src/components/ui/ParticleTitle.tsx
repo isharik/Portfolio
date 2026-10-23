@@ -64,7 +64,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
     }
 
     const drawTitle = (animateOnce: boolean) => {
-      const nextWidth = wrap.clientWidth
+      const nextWidth = window.innerWidth
       const nextHeight = wrap.clientHeight
       if (dots.length && nextWidth === lastWidth && nextHeight === lastHeight) return
       width = nextWidth
@@ -72,6 +72,10 @@ export default function ParticleTitle({ lead, accent }: Props) {
       if (!width || !height) return
       lastWidth = width
       lastHeight = height
+      const wrapRect = wrap.getBoundingClientRect()
+      // Let particles travel from the actual viewport edges, while keeping the
+      // target text anchored to this title's normal layout position.
+      canvas.style.left = `${-wrapRect.left}px`
       dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
@@ -86,26 +90,29 @@ export default function ParticleTitle({ lead, accent }: Props) {
       maskCtx.textAlign = 'left'
       maskCtx.textBaseline = 'middle'
       const textAlign = getComputedStyle(wrap).textAlign
-      const fontSize = Math.min(58, Math.max(36, width * 0.08))
+      const layoutWidth = wrap.clientWidth
+      const fontSize = Math.min(58, Math.max(36, layoutWidth * 0.08))
       const font = getComputedStyle(document.documentElement).getPropertyValue('--font-display').trim() || 'system-ui'
       maskCtx.font = `600 ${fontSize}px ${font}, sans-serif`
       const leadWidth = maskCtx.measureText(`${lead} `).width
       const accentWidth = maskCtx.measureText(accent).width
-      const oneLine = leadWidth + accentWidth <= width - 20
-      const lines = oneLine ? 1 : 2
+      const oneLine = leadWidth + accentWidth <= layoutWidth - 20
       const lineHeight = fontSize * 1.12
       if (oneLine) {
-        const left = textAlign === 'left' ? 0 : (width - leadWidth - accentWidth) / 2
+        const left = textAlign === 'left'
+          ? wrapRect.left
+          : wrapRect.left + (layoutWidth - leadWidth - accentWidth) / 2
         maskCtx.fillStyle = '#000000'
         maskCtx.fillText(`${lead} `, left, height / 2)
         maskCtx.fillStyle = '#ffffff'
         maskCtx.fillText(accent, left + leadWidth, height / 2)
       } else {
         maskCtx.textAlign = textAlign === 'left' ? 'left' : 'center'
+        const left = textAlign === 'left' ? wrapRect.left : wrapRect.left + layoutWidth / 2
         maskCtx.fillStyle = '#000000'
-        maskCtx.fillText(lead, textAlign === 'left' ? 0 : width / 2, height / 2 - lineHeight / 2)
+        maskCtx.fillText(lead, left, height / 2 - lineHeight / 2)
         maskCtx.fillStyle = '#ffffff'
-        maskCtx.fillText(accent, textAlign === 'left' ? 0 : width / 2, height / 2 + lineHeight / 2)
+        maskCtx.fillText(accent, left, height / 2 + lineHeight / 2)
       }
 
       const pixels = maskCtx.getImageData(0, 0, mask.width, mask.height).data
@@ -128,7 +135,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
       const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
       dots = points.map((point) => {
         const direction = random() < 0.5 ? -1 : 1
-        const distance = Math.max(width * 0.34, Math.min(window.innerWidth * 0.56, width * 1.15)) * (0.72 + random() * 0.42)
+        const distance = Math.max(width * 0.035, 28) * (0.72 + random() * 0.42)
         return {
           ...point,
           sx: direction < 0 ? -distance : width + distance,

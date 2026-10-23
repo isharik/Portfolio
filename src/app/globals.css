@@ -257,10 +257,11 @@ html.js .particle-title-canvas {
   position: absolute;
   inset: 0;
   display: block;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   opacity: 0;
   transition: opacity 220ms ease-out;
+  pointer-events: none;
 }
 html.js .particle-title.is-ready .particle-title-canvas { opacity: 1; }
 html.js .particle-title.is-ready .particle-title-semantic {
@@ -526,9 +527,11 @@ html.js .preloader-root {
 /* Single featured-project spread, following the supplied two-column reference. */
 .project-showcase { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
 .project-showcase-visual { position: relative; min-width: 0; min-height: 18rem; aspect-ratio: 1.38; perspective: 900px; }
-.project-showcase-page { position: absolute; inset: 0; transform-style: preserve-3d; }
+.project-showcase-page { position: absolute; z-index: 1; inset: 0; transform-style: preserve-3d; }
+.project-showcase-page-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; }
+.project-showcase-page-back { transform: rotateY(180deg); }
 .project-showcase-preview { position: absolute; inset: 0; isolation: isolate; }
-.project-showcase-backdrop { position: absolute; inset: 3% 4% 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface-muted); }
+.project-showcase-backdrop { position: absolute; z-index: 0; inset: 3% 4% 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface-muted); pointer-events: none; }
 .project-showcase-backdrop-back { transform: rotate(-3deg) translate(-1%, 1.5%); opacity: 0.52; }
 .project-showcase-backdrop-front { transform: rotate(1.4deg) translate(0.7%, 0.8%); background: var(--surface-muted); opacity: 0.8; }
 .project-showcase-screen { position: absolute; inset: 0 0 5%; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 1rem; background: var(--surface-muted); box-shadow: 0 22px 64px rgba(0, 0, 0, 0.18); }

@@ -2,20 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useAnimationControls, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
-const PAGE_TURN = { duration: 0.38, ease: [0.32, 0.72, 0.18, 1] as const }
+const PAGE_TURN = { duration: 0.82, ease: [0.68, 0, 0.32, 1] as const }
 
 function ProjectPreview({ project, index, active }: { project: Project; index: number; active: boolean }) {
   return (
     <div className="project-showcase-preview">
-      <div className="project-showcase-backdrop project-showcase-backdrop-back" aria-hidden="true" />
-      <div className="project-showcase-backdrop project-showcase-backdrop-front" aria-hidden="true" />
       <div className="project-showcase-screen">
         {project.image ? (
           <Image
@@ -42,10 +40,12 @@ export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState(1)
-  const [flipPhase, setFlipPhase] = useState<'idle' | 'out' | 'in'>('idle')
+  const [isAnimating, setIsAnimating] = useState(false)
   const pendingIndex = useRef<number | null>(null)
-  const isAnimating = flipPhase !== 'idle'
+  const timer = useRef<number | null>(null)
+  const pageControls = useAnimationControls()
   const activeProject = projects[active]
+  const nextIndex = pendingIndex.current ?? (active + direction + projects.length) % projects.length
 
   useEffect(() => {
     // Warm local project artwork once so a selection change never flashes a blank frame.
@@ -57,28 +57,28 @@ export default function Projects() {
     })
   }, [])
 
-  // Keep the two halves of the page turn on a deterministic timeline. Framer
-  // completion callbacks can be skipped when a tab is backgrounded, so the
-  // controls must not remain disabled waiting for one.
   useEffect(() => {
-    if (flipPhase === 'idle') return
-    const timer = window.setTimeout(() => {
-      if (flipPhase === 'out') {
-        if (pendingIndex.current !== null) setActive(pendingIndex.current)
-        pendingIndex.current = null
-        setFlipPhase('in')
-      } else {
-        setFlipPhase('idle')
-      }
-    }, reduce ? 0 : 430)
-    return () => window.clearTimeout(timer)
-  }, [flipPhase, reduce])
+    return () => { if (timer.current !== null) window.clearTimeout(timer.current) }
+  }, [])
 
   const selectProject = (nextIndex: number, turnDirection: number) => {
     if (nextIndex === active || isAnimating) return
+    if (reduce) { setActive(nextIndex); return }
     setDirection(turnDirection)
     pendingIndex.current = nextIndex
-    setFlipPhase('out')
+    setIsAnimating(true)
+    void pageControls.start({ rotateY: turnDirection > 0 ? -180 : 180 }, PAGE_TURN)
+    if (timer.current !== null) window.clearTimeout(timer.current)
+    // A bounded release avoids a permanently-disabled control if animation
+    // callbacks are suspended by a background tab or browser throttling.
+    timer.current = window.setTimeout(() => {
+      const incoming = pendingIndex.current
+      if (incoming !== null) setActive(incoming)
+      pendingIndex.current = null
+      pageControls.set({ rotateY: 0 })
+      setIsAnimating(false)
+      timer.current = null
+    }, 900)
   }
 
   const step = (turn: number) => selectProject((active + turn + projects.length) % projects.length, turn)
@@ -98,17 +98,21 @@ export default function Projects() {
         <Reveal delay={0.1} className="mt-12">
           <div className="project-showcase" aria-label="Featured project">
             <div className="project-showcase-visual" aria-label={`${activeProject.title} preview`}>
+              {/* Fixed neutral leaves remain still; only the foreground page turns. */}
+              <div className="project-showcase-backdrop project-showcase-backdrop-back" aria-hidden="true" />
+              <div className="project-showcase-backdrop project-showcase-backdrop-front" aria-hidden="true" />
               <motion.div
-                key={activeProject.title}
                 className="project-showcase-page"
-                initial={flipPhase === 'in' && !reduce ? { rotateY: direction > 0 ? 82 : -82, x: direction > 0 ? 18 : -18, opacity: 0.8 } : false}
-                animate={flipPhase === 'out' && !reduce
-                  ? { rotateY: direction > 0 ? -82 : 82, x: direction > 0 ? -18 : 18, opacity: 0.78 }
-                  : { rotateY: 0, x: 0, opacity: 1 }}
-                transition={reduce ? { duration: 0 } : PAGE_TURN}
-                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', backfaceVisibility: 'hidden' }}
+                initial={false}
+                animate={pageControls}
+                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
               >
-                <ProjectPreview project={activeProject} index={active} active />
+                <div className="project-showcase-page-face project-showcase-page-front">
+                  <ProjectPreview project={activeProject} index={active} active />
+                </div>
+                <div className="project-showcase-page-face project-showcase-page-back">
+                  <ProjectPreview project={projects[nextIndex]} index={nextIndex} active />
+                </div>
               </motion.div>
             </div>
 
