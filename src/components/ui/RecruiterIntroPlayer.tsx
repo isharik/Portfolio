@@ -117,7 +117,6 @@ export default function RecruiterIntroPlayer() {
       </div>
 
       <div className="recruiter-player-controls">
-        <span className="recruiter-wheel-menu" aria-hidden="true">MENU</span>
         <button type="button" className="recruiter-control" aria-label="Back 10 seconds" onClick={() => skip(-10)}><Rewind size={17} /></button>
         <button type="button" className="recruiter-control recruiter-play" aria-label={playing ? 'Pause introduction' : 'Play introduction'} onClick={togglePlayback}>
           {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}

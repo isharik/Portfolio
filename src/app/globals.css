@@ -433,24 +433,16 @@ html.js .particle-title.is-ready .particle-title-semantic {
   font-variant-numeric: tabular-nums;
 }
 .recruiter-player-controls {
-  position: relative;
   display: flex;
-  width: 132px;
-  height: 132px;
   align-items: center;
   justify-content: center;
-  margin: 17px auto 0;
-  border: 1px solid var(--glass-border);
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--surface) 94%, var(--fg)) 0 36%, color-mix(in srgb, var(--surface) 88%, var(--fg)) 37% 100%);
-  box-shadow: inset 0 2px 5px rgba(255,255,255,.34), inset 0 -5px 12px rgba(0,0,0,.07), 0 3px 9px rgba(0,0,0,.06);
+  gap: 13px;
+  margin: 12px auto 0;
 }
-.recruiter-wheel-menu { position: absolute; top: 12px; left: 50%; color: var(--fg-subtle); font-family: var(--font-mono), monospace; font-size: 8px; font-weight: 700; letter-spacing: .08em; transform: translateX(-50%); }
 .recruiter-control {
-  position: absolute;
   display: grid;
-  width: 31px;
-  height: 31px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -459,10 +451,6 @@ html.js .particle-title.is-ready .particle-title-semantic {
   cursor: pointer;
   transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
-.recruiter-player-controls > .recruiter-control:nth-of-type(1) { left: 7px; top: 50%; transform: translateY(-50%); }
-.recruiter-player-controls > .recruiter-control:nth-of-type(2) { left: 50%; top: 50%; transform: translate(-50%, -50%); }
-.recruiter-player-controls > .recruiter-control:nth-of-type(3) { right: 7px; top: 50%; transform: translateY(-50%); }
-.recruiter-player-controls > .recruiter-control:nth-of-type(4) { left: 50%; bottom: 5px; margin: 0; transform: translateX(-50%); }
 .recruiter-control:hover { background: var(--accent-soft); color: var(--accent); }
 .recruiter-control:active { transform: scale(0.94); }
 .recruiter-control.recruiter-play {
@@ -474,6 +462,10 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-control.recruiter-play:hover { filter: brightness(1.06); }
 .recruiter-control.recruiter-repeat { margin-left: 4px; }
 .recruiter-control.recruiter-repeat.is-active { background: var(--accent-soft); color: var(--accent); }
+.hero-layout > div:first-child { transition: transform 260ms var(--ease-out); }
+@media (min-width: 1024px) {
+  .hero-layout > div:first-child { transform: translateX(8px); }
+}
 .recruiter-player-error {
   margin-top: 8px;
   color: #c2413a;
