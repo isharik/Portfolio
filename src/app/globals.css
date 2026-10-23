@@ -147,6 +147,8 @@ body {
   mask-composite: exclude;
   pointer-events: none;
 }
+.experience-card-watermark { mix-blend-mode: multiply; opacity: 0.055; filter: grayscale(1); }
+.dark .experience-card-watermark { mix-blend-mode: screen; opacity: 0.065; filter: grayscale(1) brightness(1.4); }
 
 .surface-card {
   background: var(--surface);
