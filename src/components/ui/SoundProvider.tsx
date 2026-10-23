@@ -29,16 +29,23 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
       if (AC) ctxRef.current = new AC({ latencyHint: 'interactive' })
     }
-    const ctx = ctxRef.current
-    if (ctx && ctx.state === 'suspended') void ctx.resume()
-    return ctx
+    return ctxRef.current
   }, [])
 
-  // A warm, calm click: a soft main tone over a quieter sub-octave, gently
-  // rolled off and given an unhurried decay so it reads as a real "tok".
-  const play = useCallback(() => {
+  // Create the context ahead of the first interaction, but resume it only from
+  // the pointer gesture so browser autoplay policies don't delay the first click.
+  useEffect(() => {
+    ensureCtx()
+  }, [ensureCtx])
+
+  // A short, warm click with a near-instant attack. Wait for a suspended audio
+  // context to resume before scheduling, otherwise the tone can start late.
+  const play = useCallback(async () => {
     const ctx = ensureCtx()
     if (!ctx) return
+    if (ctx.state !== 'running') {
+      try { await ctx.resume() } catch { return }
+    }
     const t = ctx.currentTime
 
     const filter = ctx.createBiquadFilter()
@@ -47,8 +54,8 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
     const master = ctx.createGain()
     master.gain.setValueAtTime(0.0001, t)
-    master.gain.exponentialRampToValueAtTime(0.1, t + 0.008) // soft, rounded attack
-    master.gain.exponentialRampToValueAtTime(0.0001, t + 0.26) // unhurried, calm decay
+    master.gain.exponentialRampToValueAtTime(0.1, t + 0.0015) // immediate, soft attack
+    master.gain.exponentialRampToValueAtTime(0.0001, t + 0.16) // short, clean decay
 
     filter.connect(master)
     master.connect(ctx.destination)
@@ -87,9 +94,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       const now = performance.now()
       if (now - lastRef.current < 70) return // throttle rapid taps
       lastRef.current = now
-      try {
-        play()
-      } catch {}
+      void play().catch(() => {})
     }
     document.addEventListener('pointerdown', onDown, true)
     return () => document.removeEventListener('pointerdown', onDown, true)
@@ -103,9 +108,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('sound', next ? 'on' : 'off')
       } catch {}
       if (next) {
-        try {
-          play() // preview the sound the moment it's re-enabled
-        } catch {}
+        void play().catch(() => {}) // preview the sound the moment it's re-enabled
       }
       return next
     })
