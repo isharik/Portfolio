@@ -82,6 +82,9 @@ export default function RecruiterIntroPlayer() {
         <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="120px" />
         </button>
+        <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
+        <span className="recruiter-art-sticker recruiter-art-sticker-two" aria-hidden="true">🎧</span>
+        <span className="recruiter-cd" aria-hidden="true"><i /></span>
         <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           Say hello <span aria-hidden="true">↗</span>
         </button>
@@ -114,6 +117,7 @@ export default function RecruiterIntroPlayer() {
       </div>
 
       <div className="recruiter-player-controls">
+        <span className="recruiter-wheel-menu" aria-hidden="true">MENU</span>
         <button type="button" className="recruiter-control" aria-label="Back 10 seconds" onClick={() => skip(-10)}><Rewind size={17} /></button>
         <button type="button" className="recruiter-control recruiter-play" aria-label={playing ? 'Pause introduction' : 'Play introduction'} onClick={togglePlayback}>
           {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
