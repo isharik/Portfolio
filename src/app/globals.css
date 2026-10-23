@@ -576,20 +576,32 @@ html.js .preloader-root {
   .project-showcase-open { margin-left: 0; }
 }
 
-/* The six nostalgic postcards share a single board, with continuous dividers. */
-.skills-postcard { border-bottom: 1px solid var(--border); background: var(--surface); }
-.skills-postcard:last-child { border-bottom: 0; }
-@media (min-width: 640px) {
-  .skills-postcard:nth-child(even) { border-left: 1px solid var(--border); }
-  .skills-postcard:nth-last-child(-n + 2) { border-bottom: 0; }
+/* Individual toolbox postcards with a subtle Windows XP-era UI cue. */
+.skills-postcard { background: var(--surface); }
+.skills-postcard-titlebar {
+  background: linear-gradient(180deg, #4a9af0 0%, #2778df 16%, #1261c9 86%, #0e55b8 100%);
+  box-shadow: inset 0 1px rgba(255,255,255,.55), inset 0 -1px rgba(0,31,94,.28);
+  text-shadow: 0 1px 1px rgba(0,28,82,.45);
 }
-@media (min-width: 1024px) {
-  .skills-postcard { border-bottom: 1px solid var(--border); }
-  .skills-postcard:nth-child(3n + 2),
-  .skills-postcard:nth-child(3n + 3) { border-left: 1px solid var(--border); }
-  .skills-postcard:nth-child(3n + 1) { border-left: 0; }
-  .skills-postcard:nth-last-child(-n + 3) { border-bottom: 0; }
+.skills-window-close {
+  display: grid;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ffb69d, #e65a40 54%, #ca321f);
+  box-shadow: inset 0 1px rgba(255,255,255,.75), 0 1px 2px rgba(0,0,0,.22);
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px rgba(90,0,0,.5);
 }
+.skills-postcard-body { background: var(--surface); box-shadow: inset 0 1px rgba(255,255,255,.24); }
+.skills-postcard-tag { background: color-mix(in srgb, var(--surface) 90%, var(--fg)); }
 
 /* Lamp pull-chain: metallic beaded chain */
 .bead-chain {
