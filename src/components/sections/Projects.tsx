@@ -57,21 +57,28 @@ export default function Projects() {
     })
   }, [])
 
+  // Keep the two halves of the page turn on a deterministic timeline. Framer
+  // completion callbacks can be skipped when a tab is backgrounded, so the
+  // controls must not remain disabled waiting for one.
+  useEffect(() => {
+    if (flipPhase === 'idle') return
+    const timer = window.setTimeout(() => {
+      if (flipPhase === 'out') {
+        if (pendingIndex.current !== null) setActive(pendingIndex.current)
+        pendingIndex.current = null
+        setFlipPhase('in')
+      } else {
+        setFlipPhase('idle')
+      }
+    }, reduce ? 0 : 430)
+    return () => window.clearTimeout(timer)
+  }, [flipPhase, reduce])
+
   const selectProject = (nextIndex: number, turnDirection: number) => {
     if (nextIndex === active || isAnimating) return
     setDirection(turnDirection)
     pendingIndex.current = nextIndex
     setFlipPhase('out')
-  }
-
-  const finishTurn = () => {
-    if (flipPhase === 'out' && pendingIndex.current !== null) {
-      setActive(pendingIndex.current)
-      pendingIndex.current = null
-      setFlipPhase('in')
-    } else if (flipPhase === 'in') {
-      setFlipPhase('idle')
-    }
   }
 
   const step = (turn: number) => selectProject((active + turn + projects.length) % projects.length, turn)
@@ -99,7 +106,6 @@ export default function Projects() {
                   ? { rotateY: direction > 0 ? -82 : 82, x: direction > 0 ? -18 : 18, opacity: 0.78 }
                   : { rotateY: 0, x: 0, opacity: 1 }}
                 transition={reduce ? { duration: 0 } : PAGE_TURN}
-                onAnimationComplete={finishTurn}
                 style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', backfaceVisibility: 'hidden' }}
               >
                 <ProjectPreview project={activeProject} index={active} active />

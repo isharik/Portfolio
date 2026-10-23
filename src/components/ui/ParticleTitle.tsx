@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 type Props = { lead: string; accent: string }
-type Dot = { x: number; y: number; sx: number; sy: number; alpha: number; radius: number; accent: boolean; delay: number }
+type Dot = { x: number; y: number; sx: number; sy: number; alpha: number; radius: number; accent: boolean; delay: number; curveX: number; curveY: number; depth: number }
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value))
 const ASSEMBLY_DURATION = 1560
@@ -40,12 +40,13 @@ export default function ParticleTitle({ lead, accent }: Props) {
       for (const dot of dots) {
         const t = clamp((progress - dot.delay * 0.2) / 0.8)
         const eased = 1 - Math.pow(1 - t, 3)
-        const x = dot.sx + (dot.x - dot.sx) * eased
-        const y = dot.sy + (dot.y - dot.sy) * eased
-        ctx.globalAlpha = dot.alpha * (0.35 + 0.65 * eased)
+        const arc = Math.sin(Math.PI * eased)
+        const x = dot.sx + (dot.x - dot.sx) * eased + dot.curveX * arc
+        const y = dot.sy + (dot.y - dot.sy) * eased + dot.curveY * arc
+        ctx.globalAlpha = dot.alpha * (0.2 + 0.8 * eased) * (0.72 + dot.depth * 0.28)
         ctx.fillStyle = dot.accent ? highlight : ink
         ctx.beginPath()
-        ctx.arc(x, y, dot.radius, 0, Math.PI * 2)
+        ctx.arc(x, y, dot.radius * (0.58 + 0.42 * eased) * (0.78 + dot.depth * 0.3), 0, Math.PI * 2)
         ctx.fill()
       }
       ctx.globalAlpha = 1
@@ -127,13 +128,16 @@ export default function ParticleTitle({ lead, accent }: Props) {
       const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
       dots = points.map((point) => {
         const direction = random() < 0.5 ? -1 : 1
-        const distance = 34 + random() * Math.min(180, width * 0.3)
+        const distance = Math.max(width * 0.34, Math.min(window.innerWidth * 0.56, width * 1.15)) * (0.72 + random() * 0.42)
         return {
           ...point,
           sx: direction < 0 ? -distance : width + distance,
           sy: point.y + (random() - 0.5) * Math.min(100, height * 0.7),
           radius: 0.8 + random() * 0.62,
           delay: random(),
+          curveX: (random() - 0.5) * Math.min(86, width * 0.14),
+          curveY: (random() - 0.5) * Math.min(94, height * 0.7),
+          depth: random(),
         }
       })
       setCanvasReady(true)
@@ -152,7 +156,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
     const resizeObserver = new ResizeObserver(() => {
       const wasAnimating = started && !finished
       const progress = wasAnimating ? clamp((performance.now() - startTime) / ASSEMBLY_DURATION) : 0
-      const shouldAnimate = !started && !finished && !reducedMotion.matches
+      const shouldAnimate = welcomeComplete && !started && !finished && !reducedMotion.matches
       if (frame) cancelAnimationFrame(frame)
       frame = 0
       drawTitle(shouldAnimate)
