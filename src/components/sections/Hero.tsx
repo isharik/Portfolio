@@ -4,6 +4,8 @@ import { useReducedMotion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
 import InteractivePortrait from '@/components/ui/InteractivePortrait'
+import ParticleTitle from '@/components/ui/ParticleTitle'
+import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
 import { profile } from '@/lib/content'
 
 const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `${delay}s` })
@@ -37,21 +39,22 @@ export default function Hero() {
           {profile.eyebrow}
         </p>
 
-        <h1
-          className="rise mt-4 font-display text-[clamp(2.3rem,6vw,3.6rem)] font-semibold leading-[1.05] tracking-tight text-fg [text-wrap:balance]"
-          style={rise(0.24)}
-        >
-          {profile.headlineLead} <span className="text-accent">{profile.headlineAccent}</span>
-        </h1>
+        <div className="mt-4 w-full">
+          <ParticleTitle lead={profile.headlineLead} accent={profile.headlineAccent} />
+        </div>
 
         <p
           className="rise mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base"
-          style={rise(0.32)}
+          style={rise(1.05)}
         >
           {profile.summary}
         </p>
 
-        <div className="rise mt-8 flex flex-wrap items-center justify-center gap-3" style={rise(0.4)}>
+        <div className="rise mt-6" style={rise(1.16)}>
+          <RecruiterIntroPlayer />
+        </div>
+
+        <div className="rise mt-7 flex flex-wrap items-center justify-center gap-3" style={rise(1.28)}>
           <MagneticButton href="#contact" onClick={(e) => go(e, '#contact')} variant="primary">
             Let&apos;s talk <ArrowUpRight size={16} />
           </MagneticButton>
@@ -61,8 +64,8 @@ export default function Hero() {
         </div>
 
         <div
-          className="rise mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle"
-          style={rise(0.48)}
+          className="rise mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle"
+          style={rise(1.38)}
         >
           <span>4+ years across support &amp; AI</span>
           <span className="text-border-strong">/</span>
