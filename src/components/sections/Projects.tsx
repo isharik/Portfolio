@@ -1,69 +1,74 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
-const OUT = [0.23, 1, 0.32, 1] as const
+const FADE_OUT_MS = 240
+const FADE_IN_MS = 440
 
-function ProjectVisual({ project, index }: { project: Project; index: number }) {
+function ProjectPreview({ project, index }: { project: Project; index: number }) {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">
-      {project.image ? (
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 48vw, (min-width: 640px) 65vw, 88vw"
-          className="object-cover object-center"
-        />
-      ) : (
-        <>
-          <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${project.accent})` }} />
-          <div className="absolute inset-0 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px]" />
-          <span className="absolute bottom-5 right-5 font-mono text-5xl font-bold text-white/25">{String(index + 1).padStart(2, '0')}</span>
-        </>
-      )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+    <div className="project-showcase-preview" style={{ '--project-accent': `linear-gradient(135deg, ${project.accent})` } as React.CSSProperties}>
+      <div className="project-showcase-backdrop project-showcase-backdrop-back" aria-hidden="true" />
+      <div className="project-showcase-backdrop project-showcase-backdrop-front" aria-hidden="true" />
+      <div className="project-showcase-screen">
+        {project.image ? (
+          <Image
+            src={project.image}
+            alt={`${project.title} project preview`}
+            fill
+            sizes="(min-width: 1024px) 48vw, (min-width: 640px) 60vw, 94vw"
+            priority
+            className={cn('project-showcase-image', project.imageFit === 'contain' ? 'object-contain' : 'object-cover')}
+          />
+        ) : (
+          <div className="project-showcase-placeholder" style={{ background: `linear-gradient(135deg, ${project.accent})` }}>
+            <span className="project-showcase-placeholder-index">{String(index + 1).padStart(2, '0')}</span>
+            <span>{project.title}</span>
+          </div>
+        )}
+      </div>
+      <div className="project-showcase-screen-foot"><span>{project.title}</span><span>{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span></div>
     </div>
   )
 }
 
 export default function Projects() {
-  const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
   const [switchPhase, setSwitchPhase] = useState<'idle' | 'out' | 'in'>('idle')
   const fadeOutTimer = useRef<number | null>(null)
   const fadeInTimer = useRef<number | null>(null)
   const activeProject = projects[active]
-  const rail = useMemo(() => [...projects.slice(active), ...projects.slice(0, active)], [active])
 
-  useEffect(() => () => {
-    if (fadeOutTimer.current !== null) window.clearTimeout(fadeOutTimer.current)
-    if (fadeInTimer.current !== null) window.clearTimeout(fadeInTimer.current)
+  useEffect(() => {
+    // Warm local project artwork once so a selection change never flashes a blank frame.
+    projects.forEach((project) => {
+      if (!project.image) return
+      const image = new window.Image()
+      image.src = project.image
+      image.decode?.().catch(() => undefined)
+    })
+    return () => {
+      if (fadeOutTimer.current !== null) window.clearTimeout(fadeOutTimer.current)
+      if (fadeInTimer.current !== null) window.clearTimeout(fadeInTimer.current)
+    }
   }, [])
 
   const selectProject = (nextIndex: number) => {
-    if (nextIndex === active && switchPhase === 'idle') return
+    if (nextIndex === active || switchPhase !== 'idle') return
     if (fadeOutTimer.current !== null) window.clearTimeout(fadeOutTimer.current)
     if (fadeInTimer.current !== null) window.clearTimeout(fadeInTimer.current)
-    if (reduce) {
-      setActive(nextIndex)
-      setSwitchPhase('idle')
-      return
-    }
-
     setSwitchPhase('out')
     fadeOutTimer.current = window.setTimeout(() => {
       setActive(nextIndex)
       setSwitchPhase('in')
-      fadeInTimer.current = window.setTimeout(() => setSwitchPhase('idle'), 440)
-    }, 220)
+      fadeInTimer.current = window.setTimeout(() => setSwitchPhase('idle'), FADE_IN_MS)
+    }, FADE_OUT_MS)
   }
 
   const step = (direction: number) => selectProject((active + direction + projects.length) % projects.length)
@@ -75,49 +80,41 @@ export default function Projects() {
           <SectionHeading eyebrow="Projects" title="Built in my free time" description="The products, tools, and experiments I make when nobody's assigning them, just for the fun of shipping something real. Every one of these is live." />
           {profile.resume && (
             <a href={profile.resume} download="Sharik-Hussain-Resume.pdf" className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-border bg-surface/40 px-4 py-2 text-sm font-medium text-fg transition-colors duration-200 hover:border-border-strong hover:bg-surface/70 sm:self-auto">
-              <Download size={15} className="text-fg-muted transition-colors group-hover:text-accent" />
-              Résumé <span className="font-mono text-[10px] text-fg-subtle">PDF</span>
+              <Download size={15} className="text-fg-muted transition-colors group-hover:text-accent" /> Résumé <span className="font-mono text-[10px] text-fg-subtle">PDF</span>
             </a>
           )}
         </div>
 
         <Reveal delay={0.1} className="mt-12">
-          <div className="mb-4 flex justify-end gap-2">
-            <button type="button" aria-label="Previous project" onClick={() => step(-1)} disabled={switchPhase !== 'idle'} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted disabled:cursor-wait"><ArrowLeft size={18} /></button>
-            <button type="button" aria-label="Next project" onClick={() => step(1)} disabled={switchPhase !== 'idle'} className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-fg transition-colors hover:border-border-strong hover:bg-surface-muted disabled:cursor-wait"><ArrowRight size={18} /></button>
-          </div>
+          <div className="project-showcase" aria-label="Featured project">
+            <div className={cn('project-showcase-visual', switchPhase === 'out' && 'is-fading-out', switchPhase === 'in' && 'is-fading-in')}>
+              <ProjectPreview project={activeProject} index={active} />
+            </div>
 
-          <div className={cn('project-rail', switchPhase === 'out' && 'project-rail-fading')} role="tablist" aria-label="Featured projects">
-            {rail.map((project, railIndex) => {
-              const actualIndex = projects.indexOf(project)
-              return (
-                <button key={project.title} type="button" role="tab" aria-selected={actualIndex === active} aria-label={`Show ${project.title}`} onClick={() => selectProject(actualIndex)} disabled={switchPhase !== 'idle'} className={cn('project-rail-panel', railIndex === 0 && 'project-rail-panel-active')}>
-                  {railIndex === 0 ? (
-                    <motion.div key={project.title} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.42, ease: OUT }} className="absolute inset-0">
-                      <ProjectVisual project={project} index={actualIndex} />
-                    </motion.div>
-                  ) : <ProjectVisual project={project} index={actualIndex} />}
-                  {railIndex === 0 && <span className="absolute bottom-5 left-5 font-mono text-xs font-semibold text-white drop-shadow-sm">{project.title}</span>}
-                </button>
-              )
-            })}
-          </div>
-
-          <motion.article initial={false} animate={{ opacity: switchPhase === 'out' ? 0 : 1, y: switchPhase === 'in' ? [4, 0] : 0 }} transition={{ duration: switchPhase === 'out' ? 0.2 : 0.34, ease: OUT }} className="mt-7 grid gap-5 rounded-2xl border border-border bg-surface/45 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-6">
-            <div>
-              <div className="font-mono text-[11px] uppercase tracking-widest text-accent">{activeProject.tagline}</div>
-              <h3 className="mt-2 font-display text-2xl font-semibold text-fg">{activeProject.title}</h3>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-muted">{activeProject.description}</p>
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {activeProject.tags.map((tag) => <span key={tag} className="rounded-md border border-border bg-surface/50 px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}
+            <article className={cn('project-showcase-details', switchPhase === 'out' && 'is-fading-out', switchPhase === 'in' && 'is-fading-in')} aria-live="polite" aria-atomic="true">
+              <div>
+                <div className="project-showcase-kicker">{activeProject.tagline}</div>
+                <h3 className="project-showcase-title">{activeProject.title}</h3>
+                <p className="project-showcase-description">{activeProject.description}</p>
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {activeProject.tags.map((tag) => <span key={tag} className="rounded-md border border-border bg-surface/50 px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}
+                </div>
               </div>
-            </div>
-            <div className="flex flex-wrap gap-3 sm:justify-end">
-              {activeProject.link && <a href={activeProject.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-[var(--accent-fg)] transition-[filter,transform] duration-200 hover:brightness-110 active:scale-95">Visit live <ArrowUpRight size={15} /></a>}
-              {activeProject.repo && <a href={activeProject.repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-fg transition-colors hover:border-border-strong"><Github size={15} /> Code</a>}
-              {!activeProject.link && !activeProject.repo && <span className="inline-flex items-center gap-1 text-sm text-fg-subtle"><Dot size={16} /> Internal / not public</span>}
-            </div>
-          </motion.article>
+
+              <div className="project-showcase-actions">
+                <button type="button" onClick={() => step(-1)} disabled={switchPhase !== 'idle'} className="project-showcase-nav"><ArrowLeft size={16} /><span>Previous</span></button>
+                <button type="button" onClick={() => step(1)} disabled={switchPhase !== 'idle'} className="project-showcase-nav"><span>Next</span><ArrowRight size={16} /></button>
+                {activeProject.link ? <a href={activeProject.link} target="_blank" rel="noopener noreferrer" className="project-showcase-open">Open project <ArrowUpRight size={15} /></a> : activeProject.repo ? <a href={activeProject.repo} target="_blank" rel="noopener noreferrer" className="project-showcase-open">View code <Github size={15} /></a> : <span className="project-showcase-private"><Dot size={16} /> Internal / not public</span>}
+              </div>
+            </article>
+          </div>
+
+          <div className="project-showcase-pagination" aria-label="Select a project">
+            {projects.map((project, index) => (
+              <button key={project.title} type="button" aria-label={`Show ${project.title}`} aria-current={index === active ? 'true' : undefined} onClick={() => selectProject(index)} disabled={switchPhase !== 'idle'} className={cn('project-showcase-dot', index === active && 'is-active')} />
+            ))}
+            <span>{String(active + 1).padStart(2, '0')} <span aria-hidden="true">/</span> {String(projects.length).padStart(2, '0')}</span>
+          </div>
         </Reveal>
       </div>
     </section>

@@ -6,6 +6,7 @@ type Props = { lead: string; accent: string }
 type Dot = { x: number; y: number; sx: number; sy: number; alpha: number; radius: number; accent: boolean; delay: number }
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value))
+const ASSEMBLY_DURATION = 1560
 
 export default function ParticleTitle({ lead, accent }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -51,7 +52,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
 
     const animate = (now: number) => {
       frame = 0
-      const progress = clamp((now - startTime) / 1280)
+      const progress = clamp((now - startTime) / ASSEMBLY_DURATION)
       paint(progress)
       if (progress < 1 && !document.hidden) frame = requestAnimationFrame(animate)
       else {
@@ -82,6 +83,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
       maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
       maskCtx.textAlign = 'left'
       maskCtx.textBaseline = 'middle'
+      const textAlign = getComputedStyle(wrap).textAlign
       const fontSize = Math.min(58, Math.max(36, width * 0.08))
       const font = getComputedStyle(document.documentElement).getPropertyValue('--font-display').trim() || 'system-ui'
       maskCtx.font = `600 ${fontSize}px ${font}, sans-serif`
@@ -91,17 +93,17 @@ export default function ParticleTitle({ lead, accent }: Props) {
       const lines = oneLine ? 1 : 2
       const lineHeight = fontSize * 1.12
       if (oneLine) {
-        const left = (width - leadWidth - accentWidth) / 2
+        const left = textAlign === 'left' ? 0 : (width - leadWidth - accentWidth) / 2
         maskCtx.fillStyle = '#000000'
         maskCtx.fillText(`${lead} `, left, height / 2)
         maskCtx.fillStyle = '#ffffff'
         maskCtx.fillText(accent, left + leadWidth, height / 2)
       } else {
-        maskCtx.textAlign = 'center'
+        maskCtx.textAlign = textAlign === 'left' ? 'left' : 'center'
         maskCtx.fillStyle = '#000000'
-        maskCtx.fillText(lead, width / 2, height / 2 - lineHeight / 2)
+        maskCtx.fillText(lead, textAlign === 'left' ? 0 : width / 2, height / 2 - lineHeight / 2)
         maskCtx.fillStyle = '#ffffff'
-        maskCtx.fillText(accent, width / 2, height / 2 + lineHeight / 2)
+        maskCtx.fillText(accent, textAlign === 'left' ? 0 : width / 2, height / 2 + lineHeight / 2)
       }
 
       const pixels = maskCtx.getImageData(0, 0, mask.width, mask.height).data
@@ -148,13 +150,13 @@ export default function ParticleTitle({ lead, accent }: Props) {
 
     const resizeObserver = new ResizeObserver(() => {
       const wasAnimating = started && !finished
-      const progress = wasAnimating ? clamp((performance.now() - startTime) / 1280) : 0
+      const progress = wasAnimating ? clamp((performance.now() - startTime) / ASSEMBLY_DURATION) : 0
       const shouldAnimate = !started && !finished && !reducedMotion.matches
       if (frame) cancelAnimationFrame(frame)
       frame = 0
       drawTitle(shouldAnimate)
       if (wasAnimating && !reducedMotion.matches && !finished) {
-        startTime = performance.now() - progress * 1280
+        startTime = performance.now() - progress * ASSEMBLY_DURATION
         paint(progress)
         frame = requestAnimationFrame(animate)
       }
@@ -175,7 +177,7 @@ export default function ParticleTitle({ lead, accent }: Props) {
       if (entry.isIntersecting) startWhenVisible()
     }, { threshold: 0.15 })
     visibility.observe(wrap)
-    const themeObserver = new MutationObserver(() => paint(finished ? 1 : clamp((performance.now() - startTime) / 1280)))
+    const themeObserver = new MutationObserver(() => paint(finished ? 1 : clamp((performance.now() - startTime) / ASSEMBLY_DURATION)))
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
     const onVisible = () => {
       if (document.hidden) return
