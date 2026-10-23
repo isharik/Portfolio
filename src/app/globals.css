@@ -530,6 +530,7 @@ html.js .preloader-root {
 .project-showcase-page { position: absolute; z-index: 1; inset: 0; transform-style: preserve-3d; }
 .project-showcase-page-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; }
 .project-showcase-page-back { transform: rotateY(180deg); }
+.project-showcase-page-fold { position: absolute; z-index: 3; inset: 0; border-radius: 1rem; background: linear-gradient(90deg, transparent 36%, rgba(0,0,0,.12) 46%, rgba(255,255,255,.42) 50%, rgba(0,0,0,.28) 55%, transparent 70%); opacity: 0; pointer-events: none; backface-visibility: hidden; }
 .project-showcase-preview { position: absolute; inset: 0; isolation: isolate; }
 .project-showcase-backdrop { position: absolute; z-index: 0; inset: 3% 4% 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface-muted); pointer-events: none; }
 .project-showcase-backdrop-back { transform: rotate(-3deg) translate(-1%, 1.5%); opacity: 0.52; }

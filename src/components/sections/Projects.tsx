@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { motion, useAnimationControls, useReducedMotion } from 'framer-motion'
+import { flushSync } from 'react-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
-const PAGE_TURN = { duration: 0.82, ease: [0.68, 0, 0.32, 1] as const }
+const PAGE_TURN_MS = 960
 
 function ProjectPreview({ project, index, active }: { project: Project; index: number; active: boolean }) {
   return (
@@ -41,11 +42,16 @@ export default function Projects() {
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState(1)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [settling, setSettling] = useState(false)
   const pendingIndex = useRef<number | null>(null)
   const timer = useRef<number | null>(null)
-  const pageControls = useAnimationControls()
+  const pageRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<Animation | null>(null)
+  const foldAnimationRef = useRef<Animation | null>(null)
   const activeProject = projects[active]
-  const nextIndex = pendingIndex.current ?? (active + direction + projects.length) % projects.length
+  const nextIndex = settling
+    ? active
+    : pendingIndex.current ?? (active + direction + projects.length) % projects.length
 
   useEffect(() => {
     // Warm local project artwork once so a selection change never flashes a blank frame.
@@ -58,8 +64,35 @@ export default function Projects() {
   }, [])
 
   useEffect(() => {
-    return () => { if (timer.current !== null) window.clearTimeout(timer.current) }
+    return () => {
+      if (timer.current !== null) window.clearTimeout(timer.current)
+      animationRef.current?.cancel()
+      foldAnimationRef.current?.cancel()
+    }
   }, [])
+
+  const finishTurn = () => {
+    const incoming = pendingIndex.current
+    if (incoming === null) return
+
+    // At the end of the turn the reverse face is visible. Update both faces to
+    // the incoming project before clearing the animation, so the reset from
+    // 180° to 0° is visually seamless (same art on either face).
+    flushSync(() => {
+      setActive(incoming)
+      setSettling(true)
+    })
+    pendingIndex.current = null
+    animationRef.current?.cancel()
+    animationRef.current = null
+    foldAnimationRef.current?.cancel()
+    foldAnimationRef.current = null
+    if (pageRef.current) pageRef.current.style.transform = 'none'
+    if (timer.current !== null) window.clearTimeout(timer.current)
+    timer.current = null
+    setSettling(false)
+    setIsAnimating(false)
+  }
 
   const selectProject = (nextIndex: number, turnDirection: number) => {
     if (nextIndex === active || isAnimating) return
@@ -67,18 +100,26 @@ export default function Projects() {
     setDirection(turnDirection)
     pendingIndex.current = nextIndex
     setIsAnimating(true)
-    void pageControls.start({ rotateY: turnDirection > 0 ? -180 : 180 }, PAGE_TURN)
+    const page = pageRef.current
+    if (!page) { setActive(nextIndex); pendingIndex.current = null; setIsAnimating(false); return }
+    const rotation = turnDirection > 0 ? -180 : 180
+    page.style.transformOrigin = turnDirection > 0 ? 'left center' : 'right center'
+    page.style.transform = 'rotateY(0deg)'
+    const animation = page.animate([
+      { transform: 'rotateY(0deg) translateZ(0px)', boxShadow: '0 18px 42px rgba(0,0,0,.16)', offset: 0 },
+      { transform: `rotateY(${rotation * 0.52}deg) translateZ(12px)`, boxShadow: turnDirection > 0 ? '-30px 8px 42px rgba(0,0,0,.38)' : '30px 8px 42px rgba(0,0,0,.38)', offset: 0.52, easing: 'cubic-bezier(.72,0,.88,.35)' },
+      { transform: `rotateY(${rotation}deg) translateZ(0px)`, boxShadow: '0 18px 42px rgba(0,0,0,.16)', offset: 1 },
+    ], { duration: PAGE_TURN_MS, easing: 'cubic-bezier(.45,0,.55,1)', fill: 'forwards' })
+    animationRef.current = animation
+    animation.onfinish = finishTurn
+    const fold = page.querySelector<HTMLElement>('.project-showcase-page-fold')
+    foldAnimationRef.current = fold?.animate(
+      [{ opacity: 0 }, { opacity: 0.82, offset: 0.5 }, { opacity: 0 }],
+      { duration: PAGE_TURN_MS, easing: 'ease-in-out', fill: 'forwards' },
+    ) ?? null
     if (timer.current !== null) window.clearTimeout(timer.current)
-    // A bounded release avoids a permanently-disabled control if animation
-    // callbacks are suspended by a background tab or browser throttling.
-    timer.current = window.setTimeout(() => {
-      const incoming = pendingIndex.current
-      if (incoming !== null) setActive(incoming)
-      pendingIndex.current = null
-      pageControls.set({ rotateY: 0 })
-      setIsAnimating(false)
-      timer.current = null
-    }, 900)
+    // Safety release in case the browser suppresses the Web Animations finish event.
+    timer.current = window.setTimeout(finishTurn, PAGE_TURN_MS + 500)
   }
 
   const step = (turn: number) => selectProject((active + turn + projects.length) % projects.length, turn)
@@ -102,10 +143,10 @@ export default function Projects() {
               <div className="project-showcase-backdrop project-showcase-backdrop-back" aria-hidden="true" />
               <div className="project-showcase-backdrop project-showcase-backdrop-front" aria-hidden="true" />
               <motion.div
+                ref={pageRef}
                 className="project-showcase-page"
                 initial={false}
-                animate={pageControls}
-                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', transformStyle: 'preserve-3d' }}
               >
                 <div className="project-showcase-page-face project-showcase-page-front">
                   <ProjectPreview project={activeProject} index={active} active />
@@ -113,6 +154,7 @@ export default function Projects() {
                 <div className="project-showcase-page-face project-showcase-page-back">
                   <ProjectPreview project={projects[nextIndex]} index={nextIndex} active />
                 </div>
+                <div className="project-showcase-page-fold" aria-hidden="true" />
               </motion.div>
             </div>
 
