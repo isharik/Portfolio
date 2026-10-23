@@ -183,8 +183,16 @@ body {
 }
 .portrait-light-image {
   display: block;
-  filter: brightness(0) saturate(100%) drop-shadow(0 0 1px var(--portrait-edge));
+  z-index: 1;
 }
+.portrait-light-backing {
+  display: block;
+  z-index: 0;
+  filter: brightness(0) saturate(100%)
+    drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000)
+    drop-shadow(0 0 2px #000);
+}
+.dark .portrait-light-backing { display: none; }
 .portrait-dark-image { display: none; }
 .dark .portrait-light-image { display: none; }
 .dark .portrait-dark-image {
