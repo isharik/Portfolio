@@ -67,7 +67,8 @@ export default function RecruiterIntroPlayer() {
       <audio
         ref={audioRef}
         src="/recruiter-intro.mp3"
-        preload="metadata"
+        preload="auto"
+        playsInline
         onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
         onDurationChange={(event) => setDuration(event.currentTarget.duration)}
         onTimeUpdate={(event) => setTime(event.currentTarget.currentTime)}

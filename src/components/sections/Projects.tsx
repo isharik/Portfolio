@@ -1,16 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { flushSync } from 'react-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Download, Dot, Github } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { projects, profile, type Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
-
-const PAGE_TURN_MS = 960
 
 function ProjectPreview({ project, index, active }: { project: Project; index: number; active: boolean }) {
   return (
@@ -40,18 +37,7 @@ function ProjectPreview({ project, index, active }: { project: Project; index: n
 export default function Projects() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
-  const [direction, setDirection] = useState(1)
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [settling, setSettling] = useState(false)
-  const pendingIndex = useRef<number | null>(null)
-  const timer = useRef<number | null>(null)
-  const pageRef = useRef<HTMLDivElement>(null)
-  const animationRef = useRef<Animation | null>(null)
-  const foldAnimationRef = useRef<Animation | null>(null)
   const activeProject = projects[active]
-  const nextIndex = settling
-    ? active
-    : pendingIndex.current ?? (active + direction + projects.length) % projects.length
 
   useEffect(() => {
     // Warm local project artwork once so a selection change never flashes a blank frame.
@@ -63,66 +49,7 @@ export default function Projects() {
     })
   }, [])
 
-  useEffect(() => {
-    return () => {
-      if (timer.current !== null) window.clearTimeout(timer.current)
-      animationRef.current?.cancel()
-      foldAnimationRef.current?.cancel()
-    }
-  }, [])
-
-  const finishTurn = () => {
-    const incoming = pendingIndex.current
-    if (incoming === null) return
-
-    // At the end of the turn the reverse face is visible. Update both faces to
-    // the incoming project before clearing the animation, so the reset from
-    // 180° to 0° is visually seamless (same art on either face).
-    flushSync(() => {
-      setActive(incoming)
-      setSettling(true)
-    })
-    pendingIndex.current = null
-    animationRef.current?.cancel()
-    animationRef.current = null
-    foldAnimationRef.current?.cancel()
-    foldAnimationRef.current = null
-    if (pageRef.current) pageRef.current.style.transform = 'none'
-    if (timer.current !== null) window.clearTimeout(timer.current)
-    timer.current = null
-    setSettling(false)
-    setIsAnimating(false)
-  }
-
-  const selectProject = (nextIndex: number, turnDirection: number) => {
-    if (nextIndex === active || isAnimating) return
-    if (reduce) { setActive(nextIndex); return }
-    setDirection(turnDirection)
-    pendingIndex.current = nextIndex
-    setIsAnimating(true)
-    const page = pageRef.current
-    if (!page) { setActive(nextIndex); pendingIndex.current = null; setIsAnimating(false); return }
-    const rotation = turnDirection > 0 ? -180 : 180
-    page.style.transformOrigin = turnDirection > 0 ? 'left center' : 'right center'
-    page.style.transform = 'rotateY(0deg)'
-    const animation = page.animate([
-      { transform: 'rotateY(0deg) translateZ(0px)', boxShadow: '0 18px 42px rgba(0,0,0,.16)', offset: 0 },
-      { transform: `rotateY(${rotation * 0.52}deg) translateZ(12px)`, boxShadow: turnDirection > 0 ? '-30px 8px 42px rgba(0,0,0,.38)' : '30px 8px 42px rgba(0,0,0,.38)', offset: 0.52, easing: 'cubic-bezier(.72,0,.88,.35)' },
-      { transform: `rotateY(${rotation}deg) translateZ(0px)`, boxShadow: '0 18px 42px rgba(0,0,0,.16)', offset: 1 },
-    ], { duration: PAGE_TURN_MS, easing: 'cubic-bezier(.45,0,.55,1)', fill: 'forwards' })
-    animationRef.current = animation
-    animation.onfinish = finishTurn
-    const fold = page.querySelector<HTMLElement>('.project-showcase-page-fold')
-    foldAnimationRef.current = fold?.animate(
-      [{ opacity: 0 }, { opacity: 0.82, offset: 0.5 }, { opacity: 0 }],
-      { duration: PAGE_TURN_MS, easing: 'ease-in-out', fill: 'forwards' },
-    ) ?? null
-    if (timer.current !== null) window.clearTimeout(timer.current)
-    // Safety release in case the browser suppresses the Web Animations finish event.
-    timer.current = window.setTimeout(finishTurn, PAGE_TURN_MS + 500)
-  }
-
-  const step = (turn: number) => selectProject((active + turn + projects.length) % projects.length, turn)
+  const step = (turn: number) => setActive((current) => (current + turn + projects.length) % projects.length)
 
   return (
     <section id="projects" className="relative px-5 py-24 sm:px-6 sm:py-32">
@@ -139,38 +66,44 @@ export default function Projects() {
         <Reveal delay={0.1} className="mt-12">
           <div className="project-showcase" aria-label="Featured project">
             <div className="project-showcase-visual" aria-label={`${activeProject.title} preview`}>
-              {/* Fixed neutral leaves remain still; only the foreground page turns. */}
-              <div className="project-showcase-backdrop project-showcase-backdrop-back" aria-hidden="true" />
-              <div className="project-showcase-backdrop project-showcase-backdrop-front" aria-hidden="true" />
-              <motion.div
-                ref={pageRef}
-                className="project-showcase-page"
-                initial={false}
-                style={{ transformOrigin: direction > 0 ? 'left center' : 'right center', transformStyle: 'preserve-3d' }}
-              >
-                <div className="project-showcase-page-face project-showcase-page-front">
-                  <ProjectPreview project={activeProject} index={active} active />
-                </div>
-                <div className="project-showcase-page-face project-showcase-page-back">
-                  <ProjectPreview project={projects[nextIndex]} index={nextIndex} active />
-                </div>
-                <div className="project-showcase-page-fold" aria-hidden="true" />
-              </motion.div>
+              {projects.map((project, index) => {
+                const isActive = index === active
+                const distance = (index - active + projects.length) % projects.length
+                // Keep the deck offsets deterministic: no per-render randomness or layout churn.
+                const offsets = [0, 1, -1, 2, -2, 3]
+                const offset = offsets[distance] ?? 0
+                return (
+                  <motion.div
+                    key={project.title}
+                    className="project-showcase-page"
+                    aria-hidden={!isActive}
+                    style={{ zIndex: isActive ? projects.length + 1 : projects.length - distance }}
+                    initial={false}
+                    animate={isActive
+                      ? { x: 0, y: reduce ? 0 : [0, -22, 0], rotate: 0, scale: 1, z: 0, opacity: 1 }
+                      : { x: offset * 9, y: Math.abs(offset) * 4, rotate: offset * 1.25, scale: 0.985 - Math.abs(offset) * 0.008, z: -distance * 28, opacity: distance < 4 ? 0.92 : 0 }}
+                    transition={{ duration: reduce ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
+                    onClick={() => !isActive && setActive(index)}
+                  >
+                    <ProjectPreview project={project} index={index} active={isActive} />
+                  </motion.div>
+                )
+              })}
             </div>
 
-            <article className={cn('project-showcase-details', isAnimating && 'is-changing')} aria-live="polite" aria-atomic="true">
-              <div>
+            <article className="project-showcase-details" aria-live="polite" aria-atomic="true">
+              <motion.div key={activeProject.title} initial={reduce ? false : { y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: reduce ? 0 : 0.36, ease: 'easeOut' }}>
                 <div className="project-showcase-kicker">{activeProject.tagline}</div>
                 <h3 className="project-showcase-title">{activeProject.title}</h3>
                 <p className="project-showcase-description">{activeProject.description}</p>
                 <div className="mt-5 flex flex-wrap gap-1.5">
                   {activeProject.tags.map((tag) => <span key={tag} className="rounded-md border border-border bg-surface/50 px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}
                 </div>
-              </div>
+              </motion.div>
 
               <div className="project-showcase-actions">
-                <button type="button" onClick={() => step(-1)} disabled={isAnimating} className="project-showcase-nav"><ArrowLeft size={16} /><span>Previous</span></button>
-                <button type="button" onClick={() => step(1)} disabled={isAnimating} className="project-showcase-nav"><span>Next</span><ArrowRight size={16} /></button>
+                <button type="button" onClick={() => step(-1)} className="project-showcase-nav"><ArrowLeft size={16} /><span>Previous</span></button>
+                <button type="button" onClick={() => step(1)} className="project-showcase-nav"><span>Next</span><ArrowRight size={16} /></button>
                 {activeProject.link ? <a href={activeProject.link} target="_blank" rel="noopener noreferrer" className="project-showcase-open">Open project <ArrowUpRight size={15} /></a> : activeProject.repo ? <a href={activeProject.repo} target="_blank" rel="noopener noreferrer" className="project-showcase-open">View code <Github size={15} /></a> : <span className="project-showcase-private"><Dot size={16} /> Internal / not public</span>}
               </div>
             </article>
