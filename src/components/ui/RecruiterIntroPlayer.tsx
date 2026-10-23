@@ -66,8 +66,7 @@ export default function RecruiterIntroPlayer() {
     <section className="recruiter-player" aria-label="Recruiter introduction audio player">
       <audio
         ref={audioRef}
-        src="/recruiter-intro.mp3"
-        preload="auto"
+        preload="metadata"
         playsInline
         onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
         onDurationChange={(event) => setDuration(event.currentTarget.duration)}
@@ -75,8 +74,11 @@ export default function RecruiterIntroPlayer() {
         onPlay={() => { setPlaying(true); setError(false) }}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
+        onCanPlay={() => setError(false)}
         onError={() => setError(true)}
-      />
+      >
+        <source src="/recruiter-intro.mp3" type="audio/mpeg" />
+      </audio>
       <span className="recruiter-player-doodle" aria-hidden="true">☺</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
@@ -86,7 +88,7 @@ export default function RecruiterIntroPlayer() {
         <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
         <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
         <span className="recruiter-art-sticker recruiter-art-sticker-two" aria-hidden="true">🎧</span>
-        <span className="recruiter-cd" aria-hidden="true"><i /></span>
+        <span className={`recruiter-cd${playing ? ' is-playing' : ''}`} aria-hidden="true"><i /></span>
         <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           Say hello <span aria-hidden="true">↗</span>
         </button>

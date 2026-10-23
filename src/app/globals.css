@@ -353,6 +353,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-cd::before { position: absolute; inset: 7px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; content: ''; }
 .recruiter-cd::after { position: absolute; inset: 1px; border-radius: 50%; background: conic-gradient(from 12deg, transparent 0deg 240deg, rgba(255,255,255,.42) 270deg, rgba(255,255,255,.08) 302deg, transparent 326deg); content: ''; }
 .recruiter-cd i { position: relative; z-index: 1; width: 9px; aspect-ratio: 1; border: 2px solid rgba(28,30,35,.72); border-radius: 50%; background: #b7bac0; box-shadow: 0 0 0 2px rgba(220,222,226,.75); }
+.recruiter-cd.is-playing { animation-duration: 4.2s; }
 @keyframes recruiter-cd-spin { to { transform: rotate(360deg); } }
 @keyframes recruiter-sticker-float { 50% { translate: 0 -4px; } }
 .recruiter-player-heading { display: flex; align-items: center; gap: 10px; min-width: 0; margin-top: 22px; }

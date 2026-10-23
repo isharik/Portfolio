@@ -1,8 +1,10 @@
 'use client'
 import { Brain, Code2, Headset, Globe, PenTool, Workflow, GraduationCap, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 import GlassCard from '@/components/ui/GlassCard'
 import { Reveal, RevealItem } from '@/components/ui/Reveal'
 import { profile, languages, credentials } from '@/lib/content'
+import { cn } from '@/lib/utils'
 
 const focus = [
   { icon: Brain, label: 'AI & LLM Evaluation', note: 'Structured QA & RLHF feedback' },
@@ -72,8 +74,8 @@ export default function About() {
               {credentials.map((c) => {
                 const card = (
                   <>
-                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-                      <GraduationCap size={17} />
+                    <div className="relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 text-accent">
+                      {c.logo ? <Image src={c.logo} alt="" fill sizes="40px" unoptimized className={cn('p-1', c.logo.includes('miet') || c.logo.includes('pharos-network') ? 'object-cover object-left' : 'object-contain dark:brightness-0 dark:invert')} /> : <GraduationCap size={17} />}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium text-fg">{c.title}</div>

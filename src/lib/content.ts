@@ -318,6 +318,7 @@ export const credentials = [
   {
     title: 'B.E. Computer Science',
     org: 'MIET · India',
+    logo: '/logos/miet.png',
     period: '2019 — 2023',
     note: 'GPA 3.1 / 4.0',
     href: null,
@@ -325,6 +326,7 @@ export const credentials = [
   {
     title: 'Certified System Administrator',
     org: 'Micro1',
+    logo: '/logos/micro1-mark.svg',
     period: '2025',
     note: 'System administration',
     href: 'https://micro1-portal-data.s3.amazonaws.com/engineer-certificates/1759308472-4893f61f-5c08-4178-8451-d4131afc3683.jpg',
@@ -332,6 +334,7 @@ export const credentials = [
   {
     title: 'Pharos Network Storyteller',
     org: 'Pharos Network',
+    logo: '/logos/pharos-network.png',
     period: '2025 — Present',
     note: 'Selected ecosystem contributor',
     href: 'https://twitter.com/isharik99',
