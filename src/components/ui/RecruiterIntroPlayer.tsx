@@ -77,24 +77,14 @@ export default function RecruiterIntroPlayer() {
         onError={() => setError(true)}
       />
 
-      <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik voice note cover art">
-        <div className="recruiter-art-orbit recruiter-art-orbit-one" />
-        <div className="recruiter-art-orbit recruiter-art-orbit-two" />
-        <div className="recruiter-art-copy">
-          <span>SHARIK HUSSAIN</span>
-          <strong>Voice note<br />for recruiters</strong>
-          <small>An introduction about me</small>
-          <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
-            Say hello <span aria-hidden="true">↗</span>
-          </button>
-          {greetingIndex !== null && <span className="recruiter-art-greeting" role="status" aria-live="polite">{greetings[greetingIndex]}</span>}
-        </div>
+      <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="120px" />
-          <span className="recruiter-art-avatar-hint">HELLO</span>
         </button>
-        <div className="recruiter-art-bars" aria-hidden="true">{bars.slice(0, 16).map((height, index) => <i key={index} style={{ '--bar-height': `${height}px`, '--bar-delay': `${index * 32}ms` } as CSSProperties} />)}</div>
-        <span className="recruiter-art-index">INTRO · 01</span>
+        <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
+          Say hello <span aria-hidden="true">↗</span>
+        </button>
+        {greetingIndex !== null && <span className="recruiter-art-greeting" role="status" aria-live="polite">{greetings[greetingIndex]}</span>}
       </div>
 
       <div className="recruiter-player-heading">
