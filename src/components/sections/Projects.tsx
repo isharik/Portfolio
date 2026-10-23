@@ -68,22 +68,25 @@ export default function Projects() {
             <div className="project-showcase-visual" aria-label={`${activeProject.title} preview`}>
               {projects.map((project, index) => {
                 const isActive = index === active
-                const distance = (index - active + projects.length) % projects.length
-                // Keep the deck offsets deterministic: no per-render randomness or layout churn.
-                const offsets = [0, 1, -1, 2, -2, 3]
-                const offset = offsets[distance] ?? 0
+                const forward = (index - active + projects.length) % projects.length
+                const signedDepth = forward > projects.length / 2 ? forward - projects.length : forward
+                const depth = Math.abs(signedDepth)
+                // Stable per-card angles give the deck the reference's tilted stack
+                // without generating a new random pose on every render.
+                const restingAngle = signedDepth * 1.15 + (((index * 13 + 7) % 7) - 3) * 0.35
                 return (
                   <motion.div
                     key={project.title}
                     className="project-showcase-page"
                     aria-hidden={!isActive}
-                    style={{ zIndex: isActive ? projects.length + 1 : projects.length - distance }}
+                    style={{ zIndex: isActive ? 999 : projects.length - depth, transformOrigin: '50% 82%' }}
                     initial={false}
                     animate={isActive
-                      ? { x: 0, y: reduce ? 0 : [0, -22, 0], rotate: 0, scale: 1, z: 0, opacity: 1 }
-                      : { x: offset * 9, y: Math.abs(offset) * 4, rotate: offset * 1.25, scale: 0.985 - Math.abs(offset) * 0.008, z: -distance * 28, opacity: distance < 4 ? 0.92 : 0 }}
-                    transition={{ duration: reduce ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
-                    onClick={() => !isActive && setActive(index)}
+                      ? { opacity: 1, scale: 1, z: 0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: reduce ? 0 : [0, -18, 0] }
+                      : { opacity: 0.7, scale: 1 - depth * 0.022, z: -depth * 42, rotate: restingAngle, rotateX: 1.5 + depth * 0.35, rotateY: signedDepth * 2.4, x: signedDepth * 9, y: depth * 7 }}
+                    transition={reduce
+                      ? { duration: 0 }
+                      : { type: 'spring', stiffness: 115, damping: 23, mass: 0.82 }}
                   >
                     <ProjectPreview project={project} index={index} active={isActive} />
                   </motion.div>
