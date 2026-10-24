@@ -30,8 +30,8 @@ const GREETINGS = [
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-const MORPH_DURATION = 0.28
-const MORPH_REST = 0.06
+const MORPH_DURATION = 0.34
+const MORPH_REST = 0.08
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
@@ -89,6 +89,7 @@ export default function Preloader() {
                     texts={GREETING_TEXTS}
                     morphDuration={reduce ? 0 : MORPH_DURATION}
                     restDuration={reduce ? 0.16 : MORPH_REST}
+                    repeat={false}
                     onWordChange={setIndex}
                     className="text-fg"
                   />

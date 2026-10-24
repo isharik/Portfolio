@@ -8,6 +8,7 @@ type MorphingTextProps = {
   className?: string
   morphDuration?: number
   restDuration?: number
+  repeat?: boolean
   onWordChange?: (index: number) => void
 }
 
@@ -21,6 +22,7 @@ export function MorphingText({
   className,
   morphDuration = 0.48,
   restDuration = 0.22,
+  repeat = true,
   onWordChange,
 }: MorphingTextProps) {
   const firstRef = useRef<HTMLSpanElement>(null)
@@ -66,8 +68,12 @@ export function MorphingText({
       if (reduceMotion) {
         restElapsed += delta
         if (restElapsed >= Math.max(restMs, 100)) {
+          if (!repeat && current === texts.length - 1) {
+            cancelAnimationFrame(frame)
+            return
+          }
           restElapsed = 0
-          current = (current + 1) % texts.length
+          current = repeat ? (current + 1) % texts.length : current + 1
           next = (current + 1) % texts.length
           settle()
           callbackRef.current?.(current)
@@ -80,7 +86,8 @@ export function MorphingText({
       restElapsed = 0
       morphElapsed += delta
 
-      const fraction = Math.min(1, morphElapsed / morphMs)
+      const linearFraction = Math.min(1, morphElapsed / morphMs)
+      const fraction = linearFraction * linearFraction * (3 - 2 * linearFraction)
       const inverse = 1 - fraction
       const blurIn = Math.min(8 / Math.max(fraction, 0.0001) - 8, 100)
       const blurOut = Math.min(8 / Math.max(inverse, 0.0001) - 8, 100)
@@ -92,19 +99,23 @@ export function MorphingText({
       second.style.filter = `blur(${blurIn}px)`
       second.style.opacity = String(Math.pow(fraction, 0.4))
 
-      if (fraction >= 1) {
+      if (linearFraction >= 1) {
         current = next
-        next = (current + 1) % texts.length
         morphElapsed = 0
         settle()
         callbackRef.current?.(current)
+        if (!repeat && current === texts.length - 1) {
+          cancelAnimationFrame(frame)
+          return
+        }
+        next = (current + 1) % texts.length
       }
     }
 
     settle()
     frame = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(frame)
-  }, [texts, morphDuration, restDuration, reduceMotion])
+  }, [texts, morphDuration, restDuration, reduceMotion, repeat])
 
   if (!texts.length) return null
 
