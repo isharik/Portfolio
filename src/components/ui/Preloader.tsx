@@ -30,8 +30,8 @@ const GREETINGS = [
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-// Each greeting occupies a 0.8s beat, including its smooth transition.
-const GREETING_BEAT = 0.8
+// Each greeting occupies a 0.45s beat, including its smooth transition.
+const GREETING_BEAT = 0.45
 const MORPH_DURATION = 0.22
 const MORPH_REST = GREETING_BEAT - MORPH_DURATION
 
