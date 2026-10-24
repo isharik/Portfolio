@@ -1,7 +1,8 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Background from '@/components/three/Background'
+import { TextRoll } from '@/components/ui/text-roll'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
@@ -33,7 +34,6 @@ export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
   const reduce = useReducedMotion()
-  const letters = useMemo(() => Array.from(GREETINGS[index].text), [index])
 
   // Lock scroll only while the intro is visible; restore the moment it hides.
   useEffect(() => {
@@ -86,35 +86,24 @@ export default function Preloader() {
             <Background overlay />
             <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6">
               <div className="relative flex h-40 w-full items-center justify-center">
-                <AnimatePresence initial={false} mode="sync">
-                  <motion.span
+                <AnimatePresence initial={false} mode="wait">
+                  <motion.div
                     key={index}
-                    initial="hidden"
-                    animate="shown"
-                    exit="dissolve"
-                    variants={{
-                      hidden: { opacity: 0 },
-                      shown: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.035, delayChildren: 0.02 } },
-                      dissolve: { opacity: 0, transition: { staggerChildren: reduce ? 0 : 0.018, staggerDirection: -1 } },
-                    }}
+                    initial={{ opacity: 0, y: 6, filter: 'blur(3px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -5, filter: 'blur(2px)' }}
+                    transition={{ duration: reduce ? 0 : 0.2, ease: OUT }}
                     className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg"
-                    style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1, willChange: reduce ? 'auto' : 'opacity' }}
+                    style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
                   >
-                    <span className="inline-flex" aria-label={GREETINGS[index].text}>
-                      {letters.map((letter, letterIndex) => (
-                        <motion.span key={`${letter}-${letterIndex}`} aria-hidden="true" variants={{
-                          hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
-                          shown: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: reduce ? 0 : 0.34, ease: OUT } },
-                          dissolve: { opacity: 0, y: -13 - (letterIndex % 3) * 3, x: (letterIndex % 2 ? 1 : -1) * (4 + letterIndex % 4), scale: 0.72, filter: 'blur(5px)', transition: { duration: reduce ? 0 : 0.32, ease: 'easeIn', delay: reduce ? 0 : letterIndex * 0.018 } },
-                        }}>{letter === ' ' ? '\u00a0' : letter}</motion.span>
-                      ))}
-                    </span>
-                    <motion.span className="preloader-emoji" aria-hidden="true" variants={{
-                      hidden: { opacity: 0, scale: 0.75, rotate: -12 },
-                      shown: { opacity: 1, scale: 1, rotate: 0, transition: { duration: reduce ? 0 : 0.32, ease: OUT } },
-                      dissolve: { opacity: 0, scale: 0.7, y: -7, filter: 'blur(4px)', transition: { duration: reduce ? 0 : 0.25, ease: 'easeIn' } },
-                    }}>{GREETINGS[index].emoji}</motion.span>
-                  </motion.span>
+                    <TextRoll
+                      duration={reduce ? 0 : 0.34}
+                      getEnterDelay={(letterIndex) => reduce ? 0 : letterIndex * 0.025}
+                      getExitDelay={(letterIndex) => reduce ? 0 : letterIndex * 0.025 + 0.04}
+                      transition={{ ease: 'easeInOut' }}
+                    >{GREETINGS[index].text}</TextRoll>
+                    <span className="preloader-emoji" aria-hidden="true">{GREETINGS[index].emoji}</span>
+                  </motion.div>
                 </AnimatePresence>
               </div>
 
