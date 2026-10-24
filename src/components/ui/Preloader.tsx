@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Background from '@/components/three/Background'
 
@@ -7,23 +7,23 @@ const OUT = [0.23, 1, 0.32, 1] as const
 
 // "Hello" around the world (native script where it reads well)
 const GREETINGS = [
-  'Hello 👋',
-  'नमस्ते 🙏',
-  'Hola ☀️',
-  'Bonjour 🥐',
-  'Ciao 🤌',
-  'こんにちは 🌸',
-  '你好 🏮',
-  '안녕하세요 💜',
-  'مرحبا 🌙',
-  'Olá 🎉',
-  'Hallo 🌷',
-  'Привет ❄️',
-  'Vanakkam 🌺',
-  'Salaam ✨',
+  { text: 'Hello', emoji: '👋' },
+  { text: 'नमस्ते', emoji: '🙏' },
+  { text: 'Hola', emoji: '🌞' },
+  { text: 'Bonjour', emoji: '🌷' },
+  { text: 'Ciao', emoji: '🍋' },
+  { text: 'こんにちは', emoji: '🌸' },
+  { text: '你好', emoji: '🏮' },
+  { text: '안녕하세요', emoji: '🫰' },
+  { text: 'مرحبا', emoji: '🌙' },
+  { text: 'Olá', emoji: '🪇' },
+  { text: 'Hallo', emoji: '🌼' },
+  { text: 'Привет', emoji: '❄️' },
+  { text: 'Vanakkam', emoji: '🌺' },
+  { text: 'Salaam', emoji: '✨' },
 ]
-const FIRST_HOLD = 640
-const STEP = 340
+const FIRST_HOLD = 760
+const STEP = 520
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
@@ -33,6 +33,7 @@ export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
   const reduce = useReducedMotion()
+  const letters = useMemo(() => Array.from(GREETINGS[index].text), [index])
 
   // Lock scroll only while the intro is visible; restore the moment it hides.
   useEffect(() => {
@@ -85,17 +86,34 @@ export default function Preloader() {
             <Background overlay />
             <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6">
               <div className="relative flex h-40 w-full items-center justify-center">
-                <AnimatePresence initial={false}>
+                <AnimatePresence initial={false} mode="sync">
                   <motion.span
                     key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: reduce ? 0 : 0.26, ease: OUT }}
-                    className="absolute inset-0 flex items-center justify-center text-center font-display font-bold tracking-tight text-fg"
+                    initial="hidden"
+                    animate="shown"
+                    exit="dissolve"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      shown: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.035, delayChildren: 0.02 } },
+                      dissolve: { opacity: 0, transition: { staggerChildren: reduce ? 0 : 0.018, staggerDirection: -1 } },
+                    }}
+                    className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg"
                     style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1, willChange: reduce ? 'auto' : 'opacity' }}
                   >
-                    {GREETINGS[index]}
+                    <span className="inline-flex" aria-label={GREETINGS[index].text}>
+                      {letters.map((letter, letterIndex) => (
+                        <motion.span key={`${letter}-${letterIndex}`} aria-hidden="true" variants={{
+                          hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
+                          shown: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: reduce ? 0 : 0.34, ease: OUT } },
+                          dissolve: { opacity: 0, y: -13 - (letterIndex % 3) * 3, x: (letterIndex % 2 ? 1 : -1) * (4 + letterIndex % 4), scale: 0.72, filter: 'blur(5px)', transition: { duration: reduce ? 0 : 0.32, ease: 'easeIn', delay: reduce ? 0 : letterIndex * 0.018 } },
+                        }}>{letter === ' ' ? '\u00a0' : letter}</motion.span>
+                      ))}
+                    </span>
+                    <motion.span className="preloader-emoji" aria-hidden="true" variants={{
+                      hidden: { opacity: 0, scale: 0.75, rotate: -12 },
+                      shown: { opacity: 1, scale: 1, rotate: 0, transition: { duration: reduce ? 0 : 0.32, ease: OUT } },
+                      dissolve: { opacity: 0, scale: 0.7, y: -7, filter: 'blur(4px)', transition: { duration: reduce ? 0 : 0.25, ease: 'easeIn' } },
+                    }}>{GREETINGS[index].emoji}</motion.span>
                   </motion.span>
                 </AnimatePresence>
               </div>

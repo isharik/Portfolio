@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import LampToggle from '@/components/ui/LampToggle'
 import SoundToggle from '@/components/ui/SoundToggle'
@@ -78,8 +79,8 @@ export default function Navbar() {
           onClick={(e) => go(e, '#home')}
           className="flex items-center gap-2 rounded-full font-display text-sm font-semibold tracking-tight text-fg"
         >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-[13px] font-bold text-[var(--accent-fg)]">
-            {profile.initials}
+          <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full border border-border bg-surface">
+            <Image src="/anime-avatar.png" alt="" fill sizes="32px" className="object-contain" />
           </span>
           <span className="hidden sm:inline">{profile.name}</span>
         </a>
@@ -117,7 +118,7 @@ export default function Navbar() {
           <a
             href="#contact"
             onClick={(e) => go(e, '#contact')}
-            className="hidden rounded-full bg-accent px-4 py-2 text-sm font-medium text-[var(--accent-fg)] transition-[filter,transform] duration-200 ease-out hover:brightness-110 active:scale-95 md:inline-flex"
+            className="hidden rounded-full bg-[#22282a] px-4 py-2 text-sm font-medium text-white transition-[filter,transform] duration-200 ease-out hover:brightness-125 active:scale-95 md:inline-flex"
           >
             Get in touch
           </a>
@@ -159,7 +160,7 @@ export default function Navbar() {
                 <a
                   href="#contact"
                   onClick={(e) => go(e, '#contact')}
-                  className="block rounded-xl bg-accent px-4 py-3 text-center text-sm font-medium text-[var(--accent-fg)]"
+                  className="block rounded-xl bg-[#22282a] px-4 py-3 text-center text-sm font-medium text-white"
                 >
                   Get in touch
                 </a>

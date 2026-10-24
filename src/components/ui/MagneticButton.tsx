@@ -19,7 +19,7 @@ type Props = {
 
 const styles: Record<Variant, string> = {
   primary:
-    'bg-accent text-[var(--accent-fg)] hover:brightness-110 shadow-[0_4px_20px_-4px_var(--accent)]',
+    'bg-[var(--action)] text-white hover:brightness-110 shadow-[0_4px_20px_-4px_var(--action)]',
   secondary:
     'border border-border bg-surface/60 text-fg hover:border-border-strong hover:bg-[var(--surface-muted)]',
   ghost: 'text-fg-muted hover:text-fg',

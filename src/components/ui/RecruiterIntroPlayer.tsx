@@ -80,6 +80,8 @@ export default function RecruiterIntroPlayer() {
         <source src="/recruiter-intro.mp3" type="audio/mpeg" />
       </audio>
       <span className="recruiter-player-doodle" aria-hidden="true">☺</span>
+      <span className="recruiter-player-sticker recruiter-player-sticker-star" aria-hidden="true">✦</span>
+      <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">☺</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
