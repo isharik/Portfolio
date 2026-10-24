@@ -148,37 +148,46 @@ export default function RecruiterIntroPlayer() {
             </button>
           </div>
         </div>
-        <aside className="recruiter-art-aside" aria-label="Local weather and personal mark">
-        <div className={`recruiter-weather${weather ? ' is-ready' : ''}`}>
-          {weatherStatus === 'consent' || weatherStatus === 'unavailable' ? (
-            <button type="button" className="recruiter-weather-enable" onClick={enableLocalWeather} aria-label="Enable local weather. Your location is sent to Open-Meteo for the forecast and OpenStreetMap to find the city name.">
-              <span aria-hidden="true">☀️</span>
-              <span>{weatherStatus === 'consent' ? 'LOCAL' : 'RETRY'}</span>
-              <small>{weatherStatus === 'consent' ? 'SHARE GPS' : 'WEATHER'}</small>
-            </button>
-          ) : (
-            <>
-              <span className="recruiter-weather-sky" aria-hidden="true">{weather ? weatherLabel(weather.code)[0] : '…'}</span>
-              <span className="recruiter-weather-reading">{weather ? `${weather.temperature}°` : '––°'}</span>
-              <span className="recruiter-weather-place">{weather?.place ?? 'LOCAL'}</span>
-              <span className="recruiter-weather-condition">{weather ? weatherLabel(weather.code)[1] : 'LOADING'}</span>
-              <span className="recruiter-weather-credit">OPEN-METEO · OSM</span>
-            </>
-          )}
-        </div>
-          <div className="recruiter-brand-mark" aria-label="Sharik personal mark"><span>S</span><small>SHARIK</small></div>
+        <aside className="recruiter-art-aside" aria-label="Local weather and decorative showpiece">
+          <div className={`recruiter-weather${weather ? ' is-ready' : ''}`}>
+            {weatherStatus === 'consent' || weatherStatus === 'unavailable' ? (
+              <button type="button" className="recruiter-weather-enable" onClick={enableLocalWeather} aria-label="Enable local weather. Your location is sent to Open-Meteo for the forecast and OpenStreetMap to find the city name.">
+                <span aria-hidden="true">☀️</span>
+                <span>{weatherStatus === 'consent' ? 'LOCAL WEATHER' : 'RETRY WEATHER'}</span>
+                <small>SHARE LOCATION TO VIEW</small>
+              </button>
+            ) : (
+              <div className="recruiter-weather-live">
+                <span className="recruiter-weather-sky" aria-hidden="true">{weather ? weatherLabel(weather.code)[0] : '…'}</span>
+                <div className="recruiter-weather-copy">
+                  <span className="recruiter-weather-reading">{weather ? `${weather.temperature}°` : '––°'}</span>
+                  <span className="recruiter-weather-place">{weather?.place ?? 'LOCAL'}</span>
+                  <span className="recruiter-weather-condition">{weather ? weatherLabel(weather.code)[1] : 'LOADING'}</span>
+                </div>
+                <span className="recruiter-weather-lines" aria-hidden="true"><i /><i /><i /></span>
+                <span className="recruiter-weather-credit">OPEN-METEO · OSM</span>
+              </div>
+            )}
+          </div>
+          <div className="recruiter-showpiece" role="img" aria-label="Decorative teal orbit showpiece">
+            <span className="recruiter-showpiece-orbit" />
+            <span className="recruiter-showpiece-star">✦</span>
+            <span className="recruiter-showpiece-dot" />
+            <span className="recruiter-showpiece-sparkle">✦</span>
+          </div>
         </aside>
         <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
         <span className={`recruiter-cd${playing ? ' is-playing' : ''}`} aria-hidden="true"><i /></span>
       </div>
 
+      <div className="recruiter-player-console">
       <div className="recruiter-player-heading">
         <span className="recruiter-player-copy">
           <span className="recruiter-player-kicker"><Volume2 size={12} /> PERSONAL VOICE NOTE</span>
           <span className="recruiter-player-title">Meet Sharik · Intro</span>
         </span>
         <span className={`recruiter-wave${playing ? ' is-playing' : ''}`} aria-hidden="true">
-          {bars.slice(0, 10).map((height, index) => <i key={index} style={{ '--bar-height': `${Math.max(8, height * 0.48)}px`, '--bar-delay': `${index * 45}ms` } as CSSProperties} />)}
+          {bars.slice(0, 14).map((height, index) => <i key={index} style={{ '--bar-height': `${Math.max(8, height * 0.68)}px`, '--bar-delay': `${index * 45}ms` } as CSSProperties} />)}
         </span>
       </div>
 
@@ -200,7 +209,7 @@ export default function RecruiterIntroPlayer() {
       <div className="recruiter-player-controls">
         <button type="button" className="recruiter-control" aria-label="Back 10 seconds" onClick={() => skip(-10)}><Rewind size={17} /></button>
         <button type="button" className="recruiter-control recruiter-play" aria-label={playing ? 'Pause introduction' : 'Play introduction'} onClick={togglePlayback}>
-          {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+          {playing ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
         </button>
         <button type="button" className="recruiter-control" aria-label="Forward 10 seconds" onClick={() => skip(10)}><FastForward size={17} /></button>
         <button type="button" className={`recruiter-control recruiter-repeat${loop ? ' is-active' : ''}`} aria-label={loop ? 'Turn repeat off' : 'Repeat introduction'} aria-pressed={loop} onClick={() => {
@@ -210,6 +219,7 @@ export default function RecruiterIntroPlayer() {
         }}><Repeat size={16} /></button>
       </div>
       {error && <p className="recruiter-player-error" role="status">Couldn’t play the voice note here. <a href="/recruiter-intro.mp3" download="Sharik-Intro.mp3">Download the audio</a>.</p>}
+      </div>
     </section>
   )
 }

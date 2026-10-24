@@ -63,7 +63,7 @@ export default function Hero() {
 
   return (
     <section id="home" ref={sectionRef} className="relative flex min-h-[100svh] items-center px-5 py-24 sm:px-6 sm:py-28">
-      <div className="hero-layout mx-auto grid w-full max-w-content items-center gap-10 lg:items-start lg:grid-cols-[minmax(410px,0.8fr)_minmax(0,1.2fr)] lg:gap-12">
+      <div className="hero-layout mx-auto grid w-full max-w-content items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
         <div className="rise flex justify-center lg:justify-start" style={rise(0.12)}>
           <div data-parallax-layer="1"><RecruiterIntroPlayer /></div>
         </div>
