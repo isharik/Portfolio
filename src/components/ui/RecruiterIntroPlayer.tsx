@@ -131,11 +131,24 @@ export default function RecruiterIntroPlayer() {
       <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">😎</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
-        <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
-          <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="120px" />
-        </button>
-        <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
-        <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
+        <div className="recruiter-art-main">
+          <div className="recruiter-avatar-wrap">
+            <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
+              <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="(max-width: 639px) 104px, 132px" />
+            </button>
+            <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
+            <span className="recruiter-headphone-badge" aria-hidden="true">🎧</span>
+          </div>
+          <div className="recruiter-art-intro">
+            <span className="recruiter-art-greeting" role={greetingIndex === null ? undefined : 'status'} aria-live={greetingIndex === null ? undefined : 'polite'}>
+              {greetingIndex === null ? 'Hello — nice to meet you ✨' : greetings[greetingIndex]}
+            </span>
+            <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
+              Say hello <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+        <aside className="recruiter-art-aside" aria-label="Local weather and personal mark">
         <div className={`recruiter-weather${weather ? ' is-ready' : ''}`}>
           {weatherStatus === 'consent' || weatherStatus === 'unavailable' ? (
             <button type="button" className="recruiter-weather-enable" onClick={enableLocalWeather} aria-label="Enable local weather. Your location is sent to Open-Meteo for the forecast and OpenStreetMap to find the city name.">
@@ -153,11 +166,10 @@ export default function RecruiterIntroPlayer() {
             </>
           )}
         </div>
+          <div className="recruiter-brand-mark" aria-label="Sharik personal mark"><span>S</span><small>SHARIK</small></div>
+        </aside>
+        <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
         <span className={`recruiter-cd${playing ? ' is-playing' : ''}`} aria-hidden="true"><i /></span>
-        <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
-          Say hello <span aria-hidden="true">↗</span>
-        </button>
-        {greetingIndex !== null && <span className="recruiter-art-greeting" role="status" aria-live="polite">{greetings[greetingIndex]}</span>}
       </div>
 
       <div className="recruiter-player-heading">
@@ -182,7 +194,7 @@ export default function RecruiterIntroPlayer() {
             setTime(next)
           }}
         />
-        <span className="recruiter-player-time" aria-live="off"><span className="recruiter-headphone-mark" role="img" aria-label="Headphones">🎧</span><time>{formatTime(time)}</time><time>{formatTime(duration)}</time></span>
+        <span className="recruiter-player-time" aria-live="off"><time>{formatTime(time)}</time><time>{formatTime(duration)}</time></span>
       </div>
 
       <div className="recruiter-player-controls">
