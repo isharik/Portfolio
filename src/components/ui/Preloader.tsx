@@ -6,32 +6,32 @@ import { MorphingText } from '@/components/ui/morphing-text'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
-// Latin transliterations keep the international greeting set consistent in the handwritten font.
+// Show each greeting in its native writing system where applicable.
 const GREETINGS = [
   { text: 'Hello', emoji: '👋' },
-  { text: 'Namaste', emoji: '🙏' },
+  { text: 'नमस्ते', emoji: '🙏' },
   { text: 'Hola', emoji: '🌞' },
   { text: 'Bonjour', emoji: '🌷' },
   { text: 'Ciao', emoji: '🍋' },
-  { text: 'Konnichiwa', emoji: '🌸' },
-  { text: 'Ni Hao', emoji: '🏮' },
-  { text: 'Annyeong', emoji: '🫰' },
-  { text: 'Marhaba', emoji: '🌙' },
+  { text: 'こんにちは', emoji: '🌸' },
+  { text: '你好', emoji: '🏮' },
+  { text: '안녕하세요', emoji: '🫰' },
+  { text: 'مرحباً', emoji: '🌙' },
   { text: 'Olá', emoji: '🪇' },
   { text: 'Hallo', emoji: '🌼' },
-  { text: 'Privet', emoji: '❄️' },
-  { text: 'Vanakkam', emoji: '🌺' },
-  { text: 'Salaam', emoji: '✨' },
+  { text: 'Привет', emoji: '❄️' },
+  { text: 'வணக்கம்', emoji: '🌺' },
+  { text: 'سلام', emoji: '✨' },
   { text: 'Jambo', emoji: '🦒' },
   { text: 'Sawubona', emoji: '🌍' },
-  { text: 'Xin Chào', emoji: '🪷' },
-  { text: 'Sawasdee', emoji: '🌼' },
-  { text: 'Shalom', emoji: '🕊️' },
+  { text: 'Xin chào', emoji: '🪷' },
+  { text: 'สวัสดี', emoji: '🌼' },
+  { text: 'שלום', emoji: '🕊️' },
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-// Each greeting occupies a 0.45s beat, including its smooth transition.
-const GREETING_BEAT = 0.45
+// Each greeting occupies a 0.28s beat, including its smooth transition.
+const GREETING_BEAT = 0.28
 const MORPH_DURATION = 0.22
 const MORPH_REST = GREETING_BEAT - MORPH_DURATION
 
