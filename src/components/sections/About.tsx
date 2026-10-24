@@ -78,25 +78,29 @@ export default function About() {
                       {c.logo ? <Image src={c.logo} alt={`${c.org} logo`} fill sizes={c.logo.includes('pharos-network') ? '76px' : '48px'} unoptimized className={cn(c.logo.includes('miet') ? 'object-contain' : 'object-contain p-1')} /> : <GraduationCap size={17} />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium text-fg">{c.title}</div>
+                      <div className={cn('text-sm font-medium text-fg', c.org === 'Micro1' ? 'line-clamp-2 text-[13px] leading-tight' : 'truncate')}>{c.title}</div>
                       <div className="truncate text-xs text-fg-muted">
                         {c.org} · {c.period}
                       </div>
                     </div>
-                    <div className="hidden shrink-0 items-center gap-1 rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted sm:flex">
-                      {c.note} {c.href && <ExternalLink size={11} aria-hidden />}
-                    </div>
+                    {c.org === 'Micro1' && c.href ? (
+                      <ExternalLink size={14} className="shrink-0 text-fg-subtle" aria-hidden />
+                    ) : (
+                      <div className="hidden shrink-0 items-center gap-1 rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted sm:flex">
+                        {c.note} {c.href && <ExternalLink size={11} aria-hidden />}
+                      </div>
+                    )}
                   </>
                 )
 
                 if (c.org === 'Micro1' && c.href) {
                   return (
-                    <div key={c.title} className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+                    <div key={c.title} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       <a
                         href={c.href}
                         target="_blank"
                         rel="noreferrer"
-                        className="surface-card flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3 py-2.5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[var(--accent)]"
+                        className="surface-card flex min-h-[84px] min-w-0 items-center gap-3 rounded-xl p-3 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[var(--accent)]"
                         aria-label={`Verify ${c.title}`}
                       >
                         {card}
@@ -105,11 +109,18 @@ export default function About() {
                         href="https://www.credly.com/badges/f77ea8b0-a683-4d04-97f4-34a61a49076f/print"
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-[var(--surface-muted)] px-3 py-2.5 text-xs font-medium text-fg transition-[border-color,transform,background-color] hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-surface sm:max-w-[190px]"
+                        className="surface-card inline-flex min-h-[84px] min-w-0 items-center justify-center gap-3 rounded-xl p-3 text-xs font-medium text-fg transition-[border-color,transform,background-color] hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-surface"
                         aria-label="View AWS Academy Graduate badge on Credly"
                       >
-                        <span className="text-left leading-snug">AWS Academy Graduate</span>
-                        <ExternalLink size={13} className="shrink-0 text-fg-subtle" aria-hidden />
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border bg-white" aria-hidden="true">
+                          <svg viewBox="0 0 40 28" className="h-6 w-8" role="img" aria-label="AWS logo">
+                            <text x="3" y="17" fill="#232f3e" fontFamily="Arial, sans-serif" fontSize="16" fontWeight="700" letterSpacing="-1.2">aws</text>
+                            <path d="M7 21.5c7 4.2 17 4.2 25-.5" fill="none" stroke="#ff9900" strokeWidth="2" strokeLinecap="round" />
+                            <path d="m29.5 18.8 3 2.2-3.5 1.5" fill="none" stroke="#ff9900" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        <span className="min-w-0 flex-1 text-left text-[13px] leading-tight">AWS Academy Graduate</span>
+                        <ExternalLink size={14} className="shrink-0 text-fg-subtle" aria-hidden />
                       </a>
                     </div>
                   )
