@@ -183,6 +183,29 @@ body {
 }
 .experience-card-watermark { mix-blend-mode: multiply; opacity: 0.055; filter: grayscale(1); }
 .dark .experience-card-watermark { mix-blend-mode: screen; opacity: 0.065; filter: grayscale(1) brightness(1.4); }
+.experience-showcase { width: min(900px, 100%); margin-inline: auto; }
+.experience-deck { position: relative; padding-bottom: 120px; perspective: 1100px; outline: none; }
+.experience-deck-card { width: 100%; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--glass-shadow); transform-style: preserve-3d; backface-visibility: hidden; }
+.experience-deck-card.is-active { position: relative; }
+.experience-deck-preview-card { position: absolute; right: 0; left: 0; height: 88px; overflow: hidden; border-radius: 16px; pointer-events: none; }
+.experience-deck-preview { position: absolute; right: 24px; bottom: 10px; left: 24px; display: flex; height: 44px; align-items: center; gap: 12px; min-width: 0; }
+.experience-deck-preview-logo { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--elevated); padding: 4px; }
+.experience-deck-preview-copy { display: grid; min-width: 0; gap: 2px; }
+.experience-deck-preview-copy strong { overflow: hidden; color: var(--fg); font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.experience-deck-preview-copy small { overflow: hidden; color: var(--fg-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.experience-deck-preview-index { margin-left: auto; color: var(--fg-subtle); font-family: var(--font-mono), monospace; font-size: 10px; }
+.experience-deck-controls { position: relative; z-index: 30; display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: -4px; }
+.experience-deck-nav { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); padding: 0 16px; color: var(--fg); font-size: 13px; font-weight: 550; transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease; }
+.experience-deck-nav:hover { transform: translateY(-1px); border-color: var(--accent); background: var(--surface-muted); }
+.experience-deck-nav:active { transform: scale(.97); }
+.experience-deck-count { min-width: 52px; color: var(--fg-subtle); font-family: var(--font-mono), monospace; font-size: 11px; font-variant-numeric: tabular-nums; text-align: center; }
+@media (max-width: 639px) {
+  .experience-deck { padding-bottom: 112px; }
+  .experience-deck-preview { right: 14px; left: 14px; gap: 8px; }
+  .experience-deck-card.is-active { min-height: 0; padding: 20px 16px; }
+  .experience-deck-controls { gap: 10px; }
+  .experience-deck-nav { min-height: 40px; padding-inline: 12px; }
+}
 
 .surface-card {
   background: var(--surface);

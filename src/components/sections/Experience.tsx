@@ -1,28 +1,30 @@
 'use client'
-import { useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import Image from 'next/image'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
-import { cn } from '@/lib/utils'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
 export default function Experience() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
-  const listRef = useRef<HTMLDivElement>(null)
-  const exp = experiences[active]
+  const [direction, setDirection] = useState(1)
+  const step = (turn: number) => {
+    setDirection(turn)
+    setActive((current) => (current + turn + experiences.length) % experiences.length)
+  }
 
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      e.preventDefault()
-      setActive((i) => Math.min(i + 1, experiences.length - 1))
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      e.preventDefault()
-      setActive((i) => Math.max(i - 1, 0))
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      step(1)
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      step(-1)
     }
   }
 
@@ -35,107 +37,91 @@ export default function Experience() {
           description="One line runs through all of it: staying close to the people that technology is meant to serve, across customer support and AI evaluation."
         />
 
-        <Reveal delay={0.1} className="mt-12 grid gap-4 lg:grid-cols-[300px_1fr] lg:gap-8">
-          {/* Rail */}
-          <div
-            ref={listRef}
-            role="tablist"
-            aria-label="Work history"
-            aria-orientation="vertical"
-            onKeyDown={onKeyDown}
-            className="flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible no-scrollbar"
-          >
-            {experiences.map((e, i) => {
-              const on = active === i
-              return (
-                <button
-                  key={e.company}
-                  role="tab"
-                  aria-selected={on}
-                  tabIndex={on ? 0 : -1}
-                  onClick={() => setActive(i)}
-                  className={cn(
-                    'group relative shrink-0 rounded-xl px-4 py-3 text-left transition-colors duration-200 lg:w-full',
-                    on ? 'bg-surface' : 'hover:bg-surface/50'
-                  )}
-                >
-                  {on && (
-                    <motion.span
-                      layoutId="exp-rail"
-                      className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-accent"
-                      transition={{ type: 'spring', stiffness: 400, damping: 34 }}
-                    />
-                  )}
-                  <div className="flex items-center gap-2.5">
-                    <span className="grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm">
-                      <Image src={e.logo} alt="" width={20} height={20} className="h-5 w-5 object-contain" unoptimized />
-                    </span>
-                    <div className={cn('text-sm font-medium transition-colors', on ? 'text-fg' : 'text-fg-muted group-hover:text-fg')}>
-                      {e.company}
-                    </div>
-                  </div>
-                  <div className="mt-0.5 hidden text-xs text-fg-subtle lg:block">{e.role}</div>
-                  <div className="mt-0.5 font-mono text-[10px] text-fg-subtle">{e.period}</div>
-                </button>
-              )
-            })}
-          </div>
+        <Reveal delay={0.1} className="mt-12">
+          <div className="experience-showcase">
+            <div className="experience-deck" role="region" aria-label="Work experience cards. Use the next and previous buttons to browse." tabIndex={0} onKeyDown={onKeyDown}>
+              <AnimatePresence initial={false} custom={direction}>
+              {experiences.map((item, index) => {
+                const depth = direction > 0
+                  ? (index - active + experiences.length) % experiences.length
+                  : (active - index + experiences.length) % experiences.length
+                const isActive = depth === 0
+                if (!isActive && depth > 3) return null
+                const previewOffset = Math.max(0, depth - 1) * 54
 
-          {/* Detail */}
-          <div className="experience-detail-card glass relative isolate min-h-[420px] self-start overflow-hidden rounded-2xl p-6 sm:p-8">
-            <div className="experience-card-watermark pointer-events-none absolute right-0 top-1/2 z-0 aspect-square w-[min(78%,360px)] -translate-y-1/2" aria-hidden="true">
-              <motion.div key={exp.company} className="absolute inset-0" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }}>
-                <Image src={exp.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
-              </motion.div>
+                return (
+                  <motion.article
+                    layout
+                    key={item.company}
+                    className={isActive
+                      ? 'experience-deck-card experience-detail-card glass is-active relative isolate min-h-[420px] overflow-hidden rounded-2xl p-6 sm:p-8'
+                      : 'experience-deck-card experience-deck-preview-card'}
+                    aria-hidden={!isActive}
+                    style={{
+                      zIndex: isActive ? 20 : experiences.length - depth,
+                      top: isActive ? undefined : `calc(100% - 152px + ${previewOffset}px)`,
+                      transformOrigin: '50% 82%',
+                      transformStyle: 'preserve-3d',
+                      backfaceVisibility: 'hidden',
+                    }}
+                    initial={false}
+                    animate={isActive
+                      ? { opacity: 1, scale: 1, z: 0, rotateX: 0, rotateY: 0, y: reduce ? 0 : [0, -8, 0] }
+                      : { opacity: 1, scale: 1 - depth * 0.018, z: -depth * 34, rotateX: 0, rotateY: reduce ? 0 : direction * -2, y: 0 }}
+                    transition={reduce
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : { type: 'spring', stiffness: 95, damping: 20, mass: 0.85 }}
+                    exit={{ opacity: 0, scale: 0.94, y: direction > 0 ? 40 : -40, z: -100, rotateY: direction > 0 ? -8 : 8 }}
+                  >
+                    {isActive ? (
+                      <>
+                        <div className="experience-card-watermark pointer-events-none absolute right-0 top-1/2 z-0 aspect-square w-[min(78%,360px)] -translate-y-1/2" aria-hidden="true">
+                          <motion.div key={item.company} className="absolute inset-0" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }}>
+                            <Image src={item.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
+                          </motion.div>
+                        </div>
+                        <motion.div className="relative z-10" key={`${active}-${item.company}`} initial={reduce ? false : { opacity: 0, y: direction * 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.3, ease: OUT }}>
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                              <h3 className="font-display text-xl font-semibold text-fg">{item.role}</h3>
+                              <div className="mt-2 flex items-center gap-2.5 text-sm font-medium text-accent">
+                                <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm">
+                                  <Image src={item.logo} alt={`${item.company} logo`} width={22} height={22} className="h-[22px] w-[22px] object-contain" unoptimized />
+                                </span>
+                                {item.company}
+                              </div>
+                              <div className="mt-0.5 text-xs text-fg-muted">{item.companyDesc}</div>
+                            </div>
+                            {item.current && <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 text-[11px] font-medium text-green-600 dark:text-green-400"><span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Current</span>}
+                          </div>
+                          <div className="mt-3 font-mono text-[11px] text-fg-subtle">{item.period} · {item.type}</div>
+                          <p className="mt-5 text-sm leading-relaxed text-fg-muted">{item.description}</p>
+                          <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                            {item.highlights.map((highlight) => <li key={highlight} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-fg-muted"><Check size={14} className="mt-0.5 shrink-0 text-accent" /><span>{highlight}</span></li>)}
+                          </ul>
+                          <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
+                            {item.tags.map((tag) => <span key={tag} className="rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}
+                          </div>
+                        </motion.div>
+                      </>
+                    ) : (
+                      <div className="experience-deck-preview">
+                        <span className="experience-deck-preview-logo"><Image src={item.logo} alt="" width={24} height={24} className="h-6 w-6 object-contain" unoptimized /></span>
+                        <span className="experience-deck-preview-copy"><strong>{item.company}</strong><small>{item.role}</small></span>
+                        <span className="experience-deck-preview-index">{String((index + 1)).padStart(2, '0')}</span>
+                      </div>
+                    )}
+                  </motion.article>
+                )
+              })}
+              </AnimatePresence>
             </div>
-            <motion.div
-              className="relative z-10"
-              key={active}
-              initial={{ opacity: 0, y: reduce ? 0 : 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduce ? 0 : 0.24, ease: OUT }}
-            >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-display text-xl font-semibold text-fg">{exp.role}</h3>
-                    <div className="mt-2 flex items-center gap-2.5 text-sm font-medium text-accent">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm">
-                        <Image src={exp.logo} alt={`${exp.company} logo`} width={22} height={22} className="h-[22px] w-[22px] object-contain" unoptimized />
-                      </span>
-                      {exp.company}
-                    </div>
-                    <div className="mt-0.5 text-xs text-fg-muted">{exp.companyDesc}</div>
-                  </div>
-                  {exp.current && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 text-[11px] font-medium text-green-600 dark:text-green-400">
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Current
-                    </span>
-                  )}
-                </div>
 
-                <div className="mt-3 font-mono text-[11px] text-fg-subtle">
-                  {exp.period} · {exp.type}
-                </div>
-
-                <p className="mt-5 text-sm leading-relaxed text-fg-muted">{exp.description}</p>
-
-                <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
-                  {exp.highlights.map((h) => (
-                    <li key={h} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-fg-muted">
-                      <Check size={14} className="mt-0.5 shrink-0 text-accent" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
-                  {exp.tags.map((t) => (
-                    <span key={t} className="rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-            </motion.div>
+            <div className="experience-deck-controls" aria-label="Experience navigation">
+              <button type="button" className="experience-deck-nav" onClick={() => step(-1)}><ArrowLeft size={16} /><span>Previous</span></button>
+              <span className="experience-deck-count" aria-live="polite">{String(active + 1).padStart(2, '0')} / {String(experiences.length).padStart(2, '0')}</span>
+              <button type="button" className="experience-deck-nav" onClick={() => step(1)}><span>Next</span><ArrowRight size={16} /></button>
+            </div>
           </div>
         </Reveal>
       </div>
