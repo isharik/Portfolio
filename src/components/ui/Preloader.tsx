@@ -31,7 +31,8 @@ const GREETINGS = [
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
 const MORPH_DURATION = 0.46
-const MORPH_REST = 0.54
+// Add ~2.4s across the full 20-greeting sequence without making each pause drag.
+const MORPH_REST = 0.66
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
