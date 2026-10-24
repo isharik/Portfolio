@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono, Pixelify_Sans } from 'next/font/g
 import './globals.css'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { SoundProvider } from '@/components/ui/SoundProvider'
+import SmoothScrollProvider from '@/components/ui/SmoothScrollProvider'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-display' })
@@ -78,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider>
-          <SoundProvider>{children}</SoundProvider>
+          <SoundProvider><SmoothScrollProvider>{children}</SmoothScrollProvider></SoundProvider>
         </ThemeProvider>
       </body>
     </html>

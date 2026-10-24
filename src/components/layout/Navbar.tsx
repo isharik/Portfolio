@@ -7,6 +7,7 @@ import LampToggle from '@/components/ui/LampToggle'
 import SoundToggle from '@/components/ui/SoundToggle'
 import { navLinks, profile } from '@/lib/content'
 import { cn } from '@/lib/utils'
+import { scrollToSection } from '@/lib/scroll'
 
 export default function Navbar() {
   const reduce = useReducedMotion()
@@ -58,7 +59,7 @@ export default function Navbar() {
   const go = (e: React.MouseEvent, href: string) => {
     e.preventDefault()
     setOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
+    scrollToSection(href, Boolean(reduce))
   }
 
   return (

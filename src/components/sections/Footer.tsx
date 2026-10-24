@@ -1,6 +1,7 @@
 'use client'
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react'
 import { profile, socials, navLinks } from '@/lib/content'
+import { scrollToSection } from '@/lib/scroll'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -13,7 +14,7 @@ export default function Footer() {
 
   const go = (e: React.MouseEvent, href: string) => {
     e.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    scrollToSection(href)
   }
 
   return (

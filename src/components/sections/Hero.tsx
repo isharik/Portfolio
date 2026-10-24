@@ -1,52 +1,102 @@
 'use client'
-import { type CSSProperties } from 'react'
+import { type CSSProperties, useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowUpRight } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
 import ParticleTitle from '@/components/ui/ParticleTitle'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
 import { profile } from '@/lib/content'
+import { scrollToSection } from '@/lib/scroll'
 
 const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `${delay}s` })
 
 export default function Hero() {
   const reduce = useReducedMotion()
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || reduce) return
+
+    gsap.registerPlugin(ScrollTrigger)
+    const media = gsap.matchMedia()
+    const setup = (layers: Array<[string, number]>) => {
+      layers.forEach(([selector, yPercent]) => {
+        section.querySelectorAll<HTMLElement>(selector).forEach((element) => {
+          gsap.to(element, {
+            yPercent,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 0.25,
+              invalidateOnRefresh: true,
+            },
+          })
+        })
+      })
+    }
+
+    media.add('(min-width: 768px)', () => setup([
+      ['[data-parallax-layer="1"]', 28],
+      ['[data-parallax-layer="2"]', 20],
+      ['[data-parallax-layer="3"]', 12],
+      ['[data-parallax-layer="4"]', 5],
+    ]))
+    media.add('(max-width: 767px)', () => setup([
+      ['[data-parallax-layer="1"]', 16],
+      ['[data-parallax-layer="2"]', 12],
+      ['[data-parallax-layer="3"]', 7],
+      ['[data-parallax-layer="4"]', 3],
+    ]))
+
+    return () => media.revert()
+  }, [reduce])
 
   const go = (e: React.MouseEvent, href: string) => {
     e.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
+    scrollToSection(href, Boolean(reduce))
   }
 
   return (
-    <section id="home" className="relative flex min-h-[100svh] items-center px-5 py-24 sm:px-6 sm:py-28">
+    <section id="home" ref={sectionRef} className="relative flex min-h-[100svh] items-center px-5 py-24 sm:px-6 sm:py-28">
       <div className="hero-layout mx-auto grid w-full max-w-content items-center gap-12 lg:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] lg:gap-16">
         <div className="rise flex justify-center lg:justify-start" style={rise(0.12)}>
-          <RecruiterIntroPlayer />
+          <div data-parallax-layer="1"><RecruiterIntroPlayer /></div>
         </div>
 
         <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="rise mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1" style={rise(0.2)}>
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            <span className="font-mono text-[11px] tracking-wide text-fg-muted">{profile.availability}</span>
+          <div className="rise mt-4" style={rise(0.2)}>
+            <span data-parallax-layer="4" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              <span className="font-mono text-[11px] tracking-wide text-fg-muted">{profile.availability}</span>
+            </span>
           </div>
 
-          <p className="eyebrow rise mt-5" style={rise(0.28)}>{profile.eyebrow}</p>
+          <p className="eyebrow rise mt-5" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
 
-          <div className="mt-3 w-full">
+          <div data-parallax-layer="2" className="mt-3 w-full">
             <ParticleTitle lead={profile.headlineLead} accent={profile.headlineAccent} />
           </div>
 
           <p className="rise mt-4 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base" style={rise(1.48)}>
-            {profile.summary}
+            <span data-parallax-layer="3" className="block">{profile.summary}</span>
           </p>
 
-          <div className="rise mt-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start" style={rise(1.6)}>
-            <MagneticButton href="#contact" onClick={(e) => go(e, '#contact')} variant="primary">Let&apos;s talk <ArrowUpRight size={16} /></MagneticButton>
-            <MagneticButton href="#projects" onClick={(e) => go(e, '#projects')} variant="secondary">View my work</MagneticButton>
+          <div className="rise mt-6" style={rise(1.6)}>
+            <div data-parallax-layer="2" className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              <MagneticButton href="#contact" onClick={(e) => go(e, '#contact')} variant="primary">Let&apos;s talk <ArrowUpRight size={16} /></MagneticButton>
+              <MagneticButton href="#projects" onClick={(e) => go(e, '#projects')} variant="secondary">View my work</MagneticButton>
+            </div>
           </div>
 
-          <div className="rise mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle lg:justify-start" style={rise(1.68)}>
-            <span>4+ years across support &amp; AI</span><span className="text-border-strong">/</span><span>Remote-first</span><span className="text-border-strong">/</span><span>{profile.location}</span>
+          <div className="rise mt-6" style={rise(1.68)}>
+            <div data-parallax-layer="4" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle lg:justify-start">
+              <span>4+ years across support &amp; AI</span><span className="text-border-strong">/</span><span>Remote-first</span><span className="text-border-strong">/</span><span>{profile.location}</span>
+            </div>
           </div>
         </div>
       </div>
