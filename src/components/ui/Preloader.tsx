@@ -2,44 +2,33 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Background from '@/components/three/Background'
+import { MorphingText } from '@/components/ui/morphing-text'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
-// "Hello" around the world (native script where it reads well)
+// Latin transliterations keep every greeting in the provided pixel font.
 const GREETINGS = [
   { text: 'Hello', emoji: '👋' },
-  { text: 'नमस्ते', emoji: '🙏' },
+  { text: 'Namaste', emoji: '🙏' },
   { text: 'Hola', emoji: '🌞' },
   { text: 'Bonjour', emoji: '🌷' },
   { text: 'Ciao', emoji: '🍋' },
-  { text: 'こんにちは', emoji: '🌸' },
-  { text: '你好', emoji: '🏮' },
-  { text: '안녕하세요', emoji: '🫰' },
-  { text: 'مرحبا', emoji: '🌙' },
-  { text: 'Olá', emoji: '🪇' },
+  { text: 'Konnichiwa', emoji: '🌸' },
+  { text: 'Ni Hao', emoji: '🏮' },
+  { text: 'Annyeong', emoji: '🫰' },
+  { text: 'Marhaba', emoji: '🌙' },
+  { text: 'Ola', emoji: '🪇' },
   { text: 'Hallo', emoji: '🌼' },
-  { text: 'Привет', emoji: '❄️' },
+  { text: 'Privet', emoji: '❄️' },
   { text: 'Vanakkam', emoji: '🌺' },
   { text: 'Salaam', emoji: '✨' },
 ]
-const FIRST_HOLD = 640
-const STEP = 760
-
-function splitGlyphs(text: string) {
-  if (typeof Intl.Segmenter === 'function') {
-    return Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text), ({ segment }) => segment)
-  }
-  return Array.from(text)
-}
-
-function scatter(index: number, axis: 'x' | 'y') {
-  const seed = (index * 17 + (axis === 'x' ? 11 : 29)) % 9
-  return axis === 'x' ? (seed - 4) * 5 : -10 - seed * 2
-}
+const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
+const INTRO_DURATION = GREETINGS.length * (0.48 + 0.22) * 1000 + 350
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
- * the page. Each glyph settles in crisply, then breaks into a brief ash-like drift.
+ * the page, using a smooth blur-threshold morph between pixel-font greetings.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true)
@@ -62,20 +51,10 @@ export default function Preloader() {
     return () => window.clearTimeout(timer)
   }, [visible])
 
-  // One clean timeline: hold "Hello", then flow, then exit. (setTimeout chain,
-  // so the first word never double-fires.)
+  // Let the morph component finish one full loop before the welcome overlay exits.
   useEffect(() => {
     if (!visible) return
-    let idx = 0
-    let timer = window.setTimeout(function tick() {
-      idx += 1
-      if (idx >= GREETINGS.length) {
-        timer = window.setTimeout(() => setVisible(false), 400)
-        return
-      }
-      setIndex(idx)
-      timer = window.setTimeout(tick, STEP)
-    }, FIRST_HOLD)
+    const timer = window.setTimeout(() => setVisible(false), INTRO_DURATION)
     return () => window.clearTimeout(timer)
   }, [visible])
 
@@ -97,45 +76,26 @@ export default function Preloader() {
             <Background overlay />
             <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6">
               <div className="relative flex h-40 w-full items-center justify-center">
-                <AnimatePresence initial={false} mode="sync">
-                  <motion.div
-                    key={index}
-                    initial="enter"
-                    animate="settled"
-                    exit="ash"
-                    variants={{
-                      enter: { opacity: 1 },
-                      settled: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.014, delayChildren: 0.015 } },
-                      ash: { transition: { staggerChildren: reduce ? 0 : 0.014, staggerDirection: -1 } },
-                    }}
-                    className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg"
-                    style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
-                  >
-                    <span className="inline-flex" aria-hidden="true">
-                      {splitGlyphs(GREETINGS[index].text).map((glyph, glyphIndex) => (
-                        <motion.span
-                          key={`${glyph}-${glyphIndex}`}
-                          className="inline-block"
-                          variants={{
-                            enter: { opacity: 0, y: 9, rotateX: -24, filter: 'blur(3px)' },
-                            settled: { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', transition: { duration: reduce ? 0 : 0.24, ease: OUT } },
-                            ash: { opacity: 0, x: reduce ? 0 : scatter(glyphIndex, 'x'), y: reduce ? 0 : scatter(glyphIndex, 'y'), scale: 0.65, filter: reduce ? 'blur(0px)' : 'blur(4px)', transition: { duration: reduce ? 0 : 0.22, ease: 'easeOut' } },
-                          }}
-                        >{glyph}</motion.span>
-                      ))}
-                    </span>
+                <div className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg" style={{ fontSize: 'clamp(2.4rem, 8.6vw, 6rem)', lineHeight: 1 }}>
+                  <MorphingText
+                    texts={GREETING_TEXTS}
+                    morphDuration={reduce ? 0 : 0.48}
+                    restDuration={reduce ? 2.2 : 0.22}
+                    onWordChange={setIndex}
+                    className="text-fg"
+                  />
+                  <AnimatePresence mode="wait" initial={false}>
                     <motion.span
+                      key={index}
                       className="preloader-emoji"
                       aria-hidden="true"
-                      variants={{
-                        enter: { opacity: 0, y: 5, scale: 0.8 },
-                        settled: { opacity: 1, y: 0, scale: 1, transition: { duration: reduce ? 0 : 0.2, delay: 0.08, ease: OUT } },
-                        ash: { opacity: 0, y: -7, scale: 0.8, transition: { duration: reduce ? 0 : 0.16 } },
-                      }}
+                      initial={{ opacity: 0, y: 6, scale: 0.78, rotate: -8 }}
+                      animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                      exit={{ opacity: 0, y: -5, scale: 0.85, rotate: 8 }}
+                      transition={{ duration: reduce ? 0 : 0.2, ease: OUT }}
                     >{GREETINGS[index].emoji}</motion.span>
-                    <span className="sr-only">{GREETINGS[index].text}</span>
-                  </motion.div>
-                </AnimatePresence>
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* fill line + skip hint */}

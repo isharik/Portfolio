@@ -8,7 +8,7 @@ import SmoothScrollProvider from '@/components/ui/SmoothScrollProvider'
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-display' })
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
-const pixelify = Pixelify_Sans({ subsets: ['latin'], display: 'swap', weight: ['400', '500'], variable: '--font-pixel' })
+const pixelify = Pixelify_Sans({ subsets: ['latin'], display: 'swap', weight: ['400'], variable: '--font-pixel' })
 
 const SITE = 'https://sharikhussain.dev'
 const TITLE = 'Sharik'
