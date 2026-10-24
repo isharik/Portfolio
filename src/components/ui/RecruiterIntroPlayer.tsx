@@ -1,6 +1,6 @@
 'use client'
 
-import { Clock3, FastForward, Pause, Play, Repeat, Rewind, Volume2 } from 'lucide-react'
+import { FastForward, Pause, Play, Repeat, Rewind, Volume2 } from 'lucide-react'
 import Image from 'next/image'
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
 
@@ -35,16 +35,13 @@ export default function RecruiterIntroPlayer() {
   const [weather, setWeather] = useState<LocalWeather | null>(null)
   const [weatherStatus, setWeatherStatus] = useState<WeatherState>('consent')
   const [localTime, setLocalTime] = useState('')
-  const [timeZone, setTimeZone] = useState('LOCAL TIME')
 
   const greetings = ['Hi there 👋', 'Hello — nice to meet you ✨', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
 
   useEffect(() => {
-    const updateClock = () => setLocalTime(new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()))
+    const updateClock = () => setLocalTime(new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date()))
     updateClock()
-    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    setTimeZone(zone?.split('/').at(-1)?.replaceAll('_', ' ') ?? 'LOCAL TIME')
-    const timer = window.setInterval(updateClock, 1000)
+    const timer = window.setInterval(updateClock, 15000)
     return () => window.clearInterval(timer)
   }, [])
 
@@ -178,10 +175,8 @@ export default function RecruiterIntroPlayer() {
               </div>
             )}
           </div>
-          <div className="recruiter-showpiece" role="img" aria-label="Decorative teal orbit showpiece">
-            <span className="recruiter-clock-face" aria-hidden="true"><Clock3 size={15} /></span>
-            <span className="recruiter-clock-time" aria-label={`Local time ${localTime || 'loading'}`}>{localTime || '--:--:--'}</span>
-            <span className="recruiter-clock-zone">{timeZone}</span>
+          <div className="recruiter-showpiece">
+            <time className="recruiter-clock-time" aria-label={`Local time ${localTime || 'loading'}`}>{localTime || '--:--'}</time>
           </div>
         </aside>
       </div>
