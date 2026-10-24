@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Background from '@/components/three/Background'
-import { TextRoll } from '@/components/ui/text-roll'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
@@ -23,12 +22,24 @@ const GREETINGS = [
   { text: 'Vanakkam', emoji: '🌺' },
   { text: 'Salaam', emoji: '✨' },
 ]
-const FIRST_HOLD = 760
-const STEP = 520
+const FIRST_HOLD = 640
+const STEP = 760
+
+function splitGlyphs(text: string) {
+  if (typeof Intl.Segmenter === 'function') {
+    return Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text), ({ segment }) => segment)
+  }
+  return Array.from(text)
+}
+
+function scatter(index: number, axis: 'x' | 'y') {
+  const seed = (index * 17 + (axis === 'x' ? 11 : 29)) % 9
+  return axis === 'x' ? (seed - 4) * 5 : -10 - seed * 2
+}
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
- * the page, with opacity-only text transitions and no pointer-driven motion.
+ * the page. Each glyph settles in crisply, then breaks into a brief ash-like drift.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true)
@@ -86,23 +97,43 @@ export default function Preloader() {
             <Background overlay />
             <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6">
               <div className="relative flex h-40 w-full items-center justify-center">
-                <AnimatePresence initial={false} mode="wait">
+                <AnimatePresence initial={false} mode="sync">
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 6, filter: 'blur(3px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -5, filter: 'blur(2px)' }}
-                    transition={{ duration: reduce ? 0 : 0.2, ease: OUT }}
+                    initial="enter"
+                    animate="settled"
+                    exit="ash"
+                    variants={{
+                      enter: { opacity: 1 },
+                      settled: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.014, delayChildren: 0.015 } },
+                      ash: { transition: { staggerChildren: reduce ? 0 : 0.014, staggerDirection: -1 } },
+                    }}
                     className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg"
                     style={{ fontSize: 'clamp(2.75rem, 11vw, 6.5rem)', lineHeight: 1 }}
                   >
-                    <TextRoll
-                      duration={reduce ? 0 : 0.34}
-                      getEnterDelay={(letterIndex) => reduce ? 0 : letterIndex * 0.025}
-                      getExitDelay={(letterIndex) => reduce ? 0 : letterIndex * 0.025 + 0.04}
-                      transition={{ ease: 'easeInOut' }}
-                    >{GREETINGS[index].text}</TextRoll>
-                    <span className="preloader-emoji" aria-hidden="true">{GREETINGS[index].emoji}</span>
+                    <span className="inline-flex" aria-hidden="true">
+                      {splitGlyphs(GREETINGS[index].text).map((glyph, glyphIndex) => (
+                        <motion.span
+                          key={`${glyph}-${glyphIndex}`}
+                          className="inline-block"
+                          variants={{
+                            enter: { opacity: 0, y: 9, rotateX: -24, filter: 'blur(3px)' },
+                            settled: { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', transition: { duration: reduce ? 0 : 0.24, ease: OUT } },
+                            ash: { opacity: 0, x: reduce ? 0 : scatter(glyphIndex, 'x'), y: reduce ? 0 : scatter(glyphIndex, 'y'), scale: 0.65, filter: reduce ? 'blur(0px)' : 'blur(4px)', transition: { duration: reduce ? 0 : 0.22, ease: 'easeOut' } },
+                          }}
+                        >{glyph}</motion.span>
+                      ))}
+                    </span>
+                    <motion.span
+                      className="preloader-emoji"
+                      aria-hidden="true"
+                      variants={{
+                        enter: { opacity: 0, y: 5, scale: 0.8 },
+                        settled: { opacity: 1, y: 0, scale: 1, transition: { duration: reduce ? 0 : 0.2, delay: 0.08, ease: OUT } },
+                        ash: { opacity: 0, y: -7, scale: 0.8, transition: { duration: reduce ? 0 : 0.16 } },
+                      }}
+                    >{GREETINGS[index].emoji}</motion.span>
+                    <span className="sr-only">{GREETINGS[index].text}</span>
                   </motion.div>
                 </AnimatePresence>
               </div>

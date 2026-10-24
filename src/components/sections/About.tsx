@@ -75,7 +75,7 @@ export default function About() {
                 const card = (
                   <>
                     <div className={cn('relative grid h-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white text-accent', c.logo?.includes('pharos-network') ? 'w-[76px] px-1' : 'w-12')}>
-                      {c.logo ? <Image src={c.logo} alt={`${c.org} logo`} fill sizes={c.logo.includes('pharos-network') ? '76px' : '48px'} unoptimized className={cn(c.logo.includes('miet') ? 'object-cover object-left' : 'object-contain p-1')} /> : <GraduationCap size={17} />}
+                      {c.logo ? <Image src={c.logo} alt={`${c.org} logo`} fill sizes={c.logo.includes('pharos-network') ? '76px' : '48px'} unoptimized className={cn(c.logo.includes('miet') ? 'object-contain' : 'object-contain p-1')} /> : <GraduationCap size={17} />}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium text-fg">{c.title}</div>

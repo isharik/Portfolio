@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react'
 import { profile, socials, navLinks } from '@/lib/content'
 import { scrollToSection } from '@/lib/scroll'
@@ -23,8 +24,8 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-[13px] font-bold text-[var(--accent-fg)]">
-                {profile.initials}
+              <span className="relative grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-surface">
+                <Image src="/anime-avatar.png" alt="" fill sizes="32px" className="object-contain" />
               </span>
               <span className="font-display text-sm font-semibold text-fg">{profile.name}</span>
             </div>
