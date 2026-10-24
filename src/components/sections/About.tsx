@@ -74,7 +74,7 @@ export default function About() {
               {credentials.map((c) => {
                 const card = (
                   <>
-                    <div className={cn('relative grid h-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white text-accent', c.logo?.includes('pharos-network') ? 'w-[76px] px-1' : 'w-12')}>
+                    <div className={cn('relative grid shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-white text-accent', c.org === 'Micro1' ? 'h-9 w-9' : 'h-12', c.logo?.includes('pharos-network') ? 'w-[76px] px-1' : c.org === 'Micro1' ? '' : 'w-12')}>
                       {c.logo ? <Image src={c.logo} alt={`${c.org} logo`} fill sizes={c.logo.includes('pharos-network') ? '76px' : '48px'} unoptimized className={cn(c.logo.includes('miet') ? 'object-contain' : 'object-contain p-1')} /> : <GraduationCap size={17} />}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -88,6 +88,32 @@ export default function About() {
                     </div>
                   </>
                 )
+
+                if (c.org === 'Micro1' && c.href) {
+                  return (
+                    <div key={c.title} className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+                      <a
+                        href={c.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="surface-card flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3 py-2.5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[var(--accent)]"
+                        aria-label={`Verify ${c.title}`}
+                      >
+                        {card}
+                      </a>
+                      <a
+                        href="https://www.credly.com/badges/f77ea8b0-a683-4d04-97f4-34a61a49076f/print"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-[var(--surface-muted)] px-3 py-2.5 text-xs font-medium text-fg transition-[border-color,transform,background-color] hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-surface sm:max-w-[190px]"
+                        aria-label="View AWS Academy Graduate badge on Credly"
+                      >
+                        <span className="text-left leading-snug">AWS Academy Graduate</span>
+                        <ExternalLink size={13} className="shrink-0 text-fg-subtle" aria-hidden />
+                      </a>
+                    </div>
+                  )
+                }
 
                 return c.href ? (
                   <a
