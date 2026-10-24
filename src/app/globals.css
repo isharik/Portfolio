@@ -266,7 +266,7 @@ body {
   text-wrap: balance;
 }
 .particle-title-semantic span { color: var(--accent); }
-.preloader-greeting { font-family: var(--font-pixel), var(--font-mono), monospace; font-weight: 400; letter-spacing: 0.035em; -webkit-font-smoothing: none; text-rendering: optimizeSpeed; }
+.preloader-greeting { font-family: var(--font-greeting), cursive; font-weight: 400; letter-spacing: 0.005em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 .morphing-text { position: relative; display: inline-block; width: max-content; max-width: 100%; height: 1.15em; flex: 0 1 auto; text-align: center; white-space: nowrap; }
 .morphing-text-measure { display: block; visibility: hidden; white-space: pre; }
 .morphing-text-layer { position: absolute; top: 0; right: 0; left: 0; display: block; width: 100%; line-height: 1.15; will-change: filter, opacity; }

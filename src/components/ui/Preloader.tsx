@@ -24,7 +24,9 @@ const GREETINGS = [
   { text: 'Salaam', emoji: '✨' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-const INTRO_DURATION = GREETINGS.length * (0.48 + 0.22) * 1000 + 350
+const MORPH_DURATION = 0.36
+const MORPH_REST = 0.12
+const INTRO_DURATION = GREETINGS.length * (MORPH_DURATION + MORPH_REST) * 1000 + 350
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
@@ -79,8 +81,8 @@ export default function Preloader() {
                 <div className="preloader-greeting absolute inset-0 flex items-center justify-center gap-[0.22em] text-center text-fg" style={{ fontSize: 'clamp(2.4rem, 8.6vw, 6rem)', lineHeight: 1 }}>
                   <MorphingText
                     texts={GREETING_TEXTS}
-                    morphDuration={reduce ? 0 : 0.48}
-                    restDuration={reduce ? 2.2 : 0.22}
+                    morphDuration={reduce ? 0 : MORPH_DURATION}
+                    restDuration={reduce ? 2.2 : MORPH_REST}
                     onWordChange={setIndex}
                     className="text-fg"
                   />

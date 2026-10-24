@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono, Pixelify_Sans } from 'next/font/google'
+import { Inter, Space_Grotesk, JetBrains_Mono, Shadows_Into_Light } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { SoundProvider } from '@/components/ui/SoundProvider'
@@ -8,7 +8,7 @@ import SmoothScrollProvider from '@/components/ui/SmoothScrollProvider'
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-display' })
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
-const pixelify = Pixelify_Sans({ subsets: ['latin'], display: 'swap', weight: ['400'], variable: '--font-pixel' })
+const greeting = Shadows_Into_Light({ subsets: ['latin'], display: 'swap', weight: '400', variable: '--font-greeting' })
 
 const SITE = 'https://sharikhussain.dev'
 const TITLE = 'Sharik'
@@ -72,7 +72,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${pixelify.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${greeting.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
