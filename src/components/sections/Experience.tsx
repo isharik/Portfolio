@@ -7,8 +7,6 @@ import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
-const OUT = [0.23, 1, 0.32, 1] as const
-
 export default function Experience() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
@@ -38,7 +36,7 @@ export default function Experience() {
         />
 
         <Reveal delay={0.1} className="mt-12">
-          <div className="experience-showcase grid gap-8 lg:grid-cols-[minmax(260px,0.75fr)_minmax(0,1.7fr)] lg:items-start">
+          <div className="experience-showcase grid gap-8 lg:grid-cols-[minmax(260px,0.75fr)_minmax(0,1.7fr)]">
             <div className="experience-stack-column">
               <div className="experience-deck" role="region" aria-label="Work experience cards. Use the next and previous buttons to browse." tabIndex={0} onKeyDown={onKeyDown}>
                 <AnimatePresence initial={false} custom={direction}>
@@ -58,7 +56,7 @@ export default function Experience() {
                         aria-hidden={!isActive}
                         style={{
                           zIndex: isActive ? 20 : 10 - depth,
-                          top: isActive ? undefined : `calc(100% - 154px + ${offset}px)`,
+                          top: isActive ? undefined : `${74 + offset}px`,
                           transformOrigin: '50% 80%',
                           transformStyle: 'preserve-3d',
                           backfaceVisibility: 'hidden',
@@ -95,11 +93,9 @@ export default function Experience() {
               return (
                 <article className="experience-detail-card glass relative isolate min-h-[420px] self-start overflow-hidden rounded-2xl p-6 sm:p-8">
                   <div className="experience-card-watermark pointer-events-none absolute right-0 top-1/2 z-0 aspect-square w-[min(78%,360px)] -translate-y-1/2" aria-hidden="true">
-                    <motion.div key={item.company} className="absolute inset-0" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }}>
-                      <Image src={item.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
-                    </motion.div>
+                    <Image src={item.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
                   </div>
-                  <motion.div className="relative z-10" key={`${active}-${item.company}`} initial={reduce ? false : { opacity: 0, y: direction * 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.3, ease: OUT }}>
+                  <div className="relative z-10">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h3 className="font-display text-xl font-semibold text-fg">{item.role}</h3>
@@ -115,7 +111,7 @@ export default function Experience() {
                     <p className="mt-5 text-sm leading-relaxed text-fg-muted">{item.description}</p>
                     <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">{item.highlights.map((highlight) => <li key={highlight} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-fg-muted"><Check size={14} className="mt-0.5 shrink-0 text-accent" /><span>{highlight}</span></li>)}</ul>
                     <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">{item.tags.map((tag) => <span key={tag} className="rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}</div>
-                  </motion.div>
+                  </div>
                 </article>
               )
             })()}
