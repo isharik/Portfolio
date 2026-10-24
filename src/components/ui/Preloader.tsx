@@ -30,9 +30,9 @@ const GREETINGS = [
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-const MORPH_DURATION = 0.46
-// Add ~2.4s across the full 20-greeting sequence without making each pause drag.
-const MORPH_REST = 0.66
+// Keep all 20 greetings within a ~5.8s intro while preserving a visible morph.
+const MORPH_DURATION = 0.22
+const MORPH_REST = 0.055
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
