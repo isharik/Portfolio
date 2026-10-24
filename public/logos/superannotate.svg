@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="superannotate" x1="12" y1="12" x2="116" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F26791"/>
+      <stop offset="1" stop-color="#F29A45"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#superannotate)"/>
+  <path d="M87 39c-7-7-16-10-27-10-19 0-32 10-32 25 0 14 10 20 29 24l10 2c9 2 13 5 13 10 0 6-7 10-18 10-12 0-21-4-29-12l-13 14c10 11 25 17 43 17 21 0 35-11 35-28 0-14-9-22-29-26l-11-2c-8-2-12-4-12-9 0-5 5-8 14-8 9 0 16 3 22 9l13-16Z" fill="#fff"/>
+</svg>

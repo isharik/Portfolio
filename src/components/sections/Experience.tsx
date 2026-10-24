@@ -31,7 +31,7 @@ export default function Experience() {
       <div className="mx-auto max-w-content">
         <SectionHeading
           eyebrow="Experience"
-          title="Five roles, one throughline"
+          title="Seven roles, one throughline"
           description="One line runs through all of it: staying close to the people that technology is meant to serve, across customer support and AI evaluation."
         />
 

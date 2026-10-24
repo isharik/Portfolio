@@ -104,6 +104,43 @@ export const experiences: Experience[] = [
     tags: ['RLHF', 'Data Annotation', 'Robotics', 'Python', 'Certified SysAdmin'],
   },
   {
+    role: 'Mathematics & STEM AI Trainer',
+    company: 'Outlier',
+    logo: '/logos/outlier.svg',
+    companyDesc: 'AI training & expert evaluation platform',
+    period: 'Dec 2024 — Present',
+    type: 'Part-time · Remote',
+    current: true,
+    description:
+      'Evaluate and improve AI-generated work across mathematics, STEM, computer science, and logical reasoning.',
+    highlights: [
+      'Evaluate AI-generated solutions across mathematics, STEM, computer science, and logical reasoning tasks',
+      'Create, solve, review, and validate technical problems and model responses for correctness and completeness',
+      'Identify mathematical errors, invalid reasoning steps, and inconsistencies in AI-generated solutions',
+      'Apply Python and Java knowledge to coding-related and computational reasoning tasks',
+    ],
+    tags: ['Mathematics', 'STEM', 'AI Training', 'Python', 'Java'],
+  },
+  {
+    role: 'Python Expert & Mathematics QA Lead',
+    company: 'SuperAnnotate',
+    logo: '/logos/superannotate.svg',
+    companyDesc: 'AI data annotation & quality platform',
+    period: 'Date range not specified',
+    type: 'Part-time · Remote',
+    current: false,
+    description:
+      'Review Python and mathematics work for correctness, sound reasoning, and consistent quality against task requirements.',
+    highlights: [
+      'Evaluate Python solutions and AI-generated code for correctness, logical consistency, and compliance with task requirements',
+      'Review mathematical reasoning, validate solutions, and identify calculation errors, flawed assumptions, and gaps in problem-solving',
+      'Assess technical responses against evaluation criteria for accuracy, completeness, and reasoning quality',
+      'Provide structured feedback on coding and mathematics tasks to support model evaluation and improve response quality',
+      'Apply consistent quality standards when reviewing technical outputs and validating reasoning-heavy tasks',
+    ],
+    tags: ['Python', 'Mathematics QA', 'Code Review', 'AI Evaluation', 'Quality Assurance'],
+  },
+  {
     role: 'Customer Support Specialist',
     company: 'Datamark',
     logo: '/logos/datamark.jpg',
