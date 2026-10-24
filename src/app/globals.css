@@ -297,8 +297,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
    theme-aware glass player surface around it. */
 .recruiter-player {
   position: relative;
-  width: min(100%, 350px);
-  padding: 24px 20px 26px;
+  width: min(100%, 390px);
+  padding: 22px 22px 24px;
   border: 1px solid var(--glass-border);
   border-radius: 26px;
   background: color-mix(in srgb, var(--surface) 84%, transparent);
@@ -313,7 +313,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-album-art {
   position: relative;
   isolation: isolate;
-  height: 218px;
+  height: clamp(238px, 25vw, 272px);
   overflow: hidden;
   border: 1px solid var(--glass-border);
   border-radius: 17px;
@@ -329,10 +329,10 @@ html.js .particle-title.is-ready .particle-title-semantic {
   content: '';
   opacity: 0.32;
 }
-.recruiter-player-doodle { position: absolute; z-index: 2; top: 3px; right: 23px; color: var(--fg-subtle); font-family: var(--font-display), sans-serif; font-size: 18px; line-height: 1; transform: rotate(12deg); }
+.recruiter-player-doodle { position: absolute; z-index: 2; top: 6px; right: 23px; color: var(--fg-subtle); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; line-height: 1; transform: rotate(12deg); }
 .recruiter-player-sticker { position: absolute; z-index: 2; pointer-events: none; color: var(--accent); filter: drop-shadow(0 2px 3px rgba(0,0,0,.12)); animation: recruiter-sticker-float 3.8s ease-in-out infinite; }
 .recruiter-player-sticker-star { top: 19px; right: 7px; font-size: 14px; transform: rotate(12deg); }
-.recruiter-player-sticker-smile { right: 14px; bottom: 18px; display: grid; width: 21px; height: 21px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); font-size: 14px; animation-delay: -1.1s; }
+.recruiter-player-sticker-smile { right: 14px; bottom: 18px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 14px; animation-delay: -1.1s; }
 .recruiter-art-hello {
   position: absolute; z-index: 2; top: 68%; left: 142px; display: inline-flex;
   align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; transform: translateY(-50%);
@@ -496,6 +496,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   color: #c2413a;
   font-size: 11px;
 }
+.recruiter-player-error a { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   .recruiter-player, .recruiter-art-avatar, .recruiter-art-sticker, .recruiter-player-sticker { animation: none; transition: none; }
   .recruiter-cd { animation: recruiter-cd-spin 28s linear infinite; }

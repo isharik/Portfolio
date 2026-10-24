@@ -27,7 +27,16 @@ export default function RecruiterIntroPlayer() {
     const audio = audioRef.current
     if (!audio) return
     if (audio.paused) {
-      try { await audio.play() } catch { setError(true) }
+      setError(false)
+      try {
+        // Retry a failed/stale resource from the user gesture. This also keeps
+        // mobile browsers happy when they deferred loading while off-screen.
+        if (audio.error || audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) audio.load()
+        await audio.play()
+      } catch {
+        setPlaying(false)
+        setError(true)
+      }
     } else audio.pause()
   }
 
@@ -79,9 +88,9 @@ export default function RecruiterIntroPlayer() {
       >
         <source src="/recruiter-intro.mp3" type="audio/mpeg" />
       </audio>
-      <span className="recruiter-player-doodle" aria-hidden="true">☺</span>
+      <span className="recruiter-player-doodle" aria-hidden="true">😊</span>
       <span className="recruiter-player-sticker recruiter-player-sticker-star" aria-hidden="true">✦</span>
-      <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">☺</span>
+      <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">😎</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
@@ -134,7 +143,7 @@ export default function RecruiterIntroPlayer() {
           if (audioRef.current) audioRef.current.loop = next
         }}><Repeat size={16} /></button>
       </div>
-      {error && <p className="recruiter-player-error" role="status">The voice note couldn’t be loaded. Please try again.</p>}
+      {error && <p className="recruiter-player-error" role="status">Couldn’t play the voice note here. <a href="/recruiter-intro.mp3" download="Sharik-Intro.mp3">Download the audio</a>.</p>}
     </section>
   )
 }
