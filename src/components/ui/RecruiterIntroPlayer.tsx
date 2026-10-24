@@ -10,6 +10,18 @@ const formatTime = (seconds: number) => {
 }
 
 const bars = [12, 20, 15, 26, 18, 32, 22, 15, 27, 36, 21, 30, 16, 25, 34, 18, 28, 14, 24, 32, 18, 27, 15, 22, 30, 17]
+type LocalWeather = { temperature: number; code: number; place: string }
+type WeatherState = 'consent' | 'loading' | 'ready' | 'unavailable'
+
+const weatherLabel = (code: number) => {
+  if (code === 0) return ['☀️', 'CLEAR']
+  if (code <= 3) return ['🌤️', 'PARTLY CLOUDY']
+  if (code <= 48) return ['🌫️', 'FOG']
+  if (code <= 67 || (code >= 80 && code <= 82)) return ['🌧️', 'RAIN']
+  if (code <= 77) return ['❄️', 'SNOW']
+  if (code >= 95) return ['⛈️', 'STORM']
+  return ['☁️', 'CLOUDY']
+}
 
 export default function RecruiterIntroPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -20,8 +32,34 @@ export default function RecruiterIntroPlayer() {
   const [loop, setLoop] = useState(false)
   const [error, setError] = useState(false)
   const [greetingIndex, setGreetingIndex] = useState<number | null>(null)
+  const [weather, setWeather] = useState<LocalWeather | null>(null)
+  const [weatherStatus, setWeatherStatus] = useState<WeatherState>('consent')
 
   const greetings = ['Hi there 👋', 'Hello — nice to meet you ✨', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
+
+  const enableLocalWeather = () => {
+    if (!navigator.geolocation) {
+      setWeatherStatus('unavailable')
+      return
+    }
+    setWeatherStatus('loading')
+    navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+      try {
+        const params = new URLSearchParams({ latitude: String(coords.latitude), longitude: String(coords.longitude), current: 'temperature_2m,weather_code', temperature_unit: 'celsius' })
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`)
+        if (!response.ok) throw new Error('Weather request failed')
+        const data = await response.json() as { current?: { temperature_2m?: number; weather_code?: number }; timezone?: string }
+        const placeResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coords.latitude}&lon=${coords.longitude}&zoom=10`)
+        const placeData = placeResponse.ok ? await placeResponse.json() as { address?: { city?: string; town?: string; village?: string; county?: string } } : null
+        const place = placeData?.address?.city ?? placeData?.address?.town ?? placeData?.address?.village ?? placeData?.address?.county ?? data.timezone?.split('/').at(-1)?.replaceAll('_', ' ') ?? 'LOCAL WEATHER'
+        if (data.current?.temperature_2m == null || data.current.weather_code == null) throw new Error('Weather unavailable')
+        setWeather({ temperature: Math.round(data.current.temperature_2m), code: data.current.weather_code, place })
+        setWeatherStatus('ready')
+      } catch {
+        setWeatherStatus('unavailable')
+      }
+    }, () => setWeatherStatus('unavailable'), { enableHighAccuracy: false, maximumAge: 15 * 60 * 1000, timeout: 10000 })
+  }
 
   const togglePlayback = async () => {
     const audio = audioRef.current
@@ -98,7 +136,23 @@ export default function RecruiterIntroPlayer() {
         </button>
         <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
         <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
-        <span className="recruiter-art-sticker recruiter-art-sticker-two" aria-hidden="true">🎧</span>
+        <div className={`recruiter-weather${weather ? ' is-ready' : ''}`}>
+          {weatherStatus === 'consent' || weatherStatus === 'unavailable' ? (
+            <button type="button" className="recruiter-weather-enable" onClick={enableLocalWeather} aria-label="Enable local weather. Your location is sent to Open-Meteo for the forecast and OpenStreetMap to find the city name.">
+              <span aria-hidden="true">☀️</span>
+              <span>{weatherStatus === 'consent' ? 'LOCAL' : 'RETRY'}</span>
+              <small>{weatherStatus === 'consent' ? 'SHARE GPS' : 'WEATHER'}</small>
+            </button>
+          ) : (
+            <>
+              <span className="recruiter-weather-sky" aria-hidden="true">{weather ? weatherLabel(weather.code)[0] : '…'}</span>
+              <span className="recruiter-weather-reading">{weather ? `${weather.temperature}°` : '––°'}</span>
+              <span className="recruiter-weather-place">{weather?.place ?? 'LOCAL'}</span>
+              <span className="recruiter-weather-condition">{weather ? weatherLabel(weather.code)[1] : 'LOADING'}</span>
+              <span className="recruiter-weather-credit">OPEN-METEO · OSM</span>
+            </>
+          )}
+        </div>
         <span className={`recruiter-cd${playing ? ' is-playing' : ''}`} aria-hidden="true"><i /></span>
         <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
           Say hello <span aria-hidden="true">↗</span>
@@ -128,7 +182,7 @@ export default function RecruiterIntroPlayer() {
             setTime(next)
           }}
         />
-        <span className="recruiter-player-time" aria-live="off"><time>{formatTime(time)}</time><time>{formatTime(duration)}</time></span>
+        <span className="recruiter-player-time" aria-live="off"><span className="recruiter-headphone-mark" role="img" aria-label="Headphones">🎧</span><time>{formatTime(time)}</time><time>{formatTime(duration)}</time></span>
       </div>
 
       <div className="recruiter-player-controls">

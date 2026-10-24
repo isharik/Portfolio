@@ -25,6 +25,7 @@ export function MorphingText({
 }: MorphingTextProps) {
   const firstRef = useRef<HTMLSpanElement>(null)
   const secondRef = useRef<HTMLSpanElement>(null)
+  const measureRef = useRef<HTMLSpanElement>(null)
   const callbackRef = useRef(onWordChange)
   const filterId = `greeting-morph-${useId().replace(/:/g, '')}`
   const reduceMotion = useReducedMotion()
@@ -33,7 +34,8 @@ export function MorphingText({
   useEffect(() => {
     const first = firstRef.current
     const second = secondRef.current
-    if (!first || !second || texts.length < 2) return
+    const measure = measureRef.current
+    if (!first || !second || !measure || texts.length < 2) return
 
     let frame = 0
     let current = 0
@@ -45,6 +47,9 @@ export function MorphingText({
     const restMs = Math.max(0, restDuration * 1000)
 
     const settle = () => {
+      // Size the word+emoji group to the active greeting, not the longest
+      // greeting in the sequence, so the emoji stays tucked beside each word.
+      measure.textContent = texts[current]
       first.textContent = texts[current]
       second.textContent = texts[(current + 1) % texts.length]
       first.style.filter = 'none'
@@ -60,7 +65,7 @@ export function MorphingText({
 
       if (reduceMotion) {
         restElapsed += delta
-        if (restElapsed >= 2200) {
+        if (restElapsed >= Math.max(restMs, 100)) {
           restElapsed = 0
           current = (current + 1) % texts.length
           next = (current + 1) % texts.length
@@ -110,7 +115,7 @@ export function MorphingText({
         aria-hidden="true"
         style={{ filter: `url(#${filterId}) blur(0.45px)` }}
       >
-        <span className="morphing-text-measure">{texts.reduce((widest, text) => text.length > widest.length ? text : widest, '')}</span>
+        <span ref={measureRef} className="morphing-text-measure">{texts[0]}</span>
         <span ref={firstRef} className="morphing-text-layer">{texts[0]}</span>
         <span ref={secondRef} className="morphing-text-layer" style={{ opacity: 0 }}>{texts[1 % texts.length]}</span>
       </span>

@@ -6,7 +6,7 @@ import { MorphingText } from '@/components/ui/morphing-text'
 
 const OUT = [0.23, 1, 0.32, 1] as const
 
-// Latin transliterations keep every greeting in the provided pixel font.
+// Latin transliterations keep the international greeting set consistent in the handwritten font.
 const GREETINGS = [
   { text: 'Hello', emoji: '👋' },
   { text: 'Namaste', emoji: '🙏' },
@@ -17,16 +17,21 @@ const GREETINGS = [
   { text: 'Ni Hao', emoji: '🏮' },
   { text: 'Annyeong', emoji: '🫰' },
   { text: 'Marhaba', emoji: '🌙' },
-  { text: 'Ola', emoji: '🪇' },
+  { text: 'Olá', emoji: '🪇' },
   { text: 'Hallo', emoji: '🌼' },
   { text: 'Privet', emoji: '❄️' },
   { text: 'Vanakkam', emoji: '🌺' },
   { text: 'Salaam', emoji: '✨' },
+  { text: 'Jambo', emoji: '🦒' },
+  { text: 'Sawubona', emoji: '🌍' },
+  { text: 'Xin Chào', emoji: '🪷' },
+  { text: 'Sawasdee', emoji: '🌼' },
+  { text: 'Shalom', emoji: '🕊️' },
+  { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-const MORPH_DURATION = 0.36
-const MORPH_REST = 0.12
-const INTRO_DURATION = GREETINGS.length * (MORPH_DURATION + MORPH_REST) * 1000 + 350
+const MORPH_DURATION = 0.28
+const MORPH_REST = 0.06
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
@@ -36,6 +41,7 @@ export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
   const reduce = useReducedMotion()
+  const introDuration = GREETINGS.length * ((reduce ? 0 : MORPH_DURATION) + (reduce ? 0.16 : MORPH_REST)) * 1000 + 350
 
   // Lock scroll only while the intro is visible; restore the moment it hides.
   useEffect(() => {
@@ -56,9 +62,9 @@ export default function Preloader() {
   // Let the morph component finish one full loop before the welcome overlay exits.
   useEffect(() => {
     if (!visible) return
-    const timer = window.setTimeout(() => setVisible(false), INTRO_DURATION)
+    const timer = window.setTimeout(() => setVisible(false), introDuration)
     return () => window.clearTimeout(timer)
-  }, [visible])
+  }, [visible, introDuration])
 
   const progress = ((index + 1) / GREETINGS.length) * 100
 
@@ -82,7 +88,7 @@ export default function Preloader() {
                   <MorphingText
                     texts={GREETING_TEXTS}
                     morphDuration={reduce ? 0 : MORPH_DURATION}
-                    restDuration={reduce ? 2.2 : MORPH_REST}
+                    restDuration={reduce ? 0.16 : MORPH_REST}
                     onWordChange={setIndex}
                     className="text-fg"
                   />
@@ -94,7 +100,7 @@ export default function Preloader() {
                       initial={{ opacity: 0, y: 6, scale: 0.78, rotate: -8 }}
                       animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
                       exit={{ opacity: 0, y: -5, scale: 0.85, rotate: 8 }}
-                      transition={{ duration: reduce ? 0 : 0.2, ease: OUT }}
+                      transition={{ duration: reduce ? 0 : 0.16, ease: OUT }}
                     >{GREETINGS[index].emoji}</motion.span>
                   </AnimatePresence>
                 </div>
