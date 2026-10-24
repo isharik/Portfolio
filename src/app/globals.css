@@ -300,7 +300,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
    theme-aware glass player surface around it. */
 .recruiter-player {
   position: relative;
-  width: min(100%, 390px);
+  width: min(390px, calc(100vw - 40px));
+  flex: 0 0 auto;
   padding: 22px 22px 24px;
   border: 1px solid var(--glass-border);
   border-radius: 26px;
@@ -341,7 +342,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; transform: translateY(-50%);
   border: 1px solid var(--glass-border); border-radius: 999px;
   background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--fg);
-  font-family: var(--font-mono), monospace; font-size: 10px; cursor: pointer;
+  font-family: var(--font-mono), monospace; font-size: 10px; white-space: nowrap; cursor: pointer;
   transition: background-color 180ms ease, border-color 180ms ease;
 }
 .recruiter-art-hello:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--glass-border)); background: var(--surface); }
