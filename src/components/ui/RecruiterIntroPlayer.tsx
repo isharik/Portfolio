@@ -36,7 +36,7 @@ export default function RecruiterIntroPlayer() {
   const [weatherStatus, setWeatherStatus] = useState<WeatherState>('consent')
   const [localTime, setLocalTime] = useState('')
 
-  const greetings = ['Hi there 👋', 'Hello — nice to meet you ✨', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
+  const greetings = ['Hello — nice to meet you ✨', 'Hi there 👋', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
 
   useEffect(() => {
     const updateClock = () => setLocalTime(new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date()))
@@ -139,16 +139,18 @@ export default function RecruiterIntroPlayer() {
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <div className="recruiter-art-main">
           <div className="recruiter-avatar-wrap">
-            <button type="button" className="recruiter-art-avatar" aria-label="Say hello to Sharik" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
+            <div className="recruiter-art-avatar">
               <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="(max-width: 639px) 104px, 132px" />
-            </button>
+            </div>
             <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
             <span className="recruiter-headphone-badge" aria-hidden="true">🎧</span>
           </div>
           <div className="recruiter-art-intro">
-            <span className="recruiter-art-greeting" role={greetingIndex === null ? undefined : 'status'} aria-live={greetingIndex === null ? undefined : 'polite'}>
-              {greetingIndex === null ? 'Hello — nice to meet you ✨' : greetings[greetingIndex]}
-            </span>
+            {greetingIndex !== null && (
+              <span className="recruiter-art-greeting" role="status" aria-live="polite" key={greetingIndex}>
+                {greetings[greetingIndex]}
+              </span>
+            )}
             <button type="button" className="recruiter-art-hello" onClick={() => setGreetingIndex((current) => current === null ? 0 : (current + 1) % greetings.length)}>
               Say hello <span aria-hidden="true">↗</span>
             </button>

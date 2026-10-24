@@ -388,7 +388,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   position: relative; display: block; width: 100%; aspect-ratio: 0.82;
   overflow: hidden; padding: 0;
   border: 1px solid rgba(35, 35, 42, 0.14); border-radius: 18px;
-  background: #fff; cursor: pointer;
+  background: #fff; cursor: default;
   transition: transform 260ms var(--ease-out), box-shadow 260ms ease;
 }
 .recruiter-art-avatar:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); }
