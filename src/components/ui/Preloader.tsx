@@ -30,9 +30,10 @@ const GREETINGS = [
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-// Keep all 20 greetings within a ~5.8s intro while preserving a visible morph.
+// Each greeting occupies a 2s beat, including its smooth transition.
+const GREETING_BEAT = 2
 const MORPH_DURATION = 0.22
-const MORPH_REST = 0.055
+const MORPH_REST = GREETING_BEAT - MORPH_DURATION
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as
@@ -42,7 +43,7 @@ export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
   const reduce = useReducedMotion()
-  const introDuration = GREETINGS.length * ((reduce ? 0 : MORPH_DURATION) + (reduce ? 0.16 : MORPH_REST)) * 1000 + 350
+  const introDuration = GREETINGS.length * (reduce ? GREETING_BEAT : MORPH_DURATION + MORPH_REST) * 1000 + 350
 
   // Lock scroll only while the intro is visible; restore the moment it hides.
   useEffect(() => {
@@ -89,7 +90,7 @@ export default function Preloader() {
                   <MorphingText
                     texts={GREETING_TEXTS}
                     morphDuration={reduce ? 0 : MORPH_DURATION}
-                    restDuration={reduce ? 0.16 : MORPH_REST}
+                    restDuration={reduce ? GREETING_BEAT : MORPH_REST}
                     repeat={false}
                     onWordChange={setIndex}
                     className="text-fg"
