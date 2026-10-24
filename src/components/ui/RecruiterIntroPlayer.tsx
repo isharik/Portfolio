@@ -1,6 +1,6 @@
 'use client'
 
-import { FastForward, Pause, Play, Repeat, Rewind, Volume2 } from 'lucide-react'
+import { Clock3, FastForward, Pause, Play, Repeat, Rewind, Volume2 } from 'lucide-react'
 import Image from 'next/image'
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
 
@@ -34,8 +34,19 @@ export default function RecruiterIntroPlayer() {
   const [greetingIndex, setGreetingIndex] = useState<number | null>(null)
   const [weather, setWeather] = useState<LocalWeather | null>(null)
   const [weatherStatus, setWeatherStatus] = useState<WeatherState>('consent')
+  const [localTime, setLocalTime] = useState('')
+  const [timeZone, setTimeZone] = useState('LOCAL TIME')
 
   const greetings = ['Hi there 👋', 'Hello — nice to meet you ✨', 'Let’s get to know each other ☕', 'Let’s connect 🤝']
+
+  useEffect(() => {
+    const updateClock = () => setLocalTime(new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()))
+    updateClock()
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    setTimeZone(zone?.split('/').at(-1)?.replaceAll('_', ' ') ?? 'LOCAL TIME')
+    const timer = window.setInterval(updateClock, 1000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   const enableLocalWeather = () => {
     if (!navigator.geolocation) {
@@ -126,8 +137,6 @@ export default function RecruiterIntroPlayer() {
       >
         <source src="/recruiter-intro.mp3" type="audio/mpeg" />
       </audio>
-      <span className="recruiter-player-doodle" aria-hidden="true">😊</span>
-      <span className="recruiter-player-sticker recruiter-player-sticker-star" aria-hidden="true">✦</span>
       <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">😎</span>
 
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
@@ -170,14 +179,11 @@ export default function RecruiterIntroPlayer() {
             )}
           </div>
           <div className="recruiter-showpiece" role="img" aria-label="Decorative teal orbit showpiece">
-            <span className="recruiter-showpiece-orbit" />
-            <span className="recruiter-showpiece-star">✦</span>
-            <span className="recruiter-showpiece-dot" />
-            <span className="recruiter-showpiece-sparkle">✦</span>
+            <span className="recruiter-clock-face" aria-hidden="true"><Clock3 size={15} /></span>
+            <span className="recruiter-clock-time" aria-label={`Local time ${localTime || 'loading'}`}>{localTime || '--:--:--'}</span>
+            <span className="recruiter-clock-zone">{timeZone}</span>
           </div>
         </aside>
-        <span className="recruiter-art-sticker recruiter-art-sticker-one" aria-hidden="true">✦</span>
-        <span className={`recruiter-cd${playing ? ' is-playing' : ''}`} aria-hidden="true"><i /></span>
       </div>
 
       <div className="recruiter-player-console">

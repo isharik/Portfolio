@@ -30,8 +30,8 @@ const GREETINGS = [
   { text: 'Merhaba', emoji: '🧿' },
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
-const MORPH_DURATION = 0.38
-const MORPH_REST = 0.1
+const MORPH_DURATION = 0.42
+const MORPH_REST = 0.11
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as

@@ -303,7 +303,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   width: min(480px, calc(100vw - 40px));
   flex: 0 0 auto;
   padding: 20px;
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--glass-border));
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--glass-border));
   border-radius: 30px;
   background: linear-gradient(148deg, #121a1d, #080d0f 72%);
   box-shadow: 0 18px 52px rgba(0,0,0,.28), 0 0 30px color-mix(in srgb, var(--accent) 8%, transparent);
@@ -313,7 +313,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   backdrop-filter: blur(18px) saturate(1.2);
   transition: transform 260ms var(--ease-out), box-shadow 260ms ease, border-color 260ms ease;
 }
-.recruiter-player:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 30%, var(--glass-border)); box-shadow: 0 22px 54px rgba(0,0,0,.13), var(--glass-shadow); }
+.recruiter-player:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 18%, var(--glass-border)); box-shadow: 0 22px 54px rgba(0,0,0,.13), var(--glass-shadow); }
 .recruiter-album-art {
   position: relative;
   display: grid;
@@ -338,9 +338,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   content: '';
   opacity: 0.32;
 }
-.recruiter-player-doodle { position: absolute; z-index: 2; top: 6px; right: 23px; color: #a9b6b4; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; line-height: 1; transform: rotate(12deg); }
 .recruiter-player-sticker { position: absolute; z-index: 2; pointer-events: none; color: var(--accent); filter: drop-shadow(0 2px 3px rgba(0,0,0,.12)); animation: recruiter-sticker-float 3.8s ease-in-out infinite; }
-.recruiter-player-sticker-star { top: 19px; right: 7px; font-size: 14px; transform: rotate(12deg); }
 .recruiter-player-sticker-smile { right: 14px; bottom: 18px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 14px; animation-delay: -1.1s; }
 .recruiter-art-hello {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; width: fit-content; padding: 0.5rem 0.72rem;
@@ -376,11 +374,10 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-avatar-doodle { position: absolute; z-index: 4; top: -9px; left: -8px; display: grid; width: 29px; height: 29px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); box-shadow: 0 3px 9px rgba(0,0,0,.14); font-size: 16px; transform: rotate(-10deg); transition: transform 220ms var(--ease-out); }
 .recruiter-album-art:hover .recruiter-avatar-doodle { transform: rotate(8deg) translateY(-2px); }
 .recruiter-headphone-badge { position: absolute; z-index: 4; right: -9px; bottom: -8px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--glass-border)); border-radius: 12px; background: color-mix(in srgb, #0b1114 88%, transparent); box-shadow: 0 4px 12px rgba(0,0,0,.25); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; }
-.recruiter-showpiece { position: relative; display: grid; min-height: 92px; place-items: center; overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--glass-border)); border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 82%, #071012), color-mix(in srgb, var(--surface) 72%, #092023)); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.12); }
-.recruiter-showpiece-orbit { position: absolute; width: 72px; height: 34px; border: 2px solid color-mix(in srgb, var(--accent) 84%, white); border-radius: 50%; transform: rotate(-18deg); }
-.recruiter-showpiece-star { position: relative; z-index: 1; color: color-mix(in srgb, var(--accent) 75%, white); font-size: 38px; line-height: 1; text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 40%, transparent); }
-.recruiter-showpiece-dot { position: absolute; top: 27px; right: 19px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
-.recruiter-showpiece-sparkle { position: absolute; right: 12px; bottom: 10px; color: var(--accent); font-size: 15px; }
+.recruiter-showpiece { position: relative; display: grid; min-height: 92px; align-content: center; justify-items: center; gap: 4px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--glass-border)); border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 82%, #071012), color-mix(in srgb, var(--surface) 72%, #092023)); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.12); }
+.recruiter-clock-face { display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--glass-border)); border-radius: 50%; color: var(--accent); }
+.recruiter-clock-time { color: #f4f7f7; font-family: var(--font-mono), monospace; font-size: 18px; font-variant-numeric: tabular-nums; letter-spacing: .04em; line-height: 1; }
+.recruiter-clock-zone { color: #9da9aa; font-family: var(--font-mono), monospace; font-size: 7px; letter-spacing: .12em; text-transform: uppercase; }
 .recruiter-art-sticker { position: absolute; z-index: 2; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
 .recruiter-art-sticker-one { top: 18px; left: 144px; color: var(--accent); font-size: 22px; transform: rotate(-12deg); animation: recruiter-sticker-float 3.6s ease-in-out infinite; }
 .recruiter-art-aside .recruiter-showpiece { background: linear-gradient(145deg, #10191c, #071012); }
@@ -406,12 +403,6 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-weather-lines i:nth-child(2) { width: 72%; }
 .recruiter-weather-lines i:nth-child(3) { width: 46%; }
 .recruiter-weather-credit { grid-column: 1 / -1; color: #82848b; font-family: var(--font-mono), monospace; font-size: 6px; line-height: 1; text-align: right; }
-.recruiter-cd { position: absolute; z-index: 3; top: 8px; right: 124px; display: grid; width: 48px; aspect-ratio: 1; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; background: repeating-radial-gradient(circle at center, transparent 0 3px, rgba(255,255,255,.12) 3.5px 4px), conic-gradient(from 0deg, #181a1f, #777b82 22deg, #24262b 61deg, #a3a6ac 88deg, #1b1d22 129deg, #656970 166deg, #202227 210deg, #92959b 244deg, #17191e 290deg, #555960 326deg, #181a1f); box-shadow: 0 5px 16px rgba(0,0,0,.3), inset 0 1px 4px rgba(255,255,255,.28); animation: recruiter-cd-spin 7s linear infinite; will-change: transform; }
-.recruiter-cd::before { position: absolute; inset: 7px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; content: ''; }
-.recruiter-cd::after { position: absolute; inset: 1px; border-radius: 50%; background: conic-gradient(from 12deg, transparent 0deg 240deg, rgba(255,255,255,.42) 270deg, rgba(255,255,255,.08) 302deg, transparent 326deg); content: ''; }
-.recruiter-cd i { position: relative; z-index: 1; width: 9px; aspect-ratio: 1; border: 2px solid rgba(28,30,35,.72); border-radius: 50%; background: #b7bac0; box-shadow: 0 0 0 2px rgba(220,222,226,.75); }
-.recruiter-cd.is-playing { animation-duration: 4.2s; }
-@keyframes recruiter-cd-spin { to { transform: rotate(360deg); } }
 @keyframes recruiter-sticker-float { 50% { translate: 0 -4px; } }
 .recruiter-player-console { margin-top: 18px; padding: 18px 20px 14px; border: 1px solid color-mix(in srgb, var(--accent) 13%, var(--glass-border)); border-radius: 23px; background: linear-gradient(145deg, #11191c, #090e10); box-shadow: inset 0 1px rgba(255,255,255,.06), 0 8px 22px rgba(0,0,0,.18); }
 .recruiter-player-heading { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -499,6 +490,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
   font-variant-numeric: tabular-nums;
 }
 .recruiter-player-controls {
+  position: relative;
+  left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -555,10 +548,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
   .recruiter-art-aside { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .recruiter-weather { min-height: 82px; }
   .recruiter-showpiece { min-height: 78px; }
-  .recruiter-cd { top: 8px; right: 8px; width: 40px; }
-  .recruiter-art-sticker-one { left: 44%; top: 9px; font-size: 17px; }
   .recruiter-player-heading { margin-top: 16px; }
-  .recruiter-player-controls { gap: 8px; }
+  .recruiter-player-controls { left: 6px; gap: 8px; }
   .recruiter-control { width: 36px; height: 36px; }
   .recruiter-control.recruiter-play { width: 48px; height: 48px; }
 }
