@@ -126,9 +126,9 @@ export const experiences: Experience[] = [
     company: 'SuperAnnotate',
     logo: '/logos/superannotate.svg',
     companyDesc: 'AI data annotation & quality platform',
-    period: 'Date range not specified',
+    period: 'Aug 2026 — Present',
     type: 'Part-time · Remote',
-    current: false,
+    current: true,
     description:
       'Review Python and mathematics work for correctness, sound reasoning, and consistent quality against task requirements.',
     highlights: [

@@ -31,7 +31,7 @@ const GREETINGS = [
 ]
 const GREETING_TEXTS = GREETINGS.map(({ text }) => text)
 const MORPH_DURATION = 0.46
-const MORPH_REST = 0.44
+const MORPH_REST = 0.54
 
 /**
  * Skippable greeting sequence over the same theme-aware global background as

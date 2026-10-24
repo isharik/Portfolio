@@ -82,7 +82,7 @@ export default function Experience() {
           </div>
 
           {/* Detail */}
-          <div className="experience-detail-card glass relative isolate min-h-[420px] overflow-hidden rounded-2xl p-6 sm:p-8">
+          <div className="experience-detail-card glass relative isolate min-h-[420px] self-start overflow-hidden rounded-2xl p-6 sm:p-8">
             <div className="experience-card-watermark pointer-events-none absolute right-0 top-1/2 z-0 aspect-square w-[min(78%,360px)] -translate-y-1/2" aria-hidden="true">
               <motion.div key={exp.company} className="absolute inset-0" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: reduce ? 0 : 0.32, ease: OUT }}>
                 <Image src={exp.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
