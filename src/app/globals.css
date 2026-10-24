@@ -36,6 +36,18 @@
   --glass-shadow: 0 1px 2px rgba(16, 16, 22, 0.04), 0 8px 32px rgba(16, 16, 22, 0.06);
   --glass-highlight: rgba(255, 255, 255, 0.9);
 
+  /* Recruiter player surfaces adapt with the active color scheme. */
+  --player-shell-bg: linear-gradient(148deg, #ffffff, #eef2f1 72%);
+  --player-cover-bg: linear-gradient(145deg, #f7faf9, #edf3f1 58%, #f5f7f6);
+  --player-console-bg: linear-gradient(145deg, #ffffff, #f0f3f2);
+  --player-widget-bg: linear-gradient(145deg, #ffffff, #edf2f1);
+  --player-fg: #1b2526;
+  --player-muted: #667273;
+  --player-border: rgba(35, 67, 64, 0.16);
+  --player-widget-grid: rgba(29, 64, 60, 0.055);
+  --player-track: #d5dcda;
+  --player-shadow: 0 18px 52px rgba(20, 35, 34, 0.12);
+
   /* Motion */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -72,6 +84,17 @@
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4);
   --glass-highlight: rgba(255, 255, 255, 0.06);
+
+  --player-shell-bg: linear-gradient(148deg, #121a1d, #080d0f 72%);
+  --player-cover-bg: linear-gradient(145deg, #0d171a, #101a1d 58%, #0a1215);
+  --player-console-bg: linear-gradient(145deg, #11191c, #090e10);
+  --player-widget-bg: linear-gradient(145deg, #10191c, #071012);
+  --player-fg: #f4f7f7;
+  --player-muted: #aab4b5;
+  --player-border: rgba(255, 255, 255, 0.09);
+  --player-widget-grid: rgba(255, 255, 255, 0.045);
+  --player-track: #4a535d;
+  --player-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
 
   color-scheme: dark;
 }
@@ -305,9 +328,9 @@ html.js .particle-title.is-ready .particle-title-semantic {
   padding: 20px;
   border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--glass-border));
   border-radius: 30px;
-  background: linear-gradient(148deg, #121a1d, #080d0f 72%);
-  box-shadow: 0 18px 52px rgba(0,0,0,.28), 0 0 30px color-mix(in srgb, var(--accent) 8%, transparent);
-  color: #f4f7f7;
+  background: var(--player-shell-bg);
+  box-shadow: var(--player-shadow), 0 0 30px color-mix(in srgb, var(--accent) 6%, transparent);
+  color: var(--player-fg);
   text-align: left;
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
   backdrop-filter: blur(18px) saturate(1.2);
@@ -326,7 +349,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--glass-border));
   border-radius: 22px;
-  background: linear-gradient(145deg, #0d171a, #101a1d 58%, #0a1215);
+  background: var(--player-cover-bg);
   box-shadow: inset 0 1px rgba(255,255,255,.11), inset 0 -16px 32px rgba(0,0,0,.08), 0 0 24px color-mix(in srgb, var(--accent) 8%, transparent);
 }
 .recruiter-album-art::before {
@@ -343,11 +366,11 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-art-hello {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; width: fit-content; padding: 0.5rem 0.72rem;
   border: 1px solid var(--glass-border); border-radius: 999px;
-  background: color-mix(in srgb, #0b1114 88%, var(--accent)); color: #f5fbfa;
+  background: color-mix(in srgb, var(--surface) 88%, var(--accent)); color: var(--player-fg);
   font-family: var(--font-mono), monospace; font-size: 10px; white-space: nowrap; cursor: pointer;
   transition: background-color 180ms ease, border-color 180ms ease;
 }
-.recruiter-art-hello:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--glass-border)); background: #172326; color: #fff; }
+.recruiter-art-hello:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--glass-border)); background: color-mix(in srgb, var(--surface) 75%, var(--accent)); color: var(--player-fg); }
 .recruiter-art-hello span { transition: transform 180ms ease; }
 .recruiter-art-hello:hover span { transform: translate(2px, -2px); }
 .recruiter-art-greeting {
@@ -373,38 +396,37 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-avatar-wrap { position: relative; width: 100%; max-width: 148px; justify-self: center; }
 .recruiter-avatar-doodle { position: absolute; z-index: 4; top: -9px; left: -8px; display: grid; width: 29px; height: 29px; place-items: center; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--surface); box-shadow: 0 3px 9px rgba(0,0,0,.14); font-size: 16px; transform: rotate(-10deg); transition: transform 220ms var(--ease-out); }
 .recruiter-album-art:hover .recruiter-avatar-doodle { transform: rotate(8deg) translateY(-2px); }
-.recruiter-headphone-badge { position: absolute; z-index: 4; right: -9px; bottom: -8px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--glass-border)); border-radius: 12px; background: color-mix(in srgb, #0b1114 88%, transparent); box-shadow: 0 4px 12px rgba(0,0,0,.25); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; }
-.recruiter-showpiece { position: relative; display: grid; min-height: 92px; align-content: center; justify-items: center; gap: 4px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--glass-border)); border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 82%, #071012), color-mix(in srgb, var(--surface) 72%, #092023)); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.12); }
+.recruiter-headphone-badge { position: absolute; z-index: 4; right: -9px; bottom: -8px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--glass-border)); border-radius: 12px; background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: 0 4px 12px rgba(0,0,0,.12); font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; }
+.recruiter-showpiece { position: relative; display: grid; min-height: 92px; align-content: center; justify-items: center; gap: 4px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--glass-border)); border-radius: 18px; background: var(--player-widget-bg); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.08); }
 .recruiter-clock-face { display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--glass-border)); border-radius: 50%; color: var(--accent); }
-.recruiter-clock-time { color: #f4f7f7; font-family: var(--font-mono), monospace; font-size: 18px; font-variant-numeric: tabular-nums; letter-spacing: .04em; line-height: 1; }
-.recruiter-clock-zone { color: #9da9aa; font-family: var(--font-mono), monospace; font-size: 7px; letter-spacing: .12em; text-transform: uppercase; }
+.recruiter-clock-time { color: var(--player-fg); font-family: var(--font-mono), monospace; font-size: 18px; font-variant-numeric: tabular-nums; letter-spacing: .04em; line-height: 1; }
+.recruiter-clock-zone { color: var(--player-muted); font-family: var(--font-mono), monospace; font-size: 7px; letter-spacing: .12em; text-transform: uppercase; }
 .recruiter-art-sticker { position: absolute; z-index: 2; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,.12)); }
 .recruiter-art-sticker-one { top: 18px; left: 144px; color: var(--accent); font-size: 22px; transform: rotate(-12deg); animation: recruiter-sticker-float 3.6s ease-in-out infinite; }
-.recruiter-art-aside .recruiter-showpiece { background: linear-gradient(145deg, #10191c, #071012); }
 .recruiter-weather {
   position: relative; display: grid; width: 100%; min-height: 112px;
   align-content: center; justify-items: center; overflow: hidden; padding: 10px;
-  border: 1px solid #45464b; border-radius: 18px; background-color: #17181b; color: #f4f4f5;
-  box-shadow: 0 3px 10px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.06);
-  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  border: 1px solid var(--player-border); border-radius: 18px; background-color: var(--surface); color: var(--player-fg);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08), inset 0 1px rgba(255,255,255,.16);
+  background-image: linear-gradient(var(--player-widget-grid) 1px, transparent 1px), linear-gradient(90deg, var(--player-widget-grid) 1px, transparent 1px);
   background-size: 8px 8px; text-align: center;
 }
 .recruiter-weather-enable { display: grid; justify-items: center; gap: 4px; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font-family: var(--font-mono), monospace; font-size: 10px; cursor: pointer; }
 .recruiter-weather-enable > span:first-child,.recruiter-weather-sky { font-size: 24px; line-height: 1; }
-.recruiter-weather-enable small { color: #a7a9b0; font-size: 7px; letter-spacing: .05em; }
+.recruiter-weather-enable small { color: var(--player-muted); font-size: 7px; letter-spacing: .05em; }
 .recruiter-weather-live { display: grid; width: 100%; grid-template-columns: 38px minmax(0, 1fr); align-items: center; gap: 5px 8px; }
 .recruiter-weather-sky { grid-row: span 2; justify-self: center; }
 .recruiter-weather-copy { display: grid; min-width: 0; gap: 2px; }
-.recruiter-weather-reading { color: #f8f8fa; font-size: 27px; font-weight: 650; line-height: .95; }
-.recruiter-weather-place { max-width: 100%; overflow: hidden; color: #c4c5ca; font-family: var(--font-mono), monospace; font-size: 8px; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.recruiter-weather-reading { color: var(--player-fg); font-size: 27px; font-weight: 650; line-height: .95; }
+.recruiter-weather-place { max-width: 100%; overflow: hidden; color: var(--player-muted); font-family: var(--font-mono), monospace; font-size: 8px; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
 .recruiter-weather-condition { color: #dbb66e; font-family: var(--font-mono), monospace; font-size: 7px; letter-spacing: .04em; line-height: 1; }
 .recruiter-weather-lines { display: grid; grid-column: 2; gap: 4px; }
-.recruiter-weather-lines i { display: block; width: 100%; height: 4px; border-radius: 99px; background: #4c535c; }
+.recruiter-weather-lines i { display: block; width: 100%; height: 4px; border-radius: 99px; background: var(--player-track); }
 .recruiter-weather-lines i:nth-child(2) { width: 72%; }
 .recruiter-weather-lines i:nth-child(3) { width: 46%; }
-.recruiter-weather-credit { grid-column: 1 / -1; color: #82848b; font-family: var(--font-mono), monospace; font-size: 6px; line-height: 1; text-align: right; }
+.recruiter-weather-credit { grid-column: 1 / -1; color: var(--fg-subtle); font-family: var(--font-mono), monospace; font-size: 6px; line-height: 1; text-align: right; }
 @keyframes recruiter-sticker-float { 50% { translate: 0 -4px; } }
-.recruiter-player-console { margin-top: 18px; padding: 18px 20px 14px; border: 1px solid color-mix(in srgb, var(--accent) 13%, var(--glass-border)); border-radius: 23px; background: linear-gradient(145deg, #11191c, #090e10); box-shadow: inset 0 1px rgba(255,255,255,.06), 0 8px 22px rgba(0,0,0,.18); }
+.recruiter-player-console { margin-top: 18px; padding: 18px 20px 14px; border: 1px solid color-mix(in srgb, var(--accent) 13%, var(--glass-border)); border-radius: 23px; background: var(--player-console-bg); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 8px 22px rgba(0,0,0,.08); }
 .recruiter-player-heading { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .recruiter-player-copy {
   display: grid;
@@ -412,7 +434,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   gap: 3px;
 }
 .recruiter-player-kicker {
-  color: #899397;
+  color: var(--player-muted);
   font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.09em;
@@ -420,7 +442,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-player-kicker { display: flex; align-items: center; gap: 5px; }
 .recruiter-player-title {
   overflow: hidden;
-  color: #f5f7f8;
+  color: var(--player-fg);
   font-size: 16px;
   font-weight: 600;
   text-overflow: ellipsis;
@@ -460,7 +482,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   appearance: none;
   border: 0;
   border-radius: 99px;
-  background: linear-gradient(to right, var(--accent) 0 var(--progress), #4a535d var(--progress) 100%);
+  background: linear-gradient(to right, var(--accent) 0 var(--progress), var(--player-track) var(--progress) 100%);
   cursor: pointer;
 }
 .recruiter-player-progress input::-webkit-slider-thumb {
@@ -484,7 +506,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
-  color: #858e94;
+  color: var(--player-muted);
   font-family: var(--font-mono), monospace;
   font-size: 10px;
   font-variant-numeric: tabular-nums;
@@ -510,7 +532,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
   cursor: pointer;
   transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
-.recruiter-control { color: #bac1c4; }
+.recruiter-control { color: var(--player-muted); }
 .recruiter-control:hover { background: var(--accent-soft); color: var(--accent); }
 .recruiter-control:active { transform: scale(0.94); }
 .recruiter-control:focus-visible, .recruiter-art-hello:focus-visible, .recruiter-weather-enable:focus-visible, .recruiter-art-avatar:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -555,7 +577,6 @@ html.js .particle-title.is-ready .particle-title-semantic {
 }
 @media (prefers-reduced-motion: reduce) {
   .recruiter-player, .recruiter-art-avatar, .recruiter-art-sticker, .recruiter-player-sticker { animation: none; transition: none; }
-  .recruiter-cd { animation: recruiter-cd-spin 28s linear infinite; }
   .recruiter-player:hover { transform: none; }
   .recruiter-wave.is-playing i { animation: none; transform: scaleY(0.8); }
   .particle-title-canvas { transition: none; }
