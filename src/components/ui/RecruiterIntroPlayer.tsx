@@ -119,28 +119,6 @@ export default function RecruiterIntroPlayer() {
 
   return (
     <section className="recruiter-player" aria-label="Recruiter introduction audio player">
-      <svg className="walkman-wiring" viewBox="0 0 620 690" fill="none" aria-hidden="true" focusable="false">
-        <defs>
-          <linearGradient id="earbud-metal" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#f7f8f6" /><stop offset=".35" stopColor="#777d80" /><stop offset=".62" stopColor="#e5e6e3" /><stop offset="1" stopColor="#34383b" /></linearGradient>
-          <linearGradient id="earbud-cable" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d9dcda" /><stop offset=".22" stopColor="#33383a" /><stop offset=".7" stopColor="#101315" /><stop offset="1" stopColor="#aeb2b0" /></linearGradient>
-        </defs>
-        <path d="M306 16 C350 -8 387 8 411 44 C439 85 450 120 472 162 C510 235 541 320 558 405 C570 465 566 516 548 548" stroke="url(#earbud-cable)" strokeWidth="8" />
-        <path d="M306 16 C260 -4 214 12 184 45 C135 99 115 178 91 260 C66 345 52 418 48 493" stroke="url(#earbud-cable)" strokeWidth="8" />
-        <path d="M305 16 C350 -8 387 8 411 44 C439 85 450 120 472 162 C510 235 541 320 558 405 C570 465 566 516 548 548" stroke="white" strokeOpacity=".22" strokeWidth="1.4" />
-        <path d="M306 16 C260 -4 214 12 184 45 C135 99 115 178 91 260 C66 345 52 418 48 493" stroke="white" strokeOpacity=".2" strokeWidth="1.4" />
-        <g transform="translate(12 472) rotate(-28 45 45)">
-          <ellipse cx="48" cy="58" rx="44" ry="36" fill="#111416" stroke="#70777a" strokeWidth="3" />
-          <ellipse cx="48" cy="58" rx="32" ry="26" fill="#050607" />
-          <path d="M46 28 C60 10 81 11 95 21 L112 33 L98 55 L80 49 L66 65 L42 54Z" fill="url(#earbud-metal)" stroke="#aeb3b2" strokeWidth="2" />
-          <circle cx="78" cy="34" r="4" fill="#34393b" /><circle cx="89" cy="39" r="2" fill="#34393b" />
-        </g>
-        <g transform="translate(520 490) rotate(24 45 45)">
-          <ellipse cx="48" cy="58" rx="44" ry="36" fill="#111416" stroke="#70777a" strokeWidth="3" />
-          <ellipse cx="48" cy="58" rx="32" ry="26" fill="#050607" />
-          <path d="M46 28 C60 10 81 11 95 21 L112 33 L98 55 L80 49 L66 65 L42 54Z" fill="url(#earbud-metal)" stroke="#aeb3b2" strokeWidth="2" />
-          <circle cx="78" cy="34" r="4" fill="#34393b" /><circle cx="89" cy="39" r="2" fill="#34393b" />
-        </g>
-      </svg>
       <audio
         ref={audioRef}
         preload="metadata"
@@ -156,16 +134,16 @@ export default function RecruiterIntroPlayer() {
       >
         <source src="/recruiter-intro.mp3" type="audio/mpeg" />
       </audio>
-      <span className="walkman-jack" aria-hidden="true" />
-      <div className="walkman-body">
       <span className="recruiter-player-sticker recruiter-player-sticker-smile" aria-hidden="true">😎</span>
 
-      <div className="walkman-screen">
       <div className={`recruiter-album-art${playing ? ' is-playing' : ''}`} aria-label="Sharik avatar cover art">
         <div className="recruiter-art-main">
           <div className="recruiter-avatar-wrap">
             <div className="recruiter-art-avatar">
-              <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="(max-width: 639px) 104px, 132px" />
+              <div className="recruiter-avatar-figure">
+                <Image src="/anime-avatar.png" alt="Anime avatar" fill sizes="(max-width: 639px) 104px, 132px" />
+                <span className="recruiter-avatar-wink" aria-hidden="true" />
+              </div>
             </div>
             <span className="recruiter-avatar-doodle" aria-hidden="true">😊</span>
             <span className="recruiter-headphone-badge" aria-hidden="true">🎧</span>
@@ -233,13 +211,8 @@ export default function RecruiterIntroPlayer() {
         />
         <span className="recruiter-player-time" aria-live="off"><time>{formatTime(time)}</time><time>{formatTime(duration)}</time></span>
       </div>
-      {error && <p className="recruiter-player-error" role="status">Couldn’t play the voice note here. <a href="/recruiter-intro.mp3" download="Sharik-Intro.mp3">Download the audio</a>.</p>}
-      </div>
-      </div>
 
-      <div className="walkman-lower-hardware">
-      <span className="walkman-lower-label" aria-hidden="true">PORTABLE AUDIO · 01</span>
-      <div className="recruiter-player-controls" role="group" aria-label="Audio controls">
+      <div className="recruiter-player-controls">
         <button type="button" className="recruiter-control" aria-label="Back 10 seconds" onClick={() => skip(-10)}><Rewind size={17} /></button>
         <button type="button" className="recruiter-control recruiter-play" aria-label={playing ? 'Pause introduction' : 'Play introduction'} onClick={togglePlayback}>
           {playing ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
@@ -251,7 +224,7 @@ export default function RecruiterIntroPlayer() {
           if (audioRef.current) audioRef.current.loop = next
         }}><Repeat size={16} /></button>
       </div>
-      </div>
+      {error && <p className="recruiter-player-error" role="status">Couldn’t play the voice note here. <a href="/recruiter-intro.mp3" download="Sharik-Intro.mp3">Download the audio</a>.</p>}
       </div>
     </section>
   )
