@@ -8,6 +8,34 @@ import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
 const TRANSITION_DURATION = 800
+const experienceTransition = {
+  initial: (dir: 'next' | 'prev') => ({
+    opacity: 0,
+    x: dir === 'next' ? 34 : -34,
+    y: 10,
+    scale: 0.94,
+    rotateY: dir === 'next' ? -5 : 5,
+    filter: 'blur(3px)',
+  }),
+  animate: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotateY: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] as const },
+  },
+  exit: (dir: 'next' | 'prev') => ({
+    opacity: 0,
+    x: dir === 'next' ? -26 : 26,
+    y: -6,
+    scale: 0.9,
+    rotateY: dir === 'next' ? 6 : -6,
+    filter: 'blur(2px)',
+    transition: { duration: 0.46, ease: [0.4, 0, 1, 1] as const },
+  }),
+}
 const ACCENTS: Record<string, string> = {
   'Invisible Technologies': '#99c96a',
   Micro1: '#78c9bd',
@@ -96,7 +124,7 @@ export default function Experience() {
   const totalLabel = String(experiences.length).padStart(2, '0')
 
   return (
-    <section id="experience" className="relative px-5 py-24 sm:px-6 sm:py-32">
+    <section id="experience" className="relative px-5 py-16 sm:px-6 sm:py-20">
       <div className="mx-auto max-w-content">
         <h2 className="sr-only">Experience</h2>
         <Reveal delay={0.1}>
@@ -119,14 +147,16 @@ export default function Experience() {
           >
             <div className="experience-editorial-main">
               <div className="experience-editorial-copy">
-                <AnimatePresence mode="wait" initial={false}>
+                <AnimatePresence mode="sync" initial={false} custom={direction}>
                   <motion.div
                     key={item.company}
                     className="experience-editorial-copy-inner"
-                    initial={reduce ? false : { opacity: 0, y: direction === 'next' ? 12 : -12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={reduce ? undefined : { opacity: 0, y: direction === 'next' ? -10 : 10 }}
-                    transition={{ duration: reduce ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }}
+                    custom={direction}
+                    variants={experienceTransition}
+                    initial={reduce ? false : 'initial'}
+                    animate="animate"
+                    exit={reduce ? undefined : 'exit'}
+                    transition={reduce ? { duration: 0 } : undefined}
                     aria-live="polite"
                   >
                     <div className="experience-editorial-index"><span />{indexLabel} / {totalLabel}</div>
@@ -135,6 +165,9 @@ export default function Experience() {
                     <p className="experience-editorial-period">{item.period} <span>·</span> {item.type}</p>
                     <p className="experience-editorial-company-desc">{item.companyDesc}</p>
                     <p className="experience-editorial-description">{item.description}</p>
+                    <ul className="experience-editorial-highlights" aria-label={`${item.company} responsibilities`}>
+                      {item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                    </ul>
                     <div className="experience-editorial-nav">
                       <button type="button" onClick={goPrev} aria-label="Previous experience"><ArrowLeft size={18} /></button>
                       <button type="button" onClick={goNext} aria-label="Next experience"><ArrowRight size={18} /></button>
@@ -144,15 +177,17 @@ export default function Experience() {
               </div>
 
               <div className="experience-editorial-visual" aria-label={`${item.company} visual`}>
-                <AnimatePresence mode="wait" initial={false}>
+                <AnimatePresence mode="sync" initial={false} custom={direction}>
                   <motion.div
                     key={item.company}
                     className="experience-editorial-art"
                     style={{ '--experience-accent': accent } as React.CSSProperties}
-                    initial={reduce ? false : { opacity: 0, scale: 1.035 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduce ? undefined : { opacity: 0, scale: 0.985 }}
-                    transition={{ duration: reduce ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+                    custom={direction}
+                    variants={experienceTransition}
+                    initial={reduce ? false : 'initial'}
+                    animate="animate"
+                    exit={reduce ? undefined : 'exit'}
+                    transition={reduce ? { duration: 0 } : undefined}
                   >
                     <div className="experience-editorial-art-grid" />
                     <span className="experience-editorial-art-number">{indexLabel}</span>
