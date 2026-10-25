@@ -190,7 +190,6 @@ export default function RecruiterIntroPlayer() {
       <div className="recruiter-player-heading">
         <span className="recruiter-player-copy">
           <span className="recruiter-player-kicker"><Volume2 size={12} /> PERSONAL VOICE NOTE</span>
-          <span className="recruiter-player-title">Meet Sharik · Intro</span>
         </span>
         <span className={`recruiter-wave${playing ? ' is-playing' : ''}`} aria-hidden="true">
           {bars.slice(0, 14).map((height, index) => <i key={index} style={{ '--bar-height': `${Math.max(8, height * 0.68)}px`, '--bar-delay': `${index * 45}ms` } as CSSProperties} />)}
