@@ -62,6 +62,8 @@ export interface CanvasTextProps {
   fontWeight?: number | string;
   /** Font family. Default: system UI sans. */
   fontFamily?: string;
+  /** Horizontal alignment of the sampled glyphs. Default: center. */
+  textAlign?: CanvasTextAlign;
 }
 
 type Particle = {
@@ -131,6 +133,7 @@ export function CanvasText({
   fontSize = 64,
   fontWeight = 600,
   fontFamily = DEFAULT_FONT_FAMILY,
+  textAlign = "center",
 }: CanvasTextProps) {
   const wrapRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -227,14 +230,15 @@ export function CanvasText({
     octx.setTransform(dpr, 0, 0, dpr, 0, 0);
     octx.clearRect(0, 0, cssW, cssH);
     octx.fillStyle = "#ffffff";
-    octx.textAlign = "center";
+    octx.textAlign = textAlign;
     octx.textBaseline = "middle";
     octx.font = `${fontWeight} ${baseFontSize}px ${resolvedFontFamily}`;
     const measuredWidth = octx.measureText(text || " ").width;
     const fitScale = Math.min(1, Math.max(0.42, (cssW - 24) / Math.max(1, measuredWidth)));
     const safeFontSize = Math.max(12, baseFontSize * fitScale);
     octx.font = `${fontWeight} ${safeFontSize}px ${resolvedFontFamily}`;
-    octx.fillText(text || " ", cx, cy);
+    const textAnchorX = textAlign === "left" ? 8 : textAlign === "right" ? cssW - 8 : cx;
+    octx.fillText(text || " ", textAnchorX, cy);
 
     // Read only the glyph bounding box — full-canvas getImageData is expensive.
     const metrics = octx.measureText(text || " ");
@@ -249,7 +253,8 @@ export function CanvasText({
         (metrics.actualBoundingBoxDescent ?? safeFontSize * 0.25),
     );
     const pad = Math.ceil(safeFontSize * 0.35);
-    const boxCssX = Math.max(0, Math.floor(cx - textW / 2 - pad));
+    const glyphLeft = textAnchorX - (metrics.actualBoundingBoxLeft ?? (textAlign === "center" ? textW / 2 : 0));
+    const boxCssX = Math.max(0, Math.floor(glyphLeft - pad));
     const boxCssY = Math.max(0, Math.floor(cy - textH / 2 - pad));
     const boxCssW = Math.min(cssW - boxCssX, Math.ceil(textW + pad * 2));
     const boxCssH = Math.min(cssH - boxCssY, Math.ceil(textH + pad * 2));
@@ -301,7 +306,9 @@ export function CanvasText({
       if (particles.length >= MAX_PARTICLES) break;
     }
 
-    const sideSpread = Math.min(220, Math.max(safeScatter, cssW * 0.28));
+    // Keep the side origins close enough to the canvas edge to become visible
+    // quickly, while preserving the full particle-to-glyph assembly duration.
+    const sideSpread = Math.min(140, Math.max(safeScatter, cssW * 0.16));
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i]!;
       const seed = Math.random();
@@ -365,6 +372,7 @@ export function CanvasText({
     fontSize,
     fontWeight,
     fontFamily,
+    textAlign,
     safeDensity,
     safeScatter,
     safeLoadDuration,

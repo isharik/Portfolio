@@ -145,6 +145,7 @@ export default function Hero() {
                   fontSize={58}
                   fontWeight={500}
                   fontFamily="var(--font-orbitron), sans-serif"
+                  textAlign="left"
                   density={2}
                   particleSize={1.7}
                   scatter={36}
