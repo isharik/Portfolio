@@ -48,6 +48,8 @@ export interface CanvasTextProps {
   magneticRadius?: number;
   /** Force the loop paused. When omitted, auto-pauses off-screen / hidden. */
   paused?: boolean;
+  /** Run this one-shot intro even when the device requests reduced motion. */
+  forceMotion?: boolean;
   /**
    * Bump to re-run the scatter → assemble intro without changing other props.
    * Useful for playground Replay controls.
@@ -134,6 +136,7 @@ export function CanvasText({
   magnetic = 0.35,
   magneticRadius = 100,
   paused,
+  forceMotion = false,
   replayKey,
   className,
   fontSize = 64,
@@ -324,7 +327,7 @@ export function CanvasText({
       p.seed = seed * 1000;
     }
 
-    const reducedMotion = window.matchMedia(
+    const reducedMotion = !forceMotion && window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
@@ -384,6 +387,7 @@ export function CanvasText({
     safeLoadDuration,
     safeMorphDuration,
     replayKey,
+    forceMotion,
   ]);
 
   const syncFillColor = React.useCallback(() => {

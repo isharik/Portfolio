@@ -105,6 +105,7 @@ export default function Hero() {
                   magnetic={0.22}
                   magneticRadius={84}
                   paused={false}
+                  forceMotion
                   className="h-[124px] max-w-none text-fg"
                 />
               </div>
