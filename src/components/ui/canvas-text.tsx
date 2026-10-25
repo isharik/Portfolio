@@ -4,17 +4,16 @@
  * CanvasText
  * ──────────
  * Headline rendered as a cloud of canvas particles. Glyphs are rasterized
- * offscreen, sampled into points, then animated through a loading-circle
- * hold that slowly morphs into the letterforms — with soft idle drift and
+ * offscreen, sampled into points, then assembled from both side edges into
+ * the letterforms — with soft idle drift and
  * optional pointer magnetism after settle. Zero deps beyond React.
  *
  * Motion contract:
- * - Intro timeline is driven by `loadDuration` (ring spin) then
- *   `morphDuration` (ring → text).
+ * - Intro timeline moves particles from both side edges into the glyphs.
  * - rAF loop only while animating / drifting / pointer-active; stops when
  *   the lattice is locked (drift=0, no pointer) to save CPU.
- * - Load spin writes positions directly; morph freezes ring origins once
- *   (no per-frame trig). Glyph sampling reads only the text bounding box.
+ * - Intro positions are calculated once and interpolated directly per frame.
+ *   Glyph sampling reads only the text bounding box.
  * - `prefers-reduced-motion` paints a static sampled glyph (no drift).
  * - Particles reassemble on text / size / density / scatter / replay changes.
  */
@@ -36,11 +35,11 @@ export interface CanvasTextProps {
   density?: number;
   /** Soft idle drift after settle, in CSS pixels. 0 = locked grid (default). */
   drift?: number;
-  /** How far the loading ring sits from center, in CSS pixels. Default: 48. */
+  /** How far particles begin beyond the side edges, in CSS pixels. Default: 48. */
   scatter?: number;
-  /** Seconds spent spinning on the loading ring before morph starts. Default: 1.0. */
+  /** Initial side-entry portion of the intro, in seconds. Default: 1.0. */
   loadDuration?: number;
-  /** Seconds for the ring → text morph. Default: 1.4. */
+  /** Remaining assembly time after side entry, in seconds. Default: 1.4. */
   morphDuration?: number;
   /** Pointer attraction strength (0 = off). Default: 0.35. */
   magnetic?: number;
@@ -68,7 +67,7 @@ export interface CanvasTextProps {
 type Particle = {
   homeX: number;
   homeY: number;
-  /** Ring → text lerp start, captured once when morph begins. */
+  /** Starting position beyond the left or right edge. */
   originX: number;
   originY: number;
   x: number;
@@ -76,16 +75,12 @@ type Particle = {
   vx: number;
   vy: number;
   seed: number;
-  orbitAngle: number;
-  orbitRadius: number;
 };
 
 type Engine = {
   particles: Particle[];
   width: number;
   height: number;
-  cx: number;
-  cy: number;
   dpr: number;
   /** Last dpr applied via setTransform — skip redundant transforms. */
   paintedDpr: number;
@@ -98,12 +93,8 @@ type Engine = {
   introElapsed: number;
   /** Last rAF timestamp used to advance the intro timeline. */
   lastFrameTime: number;
-  /** Ms spent on the spinning ring. */
-  loadMs: number;
-  /** Ms spent morphing ring → text. */
-  morphMs: number;
-  /** True after morph origins were frozen from the live ring. */
-  morphOriginsReady: boolean;
+  /** Total time for the side-to-text entrance. */
+  introMs: number;
   pointer: { x: number; y: number; active: boolean };
   reducedMotion: boolean;
   /** True once intro finished and lattice is static (no drift / pointer). */
@@ -114,11 +105,9 @@ type Engine = {
 const DEFAULT_FONT_FAMILY =
   'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
-const SPIN_RATE = 0.0024;
 /** Soft cap — denser samples are stride-skipped so mobile stays smooth. */
 const MAX_PARTICLES = 2800;
 const RESIZE_DEBOUNCE_MS = 80;
-const TWO_PI = Math.PI * 2;
 
 /**
  * Canvas-backed particle headline. Samples rasterized glyphs into points that
@@ -299,31 +288,22 @@ export function CanvasText({
           vx: 0,
           vy: 0,
           seed: 0,
-          orbitAngle: 0,
-          orbitRadius: 0,
         });
         if (particles.length >= MAX_PARTICLES) break;
       }
       if (particles.length >= MAX_PARTICLES) break;
     }
 
-    const orbitJitter = 1.12;
-    const edgePad = safeParticleSize * 2 + 10;
-    const maxFitRadius =
-      Math.max(8, Math.min(cssW, cssH) / 2 - edgePad) / orbitJitter;
-    const ringRadius = Math.min(safeScatter, maxFitRadius);
-    const count = Math.max(particles.length, 1);
-    const twoPiOverCount = TWO_PI / count;
-
+    const sideSpread = Math.min(220, Math.max(safeScatter, cssW * 0.28));
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i]!;
       const seed = Math.random();
-      p.orbitAngle = i * twoPiOverCount + seed * 0.08;
-      p.orbitRadius = ringRadius * (0.88 + seed * 0.24);
-      p.x = cx + Math.cos(p.orbitAngle) * p.orbitRadius;
-      p.y = cy + Math.sin(p.orbitAngle) * p.orbitRadius;
-      p.originX = p.x;
-      p.originY = p.y;
+      const spread = sideSpread * (0.62 + seed * 0.58);
+      const fromLeft = p.homeX < cx;
+      p.originX = fromLeft ? -spread : cssW + spread;
+      p.originY = Math.max(0, Math.min(cssH, p.homeY + (seed - 0.5) * safeScatter * 1.4));
+      p.x = p.originX;
+      p.y = p.originY;
       p.seed = seed * 1000;
     }
 
@@ -353,8 +333,6 @@ export function CanvasText({
       particles,
       width: cssW,
       height: cssH,
-      cx,
-      cy,
       dpr,
       paintedDpr: -1,
       color: resolvedColor,
@@ -364,9 +342,7 @@ export function CanvasText({
       magneticRadius: live.magneticRadius,
       introElapsed: 0,
       lastFrameTime: now,
-      loadMs: safeLoadDuration * 1000,
-      morphMs: safeMorphDuration * 1000,
-      morphOriginsReady: false,
+      introMs: (safeLoadDuration + safeMorphDuration) * 1000,
       pointer: prevPointer,
       reducedMotion,
       idleLocked: reducedMotion,
@@ -638,9 +614,9 @@ function resolveFillColor(wrap: HTMLElement, color?: string): string {
     : "#09090b";
 }
 
-/** Fast departure from the ring, soft landing on the letterforms. */
-function easeOutCubic(t: number): number {
-  return 1 - (1 - t) ** 3;
+/** Gentle acceleration and settling for the side-to-text particle flow. */
+function easeInOutCubic(t: number): number {
+  return t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
 }
 
 /**
@@ -654,10 +630,7 @@ function stepParticles(engine: Engine, now: number): boolean {
     magnetic,
     magneticRadius,
     pointer,
-    loadMs,
-    morphMs,
-    cx,
-    cy,
+    introMs,
   } = engine;
 
   const elapsed = Math.max(
@@ -669,44 +642,19 @@ function stepParticles(engine: Engine, now: number): boolean {
   const pointerLive = pointer.active && magnetic > 0;
   const len = particles.length;
 
-  // Phase 1 — loading ring (direct positions; spring was wasted work here).
-  if (elapsed < loadMs) {
-    const spin = elapsed * SPIN_RATE;
-    for (let i = 0; i < len; i++) {
-      const p = particles[i]!;
-      const angle = p.orbitAngle + spin;
-      p.x = cx + Math.cos(angle) * p.orbitRadius;
-      p.y = cy + Math.sin(angle) * p.orbitRadius;
-      p.vx = 0;
-      p.vy = 0;
-    }
-    return true;
-  }
-
-  // Phase 2 — morph ring → text (starts immediately when load ends).
-  const morphElapsed = elapsed - loadMs;
-  if (morphElapsed < morphMs) {
-    if (!engine.morphOriginsReady) {
-      // Freeze live ring positions once — no per-frame trig during morph.
-      for (let i = 0; i < len; i++) {
-        const p = particles[i]!;
-        p.originX = p.x;
-        p.originY = p.y;
-      }
-      engine.morphOriginsReady = true;
-    }
-
-    const raw = Math.min(1, morphElapsed / Math.max(1, morphMs));
+  // Intro — particles stream in from both outer edges and settle into glyphs.
+  if (elapsed < introMs) {
+    const raw = Math.min(1, elapsed / Math.max(1, introMs));
 
     for (let i = 0; i < len; i++) {
       const p = particles[i]!;
-      // Light stagger only — keeps a cascade without delaying leave-circle.
-      const stagger = (p.seed % 180) / 1000;
+      // A small per-particle delay creates a natural inward wave from both sides.
+      const stagger = (p.seed % 1000) / 1000 * 0.075;
       const delayed = Math.min(
         1,
-        Math.max(0, (raw - stagger * 0.12) / (1 - stagger * 0.12)),
+        Math.max(0, (raw - stagger) / (1 - stagger)),
       );
-      const u = easeOutCubic(delayed);
+      const u = easeInOutCubic(delayed);
 
       if (u >= 0.995) {
         p.x = p.homeX;

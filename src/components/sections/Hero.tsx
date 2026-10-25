@@ -125,7 +125,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-col items-center text-center lg:self-center lg:items-start lg:text-left">
+        <div className="flex min-w-0 flex-col items-center text-center lg:-translate-y-3 lg:self-center lg:items-start lg:text-left">
           <div className="rise mt-4" style={rise(0.2)}>
             <span data-parallax-layer="4" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
@@ -136,11 +136,11 @@ export default function Hero() {
           <p className="eyebrow rise mt-3" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
 
           <div data-parallax-layer="2" className="relative mt-1 h-[104px] w-full">
-            <h1 className="sr-only">{profile.headlineLead} {profile.headlineAccent}</h1>
+            <h1 className="sr-only">Sharik</h1>
             {welcomeComplete && (
               <div aria-hidden="true" className="absolute inset-x-0 -top-2 h-[124px]">
                 <CanvasText
-                  text={`${profile.headlineLead} ${profile.headlineAccent}`}
+                  text="Sharik"
                   color="var(--fg)"
                   fontSize={58}
                   fontWeight={600}
