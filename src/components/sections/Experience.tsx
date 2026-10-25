@@ -7,8 +7,8 @@ import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
-const EXIT_DURATION = 350
-const REVEAL_DURATION = 600
+const EXIT_DURATION = 320
+const REVEAL_DURATION = 760
 type TransitionPhase = 'idle' | 'exit' | 'enter' | 'reveal'
 
 export default function Experience() {
@@ -27,6 +27,14 @@ export default function Experience() {
   const goToRef = useRef<((index: number, dir: 'next' | 'prev') => void) | null>(null)
   const progressRef = useRef(0)
   const touchStartX = useRef<number | null>(null)
+
+  useEffect(() => {
+    experiences.forEach(({ logo }) => {
+      const image = new window.Image()
+      image.decoding = 'async'
+      image.src = logo
+    })
+  }, [])
 
   const goTo = useCallback((index: number, dir: 'next' | 'prev') => {
     if (transitionLock.current) {
