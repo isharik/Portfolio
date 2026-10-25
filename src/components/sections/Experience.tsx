@@ -8,7 +8,7 @@ import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
 const EXIT_DURATION = 320
-const REVEAL_DURATION = 760
+const REVEAL_DURATION = 940
 type TransitionPhase = 'idle' | 'exit' | 'enter' | 'reveal'
 
 export default function Experience() {
