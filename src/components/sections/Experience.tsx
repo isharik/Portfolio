@@ -7,8 +7,8 @@ import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
-const EXIT_DURATION = 760
-const ENTER_DURATION = 1080
+const EXIT_DURATION = 350
+const ENTER_DURATION = 430
 type TransitionPhase = 'idle' | 'exit' | 'enter'
 
 export default function Experience() {
@@ -19,14 +19,21 @@ export default function Experience() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [progress, setProgress] = useState(0)
+  const activeRef = useRef(active)
   const transitionLock = useRef(false)
   const transitionTimer = useRef<number | null>(null)
   const transitionFrame = useRef<number | null>(null)
+  const queuedDirection = useRef<'next' | 'prev' | null>(null)
+  const goToRef = useRef<((index: number, dir: 'next' | 'prev') => void) | null>(null)
   const progressRef = useRef(0)
   const touchStartX = useRef<number | null>(null)
 
   const goTo = useCallback((index: number, dir: 'next' | 'prev') => {
-    if (transitionLock.current || index === active) return
+    if (transitionLock.current) {
+      queuedDirection.current = dir
+      return
+    }
+    if (index === activeRef.current) return
     transitionLock.current = true
     setIsTransitioning(true)
     setDirection(dir)
@@ -37,6 +44,7 @@ export default function Experience() {
 
     setTransitionPhase('exit')
     transitionTimer.current = window.setTimeout(() => {
+      activeRef.current = index
       setActive(index)
       setTransitionPhase('enter')
       transitionFrame.current = window.requestAnimationFrame(() => {
@@ -49,9 +57,19 @@ export default function Experience() {
         transitionLock.current = false
         setIsTransitioning(false)
         transitionTimer.current = null
-      }, ENTER_DURATION)
+        const queued = queuedDirection.current
+        queuedDirection.current = null
+        if (queued) {
+          const queuedIndex = queued === 'next'
+            ? (activeRef.current + 1) % experiences.length
+            : (activeRef.current - 1 + experiences.length) % experiences.length
+          goToRef.current?.(queuedIndex, queued)
+        }
+      }, ENTER_DURATION + 40)
     }, EXIT_DURATION)
-  }, [active])
+  }, [])
+
+  goToRef.current = goTo
 
   const goNext = useCallback(() => goTo((active + 1) % experiences.length, 'next'), [active, goTo])
   const goPrev = useCallback(() => goTo((active - 1 + experiences.length) % experiences.length, 'prev'), [active, goTo])
