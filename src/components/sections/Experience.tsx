@@ -7,8 +7,8 @@ import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
-const EXIT_DURATION = 620
-const ENTER_DURATION = 920
+const EXIT_DURATION = 760
+const ENTER_DURATION = 1080
 type TransitionPhase = 'idle' | 'exit' | 'enter'
 
 export default function Experience() {
@@ -35,14 +35,6 @@ export default function Experience() {
     if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
     if (transitionFrame.current !== null) window.cancelAnimationFrame(transitionFrame.current)
 
-    if (reduce) {
-      setActive(index)
-      setTransitionPhase('idle')
-      transitionLock.current = false
-      setIsTransitioning(false)
-      return
-    }
-
     setTransitionPhase('exit')
     transitionTimer.current = window.setTimeout(() => {
       setActive(index)
@@ -59,7 +51,7 @@ export default function Experience() {
         transitionTimer.current = null
       }, ENTER_DURATION)
     }, EXIT_DURATION)
-  }, [active, reduce])
+  }, [active])
 
   const goNext = useCallback(() => goTo((active + 1) % experiences.length, 'next'), [active, goTo])
   const goPrev = useCallback(() => goTo((active - 1 + experiences.length) % experiences.length, 'prev'), [active, goTo])

@@ -86,9 +86,9 @@ export default function Hero() {
             </span>
           </div>
 
-          <p className="eyebrow rise mt-5" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
+          <p className="eyebrow rise mt-3" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
 
-          <div data-parallax-layer="2" className="mt-3 min-h-[124px] w-full">
+          <div data-parallax-layer="2" className="mt-1 min-h-[124px] w-full">
             <h1 className="sr-only">{profile.headlineLead} {profile.headlineAccent}</h1>
             {welcomeComplete && (
               <div aria-hidden="true">
@@ -112,7 +112,7 @@ export default function Hero() {
             )}
           </div>
 
-          <p className="rise mt-2 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base" style={rise(1.48)}>
+          <p className="rise mt-0 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base" style={rise(1.48)}>
             <span data-parallax-layer="3" className="block">{profile.summary}</span>
           </p>
 
