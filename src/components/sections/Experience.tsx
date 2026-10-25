@@ -8,8 +8,8 @@ import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
 const EXIT_DURATION = 350
-const ENTER_DURATION = 430
-type TransitionPhase = 'idle' | 'exit' | 'enter'
+const REVEAL_DURATION = 600
+type TransitionPhase = 'idle' | 'exit' | 'enter' | 'reveal'
 
 export default function Experience() {
   const reduce = useReducedMotion()
@@ -49,23 +49,24 @@ export default function Experience() {
       setTransitionPhase('enter')
       transitionFrame.current = window.requestAnimationFrame(() => {
         transitionFrame.current = window.requestAnimationFrame(() => {
-          setTransitionPhase('idle')
+          setTransitionPhase('reveal')
           transitionFrame.current = null
+          transitionTimer.current = window.setTimeout(() => {
+            setTransitionPhase('idle')
+            transitionLock.current = false
+            setIsTransitioning(false)
+            transitionTimer.current = null
+            const queued = queuedDirection.current
+            queuedDirection.current = null
+            if (queued) {
+              const queuedIndex = queued === 'next'
+                ? (activeRef.current + 1) % experiences.length
+                : (activeRef.current - 1 + experiences.length) % experiences.length
+              goToRef.current?.(queuedIndex, queued)
+            }
+          }, REVEAL_DURATION + 40)
         })
       })
-      transitionTimer.current = window.setTimeout(() => {
-        transitionLock.current = false
-        setIsTransitioning(false)
-        transitionTimer.current = null
-        const queued = queuedDirection.current
-        queuedDirection.current = null
-        if (queued) {
-          const queuedIndex = queued === 'next'
-            ? (activeRef.current + 1) % experiences.length
-            : (activeRef.current - 1 + experiences.length) % experiences.length
-          goToRef.current?.(queuedIndex, queued)
-        }
-      }, ENTER_DURATION + 40)
     }, EXIT_DURATION)
   }, [])
 
