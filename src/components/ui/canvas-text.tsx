@@ -607,14 +607,26 @@ export function CanvasText({
 }
 
 function resolveFillColor(wrap: HTMLElement, color?: string): string {
-  if (color && color.trim()) return color.trim();
+  const wrapStyle = getComputedStyle(wrap);
+  const rootStyle = getComputedStyle(document.documentElement);
+  const resolveVariable = (value: string, depth = 0): string => {
+    if (depth > 3) return "";
+    const match = value.trim().match(/^var\(\s*(--[\w-]+)/);
+    if (!match) return value.trim();
+    const resolved = rootStyle.getPropertyValue(match[1]!).trim();
+    return resolved ? resolveVariable(resolved, depth + 1) : "";
+  };
 
-  const token = getComputedStyle(wrap)
-    .getPropertyValue("--wensity-canvas-text")
-    .trim();
-  if (token) return token;
+  const explicit = color?.trim() || wrapStyle.getPropertyValue("--wensity-canvas-text").trim();
+  if (explicit) {
+    const resolved = resolveVariable(explicit);
+    if (resolved) return resolved;
+  }
 
-  const inherited = getComputedStyle(wrap).color;
+  const foreground = resolveVariable(rootStyle.getPropertyValue("--fg").trim());
+  if (foreground) return foreground;
+
+  const inherited = wrapStyle.color;
   if (inherited && inherited !== "rgba(0, 0, 0, 0)") return inherited;
 
   return document.documentElement.classList.contains("dark")

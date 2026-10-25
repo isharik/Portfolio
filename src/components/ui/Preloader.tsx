@@ -57,7 +57,10 @@ export default function Preloader() {
   // so visitors actually see the headline form instead of missing it behind it.
   useEffect(() => {
     if (visible) return
-    const timer = window.setTimeout(() => window.dispatchEvent(new Event('portfolio:welcome-complete')), 300)
+    const timer = window.setTimeout(() => {
+      document.documentElement.dataset.welcomeComplete = 'true'
+      window.dispatchEvent(new Event('portfolio:welcome-complete'))
+    }, 300)
     return () => window.clearTimeout(timer)
   }, [visible])
 

@@ -18,6 +18,9 @@ export default function Hero() {
   const [welcomeComplete, setWelcomeComplete] = useState(false)
 
   useEffect(() => {
+    if (document.documentElement.dataset.welcomeComplete === 'true') {
+      setWelcomeComplete(true)
+    }
     const onWelcomeComplete = () => setWelcomeComplete(true)
     window.addEventListener('portfolio:welcome-complete', onWelcomeComplete, { once: true })
     return () => window.removeEventListener('portfolio:welcome-complete', onWelcomeComplete)
@@ -89,19 +92,21 @@ export default function Hero() {
             <h1 className="sr-only">{profile.headlineLead} {profile.headlineAccent}</h1>
             {welcomeComplete && (
               <div aria-hidden="true">
-              <CanvasText
-                text={`${profile.headlineLead} ${profile.headlineAccent}`}
-                fontSize={58}
-                fontWeight={600}
-                density={2}
-                particleSize={1.55}
-                scatter={54}
-                loadDuration={0.95}
-                morphDuration={1.45}
-                magnetic={0.22}
-                magneticRadius={84}
-                className="h-[160px] max-w-none text-fg"
-              />
+                <CanvasText
+                  text={`${profile.headlineLead} ${profile.headlineAccent}`}
+                  color="var(--fg)"
+                  fontSize={58}
+                  fontWeight={600}
+                  density={2}
+                  particleSize={1.55}
+                  scatter={54}
+                  loadDuration={0.95}
+                  morphDuration={1.45}
+                  magnetic={0.22}
+                  magneticRadius={84}
+                  paused={false}
+                  className="h-[160px] max-w-none text-fg"
+                />
               </div>
             )}
           </div>
