@@ -143,8 +143,12 @@ export default function Hero() {
           </div>
 
           <div className="rise mt-6" style={rise(1.68)}>
-            <div data-parallax-layer="4" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle lg:justify-start">
-              <span className="inline-flex items-center gap-3"><Briefcase size={14} strokeWidth={1.6} aria-hidden="true" /><span>4+ years across support &amp; AI</span></span><span className="text-border-strong">/</span><span className="inline-flex items-center gap-3"><Wifi size={14} strokeWidth={1.6} aria-hidden="true" /><span>Remote-first</span></span><span className="text-border-strong">/</span><span className="inline-flex items-center gap-3"><MapPin size={14} strokeWidth={1.6} aria-hidden="true" /><span>{profile.location}</span></span>
+            <div data-parallax-layer="4" className="hero-fact-row flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-fg-subtle lg:justify-start">
+              <span className="hero-fact" role="note" tabIndex={0} aria-label="4+ years across support and AI. Experienced in turning complex support and AI work into clearer customer experiences." data-tooltip="4+ years turning complex support and AI work into clearer customer experiences."><Briefcase size={17} strokeWidth={1.6} aria-hidden="true" /><span>4+ years across support &amp; AI</span></span>
+              <span className="text-border-strong">/</span>
+              <span className="hero-fact" role="note" tabIndex={0} aria-label="Remote-first. Remote work is my forte, with clear collaboration across teams and time zones." data-tooltip="Remote work is my forte—clear collaboration across teams and time zones."><Wifi size={17} strokeWidth={1.6} aria-hidden="true" /><span>Remote-first</span></span>
+              <span className="text-border-strong">/</span>
+              <span className="hero-fact" role="note" tabIndex={0} aria-label={`${profile.location}. Based in India and collaborating with teams around the world.`} data-tooltip="Based in India, collaborating with teams around the world."><MapPin size={17} strokeWidth={1.6} aria-hidden="true" /><span>{profile.location}</span></span>
             </div>
           </div>
         </div>
