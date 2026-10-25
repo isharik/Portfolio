@@ -136,19 +136,19 @@ export default function Hero() {
           <p className="eyebrow rise mt-3" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
 
           <div data-parallax-layer="2" className="relative mt-1 h-[104px] w-full">
-            <h1 className="sr-only">Sharik</h1>
+            <h1 className="sr-only">Hi I&apos;m Sharik</h1>
             {welcomeComplete && (
               <div aria-hidden="true" className="absolute inset-x-0 -top-2 h-[124px]">
                 <CanvasText
-                  text="Sharik"
+                  text="Hi I'm Sharik"
                   color="var(--fg)"
                   fontSize={58}
                   fontWeight={600}
                   density={2}
                   particleSize={1.7}
                   scatter={36}
-                  loadDuration={1.35}
-                  morphDuration={2.8}
+                  loadDuration={1.15}
+                  morphDuration={2.5}
                   magnetic={0.22}
                   magneticRadius={84}
                   paused={false}
