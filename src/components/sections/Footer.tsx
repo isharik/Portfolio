@@ -1,16 +1,23 @@
 'use client'
 import Image from 'next/image'
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react'
+import { Github, Linkedin, type LucideProps } from 'lucide-react'
 import { profile, socials, navLinks } from '@/lib/content'
 import { scrollToSection } from '@/lib/scroll'
+
+function XBrandMark({ size = 24, className, ...props }: LucideProps) {
+  return (
+    <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93zm-1.29 19.49h2.04L6.49 3.24H4.3z" />
+    </svg>
+  )
+}
 
 export default function Footer() {
   const year = new Date().getFullYear()
   const links = [
     { href: socials.github, Icon: Github, label: 'GitHub' },
     { href: socials.linkedin, Icon: Linkedin, label: 'LinkedIn' },
-    { href: socials.twitter, Icon: Twitter, label: 'X / Twitter' },
-    { href: `mailto:${socials.email}`, Icon: Mail, label: 'Email' },
+    { href: 'https://x.com/isharik99', Icon: XBrandMark, label: 'X' },
   ]
 
   const go = (e: React.MouseEvent, href: string) => {
