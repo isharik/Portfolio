@@ -167,7 +167,7 @@ export function CanvasText({
   const safeMagneticRadius = Math.max(8, magneticRadius);
 
   const hostMinHeight = Math.max(
-    160,
+    120,
     Math.ceil(safeScatter * 2.35 + safeParticleSize * 4 + 32),
   );
 
