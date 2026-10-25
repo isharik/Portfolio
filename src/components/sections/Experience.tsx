@@ -7,33 +7,39 @@ import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
-const TRANSITION_DURATION = 800
+const TRANSITION_DURATION = 1200
 const experienceTransition = {
   initial: (dir: 'next' | 'prev') => ({
     opacity: 0,
-    x: dir === 'next' ? 34 : -34,
-    y: 10,
-    scale: 0.94,
-    rotateY: dir === 'next' ? -5 : 5,
-    filter: 'blur(3px)',
+    x: dir === 'next' ? 48 : -48,
+    y: 12,
+    z: -110,
+    scale: 0.88,
+    rotateY: dir === 'next' ? -13 : 13,
+    rotateX: 2,
+    filter: 'blur(8px)',
   }),
   animate: {
     opacity: 1,
     x: 0,
     y: 0,
+    z: 0,
     scale: 1,
     rotateY: 0,
+    rotateX: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 1.08, ease: [0.22, 1, 0.36, 1] as const },
   },
   exit: (dir: 'next' | 'prev') => ({
     opacity: 0,
-    x: dir === 'next' ? -26 : 26,
-    y: -6,
-    scale: 0.9,
-    rotateY: dir === 'next' ? 6 : -6,
-    filter: 'blur(2px)',
-    transition: { duration: 0.46, ease: [0.4, 0, 1, 1] as const },
+    x: dir === 'next' ? -34 : 34,
+    y: -8,
+    z: -150,
+    scale: 0.82,
+    rotateY: dir === 'next' ? 14 : -14,
+    rotateX: -2,
+    filter: 'blur(6px)',
+    transition: { duration: 0.94, ease: [0.4, 0, 1, 1] as const },
   }),
 }
 const ACCENTS: Record<string, string> = {
@@ -161,9 +167,11 @@ export default function Experience() {
                   >
                     <div className="experience-editorial-index"><span />{indexLabel} / {totalLabel}</div>
                     <h3 className="experience-editorial-title">{item.company}</h3>
-                    <p className="experience-editorial-subtitle">{item.role}</p>
-                    <p className="experience-editorial-period">{item.period} <span>·</span> {item.type}</p>
-                    <p className="experience-editorial-company-desc">{item.companyDesc}</p>
+                    <div className="experience-editorial-meta">
+                      <p className="experience-editorial-subtitle">{item.role}</p>
+                      <p className="experience-editorial-period">{item.period} <span>·</span> {item.type}</p>
+                      <p className="experience-editorial-company-desc">{item.companyDesc}</p>
+                    </div>
                     <p className="experience-editorial-description">{item.description}</p>
                     <ul className="experience-editorial-highlights" aria-label={`${item.company} responsibilities`}>
                       {item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
