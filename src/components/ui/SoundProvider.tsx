@@ -11,6 +11,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const [enabled, setEnabled] = useState(true)
   const enabledRef = useRef(true)
   const ctxRef = useRef<AudioContext | null>(null)
+  const clickBufferRef = useRef<AudioBuffer | null>(null)
   const lastRef = useRef(0)
 
   // Restore preference (default on)
@@ -27,7 +28,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === 'undefined') return null
     if (!ctxRef.current) {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-      if (AC) ctxRef.current = new AC({ latencyHint: 'interactive' })
+      if (AC) {
+        const context = new AC({ latencyHint: 'interactive' })
+        const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * 0.03), context.sampleRate)
+        const samples = buffer.getChannelData(0)
+        for (let index = 0; index < samples.length; index += 1) samples[index] = Math.random() * 2 - 1
+        clickBufferRef.current = buffer
+        ctxRef.current = context
+      }
     }
     return ctxRef.current
   }, [])
@@ -38,49 +46,32 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     ensureCtx()
   }, [ensureCtx])
 
-  // A short, warm click with a near-instant attack. Wait for a suspended audio
-  // context to resume before scheduling, otherwise the tone can start late.
+  // A short filtered-noise tick reads as a quiet mouse click rather than a low thud.
+  // Schedule it synchronously on pointerdown and resume in parallel to avoid a delayed first click.
   const play = useCallback(async () => {
     const ctx = ensureCtx()
-    if (!ctx) return
-    if (ctx.state !== 'running') {
-      try { await ctx.resume() } catch { return }
-    }
+    const buffer = clickBufferRef.current
+    if (!ctx || !buffer) return
+    if (ctx.state !== 'running') void ctx.resume().catch(() => {})
     const t = ctx.currentTime
 
+    const source = ctx.createBufferSource()
+    source.buffer = buffer
     const filter = ctx.createBiquadFilter()
-    filter.type = 'lowpass'
-    filter.frequency.setValueAtTime(2800, t)
+    filter.type = 'highpass'
+    filter.frequency.setValueAtTime(1150, t)
+    filter.Q.setValueAtTime(0.7, t)
 
-    const master = ctx.createGain()
-    master.gain.setValueAtTime(0.0001, t)
-    master.gain.exponentialRampToValueAtTime(0.1, t + 0.0015) // immediate, soft attack
-    master.gain.exponentialRampToValueAtTime(0.0001, t + 0.16) // short, clean decay
+    const gain = ctx.createGain()
+    gain.gain.setValueAtTime(0.0001, t)
+    gain.gain.exponentialRampToValueAtTime(0.045, t + 0.0008)
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.024)
 
-    filter.connect(master)
-    master.connect(ctx.destination)
-
-    // main tone
-    const o1 = ctx.createOscillator()
-    o1.type = 'sine'
-    o1.frequency.setValueAtTime(540, t)
-    o1.frequency.exponentialRampToValueAtTime(320, t + 0.1)
-    o1.connect(filter)
-
-    // sub-octave for warmth/body
-    const o2 = ctx.createOscillator()
-    o2.type = 'sine'
-    o2.frequency.setValueAtTime(270, t)
-    o2.frequency.exponentialRampToValueAtTime(180, t + 0.1)
-    const subGain = ctx.createGain()
-    subGain.gain.value = 0.5
-    o2.connect(subGain)
-    subGain.connect(filter)
-
-    o1.start(t)
-    o2.start(t)
-    o1.stop(t + 0.28)
-    o2.stop(t + 0.28)
+    source.connect(filter)
+    filter.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(t)
+    source.stop(t + 0.03)
   }, [ensureCtx])
 
   // Global, capture-phase listener so it works across all interactive elements.

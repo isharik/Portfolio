@@ -42,15 +42,6 @@ const experienceTransition = {
     transition: { duration: 0.94, ease: [0.4, 0, 1, 1] as const },
   }),
 }
-const ACCENTS: Record<string, string> = {
-  'Invisible Technologies': '#99c96a',
-  Micro1: '#78c9bd',
-  Outlier: '#8ca9bb',
-  SuperAnnotate: '#db8e79',
-  Datamark: '#6e9bd1',
-  KodeKloud: '#71c4cb',
-  Deloitte: '#86ba71',
-}
 
 export default function Experience() {
   const reduce = useReducedMotion()
@@ -125,7 +116,7 @@ export default function Experience() {
   }
 
   const item = experiences[active]
-  const accent = ACCENTS[item.company] ?? '#b7a078'
+  const accent = 'var(--accent)'
   const indexLabel = String(active + 1).padStart(2, '0')
   const totalLabel = String(experiences.length).padStart(2, '0')
 
@@ -176,10 +167,6 @@ export default function Experience() {
                     <ul className="experience-editorial-highlights" aria-label={`${item.company} responsibilities`}>
                       {item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
                     </ul>
-                    <div className="experience-editorial-nav">
-                      <button type="button" onClick={goPrev} aria-label="Previous experience"><ArrowLeft size={18} /></button>
-                      <button type="button" onClick={goNext} aria-label="Next experience"><ArrowRight size={18} /></button>
-                    </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -210,24 +197,30 @@ export default function Experience() {
               </div>
             </div>
 
-            <div className="experience-editorial-progress" aria-label="Choose an experience">
-              {experiences.map((experience, index) => {
-                const isActive = index === active
-                return (
-                  <button
-                    key={experience.company}
-                    type="button"
-                    className={`experience-editorial-progress-item${isActive ? ' is-active' : ''}`}
-                    onClick={() => goToProgressItem(index)}
-                    aria-label={`Show ${experience.company}, ${index + 1} of ${experiences.length}`}
-                    aria-current={isActive ? 'step' : undefined}
-                    disabled={isTransitioning}
-                  >
-                    <span className="experience-editorial-progress-track"><span style={{ width: isActive ? `${progress}%` : '0%' }} /></span>
-                    <span className="experience-editorial-progress-label">{experience.company}</span>
-                  </button>
-                )
-              })}
+            <div className="experience-editorial-footer">
+              <div className="experience-editorial-nav" aria-label="Experience controls">
+                <button type="button" onClick={goPrev} aria-label="Previous experience"><ArrowLeft size={18} /></button>
+                <button type="button" onClick={goNext} aria-label="Next experience"><ArrowRight size={18} /></button>
+              </div>
+              <div className="experience-editorial-progress" aria-label="Choose an experience">
+                {experiences.map((experience, index) => {
+                  const isActive = index === active
+                  return (
+                    <button
+                      key={experience.company}
+                      type="button"
+                      className={`experience-editorial-progress-item${isActive ? ' is-active' : ''}`}
+                      onClick={() => goToProgressItem(index)}
+                      aria-label={`Show ${experience.company}, ${index + 1} of ${experiences.length}`}
+                      aria-current={isActive ? 'step' : undefined}
+                      disabled={isTransitioning}
+                    >
+                      <span className="experience-editorial-dot"><span style={{ transform: isActive ? `scaleX(${Math.max(0.32, progress / 100)})` : 'scaleX(0.35)' }} /></span>
+                    </button>
+                  )
+                })}
+              </div>
+              <span className="experience-editorial-count">{indexLabel}<span>/</span>{totalLabel}</span>
             </div>
           </div>
         </Reveal>
