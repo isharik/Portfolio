@@ -125,7 +125,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
+        <div className="flex min-w-0 flex-col items-center text-center lg:self-center lg:items-start lg:text-left">
           <div className="rise mt-4" style={rise(0.2)}>
             <span data-parallax-layer="4" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
