@@ -149,8 +149,8 @@ export default function Hero() {
                   density={2}
                   particleSize={1.7}
                   scatter={36}
-                  loadDuration={1.15}
-                  morphDuration={2.5}
+                  loadDuration={1}
+                  morphDuration={2.1}
                   magnetic={0.22}
                   magneticRadius={84}
                   paused={false}
