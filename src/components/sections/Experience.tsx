@@ -8,7 +8,8 @@ import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
 const EXIT_DURATION = 320
-const REVEAL_DURATION = 940
+// Long enough for the detail reveal to glide in, including the existing stagger.
+const REVEAL_DURATION = 1380
 type TransitionPhase = 'idle' | 'exit' | 'enter' | 'reveal'
 
 export default function Experience() {
