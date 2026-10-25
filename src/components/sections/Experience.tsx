@@ -1,120 +1,191 @@
 'use client'
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
-import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
+
+const SLIDE_DURATION = 6000
+const TRANSITION_DURATION = 800
+const ACCENTS: Record<string, string> = {
+  'Invisible Technologies': '#99c96a',
+  Micro1: '#78c9bd',
+  Outlier: '#8ca9bb',
+  SuperAnnotate: '#db8e79',
+  Datamark: '#6e9bd1',
+  KodeKloud: '#71c4cb',
+  Deloitte: '#86ba71',
+}
 
 export default function Experience() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
-  const [direction, setDirection] = useState(1)
-  const step = (turn: number) => {
-    setDirection(turn)
-    setActive((current) => (current + turn + experiences.length) % experiences.length)
-  }
+  const [direction, setDirection] = useState<'next' | 'prev'>('next')
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const transitionLock = useRef(false)
+  const transitionTimer = useRef<number | null>(null)
+  const progressRef = useRef(0)
+  const touchStartX = useRef<number | null>(null)
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const goTo = useCallback((index: number, dir: 'next' | 'prev') => {
+    if (transitionLock.current || index === active) return
+    transitionLock.current = true
+    setIsTransitioning(true)
+    setDirection(dir)
+    progressRef.current = 0
+    setProgress(0)
+    setActive(index)
+    if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
+    transitionTimer.current = window.setTimeout(() => {
+      transitionLock.current = false
+      setIsTransitioning(false)
+      transitionTimer.current = null
+    }, reduce ? 0 : TRANSITION_DURATION)
+  }, [active, reduce])
+
+  const goNext = useCallback(() => goTo((active + 1) % experiences.length, 'next'), [active, goTo])
+  const goPrev = useCallback(() => goTo((active - 1 + experiences.length) % experiences.length, 'prev'), [active, goTo])
+
+  useEffect(() => () => {
+    if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
+  }, [])
+
+  useEffect(() => {
+    if (reduce || isPaused || isTransitioning) return
+    let elapsed = progressRef.current * SLIDE_DURATION / 100
+    const interval = window.setInterval(() => {
+      elapsed = Math.min(SLIDE_DURATION, elapsed + 50)
+      const nextProgress = elapsed / SLIDE_DURATION * 100
+      progressRef.current = nextProgress
+      setProgress(nextProgress)
+      if (elapsed >= SLIDE_DURATION) goNext()
+    }, 50)
+    return () => window.clearInterval(interval)
+  }, [active, goNext, isPaused, isTransitioning, reduce])
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault()
-      step(1)
+      goNext()
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault()
-      step(-1)
+      goPrev()
     }
   }
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLElement>) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null
+  }
+  const handleTouchEnd = (event: React.TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - (event.changedTouches[0]?.clientX ?? touchStartX.current)
+    touchStartX.current = null
+    if (Math.abs(delta) > 55) delta > 0 ? goNext() : goPrev()
+  }
+  const goToProgressItem = (index: number) => {
+    const forwardDistance = (index - active + experiences.length) % experiences.length
+    goTo(index, forwardDistance <= experiences.length / 2 ? 'next' : 'prev')
+  }
+
+  const item = experiences[active]
+  const accent = ACCENTS[item.company] ?? '#b7a078'
+  const indexLabel = String(active + 1).padStart(2, '0')
+  const totalLabel = String(experiences.length).padStart(2, '0')
 
   return (
     <section id="experience" className="relative px-5 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-content">
-        <SectionHeading
-          eyebrow="Experience"
-          title="Seven roles, one throughline"
-          description="One line runs through all of it: staying close to the people that technology is meant to serve, across customer support and AI evaluation."
-        />
-
-        <Reveal delay={0.1} className="mt-12">
-          <div className="experience-showcase grid gap-8 lg:grid-cols-[minmax(260px,0.75fr)_minmax(0,1.7fr)]">
-            <div className="experience-stack-column">
-              <div className="experience-deck" role="region" aria-label="Work experience cards. Use the next and previous buttons to browse." tabIndex={0} onKeyDown={onKeyDown}>
-                <AnimatePresence initial={false} custom={direction}>
-                  {experiences.map((item, index) => {
-                    const depth = direction > 0
-                      ? (index - active + experiences.length) % experiences.length
-                      : (active - index + experiences.length) % experiences.length
-                    const isActive = depth === 0
-                    if (!isActive && depth > 2) return null
-                    const offset = Math.max(0, depth - 1) * 48
-
-                    return (
-                      <motion.article
-                        layout
-                        key={item.company}
-                        className={isActive ? 'experience-role-card is-active' : 'experience-role-card experience-role-preview-card'}
-                        aria-hidden={!isActive}
-                        style={{
-                          zIndex: isActive ? 20 : 10 - depth,
-                          top: isActive ? undefined : `${74 + offset}px`,
-                          transformOrigin: '50% 80%',
-                          transformStyle: 'preserve-3d',
-                          backfaceVisibility: 'hidden',
-                        }}
-                        initial={false}
-                        animate={isActive
-                          ? { opacity: 1, scale: 1, z: 0, rotateX: 0, rotateY: 0, y: 0 }
-                          : { opacity: 1, scale: 1 - depth * 0.025, z: -depth * 22, rotateY: reduce ? 0 : direction * -1.2, y: 0 }}
-                        transition={reduce ? { duration: 0.24 } : { type: 'spring', stiffness: 115, damping: 22, mass: 0.8 }}
-                        exit={{ opacity: 0, scale: 0.96, y: direction > 0 ? 28 : -28, z: -70, rotateY: direction > 0 ? -7 : 7 }}
-                      >
-                        <div className="experience-role-summary">
-                          <span className="experience-role-logo"><Image src={item.logo} alt="" width={26} height={26} className="h-full w-full object-contain" unoptimized /></span>
-                          <span className="experience-role-copy">
-                            <strong>{item.company}</strong>
-                            <small>{item.role}</small>
-                            <small className="experience-role-period">{item.period}</small>
-                          </span>
-                        </div>
-                      </motion.article>
-                    )
-                  })}
+        <h2 className="sr-only">Experience</h2>
+        <Reveal delay={0.1}>
+          <div
+            className={`experience-editorial ${isPaused ? 'is-paused' : ''}`}
+            style={{ '--experience-accent': accent } as React.CSSProperties}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onFocus={() => setIsPaused(true)}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPaused(false)
+            }}
+            onKeyDown={onKeyDown}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            tabIndex={0}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Work experience carousel. Use arrow keys, swipe, or the navigation controls to browse."
+          >
+            <div className="experience-editorial-main">
+              <div className="experience-editorial-copy">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={item.company}
+                    className="experience-editorial-copy-inner"
+                    initial={reduce ? false : { opacity: 0, y: direction === 'next' ? 12 : -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduce ? undefined : { opacity: 0, y: direction === 'next' ? -10 : 10 }}
+                    transition={{ duration: reduce ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }}
+                    aria-live="polite"
+                  >
+                    <div className="experience-editorial-index"><span />{indexLabel} / {totalLabel}</div>
+                    <h3 className="experience-editorial-title">{item.company}</h3>
+                    <p className="experience-editorial-subtitle">{item.role}</p>
+                    <p className="experience-editorial-period">{item.period} <span>·</span> {item.type}</p>
+                    <p className="experience-editorial-company-desc">{item.companyDesc}</p>
+                    <p className="experience-editorial-description">{item.description}</p>
+                    <div className="experience-editorial-nav">
+                      <button type="button" onClick={goPrev} aria-label="Previous experience"><ArrowLeft size={18} /></button>
+                      <button type="button" onClick={goNext} aria-label="Next experience"><ArrowRight size={18} /></button>
+                    </div>
+                  </motion.div>
                 </AnimatePresence>
               </div>
-              <div className="experience-deck-controls" aria-label="Experience navigation">
-                <button type="button" className="experience-deck-nav" onClick={() => step(-1)}><ArrowLeft size={16} /><span>Previous</span></button>
-                <span className="experience-deck-count" aria-live="polite">{String(active + 1).padStart(2, '0')} / {String(experiences.length).padStart(2, '0')}</span>
-                <button type="button" className="experience-deck-nav" onClick={() => step(1)}><span>Next</span><ArrowRight size={16} /></button>
+
+              <div className="experience-editorial-visual" aria-label={`${item.company} visual`}>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={item.company}
+                    className="experience-editorial-art"
+                    style={{ '--experience-accent': accent } as React.CSSProperties}
+                    initial={reduce ? false : { opacity: 0, scale: 1.035 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={reduce ? undefined : { opacity: 0, scale: 0.985 }}
+                    transition={{ duration: reduce ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div className="experience-editorial-art-grid" />
+                    <span className="experience-editorial-art-number">{indexLabel}</span>
+                    <div className="experience-editorial-logo-wrap">
+                      <Image src={item.logo} alt={`${item.company} logo`} fill sizes="(max-width: 767px) 90vw, 48vw" className="experience-editorial-logo" unoptimized />
+                    </div>
+                    <span className="experience-editorial-art-caption">{item.companyDesc}</span>
+                  </motion.div>
+                </AnimatePresence>
+                <span className="experience-editorial-corner experience-editorial-corner-tl" aria-hidden="true" />
+                <span className="experience-editorial-corner experience-editorial-corner-br" aria-hidden="true" />
               </div>
             </div>
 
-            {(() => {
-              const item = experiences[active]
-              return (
-                <article className="experience-detail-card glass relative isolate min-h-[420px] self-start overflow-hidden rounded-2xl p-6 sm:p-8">
-                  <div className="experience-card-watermark pointer-events-none absolute right-0 top-1/2 z-0 aspect-square w-[min(78%,360px)] -translate-y-1/2" aria-hidden="true">
-                    <Image src={item.logo} alt="" fill sizes="360px" className="object-contain" unoptimized />
-                  </div>
-                  <div className="relative z-10">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <h3 className="font-display text-xl font-semibold text-fg">{item.role}</h3>
-                        <div className="mt-2 flex items-center gap-2.5 text-sm font-medium text-accent">
-                          <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-[var(--elevated)] p-1 shadow-sm"><Image src={item.logo} alt={`${item.company} logo`} width={22} height={22} className="h-[22px] w-[22px] object-contain" unoptimized /></span>
-                          {item.company}
-                        </div>
-                        <div className="mt-0.5 text-xs text-fg-muted">{item.companyDesc}</div>
-                      </div>
-                      {item.current && <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-1 text-[11px] font-medium text-green-600 dark:text-green-400"><span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Current</span>}
-                    </div>
-                    <div className="mt-3 font-mono text-[11px] text-fg-subtle">{item.period} · {item.type}</div>
-                    <p className="mt-5 text-sm leading-relaxed text-fg-muted">{item.description}</p>
-                    <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">{item.highlights.map((highlight) => <li key={highlight} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-fg-muted"><Check size={14} className="mt-0.5 shrink-0 text-accent" /><span>{highlight}</span></li>)}</ul>
-                    <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">{item.tags.map((tag) => <span key={tag} className="rounded-md bg-[var(--surface-muted)] px-2 py-1 font-mono text-[10px] text-fg-muted">{tag}</span>)}</div>
-                  </div>
-                </article>
-              )
-            })()}
+            <div className="experience-editorial-progress" aria-label="Choose an experience">
+              {experiences.map((experience, index) => {
+                const isActive = index === active
+                return (
+                  <button
+                    key={experience.company}
+                    type="button"
+                    className={`experience-editorial-progress-item${isActive ? ' is-active' : ''}`}
+                    onClick={() => goToProgressItem(index)}
+                    aria-label={`Show ${experience.company}, ${index + 1} of ${experiences.length}`}
+                    aria-current={isActive ? 'step' : undefined}
+                    disabled={isTransitioning}
+                  >
+                    <span className="experience-editorial-progress-track"><span style={{ width: isActive ? `${progress}%` : '0%' }} /></span>
+                    <span className="experience-editorial-progress-label">{experience.company}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </Reveal>
       </div>
