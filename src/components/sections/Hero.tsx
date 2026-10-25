@@ -143,7 +143,8 @@ export default function Hero() {
                   text="Hi I'm Sharik"
                   color="var(--fg)"
                   fontSize={58}
-                  fontWeight={600}
+                  fontWeight={500}
+                  fontFamily="var(--font-orbitron), sans-serif"
                   density={2}
                   particleSize={1.7}
                   scatter={36}

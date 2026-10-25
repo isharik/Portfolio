@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono, Caveat } from 'next/font/google'
+import { Inter, Space_Grotesk, JetBrains_Mono, Caveat, Orbitron } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { SoundProvider } from '@/components/ui/SoundProvider'
@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-san
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-display' })
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-mono' })
 const greeting = Caveat({ subsets: ['latin'], display: 'swap', weight: '400', variable: '--font-greeting' })
+const orbitron = Orbitron({ subsets: ['latin'], display: 'swap', weight: '400', variable: '--font-orbitron' })
 
 const SITE = 'https://sharikhussain.dev'
 const TITLE = 'Sharik'
@@ -72,7 +73,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${greeting.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${greeting.variable} ${orbitron.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

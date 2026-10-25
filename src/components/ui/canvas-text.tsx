@@ -217,16 +217,23 @@ export function CanvasText({
     if (!octx) return;
 
     const baseFontSize = Math.max(12, fontSize);
+    const fontVariable = fontFamily.match(/var\((--[\w-]+)/)?.[1];
+    const resolvedFontFamily = fontVariable
+      ? fontFamily.replace(
+          /var\((--[\w-]+)\)/,
+          getComputedStyle(wrap).getPropertyValue(fontVariable).trim(),
+        )
+      : fontFamily;
     octx.setTransform(dpr, 0, 0, dpr, 0, 0);
     octx.clearRect(0, 0, cssW, cssH);
     octx.fillStyle = "#ffffff";
     octx.textAlign = "center";
     octx.textBaseline = "middle";
-    octx.font = `${fontWeight} ${baseFontSize}px ${fontFamily}`;
+    octx.font = `${fontWeight} ${baseFontSize}px ${resolvedFontFamily}`;
     const measuredWidth = octx.measureText(text || " ").width;
     const fitScale = Math.min(1, Math.max(0.42, (cssW - 24) / Math.max(1, measuredWidth)));
     const safeFontSize = Math.max(12, baseFontSize * fitScale);
-    octx.font = `${fontWeight} ${safeFontSize}px ${fontFamily}`;
+    octx.font = `${fontWeight} ${safeFontSize}px ${resolvedFontFamily}`;
     octx.fillText(text || " ", cx, cy);
 
     // Read only the glyph bounding box — full-canvas getImageData is expensive.
