@@ -754,8 +754,35 @@ html.js .preloader-root {
   .project-showcase-open { margin-left: 0; }
 }
 
-/* Individual opaque postcards, restored from the original postal-card design. */
-.skills-postcard { background: var(--surface); }
+/* Theme-aware liquid-glass folders for the toolbox skills. */
+.skill-folder { min-width: 0; height: 100%; padding-top: 12px; transition: transform 260ms var(--ease-out); }
+.skill-folder::before { position: absolute; top: 0; left: 18px; width: min(43%,180px); height: 28px; border: 1px solid color-mix(in srgb,var(--accent) 20%,var(--border)); border-bottom: 0; border-radius: 12px 12px 0 0; background: color-mix(in srgb,var(--surface) 72%,transparent); content: ''; -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2); clip-path: polygon(0 0,72% 0,88% 38%,100% 38%,100% 100%,0 100%); }
+.skill-folder-body { position: relative; display: flex; min-height: 264px; height: 100%; flex-direction: column; overflow: hidden; padding: 21px 20px 17px; border: 1px solid color-mix(in srgb,var(--accent) 18%,var(--border)); border-radius: 17px 19px 19px 19px; background: linear-gradient(145deg,color-mix(in srgb,var(--surface) 68%,transparent),color-mix(in srgb,var(--surface-muted) 50%,transparent)); box-shadow: var(--glass-shadow),inset 0 1px color-mix(in srgb,var(--fg) 5%,transparent); -webkit-backdrop-filter: blur(22px) saturate(1.25); backdrop-filter: blur(22px) saturate(1.25); transition: border-color 240ms ease,box-shadow 240ms ease,background-color 240ms ease; }
+.skill-folder-body::before { position: absolute; inset: 1px; border: 1px solid color-mix(in srgb,var(--fg) 4%,transparent); border-radius: inherit; content: ''; pointer-events: none; }
+.skill-folder:hover { transform: translateY(-3px); }
+.skill-folder:hover .skill-folder-body { border-color: color-mix(in srgb,var(--accent) 34%,var(--border)); box-shadow: var(--glass-shadow),inset 0 1px color-mix(in srgb,var(--fg) 8%,transparent),0 16px 34px color-mix(in srgb,var(--fg) 8%,transparent); }
+.skill-folder-heading { position: relative; display: grid; grid-template-columns: 42px minmax(0,1fr) 20px; align-items: center; gap: 11px; min-width: 0; }
+.skill-folder-symbol { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid color-mix(in srgb,var(--accent) 22%,var(--border)); border-radius: 12px; background: color-mix(in srgb,var(--accent) 11%,var(--surface)); color: var(--accent); box-shadow: inset 0 1px color-mix(in srgb,var(--fg) 6%,transparent); }
+.skill-folder-eyebrow { overflow: hidden; color: var(--fg-subtle); font-family: var(--font-mono),monospace; font-size: 9px; letter-spacing: .13em; text-overflow: ellipsis; white-space: nowrap; }
+.skill-folder-title { margin-top: 4px; color: var(--fg); font-size: 16px; font-weight: 620; letter-spacing: -.025em; line-height: 1.25; }
+.skill-folder-open { color: var(--fg-subtle); transition: color 200ms ease,transform 200ms ease; }
+.skill-folder:hover .skill-folder-open { color: var(--accent); transform: translateY(-1px); }
+.skill-folder-divider { position: relative; height: 1px; margin: 16px 0 13px; background: linear-gradient(90deg,color-mix(in srgb,var(--accent) 30%,var(--border)),color-mix(in srgb,var(--border) 45%,transparent)); }
+.skill-folder-files { position: relative; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+.skill-folder-file { display: flex; min-width: 0; min-height: 34px; align-items: center; gap: 7px; padding: 7px 8px; border: 1px solid color-mix(in srgb,var(--border) 72%,transparent); border-radius: 9px; background: color-mix(in srgb,var(--surface) 46%,transparent); color: var(--fg-muted); font-size: 11px; line-height: 1.25; transition: border-color 180ms ease,color 180ms ease,background-color 180ms ease; }
+.skill-folder-file svg { flex: 0 0 auto; color: var(--accent); opacity: .82; }
+.skill-folder-file span { min-width: 0; }
+.skill-folder-file:hover { border-color: color-mix(in srgb,var(--accent) 30%,var(--border)); background: color-mix(in srgb,var(--surface) 70%,transparent); color: var(--fg); }
+.skill-folder-footer { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; color: var(--fg-subtle); font-family: var(--font-mono),monospace; font-size: 9px; letter-spacing: .12em; }
+@media (max-width: 639px) {
+  .skill-folder-body { min-height: 0; padding: 18px 16px 15px; }
+  .skill-folder-files { gap: 6px; }
+  .skill-folder-file { min-height: 32px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill-folder,.skill-folder-body,.skill-folder-open,.skill-folder-file { transition: none; }
+  .skill-folder:hover { transform: none; }
+}
 
 /* Lamp pull-chain: metallic beaded chain */
 .bead-chain {
