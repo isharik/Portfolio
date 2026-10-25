@@ -130,13 +130,12 @@ export const experiences: Experience[] = [
     type: 'Part-time · Remote',
     current: true,
     description:
-      'I lead quality reviews of Python and mathematics work, checking correctness, sound reasoning, completeness, and task requirements. I turn my findings into clear feedback that helps improve response quality.',
+      'I lead QA reviews of Python and mathematics responses for correctness, reasoning quality, and task fit. I use structured criteria to catch errors and gaps, then provide calibrated feedback that supports stronger AI responses.',
     highlights: [
-      'I evaluate Python solutions and generated code for correctness, logic, and task compliance',
-      'I validate mathematical solutions and flag errors, assumptions, and reasoning gaps',
-      'I assess technical responses for accuracy, completeness, and quality against clear criteria',
-      'I deliver structured feedback for model evaluation and response improvement',
-      'I apply consistent QA standards to technical and reasoning-heavy tasks',
+      'I assess Python solutions for correctness, clarity, and task requirements',
+      'I review mathematical reasoning to catch calculation errors and missed assumptions',
+      'I evaluate technical responses for completeness, consistency, and quality',
+      'I provide structured feedback for model evaluation and response improvement',
     ],
     tags: ['Python', 'Mathematics QA', 'Code Review', 'AI Evaluation', 'Quality Assurance'],
   },

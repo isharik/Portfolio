@@ -30,7 +30,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
       if (AC) {
         const context = new AC({ latencyHint: 'interactive' })
-        const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * 0.03), context.sampleRate)
+        const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * 0.01), context.sampleRate)
         const samples = buffer.getChannelData(0)
         for (let index = 0; index < samples.length; index += 1) samples[index] = Math.random() * 2 - 1
         clickBufferRef.current = buffer
@@ -46,7 +46,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     ensureCtx()
   }, [ensureCtx])
 
-  // A short filtered-noise tick reads as a quiet mouse click rather than a low thud.
+  // Blend a tiny mechanical transient with a soft, short resonance for a smooth click.
   // Schedule it synchronously on pointerdown and resume in parallel to avoid a delayed first click.
   const play = useCallback(async () => {
     const ctx = ensureCtx()
@@ -59,19 +59,32 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     source.buffer = buffer
     const filter = ctx.createBiquadFilter()
     filter.type = 'highpass'
-    filter.frequency.setValueAtTime(1150, t)
-    filter.Q.setValueAtTime(0.7, t)
+    filter.frequency.setValueAtTime(2100, t)
+    filter.Q.setValueAtTime(0.65, t)
 
-    const gain = ctx.createGain()
-    gain.gain.setValueAtTime(0.0001, t)
-    gain.gain.exponentialRampToValueAtTime(0.045, t + 0.0008)
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.024)
+    const transientGain = ctx.createGain()
+    transientGain.gain.setValueAtTime(0.0001, t)
+    transientGain.gain.exponentialRampToValueAtTime(0.016, t + 0.0006)
+    transientGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.008)
 
     source.connect(filter)
-    filter.connect(gain)
-    gain.connect(ctx.destination)
+    filter.connect(transientGain)
+    transientGain.connect(ctx.destination)
     source.start(t)
-    source.stop(t + 0.03)
+    source.stop(t + 0.01)
+
+    const tone = ctx.createOscillator()
+    tone.type = 'sine'
+    tone.frequency.setValueAtTime(980, t)
+    tone.frequency.exponentialRampToValueAtTime(720, t + 0.035)
+    const toneGain = ctx.createGain()
+    toneGain.gain.setValueAtTime(0.0001, t)
+    toneGain.gain.exponentialRampToValueAtTime(0.009, t + 0.001)
+    toneGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.038)
+    tone.connect(toneGain)
+    toneGain.connect(ctx.destination)
+    tone.start(t)
+    tone.stop(t + 0.04)
   }, [ensureCtx])
 
   // Global, capture-phase listener so it works across all interactive elements.
