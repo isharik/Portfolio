@@ -3,7 +3,7 @@ import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Briefcase, MapPin, Wifi } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
 import { CanvasText } from '@/components/ui/canvas-text'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
@@ -144,7 +144,7 @@ export default function Hero() {
 
           <div className="rise mt-6" style={rise(1.68)}>
             <div data-parallax-layer="4" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-subtle lg:justify-start">
-              <span>4+ years across support &amp; AI</span><span className="text-border-strong">/</span><span>Remote-first</span><span className="text-border-strong">/</span><span>{profile.location}</span>
+              <span className="inline-flex items-center gap-3"><Briefcase size={14} strokeWidth={1.6} aria-hidden="true" /><span>4+ years across support &amp; AI</span></span><span className="text-border-strong">/</span><span className="inline-flex items-center gap-3"><Wifi size={14} strokeWidth={1.6} aria-hidden="true" /><span>Remote-first</span></span><span className="text-border-strong">/</span><span className="inline-flex items-center gap-3"><MapPin size={14} strokeWidth={1.6} aria-hidden="true" /><span>{profile.location}</span></span>
             </div>
           </div>
         </div>
