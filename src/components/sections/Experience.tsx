@@ -1,57 +1,27 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import { Reveal } from '@/components/ui/Reveal'
 import { experiences } from '@/lib/content'
 
 const SLIDE_DURATION = 6000
-const TRANSITION_DURATION = 1200
-const experienceTransition = {
-  initial: (dir: 'next' | 'prev') => ({
-    opacity: 0,
-    x: dir === 'next' ? 48 : -48,
-    y: 12,
-    z: -110,
-    scale: 0.88,
-    rotateY: dir === 'next' ? -13 : 13,
-    rotateX: 2,
-    filter: 'blur(8px)',
-  }),
-  animate: {
-    opacity: 1,
-    x: 0,
-    y: 0,
-    z: 0,
-    scale: 1,
-    rotateY: 0,
-    rotateX: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 1.08, ease: [0.22, 1, 0.36, 1] as const },
-  },
-  exit: (dir: 'next' | 'prev') => ({
-    opacity: 0,
-    x: dir === 'next' ? -34 : 34,
-    y: -8,
-    z: -150,
-    scale: 0.82,
-    rotateY: dir === 'next' ? 14 : -14,
-    rotateX: -2,
-    filter: 'blur(6px)',
-    transition: { duration: 0.94, ease: [0.4, 0, 1, 1] as const },
-  }),
-}
+const EXIT_DURATION = 620
+const ENTER_DURATION = 920
+type TransitionPhase = 'idle' | 'exit' | 'enter'
 
 export default function Experience() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState<'next' | 'prev'>('next')
+  const [transitionPhase, setTransitionPhase] = useState<TransitionPhase>('idle')
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [progress, setProgress] = useState(0)
   const transitionLock = useRef(false)
   const transitionTimer = useRef<number | null>(null)
+  const transitionFrame = useRef<number | null>(null)
   const progressRef = useRef(0)
   const touchStartX = useRef<number | null>(null)
 
@@ -62,13 +32,33 @@ export default function Experience() {
     setDirection(dir)
     progressRef.current = 0
     setProgress(0)
-    setActive(index)
     if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
-    transitionTimer.current = window.setTimeout(() => {
+    if (transitionFrame.current !== null) window.cancelAnimationFrame(transitionFrame.current)
+
+    if (reduce) {
+      setActive(index)
+      setTransitionPhase('idle')
       transitionLock.current = false
       setIsTransitioning(false)
-      transitionTimer.current = null
-    }, reduce ? 0 : TRANSITION_DURATION)
+      return
+    }
+
+    setTransitionPhase('exit')
+    transitionTimer.current = window.setTimeout(() => {
+      setActive(index)
+      setTransitionPhase('enter')
+      transitionFrame.current = window.requestAnimationFrame(() => {
+        transitionFrame.current = window.requestAnimationFrame(() => {
+          setTransitionPhase('idle')
+          transitionFrame.current = null
+        })
+      })
+      transitionTimer.current = window.setTimeout(() => {
+        transitionLock.current = false
+        setIsTransitioning(false)
+        transitionTimer.current = null
+      }, ENTER_DURATION)
+    }, EXIT_DURATION)
   }, [active, reduce])
 
   const goNext = useCallback(() => goTo((active + 1) % experiences.length, 'next'), [active, goTo])
@@ -76,6 +66,7 @@ export default function Experience() {
 
   useEffect(() => () => {
     if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
+    if (transitionFrame.current !== null) window.cancelAnimationFrame(transitionFrame.current)
   }, [])
 
   useEffect(() => {
@@ -142,20 +133,12 @@ export default function Experience() {
             aria-roledescription="carousel"
             aria-label="Work experience carousel. Use arrow keys, swipe, or the navigation controls to browse."
           >
-            <div className="experience-editorial-main">
+            <div
+              className={`experience-editorial-main experience-phase-${transitionPhase}`}
+              data-direction={direction}
+            >
               <div className="experience-editorial-copy">
-                <AnimatePresence mode="sync" initial={false} custom={direction}>
-                  <motion.div
-                    key={item.company}
-                    className="experience-editorial-copy-inner"
-                    custom={direction}
-                    variants={experienceTransition}
-                    initial={reduce ? false : 'initial'}
-                    animate="animate"
-                    exit={reduce ? undefined : 'exit'}
-                    transition={reduce ? { duration: 0 } : undefined}
-                    aria-live="polite"
-                  >
+                  <div key={item.company} className="experience-editorial-copy-inner" aria-live="polite">
                     <div className="experience-editorial-index"><span />{indexLabel} / {totalLabel}</div>
                     <h3 className="experience-editorial-title">{item.company}</h3>
                     <div className="experience-editorial-meta">
@@ -167,22 +150,14 @@ export default function Experience() {
                     <ul className="experience-editorial-highlights" aria-label={`${item.company} responsibilities`}>
                       {item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
                     </ul>
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
               </div>
 
               <div className="experience-editorial-visual" aria-label={`${item.company} visual`}>
-                <AnimatePresence mode="sync" initial={false} custom={direction}>
-                  <motion.div
+                  <div
                     key={item.company}
                     className="experience-editorial-art"
                     style={{ '--experience-accent': accent } as React.CSSProperties}
-                    custom={direction}
-                    variants={experienceTransition}
-                    initial={reduce ? false : 'initial'}
-                    animate="animate"
-                    exit={reduce ? undefined : 'exit'}
-                    transition={reduce ? { duration: 0 } : undefined}
                   >
                     <div className="experience-editorial-art-grid" />
                     <span className="experience-editorial-art-number">{indexLabel}</span>
@@ -190,8 +165,7 @@ export default function Experience() {
                       <Image src={item.logo} alt={`${item.company} logo`} fill sizes="(max-width: 767px) 90vw, 48vw" className="experience-editorial-logo" unoptimized />
                     </div>
                     <span className="experience-editorial-art-caption">{item.companyDesc}</span>
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
                 <span className="experience-editorial-corner experience-editorial-corner-tl" aria-hidden="true" />
                 <span className="experience-editorial-corner experience-editorial-corner-br" aria-hidden="true" />
               </div>

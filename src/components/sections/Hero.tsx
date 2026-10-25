@@ -1,11 +1,11 @@
 'use client'
-import { type CSSProperties, useEffect, useRef } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowUpRight } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
-import ParticleTitle from '@/components/ui/ParticleTitle'
+import { CanvasText } from '@/components/ui/canvas-text'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
 import { profile } from '@/lib/content'
 import { scrollToSection } from '@/lib/scroll'
@@ -15,6 +15,13 @@ const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `$
 export default function Hero() {
   const reduce = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
+  const [welcomeComplete, setWelcomeComplete] = useState(false)
+
+  useEffect(() => {
+    const onWelcomeComplete = () => setWelcomeComplete(true)
+    window.addEventListener('portfolio:welcome-complete', onWelcomeComplete, { once: true })
+    return () => window.removeEventListener('portfolio:welcome-complete', onWelcomeComplete)
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -78,8 +85,25 @@ export default function Hero() {
 
           <p className="eyebrow rise mt-5" style={rise(0.28)}><span data-parallax-layer="3" className="inline-block">{profile.eyebrow}</span></p>
 
-          <div data-parallax-layer="2" className="mt-3 w-full">
-            <ParticleTitle lead={profile.headlineLead} accent={profile.headlineAccent} />
+          <div data-parallax-layer="2" className="mt-3 min-h-[160px] w-full">
+            <h1 className="sr-only">{profile.headlineLead} {profile.headlineAccent}</h1>
+            {welcomeComplete && (
+              <div aria-hidden="true">
+              <CanvasText
+                text={`${profile.headlineLead} ${profile.headlineAccent}`}
+                fontSize={58}
+                fontWeight={600}
+                density={2}
+                particleSize={1.55}
+                scatter={54}
+                loadDuration={0.95}
+                morphDuration={1.45}
+                magnetic={0.22}
+                magneticRadius={84}
+                className="h-[160px] max-w-none text-fg"
+              />
+              </div>
+            )}
           </div>
 
           <p className="rise mt-4 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base" style={rise(1.48)}>
