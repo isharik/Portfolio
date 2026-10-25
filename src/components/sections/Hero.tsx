@@ -3,14 +3,28 @@ import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowUpRight, Briefcase, MapPin, Wifi } from 'lucide-react'
+import { ArrowUpRight, Box, Briefcase, Github, MapPin, Wifi, type LucideProps } from 'lucide-react'
 import MagneticButton from '@/components/ui/MagneticButton'
 import { CanvasText } from '@/components/ui/canvas-text'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
-import { profile } from '@/lib/content'
+import { profile, socials } from '@/lib/content'
 import { scrollToSection } from '@/lib/scroll'
 
 const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `${delay}s` })
+
+function XBrandMark({ size = 24, className, ...props }: LucideProps) {
+  return (
+    <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93zm-1.29 19.49h2.04L6.49 3.24H4.3z" />
+    </svg>
+  )
+}
+
+const featuredWork = [
+  { title: 'OctoBot', subtitle: 'Pharos AI Agent', href: 'https://github.com/isharik/Pharos-Octobot', icon: Box },
+  { title: 'Content', subtitle: 'Posts & threads on X', href: socials.twitter, icon: XBrandMark },
+  { title: 'My Builds', subtitle: 'Code & repositories', href: 'https://github.com/isharik', icon: Github },
+]
 
 export default function Hero() {
   const reduce = useReducedMotion()
@@ -94,7 +108,21 @@ export default function Hero() {
 
       <div className="hero-layout mx-auto grid w-full max-w-content items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
         <div className="rise flex justify-center lg:justify-start" style={rise(0.12)}>
-          <div data-parallax-layer="1"><RecruiterIntroPlayer /></div>
+          <div className="w-full" data-parallax-layer="1">
+            <RecruiterIntroPlayer />
+            <div className="hero-featured-work" aria-label="Featured work">
+              <h2 className="hero-featured-heading"><span />FEATURED WORK</h2>
+              <div className="hero-featured-grid">
+                {featuredWork.map(({ title, subtitle, href, icon: Icon }) => (
+                  <a key={title} className="hero-featured-card" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${title}: ${subtitle}`}>
+                    <Icon className="hero-featured-icon" size={19} strokeWidth={1.6} aria-hidden="true" />
+                    <span className="hero-featured-copy"><span className="hero-featured-title">{title}</span><span className="hero-featured-subtitle">{subtitle}</span></span>
+                    <ArrowUpRight className="hero-featured-arrow" size={15} strokeWidth={1.7} aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
