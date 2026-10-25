@@ -7,7 +7,7 @@ import { ArrowUpRight, Box, Briefcase, Github, MapPin, Wifi, type LucideProps } 
 import MagneticButton from '@/components/ui/MagneticButton'
 import { CanvasText } from '@/components/ui/canvas-text'
 import RecruiterIntroPlayer from '@/components/ui/RecruiterIntroPlayer'
-import { profile, socials } from '@/lib/content'
+import { profile } from '@/lib/content'
 import { scrollToSection } from '@/lib/scroll'
 
 const rise = (delay: number): CSSProperties => ({ ['--rise-delay' as string]: `${delay}s` })
@@ -21,8 +21,8 @@ function XBrandMark({ size = 24, className, ...props }: LucideProps) {
 }
 
 const featuredWork = [
-  { title: 'OctoBot', subtitle: 'Pharos AI Agent', href: 'https://github.com/isharik/Pharos-Octobot', icon: Box },
-  { title: 'Content', subtitle: 'Posts & threads on X', href: socials.twitter, icon: XBrandMark },
+  { title: 'OctoBot', subtitle: 'Pharos AI Agent', href: 'https://pharos-octobot-by-echo.streamlit.app/', icon: Box },
+  { title: 'Content', subtitle: 'Posts & threads on X', href: 'https://x.com/isharik99', icon: XBrandMark },
   { title: 'My Builds', subtitle: 'Code & repositories', href: 'https://github.com/isharik', icon: Github },
 ]
 
