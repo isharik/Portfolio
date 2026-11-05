@@ -83,7 +83,7 @@ export default function Navbar() {
     >
       <nav
         className={cn(
-          'navbar-shell grid w-full max-w-content grid-cols-[1fr_auto_1fr] items-center rounded-full px-4 py-2.5 sm:px-5',
+          'navbar-shell grid w-full max-w-content grid-cols-[1.25fr_auto_1fr] items-center rounded-full px-4 py-2 sm:px-5',
           scrolled && 'is-scrolled'
         )}
       >

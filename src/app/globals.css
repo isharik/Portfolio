@@ -7,28 +7,28 @@
    ============================================================ */
 :root {
   /* Light: quiet grey-sage canvas with a restrained leafy highlight. */
-  --bg: #f1f3ee;
-  --surface: #fafbf7;
-  --surface-muted: #e8ece4;
+  --bg: #f3f2eb;
+  --surface: #faf9f4;
+  --surface-muted: #e3e4d9;
   --elevated: #ffffff;
-  --border: #d8ddd5;
-  --border-strong: #c5ccc1;
-  --fg: #171a17;
-  --fg-muted: #5f675e;
-  --fg-subtle: #858d83;
-  --accent: #688c4b;
-  --accent-soft: rgba(104, 140, 75, 0.11);
-  --action: #5f8245;
+  --border: #d9d9cf;
+  --border-strong: #c5c6ba;
+  --fg: #171b16;
+  --fg-muted: #626961;
+  --fg-subtle: #858c83;
+  --accent: #477827;
+  --accent-soft: rgba(71, 120, 39, 0.1);
+  --action: #587543;
   --accent-fg: #ffffff;
-  --grid-line: rgba(29, 35, 28, 0.05);
-  --spot: rgba(104, 140, 75, 0.09);
-  --aurora-1: rgba(104, 140, 75, 0.13);
-  --aurora-2: rgba(142, 164, 121, 0.1);
+  --grid-line: rgba(23, 27, 22, 0.05);
+  --spot: rgba(71, 120, 39, 0.08);
+  --aurora-1: rgba(71, 120, 39, 0.11);
+  --aurora-2: rgba(110, 139, 87, 0.08);
   /* App-wide pattern background (light) */
-  --pattern-base: radial-gradient(125% 125% at 0% 0%, #ffffff 0%, #edf1e9 60%, #e6ebe2 100%);
-  --pattern-streak: rgba(104, 140, 75, 0.07);
-  --pattern-dot: rgba(31, 38, 29, 0.3);
-  --pattern-glow: rgba(104, 140, 75, 0.09);
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #ffffff 0%, #ecebe3 60%, #e3e4d9 100%);
+  --pattern-streak: rgba(71, 120, 39, 0.055);
+  --pattern-dot: rgba(25, 30, 23, 0.28);
+  --pattern-glow: rgba(71, 120, 39, 0.075);
 
   /* Glass */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -57,42 +57,42 @@
 
 .dark {
   /* Dark: reference-inspired graphite with a luminous muted lime accent. */
-  --bg: #101112;
-  --surface: #17191a;
-  --surface-muted: #121415;
-  --elevated: #1c1f20;
-  --border: #2c3030;
-  --border-strong: #3b4140;
-  --fg: #f0f1ed;
-  --fg-muted: #a6aaa3;
-  --fg-subtle: #727870;
-  --accent: #b5ee63;
-  --accent-soft: rgba(181, 238, 99, 0.12);
-  --action: #b0e85e;
-  --accent-fg: #12150e;
+  --bg: #0b0b0d;
+  --surface: #18181d;
+  --surface-muted: #121216;
+  --elevated: #202027;
+  --border: #2b2b31;
+  --border-strong: #404047;
+  --fg: #f2f2f4;
+  --fg-muted: #a3a3aa;
+  --fg-subtle: #6f6f78;
+  --accent: #b8f56f;
+  --accent-soft: rgba(184, 245, 111, 0.08);
+  --action: #68785d;
+  --accent-fg: #ffffff;
   --grid-line: rgba(255, 255, 255, 0.035);
-  --spot: rgba(181, 238, 99, 0.07);
-  --aurora-1: rgba(117, 149, 76, 0.15);
-  --aurora-2: rgba(181, 238, 99, 0.08);
-  --pattern-base: radial-gradient(125% 125% at 0% 0%, #1a1c1c 0%, #0e0f10 61%, #080909 100%);
-  --pattern-streak: rgba(181, 238, 99, 0.065);
-  --pattern-dot: rgba(239, 241, 235, 0.37);
-  --pattern-glow: rgba(181, 238, 99, 0.09);
+  --spot: rgba(184, 245, 111, 0.045);
+  --aurora-1: rgba(122, 145, 96, 0.09);
+  --aurora-2: rgba(184, 245, 111, 0.045);
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #16161a 0%, #0b0b0d 61%, #070708 100%);
+  --pattern-streak: rgba(184, 245, 111, 0.035);
+  --pattern-dot: rgba(242, 242, 244, 0.32);
+  --pattern-glow: rgba(184, 245, 111, 0.045);
 
-  --glass-bg: rgba(20, 22, 21, 0.72);
+  --glass-bg: rgba(24, 24, 29, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4);
   --glass-highlight: rgba(255, 255, 255, 0.06);
 
-  --player-shell-bg: linear-gradient(148deg, #1a1d1b, #0d0f0e 72%);
-  --player-cover-bg: linear-gradient(145deg, #171a18, #121512 58%, #0d0f0e);
-  --player-console-bg: linear-gradient(145deg, #171a18, #0e100f);
-  --player-widget-bg: linear-gradient(145deg, #191d1a, #0e110f);
-  --player-fg: #f3f4ef;
-  --player-muted: #aab0a6;
+  --player-shell-bg: linear-gradient(148deg, #1a1a1f, #0e0e11 72%);
+  --player-cover-bg: linear-gradient(145deg, #19191e, #121216 58%, #0d0d10);
+  --player-console-bg: linear-gradient(145deg, #19191e, #0f0f12);
+  --player-widget-bg: linear-gradient(145deg, #1c1c21, #101013);
+  --player-fg: #f2f2f4;
+  --player-muted: #a7a7ae;
   --player-border: rgba(255, 255, 255, 0.09);
   --player-widget-grid: rgba(255, 255, 255, 0.045);
-  --player-track: #505750;
+  --player-track: #4d4d55;
   --player-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
 
   color-scheme: dark;
@@ -185,7 +185,7 @@ body {
 .navbar-shell {
   position: relative;
   isolation: isolate;
-  min-height: 62px;
+  min-height: 58px;
   border: 1px solid color-mix(in srgb,var(--fg) 12%,var(--glass-border));
   background:
     linear-gradient(110deg,color-mix(in srgb,var(--glass-highlight) 55%,transparent),transparent 36%),
@@ -683,8 +683,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-control.recruiter-play {
   width: 54px;
   height: 54px;
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--action);
+  color: #fff;
 }
 .recruiter-control.recruiter-play:hover { filter: brightness(1.06); }
 .recruiter-control.recruiter-repeat { margin-left: 4px; }
