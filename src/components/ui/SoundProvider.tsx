@@ -6,6 +6,11 @@ type SoundCtx = { enabled: boolean; toggle: () => void }
 const SoundContext = createContext<SoundCtx>({ enabled: true, toggle: () => {} })
 const SOUND_PREF_KEY = 'sound-v2'
 const SOUND_KEYS: SoundKey[] = ['click', 'navigation', 'hero', 'about', 'experience', 'projects', 'skills', 'contact', 'player', 'toggle', 'welcome']
+const SOUND_FILES: Record<SoundKey, string> = {
+  click: 'click.wav', navigation: 'navigation.wav', hero: 'hero.wav', about: 'about.wav',
+  experience: 'experience.wav', projects: 'projects.wav', skills: 'skills.wav', contact: 'contact.wav',
+  player: 'player.wav', toggle: 'toggle.wav', welcome: 'welcome.mp3',
+}
 const INTERACTIVE = 'a[href], button, [role="button"], [role="tab"], [role="switch"], [role="slider"], input[type="range"], label, summary, [data-sound]'
 const SECTION_SOUND: Record<string, SoundKey> = {
   home: 'hero', about: 'about', experience: 'experience', projects: 'projects', skills: 'skills', contact: 'contact',
@@ -38,7 +43,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const welcomePendingRef = useRef(false)
 
   useEffect(() => {
-    const welcomeAudio = new Audio('/sounds/welcome.wav')
+    const welcomeAudio = new Audio(`/sounds/${SOUND_FILES.welcome}`)
     welcomeAudio.preload = 'auto'
     welcomeAudio.volume = 0.46
     welcomeAudio.load()
@@ -71,7 +76,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     let cancelled = false
     void Promise.all(SOUND_KEYS.map(async (key) => {
       try {
-        const response = await fetch(`/sounds/${key}.wav`)
+        const response = await fetch(`/sounds/${SOUND_FILES[key]}`)
         if (!response.ok) return
         const bytes = await response.arrayBuffer()
         const decoded = await ctx.decodeAudioData(bytes)
