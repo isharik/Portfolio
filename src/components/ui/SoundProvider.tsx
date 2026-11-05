@@ -33,16 +33,26 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const enabledRef = useRef(true)
   const ctxRef = useRef<AudioContext | null>(null)
   const buffersRef = useRef<Partial<Record<SoundKey, AudioBuffer>>>({})
+  const welcomeAudioRef = useRef<HTMLAudioElement | null>(null)
   const lastRef = useRef(0)
   const welcomePendingRef = useRef(false)
 
   useEffect(() => {
+    const welcomeAudio = new Audio('/sounds/welcome.wav')
+    welcomeAudio.preload = 'auto'
+    welcomeAudio.volume = 0.46
+    welcomeAudio.load()
+    welcomeAudioRef.current = welcomeAudio
     try {
       if (localStorage.getItem(SOUND_PREF_KEY) === 'off') {
         setEnabled(false)
         enabledRef.current = false
       }
     } catch {}
+    return () => {
+      welcomeAudio.pause()
+      welcomeAudioRef.current = null
+    }
   }, [])
 
   const ensureCtx = useCallback(() => {
@@ -105,18 +115,36 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     oscillator.stop(start + (key === 'welcome' ? 0.28 : 0.06))
   }, [ensureCtx])
 
+  const playWelcome = useCallback(async () => {
+    if (!enabledRef.current) return false
+    const welcomeAudio = welcomeAudioRef.current
+    if (welcomeAudio) {
+      try {
+        welcomeAudio.currentTime = 0
+        await welcomeAudio.play()
+        return true
+      } catch {}
+    }
+    const ctx = ctxRef.current
+    if (ctx?.state === 'running') {
+      play('welcome')
+      return true
+    }
+    return false
+  }, [play])
+
   useEffect(() => {
     const onWelcomeComplete = () => {
       if (!enabledRef.current) return
-      const ctx = ctxRef.current
-      if (ctx?.state === 'running') play('welcome')
-      else welcomePendingRef.current = true
+      void playWelcome().then((played) => {
+        welcomePendingRef.current = !played
+      })
     }
     const onDown = (event: PointerEvent) => {
       if (!enabledRef.current) return
       if (welcomePendingRef.current) {
         welcomePendingRef.current = false
-        play('welcome')
+        void playWelcome()
         return
       }
       const target = event.target as Element | null
@@ -137,7 +165,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       lastRef.current = now
       if (welcomePendingRef.current) {
         welcomePendingRef.current = false
-        play('welcome')
+        void playWelcome()
         return
       }
       play(soundForElement(element))
@@ -150,13 +178,17 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       document.removeEventListener('pointerdown', onDown, true)
       document.removeEventListener('keydown', onKeyDown, true)
     }
-  }, [play])
+  }, [play, playWelcome])
 
   const toggle = useCallback(() => {
     setEnabled((previous) => {
       const next = !previous
       enabledRef.current = next
       try { localStorage.setItem(SOUND_PREF_KEY, next ? 'on' : 'off') } catch {}
+      if (!next) {
+        welcomeAudioRef.current?.pause()
+        welcomePendingRef.current = false
+      }
       if (next) play('toggle')
       return next
     })

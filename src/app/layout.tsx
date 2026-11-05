@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${greeting.variable} ${orbitron.variable}`}>
       <head>
+        <link rel="preload" href="/sounds/welcome.wav" as="audio" type="audio/wav" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
