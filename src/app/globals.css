@@ -6,29 +6,29 @@
    Design tokens — deliberately designed light & dark palettes
    ============================================================ */
 :root {
-  /* Light: quiet grey-sage canvas with a restrained leafy highlight. */
-  --bg: #f3f2eb;
-  --surface: #faf9f4;
-  --surface-muted: #e3e4d9;
+  /* Light: the original neutral canvas with teal accents. */
+  --bg: #f7f7f8;
+  --surface: #ffffff;
+  --surface-muted: #f1f1f3;
   --elevated: #ffffff;
-  --border: #d9d9cf;
-  --border-strong: #c5c6ba;
-  --fg: #171b16;
-  --fg-muted: #626961;
-  --fg-subtle: #858c83;
-  --accent: #477827;
-  --accent-soft: rgba(71, 120, 39, 0.1);
-  --action: #587543;
+  --border: #e6e6ea;
+  --border-strong: #d6d6dc;
+  --fg: #16161a;
+  --fg-muted: #5c5c66;
+  --fg-subtle: #8a8a94;
+  --accent: #397e78;
+  --accent-soft: rgba(57, 126, 120, 0.1);
+  --action: #34766f;
   --accent-fg: #ffffff;
-  --grid-line: rgba(23, 27, 22, 0.05);
-  --spot: rgba(71, 120, 39, 0.08);
-  --aurora-1: rgba(71, 120, 39, 0.11);
-  --aurora-2: rgba(110, 139, 87, 0.08);
+  --grid-line: rgba(22, 22, 26, 0.05);
+  --spot: rgba(57, 126, 120, 0.09);
+  --aurora-1: rgba(57, 126, 120, 0.14);
+  --aurora-2: rgba(74, 143, 135, 0.1);
   /* App-wide pattern background (light) */
-  --pattern-base: radial-gradient(125% 125% at 0% 0%, #ffffff 0%, #ecebe3 60%, #e3e4d9 100%);
-  --pattern-streak: rgba(71, 120, 39, 0.055);
-  --pattern-dot: rgba(25, 30, 23, 0.28);
-  --pattern-glow: rgba(71, 120, 39, 0.075);
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #ffffff 0%, #edeff3 60%, #e7e9ef 100%);
+  --pattern-streak: rgba(57, 126, 120, 0.07);
+  --pattern-dot: rgba(28, 28, 42, 0.3);
+  --pattern-glow: rgba(57, 126, 120, 0.09);
 
   /* Glass */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -683,8 +683,8 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-control.recruiter-play {
   width: 54px;
   height: 54px;
-  background: var(--action);
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-fg);
 }
 .recruiter-control.recruiter-play:hover { filter: brightness(1.06); }
 .recruiter-control.recruiter-repeat { margin-left: 4px; }
