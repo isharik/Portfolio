@@ -733,6 +733,17 @@ html.js .particle-title.is-ready .particle-title-semantic {
   .recruiter-photo-frame { width: min(100%,270px); }
 }
 @media (max-width: 639px) {
+  /* The scroll marker is a desktop overlay; without its desktop positioning it
+     would enter normal flow and leave a large blank area before the player. */
+  .hero-scroll-cue { display: none; }
+  #home { padding-top: 6rem; padding-bottom: 3rem; }
+  #home > .mx-auto { min-height: 0; justify-content: flex-start; }
+  .hero-layout { gap: 1.75rem; }
+  .navbar-shell { min-height: 48px; }
+  .navbar-island { border-color: transparent; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .navbar-island::before { display: none; }
+  .navbar-island a { min-width: 29px; height: 32px; padding-right: 0 !important; padding-left: 0 !important; }
+  .navbar-island a svg { width: 16px; height: 16px; }
   .hero-featured-grid { grid-template-columns: minmax(0,1fr); }
   .recruiter-player { padding: 14px; border-radius: 23px; }
   .recruiter-photo-frame { width: min(100%,260px); border-radius: 20px; }

@@ -83,7 +83,7 @@ export default function Navbar() {
     >
       <nav
         className={cn(
-          'navbar-shell grid w-full max-w-content grid-cols-[1.25fr_auto_1fr] items-center rounded-full px-4 py-1.5 sm:px-5',
+          'navbar-shell grid w-full max-w-content grid-cols-[auto_minmax(0,1fr)_auto] items-center rounded-full px-3 py-1.5 sm:grid-cols-[1.25fr_auto_1fr] sm:px-5',
           scrolled && 'is-scrolled'
         )}
       >
@@ -101,7 +101,7 @@ export default function Navbar() {
 
         <ul
           onMouseLeave={() => setHoveredTab(null)}
-          className="navbar-island hidden w-[min(420px,calc(100vw-25rem))] min-w-[380px] items-center justify-between rounded-full p-1.5 md:flex"
+          className="navbar-island flex min-w-0 w-full items-center justify-between rounded-full p-1 md:w-[min(420px,calc(100vw-25rem))] md:min-w-[380px] md:p-1.5"
         >
           {navLinks.map((link, index) => {
             const id = link.href.slice(1)
@@ -169,7 +169,7 @@ export default function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
-            className="grid h-9 w-9 place-items-center rounded-full border border-border bg-surface/60 text-fg-muted transition-colors hover:text-fg md:hidden"
+            className="hidden h-9 w-9 place-items-center rounded-full border border-border bg-surface/60 text-fg-muted transition-colors hover:text-fg"
           >
             {open ? <X size={17} /> : <Menu size={17} />}
           </button>
