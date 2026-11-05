@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 type SoundKey = 'click' | 'navigation' | 'hero' | 'about' | 'experience' | 'projects' | 'skills' | 'contact' | 'player' | 'toggle' | 'welcome'
 type SoundCtx = { enabled: boolean; toggle: () => void }
 const SoundContext = createContext<SoundCtx>({ enabled: true, toggle: () => {} })
+const SOUND_PREF_KEY = 'sound-v2'
 const SOUND_KEYS: SoundKey[] = ['click', 'navigation', 'hero', 'about', 'experience', 'projects', 'skills', 'contact', 'player', 'toggle', 'welcome']
 const INTERACTIVE = 'a[href], button, [role="button"], [role="tab"], [role="switch"], [role="slider"], input[type="range"], label, summary, [data-sound]'
 const SECTION_SOUND: Record<string, SoundKey> = {
@@ -37,7 +38,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem('sound') === 'off') {
+      if (localStorage.getItem(SOUND_PREF_KEY) === 'off') {
         setEnabled(false)
         enabledRef.current = false
       }
@@ -79,7 +80,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     if (buffer) {
       const source = ctx.createBufferSource()
       const gain = ctx.createGain()
-      gain.gain.setValueAtTime(key === 'welcome' ? 0.26 : 0.16, ctx.currentTime)
+      gain.gain.setValueAtTime(key === 'welcome' ? 0.58 : 0.62, ctx.currentTime)
       source.buffer = buffer
       source.connect(gain)
       gain.connect(ctx.destination)
@@ -113,18 +114,17 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     }
     const onDown = (event: PointerEvent) => {
       if (!enabledRef.current) return
+      if (welcomePendingRef.current) {
+        welcomePendingRef.current = false
+        play('welcome')
+        return
+      }
       const target = event.target as Element | null
       const element = target?.closest?.(INTERACTIVE) as HTMLElement | null
       if (!element || element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') return
       const now = performance.now()
       if (now - lastRef.current < 65) return
       lastRef.current = now
-      if (welcomePendingRef.current) {
-        welcomePendingRef.current = false
-        // Use the first gesture immediately when autoplay was blocked by the browser.
-        play('welcome')
-        return
-      }
       play(soundForElement(element))
     }
     const onKeyDown = (event: KeyboardEvent) => {
@@ -156,7 +156,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     setEnabled((previous) => {
       const next = !previous
       enabledRef.current = next
-      try { localStorage.setItem('sound', next ? 'on' : 'off') } catch {}
+      try { localStorage.setItem(SOUND_PREF_KEY, next ? 'on' : 'off') } catch {}
       if (next) play('toggle')
       return next
     })

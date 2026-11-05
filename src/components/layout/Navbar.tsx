@@ -94,14 +94,14 @@ export default function Navbar() {
           className="flex items-center gap-2 rounded-full font-display text-sm font-semibold tracking-tight text-fg"
         >
           <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full border border-border bg-surface">
-            <Image src="/profile-photo.webp" alt="" fill sizes="32px" className="object-cover" />
+            <Image src="/profile-photo.webp" alt="" fill sizes="32px" className="navbar-profile-image" />
           </span>
           <span className="hidden sm:inline">{profile.name}</span>
         </a>
 
         <ul
           onMouseLeave={() => setHoveredTab(null)}
-          className="navbar-island hidden w-[min(470px,calc(100vw-25rem))] min-w-[420px] items-center justify-between rounded-full p-1.5 md:flex"
+          className="navbar-island hidden w-[min(420px,calc(100vw-25rem))] min-w-[380px] items-center justify-between rounded-full p-1.5 md:flex"
         >
           {navLinks.map((link, index) => {
             const id = link.href.slice(1)
