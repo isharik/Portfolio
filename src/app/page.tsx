@@ -17,7 +17,7 @@ export default function Home() {
       <Background />
       <ScrollProgress />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <About />
         <Experience />
@@ -25,7 +25,7 @@ export default function Home() {
         <Skills />
         <Contact />
       </main>
-      <Footer />
+      <div className="relative z-10"><Footer /></div>
     </>
   )
 }

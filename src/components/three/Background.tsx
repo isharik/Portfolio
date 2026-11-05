@@ -18,7 +18,7 @@ const BASE_MASK =
  */
 export default function Background({ overlay = false }: { overlay?: boolean } = {}) {
   return (
-    <div aria-hidden className={`${overlay ? 'absolute z-0' : 'fixed -z-10'} app-background-root pointer-events-none inset-0 overflow-hidden`}>
+    <div aria-hidden className={`${overlay ? 'absolute z-0' : 'fixed z-0'} app-background-root pointer-events-none inset-0 overflow-hidden`}>
       {/* Base gradient */}
       <div className="app-background-base absolute -inset-[4%]" style={{ background: 'var(--pattern-base)' }} />
 
