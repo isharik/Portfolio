@@ -12,7 +12,7 @@ import {
   Menu,
   X,
 } from 'lucide-react'
-import LampToggle from '@/components/ui/LampToggle'
+import StarWarsToggleSwitch from '@/components/ui/star-wars-toggle-switch'
 import SoundToggle from '@/components/ui/SoundToggle'
 import { navLinks, profile } from '@/lib/content'
 import { cn } from '@/lib/utils'
@@ -163,7 +163,7 @@ export default function Navbar() {
           >
             Get in touch
           </a>
-          <LampToggle />
+          <StarWarsToggleSwitch />
           <button
             data-sound="navigation"
             onClick={() => setOpen((v) => !v)}

@@ -47,6 +47,13 @@ export default function Background({ overlay = false }: { overlay?: boolean } = 
           opacity: 0.5,
         }}
       />
+      <div
+        className="app-dots app-dots-secondary absolute -inset-16"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, var(--pattern-dot) 1.15px, transparent 0)',
+          backgroundSize: '44px 44px',
+        }}
+      />
 
       {/* Slow breathing glow */}
       <div

@@ -63,8 +63,8 @@ export default function RecruiterIntroPlayer() {
         <div className="recruiter-photo-frame">
           <Image src="/profile-photo.webp" alt="Sharik Hussain" fill priority sizes="(max-width: 639px) 78vw, 390px" className="recruiter-profile-photo" />
           <div className="recruiter-profile-shade" aria-hidden="true" />
+          <span className="recruiter-availability"><i /> Available</span>
           <div className="recruiter-profile-copy">
-            <span className="recruiter-availability"><i /> Available</span>
             <div><strong>Sharik Hussain</strong><span>Customer Support · Content · AI</span></div>
           </div>
         </div>
