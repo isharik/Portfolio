@@ -170,11 +170,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       }
       play(soundForElement(element))
     }
-    document.addEventListener('portfolio:welcome-complete', onWelcomeComplete)
+    window.addEventListener('portfolio:welcome-complete', onWelcomeComplete)
     document.addEventListener('pointerdown', onDown, true)
     document.addEventListener('keydown', onKeyDown, true)
     return () => {
-      document.removeEventListener('portfolio:welcome-complete', onWelcomeComplete)
+      window.removeEventListener('portfolio:welcome-complete', onWelcomeComplete)
       document.removeEventListener('pointerdown', onDown, true)
       document.removeEventListener('keydown', onKeyDown, true)
     }

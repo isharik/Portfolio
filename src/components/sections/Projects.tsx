@@ -92,11 +92,22 @@ export default function Projects() {
                     style={{ zIndex: isActive ? 999 : projects.length - depth, transformOrigin: '50% 82%', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                     initial={false}
                     animate={isActive
-                      ? { opacity: 1, scale: 1, z: 0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: reduce ? 0 : [0, -24, 0] }
+                      ? {
+                          opacity: 1,
+                          scale: reduce ? 1 : [0.968, 1.012, 1],
+                          z: 0,
+                          rotate: 0,
+                          rotateX: 0,
+                          rotateY: reduce ? 0 : [direction * -8, direction * -2, 0],
+                          x: reduce ? 0 : [direction * 64, direction * 12, 0],
+                          y: reduce ? 0 : [10, -20, 0],
+                        }
                       : { opacity: 1, scale: Math.max(0.84, 1 - depth * 0.026), z: -depth * 54, rotate: stackTilt, rotateX: reduce ? 0 : 2 + depth * 0.7, rotateY: reduce ? 0 : stackSide * (5 + depth), x: stackX, y: stackY }}
                     transition={reduce
                       ? { duration: 0.28, ease: 'easeOut' }
-                      : { type: 'spring', stiffness: 95, damping: 20, mass: 0.85 }}
+                      : isActive
+                        ? { duration: 0.68, ease: [0.22, 1, 0.36, 1] }
+                        : { type: 'spring', stiffness: 95, damping: 20, mass: 0.85 }}
                   >
                     <ProjectPreview project={project} index={index} active={isActive} />
                   </motion.div>

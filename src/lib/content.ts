@@ -244,7 +244,8 @@ export const projects: Project[] = [
     repo: null,
     status: 'Live',
     accent: '#5b8bd6, #5bd6c9',
-    image: null,
+    image: '/projects/pharos-onchain-wizard.jpg',
+    imageFit: 'contain',
   },
   {
     title: 'Pulse OS',
