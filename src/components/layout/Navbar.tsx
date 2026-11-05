@@ -2,7 +2,16 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
-import { Menu, X } from 'lucide-react'
+import {
+  BriefcaseBusiness,
+  House,
+  Layers3,
+  Mail,
+  PanelsTopLeft,
+  UserRound,
+  Menu,
+  X,
+} from 'lucide-react'
 import LampToggle from '@/components/ui/LampToggle'
 import SoundToggle from '@/components/ui/SoundToggle'
 import { navLinks, profile } from '@/lib/content'
@@ -15,6 +24,9 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('home')
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null)
+
+  const navIcons = [House, UserRound, BriefcaseBusiness, PanelsTopLeft, Layers3, Mail]
 
   // Scroll state: glass after 20px, hide when scrolling down past the hero
   useEffect(() => {
@@ -86,17 +98,33 @@ export default function Navbar() {
           <span className="hidden sm:inline">{profile.name}</span>
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
+        <ul
+          onMouseLeave={() => setHoveredTab(null)}
+          className="hidden items-center gap-1 rounded-full border border-border/70 bg-surface/60 p-1 shadow-sm backdrop-blur-md md:flex"
+        >
+          {navLinks.map((link, index) => {
             const id = link.href.slice(1)
             const on = active === id
+            const expanded = hoveredTab === id
+            const Icon = navIcons[index]
             return (
               <li key={link.href}>
-                <a
+                <motion.a
                   href={link.href}
                   onClick={(e) => go(e, link.href)}
+                  onMouseEnter={() => setHoveredTab(id)}
+                  onFocus={() => setHoveredTab(id)}
+                  onBlur={() => setHoveredTab(null)}
+                  aria-label={link.label}
+                  initial={false}
+                  animate={{
+                    gap: expanded ? 8 : 0,
+                    paddingLeft: expanded ? 14 : 10,
+                    paddingRight: expanded ? 14 : 10,
+                  }}
+                  transition={{ type: 'spring', stiffness: 360, damping: 30, mass: 0.7 }}
                   className={cn(
-                    'relative rounded-full px-3.5 py-1.5 text-sm transition-colors duration-200',
+                    'relative isolate flex h-9 items-center overflow-hidden rounded-full text-sm font-medium transition-colors duration-200',
                     on ? 'text-fg' : 'text-fg-muted hover:text-fg'
                   )}
                 >
@@ -107,8 +135,17 @@ export default function Navbar() {
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
-                  {link.label}
-                </a>
+                  <Icon size={17} strokeWidth={1.7} aria-hidden="true" />
+                  <motion.span
+                    initial={false}
+                    animate={{ width: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden whitespace-nowrap"
+                    aria-hidden="true"
+                  >
+                    {link.label}
+                  </motion.span>
+                </motion.a>
               </li>
             )
           })}
