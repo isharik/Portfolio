@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import {
   BriefcaseBusiness,
-  House,
+  Home,
   Layers3,
   Mail,
   PanelsTopLeft,
@@ -26,7 +26,7 @@ export default function Navbar() {
   const [active, setActive] = useState('home')
   const [hoveredTab, setHoveredTab] = useState<string | null>(null)
 
-  const navIcons = [House, UserRound, BriefcaseBusiness, PanelsTopLeft, Layers3, Mail]
+  const navIcons = [Home, UserRound, BriefcaseBusiness, PanelsTopLeft, Layers3, Mail]
 
   // Scroll state: glass after 20px, hide when scrolling down past the hero
   useEffect(() => {
