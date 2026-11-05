@@ -78,6 +78,7 @@ export default function Preloader() {
       {visible && (
         <motion.div
           className="preloader-root fixed inset-0 z-[100] cursor-pointer select-none"
+          data-sound="hero"
           initial={false}
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.3, ease: OUT }}

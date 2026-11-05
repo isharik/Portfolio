@@ -74,6 +74,7 @@ export default function LampToggle() {
       <motion.div style={{ x: '-50%', rotate: sway }} className="absolute left-1/2 top-[9px] w-5 origin-top">
         <motion.div style={{ height: chainH }} className="bead-chain absolute left-1/2 top-0 -translate-x-1/2" />
         <motion.button
+          data-sound="toggle"
           style={{
             y: tabY,
             background: 'linear-gradient(150deg, #34353c 0%, #17181c 55%, #0b0b0e 100%)',

@@ -89,6 +89,7 @@ export default function Navbar() {
       >
         <a
           href="#home"
+          data-sound="hero"
           onClick={(e) => go(e, '#home')}
           className="flex items-center gap-2 rounded-full font-display text-sm font-semibold tracking-tight text-fg"
         >
@@ -100,7 +101,7 @@ export default function Navbar() {
 
         <ul
           onMouseLeave={() => setHoveredTab(null)}
-          className="hidden items-center gap-1 rounded-full border border-border/70 bg-surface/60 p-1 shadow-sm backdrop-blur-md md:flex"
+          className="hidden w-[min(360px,calc(100vw-2rem))] items-center justify-between rounded-full border border-border/70 bg-surface/60 p-1.5 shadow-sm backdrop-blur-md md:flex"
         >
           {navLinks.map((link, index) => {
             const id = link.href.slice(1)
@@ -111,6 +112,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <motion.a
                   href={link.href}
+                  data-sound={id === 'home' ? 'hero' : id}
                   onClick={(e) => go(e, link.href)}
                   onMouseEnter={() => setHoveredTab(id)}
                   onFocus={() => setHoveredTab(id)}
@@ -118,13 +120,13 @@ export default function Navbar() {
                   aria-label={link.label}
                   initial={false}
                   animate={{
-                    gap: expanded ? 8 : 0,
-                    paddingLeft: expanded ? 14 : 10,
-                    paddingRight: expanded ? 14 : 10,
+                    gap: expanded ? 9 : 0,
+                    paddingLeft: expanded ? 16 : 13,
+                    paddingRight: expanded ? 16 : 13,
                   }}
                   transition={{ type: 'spring', stiffness: 360, damping: 30, mass: 0.7 }}
                   className={cn(
-                    'relative isolate flex h-9 items-center overflow-hidden rounded-full text-sm font-medium transition-colors duration-200',
+                    'relative isolate flex h-10 items-center overflow-hidden rounded-full text-sm font-medium transition-colors duration-200',
                     on ? 'text-fg' : 'text-fg-muted hover:text-fg'
                   )}
                 >
@@ -135,7 +137,7 @@ export default function Navbar() {
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
-                  <Icon size={17} strokeWidth={1.7} aria-hidden="true" />
+                  <Icon size={19} strokeWidth={1.7} aria-hidden="true" />
                   <motion.span
                     initial={false}
                     animate={{ width: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
@@ -155,6 +157,7 @@ export default function Navbar() {
           <SoundToggle />
           <a
             href="#contact"
+            data-sound="contact"
             onClick={(e) => go(e, '#contact')}
             className="hidden rounded-full bg-[#22282a] px-4 py-2 text-sm font-medium text-white transition-[filter,transform] duration-200 ease-out hover:brightness-125 active:scale-95 md:inline-flex"
           >
@@ -162,6 +165,7 @@ export default function Navbar() {
           </a>
           <LampToggle />
           <button
+            data-sound="navigation"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}

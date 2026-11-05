@@ -6,6 +6,7 @@ export default function SoundToggle() {
   const { enabled, toggle } = useSound()
   return (
     <button
+      data-sound="toggle"
       onClick={toggle}
       aria-label={enabled ? 'Mute click sounds' : 'Enable click sounds'}
       aria-pressed={enabled}
