@@ -83,8 +83,8 @@ export default function Navbar() {
     >
       <nav
         className={cn(
-          'flex w-full max-w-content items-center justify-between rounded-full px-4 py-2 transition-[background,border-color,box-shadow,backdrop-filter] duration-300 ease-out sm:px-5',
-          scrolled ? 'glass' : 'border border-transparent'
+          'navbar-shell flex w-full max-w-content items-center justify-between rounded-full px-4 py-2 sm:px-5',
+          scrolled && 'is-scrolled'
         )}
       >
         <a
@@ -94,14 +94,14 @@ export default function Navbar() {
           className="flex items-center gap-2 rounded-full font-display text-sm font-semibold tracking-tight text-fg"
         >
           <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full border border-border bg-surface">
-            <Image src="/anime-avatar.png" alt="" fill sizes="32px" className="object-contain" />
+            <Image src="/profile-photo.webp" alt="" fill sizes="32px" className="object-cover" />
           </span>
           <span className="hidden sm:inline">{profile.name}</span>
         </a>
 
         <ul
           onMouseLeave={() => setHoveredTab(null)}
-          className="hidden w-[min(360px,calc(100vw-2rem))] items-center justify-between rounded-full border border-border/70 bg-surface/60 p-1.5 shadow-sm backdrop-blur-md md:flex"
+          className="navbar-island hidden w-[min(470px,calc(100vw-25rem))] min-w-[420px] items-center justify-between rounded-full p-1.5 md:flex"
         >
           {navLinks.map((link, index) => {
             const id = link.href.slice(1)

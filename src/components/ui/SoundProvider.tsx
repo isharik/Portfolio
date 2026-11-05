@@ -10,9 +10,9 @@ const SECTION_SOUND: Record<string, SoundKey> = {
   home: 'hero', about: 'about', experience: 'experience', projects: 'projects', skills: 'skills', contact: 'contact',
 }
 const FALLBACK_TONES: Record<SoundKey, [number, number]> = {
-  click: [1450, 980], navigation: [1280, 1110], hero: [920, 720], about: [1080, 850],
-  experience: [740, 570], projects: [1360, 1580], skills: [1720, 1180], contact: [880, 1050],
-  player: [1860, 1420], toggle: [680, 920], welcome: [784, 988],
+  click: [620, 460], navigation: [690, 520], hero: [650, 490], about: [590, 450],
+  experience: [540, 410], projects: [610, 505], skills: [720, 560], contact: [560, 660],
+  player: [760, 540], toggle: [480, 650], welcome: [523.25, 659.25],
 }
 
 function isSoundKey(value: string | undefined): value is SoundKey {
@@ -79,7 +79,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     if (buffer) {
       const source = ctx.createBufferSource()
       const gain = ctx.createGain()
-      gain.gain.setValueAtTime(key === 'welcome' ? 0.45 : 0.28, ctx.currentTime)
+      gain.gain.setValueAtTime(key === 'welcome' ? 0.26 : 0.16, ctx.currentTime)
       source.buffer = buffer
       source.connect(gain)
       gain.connect(ctx.destination)

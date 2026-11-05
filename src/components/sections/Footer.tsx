@@ -32,7 +32,7 @@ export default function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5">
               <span className="relative grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-surface">
-                <Image src="/anime-avatar.png" alt="" fill sizes="32px" className="object-contain" />
+                <Image src="/profile-photo.webp" alt="" fill sizes="32px" className="object-cover" />
               </span>
               <span className="font-display text-sm font-semibold text-fg">{profile.name}</span>
             </div>

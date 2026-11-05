@@ -19,12 +19,12 @@ export default function InteractivePortrait({ alt }: Props) {
         onClick={() => setGreetingIndex((current) => (current === null ? 0 : (current + 1) % greetings.length))}
       >
         <Image
-          src="/anime-avatar.png"
+          src="/profile-photo.webp"
           alt={alt}
           fill
           priority
           sizes="(max-width: 640px) 256px, 288px"
-          className="portrait-image"
+          className="portrait-image object-cover"
         />
         <span className="portrait-invite" aria-hidden="true">Say hello <span>↖</span></span>
         {greetingIndex !== null && <span className="portrait-greeting" role="status" aria-live="polite">{greetings[greetingIndex]}</span>}
