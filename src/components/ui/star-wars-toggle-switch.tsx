@@ -17,10 +17,13 @@ export default function StarWarsToggleSwitch() {
         data-sound="toggle"
       />
       <span className="bb8-theme-track" aria-hidden="true">
-        <span className="bb8-theme-stars" />
-        <span className="bb8-theme-cloud bb8-theme-cloud-one" />
-        <span className="bb8-theme-cloud bb8-theme-cloud-two" />
-        <span className="bb8-theme-ground" />
+        <span className="bb8-theme-scenery">
+          <span className="bb8-theme-stars" />
+          <span className="bb8-theme-sun" />
+          <span className="bb8-theme-cloud bb8-theme-cloud-one" />
+          <span className="bb8-theme-cloud bb8-theme-cloud-two" />
+          <span className="bb8-theme-ground" />
+        </span>
         <span className="bb8-theme-droid">
           <span className="bb8-theme-head"><i /></span>
           <span className="bb8-theme-body"><i /></span>

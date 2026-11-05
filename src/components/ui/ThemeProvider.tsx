@@ -19,26 +19,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => {
       const next = prev === 'dark' ? 'light' : 'dark'
       const root = document.documentElement
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-      const apply = () => {
-        root.classList.toggle('dark', next === 'dark')
-        try {
-          localStorage.setItem('theme', next)
-        } catch {}
-      }
-
-      // View Transitions give a single GPU-composited crossfade of the whole
-      // page instead of animating color on every element (which janks).
-      const startVT = (document as unknown as {
-        startViewTransition?: (cb: () => void) => void
-      }).startViewTransition
-
-      if (!reduce && typeof startVT === 'function') {
-        startVT.call(document, apply)
-      } else {
-        apply()
-      }
+      // Apply directly: snapshotting the full page with View Transitions made
+      // the small mechanical toggle hitch on graphics-heavy pages.
+      root.classList.toggle('dark', next === 'dark')
+      try {
+        localStorage.setItem('theme', next)
+      } catch {}
       return next
     })
   }, [])
