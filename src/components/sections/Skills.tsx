@@ -1,19 +1,19 @@
 'use client'
 
-import { Brain, Braces, Code2, Headset, Users, Workflow, type LucideIcon } from 'lucide-react'
+import { Brain, Braces, Code2, Headset, Layers3, Sparkles, Users, Workflow, type LucideIcon } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import { Reveal } from '@/components/ui/Reveal'
 import { skillGroups } from '@/lib/content'
 
-const ICONS: LucideIcon[] = [Brain, Code2, Headset, Braces, Users, Workflow]
-const BENTO_SIZES = ['skills-bento-feature', 'skills-bento-wide', 'skills-bento-compact', 'skills-bento-compact', 'skills-bento-wide', 'skills-bento-feature']
-const TOOL_MARKS = [
-  [{ mark: 'AI', name: 'AI operations' }, { mark: 'LLM', name: 'Large language models' }, { mark: 'QA', name: 'Quality assurance' }],
-  [{ mark: 'Py', name: 'Python' }, { mark: 'JS', name: 'JavaScript' }, { mark: 'TS', name: 'TypeScript' }, { mark: '⚛', name: 'React' }],
-  [{ mark: 'Z', name: 'Zendesk' }, { mark: '▦', name: 'Intercom' }, { mark: '#', name: 'Slack' }],
-  [{ mark: 'G', name: 'Google Workspace' }, { mark: '365', name: 'Microsoft 365' }, { mark: '↯', name: 'Zapier' }],
-  [{ mark: 'X', name: 'X' }, { mark: '◎', name: 'Web3 communities' }, { mark: '✦', name: 'Content storytelling' }],
-  [{ mark: '↯', name: 'Zapier' }, { mark: 'A', name: 'Albato' }, { mark: '⌘', name: 'Process systems' }],
+const ICONS: LucideIcon[] = [Brain, Code2, Headset, Layers3, Users, Workflow]
+const BENTO_SIZES = ['skills-bento-tall', 'skills-bento-wide', 'skills-bento-wide', 'skills-bento-wide', 'skills-bento-wide', 'skills-bento-tall']
+const CARD_COPY = [
+  { label: 'Model craft', note: 'Evaluate, annotate, improve', glyph: '✦' },
+  { label: 'Build mode', note: 'Code, ship, refine', glyph: '⌘' },
+  { label: 'People first', note: 'Resolve with clarity', glyph: '☺' },
+  { label: 'Everyday stack', note: 'Tools that keep work moving', glyph: '↗' },
+  { label: 'Community notes', note: 'Make new ideas useful', glyph: '✎' },
+  { label: 'Systems desk', note: 'Turn repeat work into flow', glyph: '↯' },
 ]
 
 /** A concise bento view of the tools used across each working discipline. */
@@ -31,26 +31,24 @@ export default function Skills() {
           <div className="skills-bento mt-5">
             {skillGroups.map((group, index) => {
               const Icon = ICONS[index]
-              const marks = TOOL_MARKS[index]
+              const card = CARD_COPY[index]
               return (
-                <article key={group.label} className={`skills-bento-card ${BENTO_SIZES[index]}`}>
-                  <div className="skills-bento-card-top">
-                    <span className="skills-bento-icon"><Icon size={18} strokeWidth={1.65} /></span>
-                    <span className="skills-bento-index">0{index + 1}</span>
+                <article key={group.label} className={`skills-bento-card skills-bento-card-${index} ${BENTO_SIZES[index]}`}>
+                  <div className="skills-bento-art" aria-hidden="true">
+                    <span className="skills-bento-sticker">{card.glyph}</span>
+                    <span className="skills-bento-paper skills-bento-paper-back" />
+                    <span className="skills-bento-paper skills-bento-paper-main"><Icon size={26} strokeWidth={1.45} /></span>
+                    <span className="skills-bento-paper skills-bento-paper-note">0{index + 1}<i /></span>
                   </div>
-                  <div>
-                    <p className="skills-bento-eyebrow">WORKING SET</p>
+                  <div className="skills-bento-copy">
+                    <p className="skills-bento-eyebrow">{card.label}</p>
                     <h3 className="skills-bento-title">{group.label}</h3>
-                  </div>
-                  <div className="skills-bento-mark-rail" aria-label={`${group.label} platform marks`}>
-                    {marks.map(({ mark, name }) => <span key={name} className="skills-bento-mark" title={name} aria-label={name}>{mark}</span>)}
+                    <p className="skills-bento-note">{card.note}</p>
                   </div>
                   <div className="skills-bento-tools" aria-label={`${group.label} tools`}>
-                    {group.skills.slice(0, index === 0 ? 5 : 4).map((skill) => (
-                      <span key={skill} className="skills-bento-tool" title={skill}>{skill}</span>
-                    ))}
+                    {group.skills.slice(0, 3).map((skill) => <span key={skill} className="skills-bento-tool">{skill}</span>)}
                   </div>
-                  <div className="skills-bento-footer"><span>{group.skills.length} capabilities</span><span>↗</span></div>
+                  <div className="skills-bento-footer"><span>{group.skills.length} capabilities</span><span>View set ↗</span></div>
                 </article>
               )
             })}
