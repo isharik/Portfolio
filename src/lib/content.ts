@@ -235,6 +235,18 @@ export const projects: Project[] = [
     imageFit: 'contain',
   },
   {
+    title: 'Pharos Onchain Wizard',
+    tagline: 'Developer workspace for Pharos',
+    description:
+      'Pharos Onchain Wizard is a developer workspace for reading Pharos on-chain data, running policy and decision flows, monitoring contracts, preparing wallet-authorized actions, and keeping a persistent execution history.',
+    tags: ['Pharos', 'On-chain Data', 'Contract Monitoring', 'Wallet Actions', 'Web3'],
+    link: 'https://pros-onchain-wizard.vercel.app/',
+    repo: null,
+    status: 'Live',
+    accent: '#5b8bd6, #5bd6c9',
+    image: null,
+  },
+  {
     title: 'Pulse OS',
     tagline: 'AI business operating system',
     description:
