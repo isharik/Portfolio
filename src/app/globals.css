@@ -185,7 +185,7 @@ body {
 .navbar-shell {
   position: relative;
   isolation: isolate;
-  min-height: 58px;
+  min-height: 54px;
   border: 1px solid color-mix(in srgb,var(--fg) 12%,var(--glass-border));
   background:
     linear-gradient(110deg,color-mix(in srgb,var(--glass-highlight) 55%,transparent),transparent 36%),
