@@ -122,6 +122,12 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   const playWelcome = useCallback(async () => {
     if (!enabledRef.current) return false
+    // A decoded buffer starts on the current audio clock with no media-element
+    // scheduling delay once a visitor has interacted with the page.
+    if (ctxRef.current?.state === 'running' && buffersRef.current.welcome) {
+      play('welcome')
+      return true
+    }
     const welcomeAudio = welcomeAudioRef.current
     if (welcomeAudio) {
       try {
@@ -147,6 +153,10 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     }
     const onDown = (event: PointerEvent) => {
       if (!enabledRef.current) return
+      // Resume the shared audio clock during the first real user gesture. This
+      // is required by Safari and some Android browsers before any audio may play.
+      const ctx = ensureCtx()
+      if (ctx?.state === 'suspended') void ctx.resume().catch(() => {})
       if (welcomePendingRef.current) {
         welcomePendingRef.current = false
         void playWelcome()
@@ -183,7 +193,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       document.removeEventListener('pointerdown', onDown, true)
       document.removeEventListener('keydown', onKeyDown, true)
     }
-  }, [play, playWelcome])
+  }, [ensureCtx, play, playWelcome])
 
   const toggle = useCallback(() => {
     setEnabled((previous) => {

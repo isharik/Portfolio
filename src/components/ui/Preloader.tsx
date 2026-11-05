@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Background from '@/components/three/Background'
 import { MorphingText } from '@/components/ui/morphing-text'
@@ -42,6 +42,7 @@ const MORPH_REST = GREETING_BEAT - MORPH_DURATION
 export default function Preloader() {
   const [visible, setVisible] = useState(true)
   const [index, setIndex] = useState(0)
+  const completedRef = useRef(false)
   const reduce = useReducedMotion()
   const introDuration = GREETINGS.length * (reduce ? GREETING_BEAT : MORPH_DURATION + MORPH_REST) * 1000 + 350
 
@@ -53,23 +54,22 @@ export default function Preloader() {
     }
   }, [visible])
 
-  // Start the hero particle assembly as the welcome overlay finishes leaving,
-  // so visitors actually see the headline form instead of missing it behind it.
-  useEffect(() => {
-    if (visible) return
-    const timer = window.setTimeout(() => {
-      document.documentElement.dataset.welcomeComplete = 'true'
-      window.dispatchEvent(new Event('portfolio:welcome-complete'))
-    }, 300)
-    return () => window.clearTimeout(timer)
-  }, [visible])
+  // Notify the hero and audio layer in the same turn that the greeting ends.
+  // This avoids the former post-overlay timeout, which added a noticeable cue delay.
+  const finishWelcome = useCallback(() => {
+    if (completedRef.current) return
+    completedRef.current = true
+    document.documentElement.dataset.welcomeComplete = 'true'
+    window.dispatchEvent(new Event('portfolio:welcome-complete'))
+    setVisible(false)
+  }, [])
 
   // Let the morph component finish one full loop before the welcome overlay exits.
   useEffect(() => {
     if (!visible) return
-    const timer = window.setTimeout(() => setVisible(false), introDuration)
+    const timer = window.setTimeout(finishWelcome, introDuration)
     return () => window.clearTimeout(timer)
-  }, [visible, introDuration])
+  }, [visible, introDuration, finishWelcome])
 
   const progress = ((index + 1) / GREETINGS.length) * 100
 
@@ -82,7 +82,7 @@ export default function Preloader() {
           initial={false}
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.3, ease: OUT }}
-          onClick={() => setVisible(false)}
+          onClick={finishWelcome}
           role="status"
           aria-label="Loading"
         >

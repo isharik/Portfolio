@@ -821,17 +821,17 @@ html.js .preloader-root {
 /* App background — a low-cost, seamless ambient loop. Moving large painted
    layers provides a video-like sense of life without shipping or decoding MP4. */
 .app-background-root { contain: strict; isolation: isolate; }
-.app-background-base { animation: app-base-drift 11s ease-in-out infinite alternate; transform-origin: 42% 34%; will-change: transform; }
-.app-dots { animation: app-dot-drift 7s linear infinite,app-dot-breathe 4s ease-in-out infinite; will-change: transform,opacity; }
-.app-dots-secondary { opacity: .25; animation: app-dot-drift-secondary 11s linear infinite,app-dot-breathe-secondary 5s ease-in-out infinite; }
-.app-streaks { opacity: .92; animation: app-streak-drift 13s ease-in-out infinite alternate; will-change: transform,opacity; }
-.app-streak { animation: app-streak-layer 9s ease-in-out infinite alternate; }
+.app-background-base { animation: app-base-drift 9.5s ease-in-out infinite alternate; transform-origin: 42% 34%; will-change: transform; }
+.app-dots { animation: app-dot-drift 6s linear infinite,app-dot-breathe 3.5s ease-in-out infinite; will-change: transform,opacity; }
+.app-dots-secondary { opacity: .25; animation: app-dot-drift-secondary 9.5s linear infinite,app-dot-breathe-secondary 4.25s ease-in-out infinite; }
+.app-streaks { opacity: .92; animation: app-streak-drift 11s ease-in-out infinite alternate; will-change: transform,opacity; }
+.app-streak { animation: app-streak-layer 7.5s ease-in-out infinite alternate; }
 .app-streak:nth-child(2n) { animation-delay: -7s; animation-direction: alternate-reverse; }
 .app-streak:nth-child(3n) { animation-duration: 27s; animation-delay: -13s; }
-.app-glow { opacity: .92; animation: app-glow-orbit 8s ease-in-out infinite alternate; transform-origin: 50% 38%; will-change: transform,opacity; }
+.app-glow { opacity: .92; animation: app-glow-orbit 6.8s ease-in-out infinite alternate; transform-origin: 50% 38%; will-change: transform,opacity; }
 .app-aura { width: min(66vw,960px); aspect-ratio: 1; border-radius: 999px; background: radial-gradient(circle,var(--pattern-glow) 0%,transparent 68%); filter: blur(44px); opacity: .4; mix-blend-mode: screen; will-change: transform,opacity; }
-.app-aura-one { top: -24%; left: -15%; animation: app-aura-one 11s ease-in-out infinite alternate; }
-.app-aura-two { right: -20%; bottom: -32%; animation: app-aura-two 14s ease-in-out infinite alternate; opacity: .3; }
+.app-aura-one { top: -24%; left: -15%; animation: app-aura-one 9.5s ease-in-out infinite alternate; }
+.app-aura-two { right: -20%; bottom: -32%; animation: app-aura-two 12s ease-in-out infinite alternate; opacity: .3; }
 .app-vignette { z-index: 2; }
 @keyframes app-base-drift {
   from { transform: translate3d(-1.5%,-1%,0) scale(1.035); }
@@ -1049,12 +1049,12 @@ html.js .reveal-stagger.is-visible .reveal-child:nth-child(n + 7) { transition-d
   }
   /* Ambient movement is a deliberately subtle, compositor-only layer. Keep
      this visual loop alive for the portfolio even when UI motion is reduced. */
-  .app-background-base { animation: app-base-drift 16s ease-in-out infinite alternate !important; }
-  .app-dots { animation: app-dot-drift 10s linear infinite,app-dot-breathe 6s ease-in-out infinite !important; }
-  .app-dots-secondary { animation: app-dot-drift-secondary 16s linear infinite,app-dot-breathe-secondary 8s ease-in-out infinite !important; }
-  .app-streaks { animation: app-streak-drift 18s ease-in-out infinite alternate !important; }
-  .app-streak { animation: app-streak-layer 15s ease-in-out infinite alternate !important; }
-  .app-glow { animation: app-glow-orbit 14s ease-in-out infinite alternate !important; }
-  .app-aura-one { animation: app-aura-one 18s ease-in-out infinite alternate !important; }
-  .app-aura-two { animation: app-aura-two 22s ease-in-out infinite alternate !important; }
+  .app-background-base { animation: app-base-drift 13s ease-in-out infinite alternate !important; }
+  .app-dots { animation: app-dot-drift 8s linear infinite,app-dot-breathe 5s ease-in-out infinite !important; }
+  .app-dots-secondary { animation: app-dot-drift-secondary 13s linear infinite,app-dot-breathe-secondary 6s ease-in-out infinite !important; }
+  .app-streaks { animation: app-streak-drift 15s ease-in-out infinite alternate !important; }
+  .app-streak { animation: app-streak-layer 12s ease-in-out infinite alternate !important; }
+  .app-glow { animation: app-glow-orbit 11s ease-in-out infinite alternate !important; }
+  .app-aura-one { animation: app-aura-one 15s ease-in-out infinite alternate !important; }
+  .app-aura-two { animation: app-aura-two 18s ease-in-out infinite alternate !important; }
 }
