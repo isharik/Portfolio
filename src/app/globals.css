@@ -56,43 +56,43 @@
 }
 
 .dark {
-  /* Dark: reference-inspired graphite with a luminous muted lime accent. */
-  --bg: #0b0b0d;
-  --surface: #18181d;
-  --surface-muted: #121216;
-  --elevated: #202027;
-  --border: #2b2b31;
-  --border-strong: #404047;
-  --fg: #f2f2f4;
-  --fg-muted: #a3a3aa;
-  --fg-subtle: #6f6f78;
-  --accent: #b8f56f;
-  --accent-soft: rgba(184, 245, 111, 0.08);
-  --action: #68785d;
-  --accent-fg: #ffffff;
+  /* Dark: the original deep charcoal and restrained teal treatment. */
+  --bg: #08080a;
+  --surface: #101013;
+  --surface-muted: #0c0c0f;
+  --elevated: #16161b;
+  --border: #212127;
+  --border-strong: #2e2e37;
+  --fg: #f4f4f6;
+  --fg-muted: #a1a1ac;
+  --fg-subtle: #6e6e78;
+  --accent: #83c5bb;
+  --accent-soft: rgba(131, 197, 187, 0.12);
+  --action: #397f77;
+  --accent-fg: #0a0a0c;
   --grid-line: rgba(255, 255, 255, 0.035);
-  --spot: rgba(184, 245, 111, 0.045);
-  --aurora-1: rgba(122, 145, 96, 0.09);
-  --aurora-2: rgba(184, 245, 111, 0.045);
-  --pattern-base: radial-gradient(125% 125% at 0% 0%, #16161a 0%, #0b0b0d 61%, #070708 100%);
-  --pattern-streak: rgba(184, 245, 111, 0.035);
-  --pattern-dot: rgba(242, 242, 244, 0.32);
-  --pattern-glow: rgba(184, 245, 111, 0.045);
+  --spot: rgba(131, 197, 187, 0.1);
+  --aurora-1: rgba(57, 127, 119, 0.22);
+  --aurora-2: rgba(131, 197, 187, 0.13);
+  --pattern-base: radial-gradient(125% 125% at 0% 0%, #17171c 0%, #050506 62%, #000000 100%);
+  --pattern-streak: rgba(0, 207, 255, 0.1);
+  --pattern-dot: rgba(255, 255, 255, 0.42);
+  --pattern-glow: rgba(57, 127, 119, 0.12);
 
-  --glass-bg: rgba(24, 24, 29, 0.7);
+  --glass-bg: rgba(20, 20, 26, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4);
   --glass-highlight: rgba(255, 255, 255, 0.06);
 
-  --player-shell-bg: linear-gradient(148deg, #1a1a1f, #0e0e11 72%);
-  --player-cover-bg: linear-gradient(145deg, #19191e, #121216 58%, #0d0d10);
-  --player-console-bg: linear-gradient(145deg, #19191e, #0f0f12);
-  --player-widget-bg: linear-gradient(145deg, #1c1c21, #101013);
-  --player-fg: #f2f2f4;
-  --player-muted: #a7a7ae;
+  --player-shell-bg: linear-gradient(148deg, #121a1d, #080d0f 72%);
+  --player-cover-bg: linear-gradient(145deg, #0d171a, #101a1d 58%, #0a1215);
+  --player-console-bg: linear-gradient(145deg, #11191c, #090e10);
+  --player-widget-bg: linear-gradient(145deg, #10191c, #071012);
+  --player-fg: #f4f7f7;
+  --player-muted: #aab4b5;
   --player-border: rgba(255, 255, 255, 0.09);
   --player-widget-grid: rgba(255, 255, 255, 0.045);
-  --player-track: #4d4d55;
+  --player-track: #4a535d;
   --player-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
 
   color-scheme: dark;
