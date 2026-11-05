@@ -40,7 +40,7 @@ export default function Footer() {
               Customer Support &amp; AI · {profile.location}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               <span className="font-mono text-[11px] text-fg-muted">Available for opportunities</span>
             </div>
           </div>

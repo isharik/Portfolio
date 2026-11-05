@@ -86,7 +86,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" ref={sectionRef} className="relative flex min-h-[100svh] items-center px-5 py-24 sm:px-6 sm:py-28">
+    <section id="home" ref={sectionRef} className="relative px-5 py-24 sm:px-6 sm:py-28">
       <aside className="hero-scroll-cue" aria-hidden="true">
         <span className="hero-scroll-cue-dot" />
         <span className="hero-scroll-cue-line" />
@@ -106,29 +106,18 @@ export default function Hero() {
         <span>Ideas<br />Support<br />Better Tech</span>
       </aside>
 
-      <div className="hero-layout mx-auto grid w-full max-w-content items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
+      <div className="mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-content flex-col justify-center">
+      <div className="hero-layout grid w-full items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
         <div className="rise flex justify-center lg:justify-start" style={rise(0.12)}>
           <div className="w-full" data-parallax-layer="1">
             <RecruiterIntroPlayer />
-            <div className="hero-featured-work" aria-label="Featured work">
-              <h2 className="hero-featured-heading"><span />FEATURED WORK</h2>
-              <div className="hero-featured-grid">
-                {featuredWork.map(({ title, subtitle, href, icon: Icon }) => (
-                  <a key={title} className="hero-featured-card" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${title}: ${subtitle}`}>
-                    <Icon className="hero-featured-icon" size={19} strokeWidth={1.6} aria-hidden="true" />
-                    <span className="hero-featured-copy"><span className="hero-featured-title">{title}</span><span className="hero-featured-subtitle">{subtitle}</span></span>
-                    <ArrowUpRight className="hero-featured-arrow" size={15} strokeWidth={1.7} aria-hidden="true" />
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
         <div className="flex min-w-0 -translate-y-3 flex-col items-center text-center lg:-translate-y-5 lg:self-center lg:items-start lg:text-left">
           <div className="rise mt-4" style={rise(0.2)}>
             <span data-parallax-layer="4" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               <span className="font-mono text-[11px] tracking-wide text-fg-muted">{profile.availability}</span>
             </span>
           </div>
@@ -182,6 +171,19 @@ export default function Hero() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="hero-featured-work" aria-label="Featured work">
+        <h2 className="hero-featured-heading"><span />FEATURED WORK</h2>
+        <div className="hero-featured-grid">
+          {featuredWork.map(({ title, subtitle, href, icon: Icon }) => (
+            <a key={title} className="hero-featured-card" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${title}: ${subtitle}`}>
+              <Icon className="hero-featured-icon" size={19} strokeWidth={1.6} aria-hidden="true" />
+              <span className="hero-featured-copy"><span className="hero-featured-title">{title}</span><span className="hero-featured-subtitle">{subtitle}</span></span>
+              <ArrowUpRight className="hero-featured-arrow" size={15} strokeWidth={1.7} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
+      </div>
       </div>
     </section>
   )

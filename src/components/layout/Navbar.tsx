@@ -79,11 +79,11 @@ export default function Navbar() {
       initial={false}
       animate={{ y: hidden ? -90 : 0 }}
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-6 lg:px-10"
+      className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:px-6 sm:pt-4"
     >
       <nav
         className={cn(
-          'navbar-shell flex w-full max-w-none items-center rounded-full px-4 py-2.5 sm:px-5',
+          'navbar-shell grid w-full max-w-content grid-cols-[1fr_auto_1fr] items-center rounded-full px-4 py-2.5 sm:px-5',
           scrolled && 'is-scrolled'
         )}
       >
@@ -101,7 +101,7 @@ export default function Navbar() {
 
         <ul
           onMouseLeave={() => setHoveredTab(null)}
-          className="navbar-island ml-auto mr-3 hidden w-[min(420px,calc(100vw-25rem))] min-w-[380px] items-center justify-between rounded-full p-1.5 md:flex xl:mr-5"
+          className="navbar-island hidden w-[min(420px,calc(100vw-25rem))] min-w-[380px] items-center justify-between rounded-full p-1.5 md:flex"
         >
           {navLinks.map((link, index) => {
             const id = link.href.slice(1)
@@ -153,7 +153,7 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2">
           <SoundToggle />
           <a
             href="#contact"
