@@ -97,8 +97,8 @@ export default function Hero() {
         </svg>
       </aside>
 
-      <div className="mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-content flex-col justify-center">
-      <div className="hero-layout grid w-full items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
+      <div className="mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-content flex-col justify-center xl:max-w-[1440px]">
+      <div className="hero-layout grid w-full items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-[clamp(5rem,8vw,9rem)]">
         <div className="rise flex justify-center lg:order-2 lg:justify-end" style={rise(0.12)}>
           <div className="w-full" data-parallax-layer="1">
             <RecruiterIntroPlayer />
@@ -141,7 +141,7 @@ export default function Hero() {
             )}
           </div>
 
-          <p className="rise mt-0 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base" style={rise(1.48)}>
+          <p className="rise mt-0 max-w-2xl text-[15px] leading-relaxed text-fg-muted [text-wrap:pretty] sm:text-base xl:max-w-[680px]" style={rise(1.48)}>
             <span data-parallax-layer="3" className="block">{profile.summary}</span>
           </p>
 
