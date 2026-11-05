@@ -97,15 +97,6 @@ export default function Hero() {
         </svg>
       </aside>
 
-      <aside className="hero-ideas-note" aria-label="Ideas, Support, Better Tech">
-        <svg viewBox="0 0 150 104" fill="none" aria-hidden="true">
-          <circle cx="20" cy="13" r="2.5" />
-          <path d="M23 14C51 18 80 32 77 52c-2 14-18 24-34 34" />
-          <path d="m43 80-2 7 8-1" />
-        </svg>
-        <span>Ideas<br />Support<br />Better Tech</span>
-      </aside>
-
       <div className="mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-content flex-col justify-center">
       <div className="hero-layout grid w-full items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
         <div className="rise flex justify-center lg:justify-start" style={rise(0.12)}>
