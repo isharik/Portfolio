@@ -447,11 +447,11 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .recruiter-profile-photo { object-fit: cover; object-position: 50% 31%; transition: transform 700ms var(--ease-out); }
 .recruiter-player:hover .recruiter-profile-photo { transform: scale(1.018); }
 .recruiter-profile-shade { position: absolute; inset: 38% 0 0; background: linear-gradient(180deg,transparent,rgba(3,8,9,.14) 25%,rgba(3,8,9,.84)); pointer-events: none; }
-.recruiter-profile-copy { position: absolute; right: 18px; bottom: 17px; left: 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; color: #fff; }
-.recruiter-profile-copy > div { display: grid; gap: 3px; text-align: right; }
-.recruiter-profile-copy strong { font-family: var(--font-display),sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -.015em; }
-.recruiter-profile-copy > div span { color: rgba(255,255,255,.7); font-family: var(--font-mono),monospace; font-size: 8px; letter-spacing: .08em; text-transform: uppercase; }
-.recruiter-availability { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(5,13,14,.46); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font-size: 10px; font-weight: 550; }
+.recruiter-profile-copy { position: absolute; right: 12px; bottom: 12px; left: 12px; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 10px 11px 10px 13px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; background: linear-gradient(100deg,rgba(3,9,10,.76),rgba(3,9,10,.42)); -webkit-backdrop-filter: blur(14px) saturate(1.1); backdrop-filter: blur(14px) saturate(1.1); color: #fff; }
+.recruiter-profile-copy > div { display: grid; grid-column: 1; grid-row: 1; min-width: 0; gap: 3px; text-align: left; }
+.recruiter-profile-copy strong { overflow: hidden; font-family: var(--font-display),sans-serif; font-size: clamp(14px,1.25vw,17px); font-weight: 600; letter-spacing: -.015em; text-overflow: ellipsis; white-space: nowrap; }
+.recruiter-profile-copy > div span { overflow: hidden; color: rgba(255,255,255,.72); font-family: var(--font-mono),monospace; font-size: clamp(6px,.58vw,8px); letter-spacing: .075em; line-height: 1.4; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.recruiter-availability { display: inline-flex; grid-column: 2; grid-row: 1; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(5,13,14,.46); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font-size: 10px; font-weight: 550; white-space: nowrap; }
 .recruiter-availability i { width: 6px; height: 6px; border-radius: 50%; background: #77dbc6; box-shadow: 0 0 9px rgba(119,219,198,.8); }
 .recruiter-album-art {
   position: relative;
@@ -725,10 +725,10 @@ html.js .particle-title.is-ready .particle-title-semantic {
   .hero-featured-grid { grid-template-columns: minmax(0,1fr); }
   .recruiter-player { padding: 14px; border-radius: 23px; }
   .recruiter-photo-frame { width: min(100%,260px); border-radius: 20px; }
-  .recruiter-profile-copy { right: 13px; bottom: 13px; left: 13px; gap: 8px; }
+  .recruiter-profile-copy { right: 10px; bottom: 10px; left: 10px; gap: 7px; padding: 8px 8px 8px 10px; }
   .recruiter-profile-copy strong { font-size: 14px; }
   .recruiter-profile-copy > div span { font-size: 6px; }
-  .recruiter-availability { padding: 6px 8px; font-size: 8px; }
+  .recruiter-availability { gap: 5px; padding: 6px 7px; font-size: 8px; }
   .recruiter-player-console { padding: 8px; }
   .recruiter-listen-row { gap: 6px; }
   .recruiter-listen-icon { width: 25px; height: 32px; }
@@ -796,16 +796,66 @@ html.js .preloader-root {
   display: block;
 }
 
-/* App background — subtle and static outside the welcome screen. */
-.app-glow { opacity: 0.82; }
+/* App background — a low-cost, seamless ambient loop. Moving large painted
+   layers provides a video-like sense of life without shipping or decoding MP4. */
+.app-background-root { contain: strict; isolation: isolate; }
+.app-background-base { animation: app-base-drift 24s ease-in-out infinite alternate; transform-origin: 42% 34%; will-change: transform; }
+.app-dots { animation: app-dot-drift 28s linear infinite,app-dot-breathe 7s ease-in-out infinite; will-change: background-position,opacity; }
+.app-streaks { opacity: .86; animation: app-streak-drift 32s ease-in-out infinite alternate; will-change: transform,opacity; }
+.app-streak { animation: app-streak-layer 20s ease-in-out infinite alternate; }
+.app-streak:nth-child(2n) { animation-delay: -7s; animation-direction: alternate-reverse; }
+.app-streak:nth-child(3n) { animation-duration: 27s; animation-delay: -13s; }
+.app-glow { opacity: .82; animation: app-glow-orbit 19s ease-in-out infinite alternate; transform-origin: 50% 38%; will-change: transform,opacity; }
+.app-aura { width: min(58vw,850px); aspect-ratio: 1; border-radius: 999px; background: radial-gradient(circle,var(--pattern-glow) 0%,transparent 68%); filter: blur(50px); opacity: .3; mix-blend-mode: screen; will-change: transform,opacity; }
+.app-aura-one { top: -24%; left: -15%; animation: app-aura-one 26s ease-in-out infinite alternate; }
+.app-aura-two { right: -20%; bottom: -32%; animation: app-aura-two 31s ease-in-out infinite alternate; opacity: .2; }
+.app-vignette { z-index: 2; }
+@keyframes app-base-drift {
+  from { transform: translate3d(-1.5%,-1%,0) scale(1.035); }
+  to { transform: translate3d(1.5%,1.2%,0) scale(1.07); }
+}
+@keyframes app-dot-drift {
+  from { background-position: 0 0; }
+  to { background-position: 80px 40px; }
+}
+@keyframes app-dot-breathe {
+  0%,100% { opacity: .38; }
+  50% { opacity: .57; }
+}
+@keyframes app-streak-drift {
+  from { transform: translate3d(-2%,-1%,0) scale(1.02); opacity: .7; }
+  to { transform: translate3d(3%,2%,0) scale(1.08); opacity: .94; }
+}
+@keyframes app-streak-layer {
+  from { transform: translate3d(-1.5%,0,0) skewX(45deg); }
+  to { transform: translate3d(1.5%,0,0) skewX(45deg); }
+}
+@keyframes app-glow-orbit {
+  0% { transform: translate3d(-5%,-2%,0) scale(.92); opacity: .65; }
+  55% { opacity: .94; }
+  100% { transform: translate3d(6%,4%,0) scale(1.12); opacity: .76; }
+}
+@keyframes app-aura-one {
+  from { transform: translate3d(-8%,-5%,0) scale(.9); opacity: .18; }
+  to { transform: translate3d(48%,28%,0) scale(1.2); opacity: .38; }
+}
+@keyframes app-aura-two {
+  from { transform: translate3d(10%,8%,0) scale(1.15); opacity: .12; }
+  to { transform: translate3d(-44%,-30%,0) scale(.86); opacity: .3; }
+}
 @keyframes app-shimmer {
   0%, 100% { opacity: 0.78; }
   50% { opacity: 1; }
 }
-.app-streaks { opacity: 0.86; }
 .preloader-root .app-streaks { animation: app-shimmer 18s ease-in-out infinite; }
 .preloader-root .app-glow { animation: app-shimmer 14s ease-in-out infinite reverse; }
 @media (prefers-reduced-motion: reduce) {
+  .app-background-base,
+  .app-dots,
+  .app-streak,
+  .app-aura,
+  .app-streaks,
+  .app-glow,
   .preloader-root .app-streaks,
   .preloader-root .app-glow { animation: none; }
 }

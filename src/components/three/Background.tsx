@@ -18,16 +18,16 @@ const BASE_MASK =
  */
 export default function Background({ overlay = false }: { overlay?: boolean } = {}) {
   return (
-    <div aria-hidden className={overlay ? 'pointer-events-none absolute inset-0 z-0 overflow-hidden' : 'pointer-events-none fixed inset-0 -z-10 overflow-hidden'}>
+    <div aria-hidden className={`${overlay ? 'absolute z-0' : 'fixed -z-10'} app-background-root pointer-events-none inset-0 overflow-hidden`}>
       {/* Base gradient */}
-      <div className="absolute inset-0" style={{ background: 'var(--pattern-base)' }} />
+      <div className="app-background-base absolute -inset-[4%]" style={{ background: 'var(--pattern-base)' }} />
 
       {/* Skewed streaks, concentrated top-left */}
       <div className="app-streaks absolute inset-0" style={{ mask: BASE_MASK, WebkitMask: BASE_MASK }}>
         {STREAKS.map((m, i) => (
           <div
             key={i}
-            className="absolute inset-0"
+            className="app-streak absolute -inset-[5%]"
             style={{
               background: 'linear-gradient(var(--pattern-streak) 0%, transparent 100%)',
               mask: m,
@@ -40,7 +40,7 @@ export default function Background({ overlay = false }: { overlay?: boolean } = 
 
       {/* Dot grid */}
       <div
-        className="absolute inset-0"
+        className="app-dots absolute -inset-10"
         style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, var(--pattern-dot) 1px, transparent 0)',
           backgroundSize: '20px 20px',
@@ -50,13 +50,17 @@ export default function Background({ overlay = false }: { overlay?: boolean } = 
 
       {/* Slow breathing glow */}
       <div
-        className="app-glow absolute inset-0"
+        className="app-glow absolute -inset-[12%]"
         style={{ background: 'radial-gradient(circle at 50% 38%, var(--pattern-glow), transparent 60%)' }}
       />
 
+      {/* Wide moving auras give the static art a quiet, video-like loop. */}
+      <div className="app-aura app-aura-one absolute" />
+      <div className="app-aura app-aura-two absolute" />
+
       {/* Legibility vignette toward the theme background */}
       <div
-        className="absolute inset-0"
+        className="app-vignette absolute inset-0"
         style={{ background: 'radial-gradient(ellipse 92% 80% at 50% 35%, transparent 45%, var(--bg) 95%)' }}
       />
     </div>
