@@ -171,7 +171,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 /* experience */
 .experience-sheet { min-height: 640px; padding: 62px 5% 36px; }
 .experience-heading { position: relative; display: flex; align-items: end; gap: 34px; margin: -13px 0 28px; }
-.experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); }
+.experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); transform: translateY(-12px); }
 .experience-heading .ink-underline { position: absolute; top: auto; bottom: -8px; left: 0; width: 330px; }
 .experience-heading .scribble { margin-bottom: 12px; }
 .experience-list { border-top: 1px solid var(--hairline); }
