@@ -1,0 +1,246 @@
+import { useEffect, useRef, useState } from 'react'
+import QRCode from 'qrcode'
+import { Reveal } from './Chrome'
+import { TextRoll } from './ui/TextRoll'
+import { credentials, experiences, languages, profile, projects, skillGroups } from '../data'
+
+function Scribble({ children, className = '' }) {
+  return <span className={`scribble ${className}`}>{children}</span>
+}
+
+function PortraitNote({ children, className = '' }) {
+  return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
+}
+
+export function Cover() {
+  return (
+    <section id="home" data-label="Cover" className="sheet cover-sheet paper-sheet">
+      <Reveal className="cover-stage">
+        <div className="cover-kicker">AI QUALITY · CUSTOMER CLARITY · RELIABLE OPERATIONS</div>
+        <h1><TextRoll>Portfolio</TextRoll></h1>
+        <div className="orbit-stroke" aria-hidden="true"><i /></div>
+        <Scribble className="cover-signature">Sharik Hussain
+          <svg viewBox="0 0 150 86" aria-hidden="true"><path d="M142 4 C122 18 114 42 86 48 C61 54 42 45 19 67" /><path d="M19 67 L35 64 M19 67 L27 52" /></svg>
+        </Scribble>
+        <div className="role-pill">Working with AI, support, and quality</div>
+        <Scribble className="cover-scroll">scroll
+          <svg viewBox="0 0 40 76" aria-hidden="true"><path d="M13 3 C29 13 8 25 18 36 C29 47 10 53 20 61" /><path d="M12 58 L20 68 L29 58" /></svg>
+        </Scribble>
+      </Reveal>
+      <div className="sheet-foot"><span>India — 2026</span><span>Customer Support · Content · AI</span></div>
+    </section>
+  )
+}
+
+export function About() {
+  return (
+    <section id="about" data-label="Hello" className="sheet paper-sheet about-sheet">
+      <Reveal className="portrait-notes">
+        <div className="portrait-frame"><img src="/profile-photo.webp" alt="Sharik Hussain" /></div>
+        <PortraitNote className="n1">clear thinker</PortraitNote>
+        <PortraitNote className="n2">detail-oriented</PortraitNote>
+        <PortraitNote className="n3">people-first</PortraitNote>
+        <PortraitNote className="n4">curious</PortraitNote>
+        <PortraitNote className="n5">fast learner</PortraitNote>
+        <PortraitNote className="n6">consistent</PortraitNote>
+      </Reveal>
+      <Reveal className="about-copy">
+        <h2>Hello.</h2>
+        <div className="ink-underline" />
+        <p>{profile.summary}</p>
+        <p>{profile.intro}</p>
+        <Scribble className="circle-note">human judgment matters</Scribble>
+      </Reveal>
+    </section>
+  )
+}
+
+function QRPattern() {
+  const canvasRef = useRef(null)
+  useEffect(() => {
+    if (!canvasRef.current) return
+    QRCode.toCanvas(canvasRef.current, 'https://portfolio-isharik.vercel.app/resume.pdf', {
+      width: 150,
+      margin: 1,
+      color: { dark: '#171719', light: '#ffffff' },
+      errorCorrectionLevel: 'H',
+    })
+  }, [])
+  return <a className="qr" href="/resume.pdf" download="Sharik-Hussain-CV.pdf" aria-label="Download Sharik Hussain's CV"><canvas ref={canvasRef} /></a>
+}
+
+export function Education() {
+  return (
+    <section id="education" data-label="Education" className="sheet paper-sheet education-sheet">
+      <Reveal className="education-main">
+        <h2>Education</h2><div className="ink-underline short" />
+        <p className="section-intro">A computer science foundation strengthened through hands-on AI operations, systems work, and ecosystem contribution.</p>
+        <ul className="credential-list">
+          {credentials.map(item => <li key={item.title}>
+            <a href={item.href || undefined} target={item.href ? '_blank' : undefined} rel={item.href ? 'noreferrer' : undefined} aria-disabled={!item.href}>
+              <i aria-hidden>•</i><span className="credential-logo">{item.logo ? <img src={item.logo} alt="" /> : <b className="aws-mark">aws</b>}</span><b>{item.title}</b><span>{item.org}</span><span>{item.period}</span><em>{item.note}</em>{item.href && <u>↗</u>}
+            </a>
+          </li>)}
+        </ul>
+      </Reveal>
+      <Reveal className="education-aside">
+        <div className="qr-wrap"><Scribble>click for my CV</Scribble><QRPattern /><Scribble className="qr-arrow">↖ download my curriculum vitae</Scribble></div>
+        <h3>Languages</h3>
+        <div className="language-list">
+          {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
+        </div>
+      </Reveal>
+    </section>
+  )
+}
+
+export function Experience() {
+  const [expanded, setExpanded] = useState(null)
+  return (
+    <section id="experience" data-label="Experience" className="sheet paper-sheet experience-sheet">
+      <Reveal className="experience-heading">
+        <h2>Experience</h2><div className="ink-underline" />
+        <Scribble>the work behind the work ↓</Scribble>
+      </Reveal>
+      <div className="experience-list">
+        {experiences.map((item, index) => (
+          <Reveal
+            className={`experience-row ${expanded === index ? 'is-expanded' : ''}`}
+            key={item.company}
+            role="button"
+            tabIndex={0}
+            onClick={() => setExpanded(expanded === index ? null : index)}
+            onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') setExpanded(expanded === index ? null : index) }}
+          >
+            <div className="experience-index">0{index + 1}</div>
+            <img src={item.logo} alt="" />
+            <div className="experience-title"><h3>{item.company}</h3><b>{item.role}</b><span>{item.period} · {item.type}</span></div>
+            <p>{item.copy}</p>
+            <span className="experience-open">{expanded === index ? 'close ×' : 'view role +'}</span>
+            {expanded === index && <div className="experience-detail">
+              <Scribble>what I contributed</Scribble>
+              <p>{item.copy} My focus was reliable execution, careful review, clear communication, and work that could stand up to real operational use.</p>
+              <div><span>Quality review</span><span>Clear documentation</span><span>Remote collaboration</span></div>
+            </div>}
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export function Skills() {
+  const [activeSkill, setActiveSkill] = useState(0)
+  const supportSkills = [
+    'Customer Communication', 'Real-time Support', 'Ticket Resolution', 'Technical Troubleshooting',
+    'CRM Management', 'Confidentiality Protocols', 'Process Documentation', 'Operational SOPs',
+  ]
+  const technicalSkills = [
+    'AI Quality Assurance', 'LLM Output Evaluation', 'Workflow Optimisation', 'Python',
+    'Structured Feedback', 'Annotation & Labeling', 'JavaScript', 'React & Next.js',
+  ]
+  return (
+    <section id="skills" data-label="Skills" className="sheet paper-sheet skills-sheet">
+      <Reveal className="skills-top">
+        <div><h2>Skills</h2><div className="ink-underline short" /></div>
+        <Scribble>tools change — judgment compounds</Scribble>
+      </Reveal>
+      <Reveal className="skill-icons">
+        {skillGroups.slice(0, 5).map((group, index) => <button aria-pressed={activeSkill === index} onClick={() => setActiveSkill(index)} key={group.label} className={`skill-icon ${group.tone}`}><span>{group.short}</span></button>)}
+        <Scribble>I’m always studying my tools ↑</Scribble>
+        <div className="skill-popover"><b>{skillGroups[activeSkill].label}</b><span>{skillGroups[activeSkill].skills.slice(0,3).join(' · ')}</span></div>
+      </Reveal>
+      <Reveal className="skill-books">
+        <Scribble>my working library</Scribble>
+        <span className="coffee-cup" aria-hidden="true"><i /><b /><u /></span>
+        {skillGroups.slice(0, 5).map((group, i) => <div key={group.label} className={`book book-${i}`}>{group.label}</div>)}
+      </Reveal>
+      <p className="skills-copy">Practical capability across AI evaluation, technical operations, customer experience, content, and repeatable process design.</p>
+      <div className="skill-columns">
+        <div className="skill-column"><h3>Customer &amp; support</h3>{supportSkills.map(skill => <div key={skill}><span>•</span>{skill}</div>)}</div>
+        <div className="skill-column"><h3>AI &amp; development</h3>{technicalSkills.map(skill => <div key={skill}><span>•</span>{skill}</div>)}</div>
+      </div>
+      <Scribble className="toolkit-note">there’s always more in the toolkit ✎</Scribble>
+    </section>
+  )
+}
+
+export function Projects() {
+  const [selected, setSelected] = useState(null)
+  return (
+    <section id="projects" data-label="Projects" className="sheet charcoal-sheet projects-sheet">
+      <Reveal className="projects-heading"><h2>Projects.</h2><div className="ink-underline short" /><Scribble>work that left the notebook</Scribble></Reveal>
+      <div className="project-gallery">
+        {projects.map((project, index) => (
+          <Reveal className="project-item" key={project.title}>
+            <Scribble className="project-note">{project.note} ↓</Scribble>
+            <button className="device" onClick={() => setSelected(project)} aria-label={`View ${project.title} details`}>
+              <div className="device-speaker" />
+              <div className="device-screen"><img src={project.image} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
+            </button>
+            <Scribble className="project-number">{index + 1}. {project.title}</Scribble>
+          </Reveal>
+        ))}
+      </div>
+      {selected && <div className="project-modal" role="dialog" aria-modal="true" aria-label={`${selected.title} project details`} onClick={() => setSelected(null)}>
+        <div className="project-modal-card" onClick={event => event.stopPropagation()}>
+          <button className="project-modal-close" onClick={() => setSelected(null)}>close ×</button>
+          <Scribble>{selected.note}</Scribble>
+          <h3>{selected.title}</h3>
+          <p>{selected.description}</p>
+          <img src={selected.image} alt={`${selected.title} preview`} />
+          <a href={selected.url} target="_blank" rel="noreferrer">Visit live project ↗</a>
+        </div>
+      </div>}
+    </section>
+  )
+}
+
+export function Facts() {
+  const personalFacts = [
+    { icon: '🎮', title: 'Gaming', text: 'Strategy, worlds, and systems that reward curiosity.' },
+    { icon: '🎬', title: 'Movies', text: 'Science fiction, thrillers, and stories with something to unpack.' },
+    { icon: '₿', title: 'Crypto & Web3', text: 'On-chain products, ecosystems, and the communities forming around them.' },
+    { icon: '✎', title: 'Content creation', text: 'Threads and explainers that make emerging technology easier to enter.' },
+    { icon: '◉', title: 'Human in the loop', text: 'I care about the judgment behind quality AI systems.' },
+    { icon: '☕', title: 'Always learning', text: 'New tools are interesting; knowing when to use them is the real craft.' },
+  ]
+  return (
+    <section data-label="Beyond the CV" className="sheet charcoal-sheet facts-sheet">
+      <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
+      <Reveal className="facts-heading"><h2>Beyond the CV</h2><div className="ink-underline" /></Reveal>
+      <div className="facts-grid">
+        {personalFacts.map(fact => <Reveal className="fact" key={fact.title}><strong>{fact.icon}</strong><h3>{fact.title}</h3><p>{fact.text}</p></Reveal>)}
+      </div>
+    </section>
+  )
+}
+
+export function Contact() {
+  return (
+    <section id="contact" data-label="Contact" className="sheet paper-sheet contact-sheet">
+      <Reveal className="contact-left">
+        <img src="/profile-photo.webp" alt="Sharik Hussain" />
+        <h2>Thank you</h2><div className="ink-underline" />
+        <b>Get in touch:</b>
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <div className="contact-links"><a href={profile.socials.github}>GitHub</a><a href={profile.socials.x}>X / Twitter</a><a href={profile.socials.linkedin}>LinkedIn</a></div>
+      </Reveal>
+      <Reveal className="contact-letter">
+        <p>I build where people, systems, and AI meet. If your team needs careful evaluation, dependable operations, clear customer communication, or thoughtful ecosystem content, I would love to hear what you are working on.</p>
+        <p>I am comfortable with complex workflows, honest feedback, and the patient work required to make technology more useful.</p>
+        <p>Let’s make something clear, reliable, and worth shipping.</p>
+        <div className="crt-signature" data-text="Sharik" aria-label="Signed by Sharik"><span>Sharik</span></div>
+      </Reveal>
+      <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
+        <span className="booking-icon" aria-hidden="true">◷</span>
+        <span><b>Book a 30-min call</b><small>Pick any open slot — we meet on Google Meet</small></span>
+        <i aria-hidden>↗</i>
+      </a>
+    </section>
+  )
+}
+
+export function Footer() {
+  return <footer className="folio-footer paper-sheet"><span>Portfolio 2026</span><span>Curriculum Vitae</span><span>Sharik Hussain</span><a href="#home">back to top ↑</a></footer>
+}

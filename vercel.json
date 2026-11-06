@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "installCommand": "npm install --prefix marginalia-redesign",
+  "buildCommand": "npm run build --prefix marginalia-redesign",
+  "outputDirectory": "marginalia-redesign/dist"
+}

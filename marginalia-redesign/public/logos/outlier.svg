@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="outlier" x1="18" y1="25" x2="109" y2="103" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#69D3C1"/>
+      <stop offset=".52" stop-color="#8D8CFF"/>
+      <stop offset="1" stop-color="#E88FC8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="64" r="31" stroke="#63CDBB" stroke-width="15"/>
+  <circle cx="80" cy="64" r="31" stroke="url(#outlier)" stroke-width="15"/>
+</svg>

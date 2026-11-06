@@ -5,6 +5,8 @@ node_modules/
 .next/
 out/
 build/
+dist/
+.npm-cache/
 
 # env — never commit secrets
 .env
