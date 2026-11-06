@@ -99,13 +99,13 @@ export default function Hero() {
 
       <div className="mx-auto flex min-h-[calc(100svh-6rem)] w-full max-w-content flex-col justify-center xl:max-w-[1440px]">
       <div className="hero-layout grid w-full items-center gap-10 lg:items-start lg:grid-cols-[minmax(480px,0.9fr)_minmax(0,1.1fr)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-[clamp(5rem,8vw,9rem)]">
-        <div className="rise flex justify-center lg:order-2 lg:justify-end xl:justify-self-start xl:-translate-x-12" style={rise(0.12)}>
+        <div className="rise flex justify-center lg:order-2 lg:justify-end xl:justify-self-start xl:-translate-x-16" style={rise(0.12)}>
           <div className="w-full" data-parallax-layer="1">
             <RecruiterIntroPlayer />
           </div>
         </div>
 
-        <div className="flex min-w-0 -translate-y-3 flex-col items-center text-center lg:order-1 lg:-translate-y-5 lg:self-center lg:items-start lg:text-left xl:translate-x-8">
+        <div className="flex min-w-0 -translate-y-3 flex-col items-center text-center lg:order-1 lg:-translate-y-5 lg:self-center lg:items-start lg:text-left xl:translate-x-12">
           <div className="rise mt-4" style={rise(0.2)}>
             <span data-parallax-layer="4" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
