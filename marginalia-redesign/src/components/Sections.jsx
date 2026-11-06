@@ -96,6 +96,9 @@ export function Education() {
 
 export function Experience() {
   const [expanded, setExpanded] = useState(null)
+  const toggleExperience = index => {
+    setExpanded(current => current === index ? null : index)
+  }
   return (
     <section id="experience" data-label="Experience" className="sheet paper-sheet experience-sheet">
       <Reveal className="experience-heading">
@@ -104,25 +107,32 @@ export function Experience() {
       </Reveal>
       <div className="experience-list">
         {experiences.map((item, index) => (
-          <Reveal
+          <article
             className={`experience-row ${expanded === index ? 'is-expanded' : ''}`}
             key={item.company}
             role="button"
             tabIndex={0}
-            onClick={() => setExpanded(expanded === index ? null : index)}
-            onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') setExpanded(expanded === index ? null : index) }}
+            aria-expanded={expanded === index}
+            aria-controls={`experience-detail-${index}`}
+            onClick={() => toggleExperience(index)}
+            onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                toggleExperience(index)
+              }
+            }}
           >
             <div className="experience-index">0{index + 1}</div>
             <img src={item.logo} alt="" />
             <div className="experience-title"><h3>{item.company}</h3><b>{item.role}</b><span>{item.period} · {item.type}</span></div>
             <p>{item.copy}</p>
             <span className="experience-open">{expanded === index ? 'close ×' : 'view role +'}</span>
-            {expanded === index && <div className="experience-detail">
+            {expanded === index && <div className="experience-detail" id={`experience-detail-${index}`}>
               <Scribble>what I contributed</Scribble>
               <p>{item.copy} My focus was reliable execution, careful review, clear communication, and work that could stand up to real operational use.</p>
               <div><span>Quality review</span><span>Clear documentation</span><span>Remote collaboration</span></div>
             </div>}
-          </Reveal>
+          </article>
         ))}
       </div>
     </section>
