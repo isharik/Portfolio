@@ -176,7 +176,7 @@ export function Projects() {
             <Scribble className="project-note">{project.note} ↓</Scribble>
             <button className="device" onClick={() => setSelected(project)} aria-label={`View ${project.title} details`}>
               <div className="device-speaker" />
-              <div className="device-screen"><img src={project.image} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
+              <div className="device-screen"><img src={project.phoneImage || project.image} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
             </button>
             <Scribble className="project-number">{index + 1}. {project.title}</Scribble>
           </Reveal>
