@@ -5,16 +5,18 @@ const sampleRate = 24000
 const outputDir = join(process.cwd(), 'public', 'sounds')
 
 const presets = {
-  click: { duration: 0.055, noise: 0.025, layers: [{ start: 620, end: 460, amp: 0.055, decay: 0.02 }] },
-  navigation: { duration: 0.065, noise: 0.018, layers: [{ start: 690, end: 520, amp: 0.05, decay: 0.026 }] },
-  hero: { duration: 0.07, noise: 0.016, layers: [{ start: 650, end: 490, amp: 0.046, decay: 0.03 }] },
-  about: { duration: 0.07, noise: 0.018, layers: [{ start: 590, end: 450, amp: 0.048, decay: 0.029 }] },
-  experience: { duration: 0.075, noise: 0.016, layers: [{ start: 540, end: 410, amp: 0.052, decay: 0.032 }] },
-  projects: { duration: 0.078, noise: 0.014, layers: [{ start: 610, end: 505, amp: 0.047, decay: 0.034 }, { start: 910, end: 760, amp: 0.012, decay: 0.028, delay: 0.006 }] },
-  skills: { duration: 0.072, noise: 0.014, layers: [{ start: 720, end: 560, amp: 0.043, decay: 0.031 }] },
-  contact: { duration: 0.09, noise: 0.012, layers: [{ start: 560, end: 660, amp: 0.042, decay: 0.045 }] },
-  player: { duration: 0.06, noise: 0.022, layers: [{ start: 760, end: 540, amp: 0.045, decay: 0.023 }] },
-  toggle: { duration: 0.085, noise: 0.012, layers: [{ start: 480, end: 650, amp: 0.045, decay: 0.04 }] },
+  // Low-volume, tactile glass taps: deliberately short and harmonic rather
+  // than game-like bleeps. Each context has a related but distinct timbre.
+  click: { duration: 0.045, noise: 0.004, layers: [{ start: 360, end: 325, amp: 0.033, decay: 0.018 }, { start: 1060, end: 880, amp: 0.006, decay: 0.012, delay: 0.002 }] },
+  navigation: { duration: 0.052, noise: 0.003, layers: [{ start: 410, end: 365, amp: 0.029, decay: 0.022 }, { start: 1210, end: 940, amp: 0.005, decay: 0.014, delay: 0.003 }] },
+  hero: { duration: 0.055, noise: 0.003, layers: [{ start: 440, end: 395, amp: 0.027, decay: 0.024 }, { start: 1320, end: 1080, amp: 0.004, decay: 0.014, delay: 0.004 }] },
+  about: { duration: 0.056, noise: 0.003, layers: [{ start: 392, end: 350, amp: 0.028, decay: 0.024 }, { start: 1170, end: 920, amp: 0.004, decay: 0.014, delay: 0.004 }] },
+  experience: { duration: 0.06, noise: 0.002, layers: [{ start: 330, end: 305, amp: 0.03, decay: 0.027 }, { start: 990, end: 790, amp: 0.004, decay: 0.017, delay: 0.005 }] },
+  projects: { duration: 0.063, noise: 0.002, layers: [{ start: 470, end: 415, amp: 0.027, decay: 0.027 }, { start: 1410, end: 1120, amp: 0.006, decay: 0.018, delay: 0.005 }] },
+  skills: { duration: 0.06, noise: 0.002, layers: [{ start: 510, end: 455, amp: 0.026, decay: 0.026 }, { start: 1530, end: 1220, amp: 0.004, decay: 0.017, delay: 0.004 }] },
+  contact: { duration: 0.07, noise: 0.002, layers: [{ start: 370, end: 430, amp: 0.026, decay: 0.034 }, { start: 1100, end: 1330, amp: 0.004, decay: 0.02, delay: 0.006 }] },
+  player: { duration: 0.052, noise: 0.004, layers: [{ start: 475, end: 405, amp: 0.026, decay: 0.021 }, { start: 1440, end: 1050, amp: 0.005, decay: 0.012, delay: 0.003 }] },
+  toggle: { duration: 0.07, noise: 0.002, layers: [{ start: 355, end: 455, amp: 0.026, decay: 0.032 }, { start: 1030, end: 1370, amp: 0.004, decay: 0.019, delay: 0.006 }] },
   welcome: { duration: 0.82, noise: 0, layers: [
     { start: 523.25, end: 523.25, amp: 0.055, decay: 0.34, delay: 0 },
     { start: 659.25, end: 659.25, amp: 0.045, decay: 0.39, delay: 0.12 },

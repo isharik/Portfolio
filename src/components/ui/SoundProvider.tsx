@@ -95,7 +95,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     if (buffer) {
       const source = ctx.createBufferSource()
       const gain = ctx.createGain()
-      gain.gain.setValueAtTime(key === 'welcome' ? 0.58 : 0.62, ctx.currentTime)
+      gain.gain.setValueAtTime(key === 'welcome' ? 0.5 : 0.38, ctx.currentTime)
       source.buffer = buffer
       source.connect(gain)
       gain.connect(ctx.destination)
@@ -108,11 +108,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     const oscillator = ctx.createOscillator()
     const gain = ctx.createGain()
     const start = ctx.currentTime
-    oscillator.type = 'sine'
+    oscillator.type = 'triangle'
     oscillator.frequency.setValueAtTime(startFrequency, start)
     oscillator.frequency.exponentialRampToValueAtTime(Math.max(1, endFrequency), start + (key === 'welcome' ? 0.23 : 0.045))
     gain.gain.setValueAtTime(0.0001, start)
-    gain.gain.exponentialRampToValueAtTime(key === 'welcome' ? 0.026 : 0.012, start + 0.003)
+    gain.gain.exponentialRampToValueAtTime(key === 'welcome' ? 0.022 : 0.008, start + 0.003)
     gain.gain.exponentialRampToValueAtTime(0.0001, start + (key === 'welcome' ? 0.27 : 0.055))
     oscillator.connect(gain)
     gain.connect(ctx.destination)
