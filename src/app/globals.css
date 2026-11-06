@@ -709,7 +709,7 @@ html.js .particle-title.is-ready .particle-title-semantic {
 .hero-featured-arrow { justify-self: end; color: var(--accent); opacity: .8; transition: opacity 180ms ease,transform 180ms ease; }
 .hero-featured-card:hover .hero-featured-arrow,.hero-featured-card:focus-visible .hero-featured-arrow { opacity: 1; transform: translate(2px,-2px); }
 @media (min-width: 1440px) {
-  .hero-scroll-cue { position: absolute; top: 50%; left: max(12px,calc((100vw - 1200px) / 2 - 74px)); z-index: 3; display: flex; width: 22px; align-items: center; flex-direction: column; gap: 10px; transform: translateY(-50%); pointer-events: none; }
+  .hero-scroll-cue { position: absolute; top: 50%; left: max(12px,calc((100vw - 1440px) / 2 - 64px)); z-index: 3; display: flex; width: 22px; align-items: center; flex-direction: column; gap: 10px; transform: translateY(-50%); pointer-events: none; }
   .hero-scroll-cue-dot { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px color-mix(in srgb,var(--accent) 55%,transparent); }
   .hero-scroll-cue-line { width: 1px; height: clamp(72px,12vh,112px); background: color-mix(in srgb,var(--fg-muted) 45%,transparent); }
   .hero-scroll-cue-label { color: var(--fg-subtle); font-family: var(--font-mono),monospace; font-size: 9px; letter-spacing: .16em; line-height: 1; white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
