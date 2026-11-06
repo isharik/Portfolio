@@ -84,7 +84,7 @@ export function Education() {
         </ul>
       </Reveal>
       <Reveal className="education-aside">
-        <div className="qr-wrap"><Scribble>click for my CV</Scribble><QRPattern /><Scribble className="qr-arrow">↖ download my curriculum vitae</Scribble></div>
+        <div className="qr-wrap"><Scribble>scan me</Scribble><QRPattern /><Scribble className="qr-arrow">↖ my curriculum vitae</Scribble></div>
         <h3>Languages</h3>
         <div className="language-list">
           {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}

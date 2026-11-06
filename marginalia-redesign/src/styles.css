@@ -174,17 +174,17 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); transform: translateY(-12px); }
 .experience-heading .ink-underline { position: absolute; top: auto; bottom: -8px; left: 0; width: 330px; }
 .experience-heading .scribble { margin-bottom: 12px; }
-.experience-list { border-top: 1px solid var(--hairline); }
-.experience-row { min-height: 56px; display: grid; grid-template-columns: 28px 31px minmax(225px, .72fr) 1.35fr auto; gap: 11px; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--hairline); transition: padding .3s ease, background .3s ease; cursor: pointer; }
-.experience-row:hover { padding-left: 12px; padding-right: 12px; background: color-mix(in srgb, var(--blue) 5%, transparent); }
+.experience-list { display: grid; gap: 7px; }
+.experience-row { min-height: 62px; display: grid; grid-template-columns: 28px 31px minmax(225px, .72fr) 1.35fr auto; gap: 11px; align-items: center; padding: 7px 12px; border: 1px solid var(--hairline); border-radius: 8px; background: color-mix(in srgb, var(--paper) 88%, transparent); transition: padding .3s ease, background .3s ease, border-color .3s ease, transform .3s ease; cursor: pointer; text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; }
+.experience-row:hover { padding-left: 16px; padding-right: 16px; border-color: color-mix(in srgb, var(--blue) 44%, var(--hairline)); background: color-mix(in srgb, var(--blue) 5%, var(--paper)); transform: translateX(2px); }
 .experience-index { color: var(--blue); font: 19px var(--hand); }
 .experience-row img { width: 29px; height: 29px; object-fit: contain; border-radius: 7px; background: white; padding: 4px; }
-.experience-title h3 { margin: 0 0 1px; font: 18px var(--serif); text-decoration: none; }
+.experience-title h3 { margin: 0 0 1px; font: 19px var(--serif); text-decoration: none; }
 .experience-row:first-child .experience-title h3::before,.experience-row:first-child .experience-title h3::after { content: none!important; display: none!important; }
 .experience-row:first-child .experience-open { border-bottom: 0; }
-.experience-title b { display: block; font-size: 13px; }
-.experience-title span { color: var(--soft-ink); font-size: 12px; }
-.experience-row p { margin: 0; color: var(--soft-ink); line-height: 1.45; }
+.experience-title b { display: block; font-size: 13px; letter-spacing: -.01em; }
+.experience-title span { color: color-mix(in srgb, var(--ink) 68%, var(--paper)); font-size: 12px; }
+.experience-row p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--paper)); font-size: 14px; line-height: 1.45; font-weight: 400; }
 .experience-open { border: 0; border-bottom: 1px solid var(--blue); background: none; color: var(--blue); cursor: pointer; font: 18px var(--hand); white-space: nowrap; }
 .experience-detail { grid-column: 3 / -1; margin: 5px 0 14px; padding: 20px 24px; border: 1px solid var(--hairline); background: color-mix(in srgb,var(--paper-2) 78%,transparent); animation: detail-in .38s ease both; }
 .experience-detail > p { max-width: 850px; margin: 13px 0; color: var(--ink); }
