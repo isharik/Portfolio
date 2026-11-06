@@ -156,10 +156,10 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .credential-list span, .credential-list em { color: var(--soft-ink); font-size: 13px; font-style: normal; }
 .credential-list u { color: var(--blue); text-decoration: none; }
 .education-aside { padding-top: 10px; }
-.qr-wrap { position: relative; height: 215px; }
-.qr-wrap > .scribble:first-child { position: absolute; left: 0; top: 0; }
-.qr-arrow { position: absolute; left: 185px; top: 100px; white-space: nowrap; }
-.qr { position: absolute; left: 20px; top: 35px; width: 164px; height: 164px; padding: 7px; display: grid; place-items: center; background: #fff; transform: rotate(-2deg); box-shadow: 0 12px 25px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.08); transition: transform .3s ease,box-shadow .3s ease; }
+.qr-wrap { position: relative; height: 185px; }
+.qr-wrap > .scribble:first-child { position: absolute; left: 0; top: -10px; }
+.qr-arrow { position: absolute; left: 185px; top: 72px; white-space: nowrap; }
+.qr { position: absolute; left: 20px; top: 15px; width: 164px; height: 164px; padding: 7px; display: grid; place-items: center; background: #fff; transform: rotate(-2deg); box-shadow: 0 12px 25px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.08); transition: transform .3s ease,box-shadow .3s ease; }
 .qr:hover { transform: rotate(0) translateY(-5px) scale(1.03); box-shadow: 0 20px 36px rgba(0,0,0,.18),0 0 0 2px var(--blue); }
 .qr canvas { display: block; width: 150px!important; height: 150px!important; }
 .education-aside h3 { font-family: var(--serif); font-size: 48px; margin: 14px 0 20px; }
