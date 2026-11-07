@@ -32,12 +32,12 @@ export const languages = [
 
 export const experiences = [
   { company: 'Invisible Technologies', role: 'AI & QA Specialist', period: 'Jul 2025 — Present', type: 'Full-time · Remote', logo: '/logos/invisible.png', copy: 'I evaluate large language models across reasoning, coding, and language tasks, catching inaccuracies and edge cases through structured QA and calibrated feedback.' },
-  { company: 'Micro1', role: 'AI & Robotics Trainer', period: 'May 2025 — Present', type: 'Full-time · Remote', logo: '/logos/micro1.png', copy: 'I train and evaluate AI systems through annotation, RLHF, robotics-focused tasks, and Python-supported data workflows.' },
-  { company: 'Outlier', role: 'Mathematics & STEM AI Trainer', period: 'Dec 2024 — Present', type: 'Part-time · Remote', logo: '/logos/outlier.svg', copy: 'I evaluate and improve AI-generated mathematics, STEM, computer science, and logical-reasoning solutions.' },
-  { company: 'SuperAnnotate', role: 'Python Expert & Mathematics QA Lead', period: 'Aug 2026 — Present', type: 'Part-time · Remote', logo: '/logos/superannotate.svg', copy: 'I lead QA reviews of Python and mathematics responses for correctness, reasoning quality, completeness, and task fit.' },
   { company: 'Datamark', role: 'Customer Support Specialist', period: 'Mar 2025 — May 2026', type: 'Full-time · Remote', logo: '/logos/datamark.jpg', copy: 'I resolved sensitive, time-critical customer conversations through accurate interpretation, clear explanations, and careful confidentiality.' },
   { company: 'KodeKloud', role: 'System Administrator', period: 'Jan 2024 — Dec 2024', type: 'Full-time · Remote', logo: '/logos/kodekloud.png', copy: 'I supported AWS infrastructure, daily systems operations, incident investigation, and operational reporting.' },
   { company: 'Deloitte', role: 'Technology Consultant Intern', period: 'May 2020 — Sep 2020', type: 'Internship · Remote', logo: '/logos/deloitte.ico', copy: 'I supported cloud-readiness assessments, business analysis, planning, and solution documentation for enterprise engagements.' },
+  { company: 'Micro1', role: 'AI & Robotics Trainer', period: 'May 2025 — Present', type: 'Full-time · Remote', logo: '/logos/micro1.png', copy: 'I train and evaluate AI systems through annotation, RLHF, robotics-focused tasks, and Python-supported data workflows.' },
+  { company: 'Outlier', role: 'Mathematics & STEM AI Trainer', period: 'Dec 2024 — Present', type: 'Part-time · Remote', logo: '/logos/outlier.svg', copy: 'I evaluate and improve AI-generated mathematics, STEM, computer science, and logical-reasoning solutions.' },
+  { company: 'SuperAnnotate', role: 'Python Expert & Mathematics QA Lead', period: 'Aug 2026 — Present', type: 'Part-time · Remote', logo: '/logos/superannotate.svg', copy: 'I lead QA reviews of Python and mathematics responses for correctness, reasoning quality, completeness, and task fit.' },
 ]
 
 export const skillGroups = [

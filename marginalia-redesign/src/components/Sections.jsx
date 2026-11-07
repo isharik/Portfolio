@@ -88,10 +88,20 @@ export function Education() {
         </ul>
       </Reveal>
       <Reveal className="education-aside">
-        <div className="qr-wrap"><Scribble>scan me</Scribble><QRPattern /><Scribble className="qr-arrow">↖ my curriculum vitae</Scribble></div>
-        <h3>Languages</h3>
-        <div className="language-list">
-          {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
+        <div className="education-postcards">
+          <div className="education-card cv-card">
+            <div className="cv-card-copy"><Scribble>scan me</Scribble><small>CURRICULUM / 2026</small></div>
+            <QRPattern />
+            <Scribble className="cv-card-title">my curriculum vitae ↗</Scribble>
+            <span className="education-stamp" aria-label="Signed by Sharik"><b>✦</b><Scribble>Sharik</Scribble></span>
+          </div>
+          <div className="education-card languages-card">
+            <div className="languages-card-head"><Scribble>languages</Scribble><span aria-hidden>☕</span></div>
+            <p>Words I use to make technology feel human.</p>
+            <div className="language-list">
+              {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
+            </div>
+          </div>
         </div>
       </Reveal>
     </section>
