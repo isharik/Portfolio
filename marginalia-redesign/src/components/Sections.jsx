@@ -94,6 +94,8 @@ export function Education() {
             <QRPattern />
             <Scribble className="cv-card-title">my curriculum vitae ↗</Scribble>
             <span className="education-stamp" aria-label="Signed by Sharik"><b>✦</b><Scribble>Sharik</Scribble></span>
+            <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
+            <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
           </div>
           <div className="education-card languages-card">
             <div className="languages-card-head"><Scribble>languages</Scribble><span aria-hidden>☕</span></div>
@@ -115,6 +117,7 @@ export function Experience() {
   const viewportRef = useRef(null)
   const trackRef = useRef(null)
   const wheelLockRef = useRef(false)
+  const previousTopRef = useRef(null)
   const toggleExperience = index => {
     setExpanded(current => current === index ? null : index)
     setScrollFocus(index)
@@ -141,6 +144,17 @@ export function Experience() {
       if (!direction) return
       const bounds = section.getBoundingClientRect()
       const viewport = window.innerHeight || 1
+      // The first downward gesture that reaches this section is a landing
+      // gesture, not a request to skip Invisible Technologies.  This keeps
+      // wheel and trackpad input predictable when arriving from Education.
+      const isEnteringFromEducation = direction > 0 && bounds.top > 0 && bounds.top <= viewport * .72
+      if (isEnteringFromEducation) {
+        event.preventDefault()
+        if (scrollFocus !== 0) setScrollFocus(0)
+        wheelLockRef.current = true
+        window.setTimeout(() => { wheelLockRef.current = false }, 420)
+        return
+      }
       // Capture as soon as the experience stage enters the reading zone —
       // not only when the pointer happens to be over a card.
       const isExperienceInControl = bounds.top <= viewport * .58 && bounds.bottom >= viewport * .42
@@ -170,6 +184,28 @@ export function Experience() {
       window.removeEventListener('resize', positionTrack)
     }
   }, [scrollFocus])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const resetEntryFocus = () => {
+      const top = section.getBoundingClientRect().top
+      const previousTop = previousTopRef.current
+      const viewport = window.innerHeight || 1
+      if (previousTop !== null) {
+        // Entering from Education always starts the map at Invisible.
+        if (previousTop > viewport * .62 && top <= viewport * .62) setScrollFocus(0)
+        // Entering from Skills in reverse starts at the final role.
+        if (previousTop < viewport * .38 && top >= viewport * .38) setScrollFocus(experiences.length - 1)
+      }
+      previousTopRef.current = top
+    }
+
+    resetEntryFocus()
+    window.addEventListener('scroll', resetEntryFocus, { passive: true })
+    return () => window.removeEventListener('scroll', resetEntryFocus)
+  }, [])
 
   return (
     <section ref={sectionRef} id="experience" data-label="Experience" className="sheet paper-sheet experience-sheet">

@@ -168,19 +168,22 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .education-aside { justify-self: end; width: 100%; padding-top: 10px; }
 .education-postcards { display: grid; gap: 22px; max-width: 520px; margin-left: auto; }
 .education-card { position: relative; overflow: hidden; border: 1px solid var(--hairline); background: color-mix(in srgb, var(--paper-2) 94%, var(--paper)); box-shadow: 0 12px 28px rgba(10,10,14,.08); transition: transform 180ms var(--ease-out), box-shadow 180ms ease, border-color 180ms ease; }
-.cv-card { min-height: 184px; padding: 24px 28px; display: grid; grid-template-columns: 142px 1fr auto; align-items: center; gap: 24px; border-radius: 3px; transform: rotate(-1.25deg); }
+.cv-card { min-height: 224px; padding: 24px 28px; display: block; border-radius: 3px; transform: rotate(-1.25deg); }
 .cv-card:active { transform: rotate(-1.25deg) scale(.985); }
 .cv-card::before,.languages-card::before { content: ''; position: absolute; inset: 10px; pointer-events: none; border: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent); }
-.cv-card-copy { display: grid; align-content: start; gap: 9px; }
+.cv-card-copy { position: absolute; z-index: 2; top: 25px; left: 28px; display: grid; align-content: start; gap: 9px; }
 .cv-card-copy .scribble { font-size: 22px; }
 .cv-card-copy small { color: var(--soft-ink); font-size: 9px; letter-spacing: .16em; }
-.qr { position: relative; width: 134px; height: 134px; padding: 7px; display: grid; place-items: center; background: #fff; box-shadow: 0 7px 16px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.08); transition: transform 180ms var(--ease-out), box-shadow 180ms ease; z-index: 1; }
+.qr { position: absolute; z-index: 1; top: 50%; left: 50%; width: 134px; height: 134px; padding: 7px; display: grid; place-items: center; background: #fff; box-shadow: 0 7px 16px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.08); transform: translate(-50%,-50%) rotate(-1deg); transition: transform 180ms var(--ease-out), box-shadow 180ms ease; }
 .qr canvas { display: block; width: 114px!important; height: 114px!important; }
-.cv-card-title { max-width: 150px; font-size: 23px; line-height: 1.05; }
-.education-stamp { z-index: 1; display: grid; width: 70px; height: 70px; place-items: center; align-content: center; gap: 0; border: 2px solid var(--blue); border-radius: 50%; color: var(--blue); transform: rotate(11deg); background: color-mix(in srgb, var(--paper) 82%, transparent); }
+.cv-card-title { position: absolute; z-index: 2; right: 28px; bottom: 24px; max-width: 170px; font-size: 23px; line-height: 1.05; text-align: right; }
+.cv-card-title::before { content: '↖'; display: block; margin: 0 24px -2px 0; color: var(--blue); font: 28px/1 var(--hand); transform: rotate(-16deg); }
+.education-stamp { position: absolute; z-index: 2; top: 18px; right: 19px; display: grid; width: 70px; height: 70px; place-items: center; align-content: center; gap: 0; border: 2px solid var(--blue); border-radius: 50%; color: var(--blue); transform: rotate(11deg); background: color-mix(in srgb, var(--paper) 82%, transparent); }
 .education-stamp b { font-size: 22px; line-height: .8; }.education-stamp .scribble { font-size: 20px; line-height: .8; }
-.languages-card { padding: 25px 29px 26px; border-radius: 2px; background: color-mix(in srgb, #dec06b 42%, var(--paper)); transform: rotate(.85deg); }
-.languages-card::after { content: ''; position: absolute; z-index: 2; top: -11px; left: 52%; width: 20px; height: 20px; border-radius: 50%; background: #c95650; box-shadow: inset -3px -3px 0 rgba(0,0,0,.16), 0 3px 5px rgba(0,0,0,.2); transform: translateX(-50%) rotate(11deg); }
+.ticket-notch { position: absolute; z-index: 3; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: var(--paper); transform: translateY(-50%); }
+.ticket-notch-left { left: -11px; }.ticket-notch-right { right: -11px; }
+.languages-card { padding: 25px 29px 26px; border-radius: 2px; background: color-mix(in srgb, #dec06b 42%, var(--paper)); transform: rotate(-2.1deg); }
+.languages-card::after { content: ''; position: absolute; z-index: 2; top: 12px; left: 52%; width: 20px; height: 20px; border-radius: 50%; background: #c95650; box-shadow: inset -3px -3px 0 rgba(0,0,0,.16), 0 3px 5px rgba(0,0,0,.2); transform: translateX(-50%) rotate(11deg); }
 .languages-card:active { transform: rotate(.85deg) scale(.985); }
 .languages-card-head { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }.languages-card-head .scribble { font-size: 32px; }.languages-card-head span { font-size: 30px; filter: saturate(.55); transform: rotate(-8deg); }
 .languages-card > p { position: relative; z-index: 1; max-width: 300px; margin: 0 0 18px; color: var(--soft-ink); font: 18px/1.25 var(--hand); }
@@ -188,7 +191,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .language-list span { color: var(--soft-ink); }
 .language-list i { display: block; height: 10px; border-bottom: 1px solid var(--hairline); }
 .language-list u { display: block; height: 9px; background: var(--blue); clip-path: polygon(0 48%,12% 28%,25% 60%,39% 35%,54% 66%,69% 38%,83% 58%,100% 36%,100% 60%,83% 76%,69% 56%,54% 82%,39% 53%,25% 77%,12% 47%,0 68%); }
-@media (hover: hover) and (pointer: fine) { .cv-card:hover { transform: translateY(-4px) rotate(-.4deg); border-color: color-mix(in srgb, var(--blue) 55%, var(--hairline)); box-shadow: 0 18px 32px rgba(10,10,14,.13); }.languages-card:hover { transform: translateY(-4px) rotate(.25deg); border-color: color-mix(in srgb, var(--blue) 55%, var(--hairline)); box-shadow: 0 18px 32px rgba(10,10,14,.13); }.qr:hover { transform: rotate(2deg) translateY(-2px); box-shadow: 0 12px 22px rgba(0,0,0,.18),0 0 0 2px var(--blue); } }
+@media (hover: hover) and (pointer: fine) { .cv-card:hover { transform: translateY(-4px) rotate(-.4deg); border-color: color-mix(in srgb, var(--blue) 55%, var(--hairline)); box-shadow: 0 18px 32px rgba(10,10,14,.13); }.languages-card:hover { transform: translateY(-4px) rotate(-1.4deg); border-color: color-mix(in srgb, var(--blue) 55%, var(--hairline)); box-shadow: 0 18px 32px rgba(10,10,14,.13); }.qr:hover { transform: translate(-50%,-50%) rotate(2deg) translateY(-2px); box-shadow: 0 12px 22px rgba(0,0,0,.18),0 0 0 2px var(--blue); } }
 
 /* experience — wheel-controlled horizontal journey; native scrolling resumes at either end */
 .experience-sheet { min-height: 0; padding: 0; }
@@ -386,11 +389,12 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .about-copy p { font-size: 15px; }
   .education-sheet { gap: 30px; }
   .education-postcards { width: 100%; }
-  .cv-card { grid-template-columns: 1fr auto; gap: 16px; min-height: 0; padding: 24px 21px; }
-  .cv-card .qr { grid-row: 1 / span 2; grid-column: 2; width: 112px; height: 112px; }
+  .cv-card { min-height: 200px; padding: 20px 18px; }
+  .cv-card-copy { top: 20px; left: 18px; }
+  .cv-card .qr { top: 50%; left: 50%; width: 112px; height: 112px; }
   .cv-card .qr canvas { width: 98px!important; height: 98px!important; }
-  .cv-card-title { max-width: 175px; font-size: 20px; }
-  .education-stamp { width: 56px; height: 56px; }
+  .cv-card-title { right: 18px; bottom: 18px; max-width: 140px; font-size: 19px; }
+  .education-stamp { top: 12px; right: 12px; width: 56px; height: 56px; }
   .languages-card { padding: 22px 20px; }
   .language-list > div { grid-template-columns: 78px 76px 1fr; gap: 6px; font-size: 13px; }
   .credential-list a { grid-template-columns: 12px 38px minmax(0,1fr) 20px; gap: 5px 9px; padding: 12px 0; }
