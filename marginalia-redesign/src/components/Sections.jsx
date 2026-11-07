@@ -8,8 +8,27 @@ function Scribble({ children, className = '' }) {
   return <span className={`scribble ${className}`}>{children}</span>
 }
 
-function InkSignature({ children }) {
-  return <span className="ink-signature" aria-label={children}>{children}</span>
+function InkSignature({ children, defer = false }) {
+  const ref = useRef(null)
+  const [revealed, setRevealed] = useState(!defer)
+
+  useEffect(() => {
+    if (!defer || revealed) return
+    const node = ref.current
+    if (!node || !('IntersectionObserver' in window)) {
+      setRevealed(true)
+      return
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setRevealed(true)
+      observer.disconnect()
+    }, { threshold: .35 })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [defer, revealed])
+
+  return <span ref={ref} className={`ink-signature${revealed ? ' is-revealed' : ''}`} aria-label={children}>{children}</span>
 }
 
 function PortraitNote({ children, className = '' }) {
@@ -378,7 +397,7 @@ export function Contact() {
         <p>I build where people, systems, and AI meet. If your team needs careful evaluation, dependable operations, clear customer communication, or thoughtful ecosystem content, I would love to hear what you are working on.</p>
         <p>I am comfortable with complex workflows, honest feedback, and the patient work required to make technology more useful.</p>
         <p>Let’s make something clear, reliable, and worth shipping.</p>
-        <div className="crt-signature" data-text="Sharik" aria-label="Signed by Sharik"><span>Sharik</span></div>
+        <div className="crt-signature" data-text="Sharik" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
       </Reveal>
       <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
         <span className="booking-icon" aria-hidden="true">◷</span>

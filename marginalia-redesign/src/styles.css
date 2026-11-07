@@ -114,7 +114,8 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .text-roll-space { visibility: hidden; }
 .cover-kicker { position: absolute; left: 50%; top: -88px; transform: translateX(-50%); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--soft-ink); }
 .cover-signature { position: absolute; right: 6%; top: -34%; font-size: clamp(42px, 5vw, 76px); transform: rotate(-6deg); }
-.ink-signature { display: inline-block; white-space: nowrap; opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(1.5px); transform: translate(-3px,3px) rotate(-2deg); animation: ink-signature-in 1.15s cubic-bezier(.2,.82,.18,1) .18s forwards; }
+.ink-signature { display: inline-block; white-space: nowrap; opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(1.5px); transform: translate(-3px,3px) rotate(-2deg); }
+.ink-signature.is-revealed { animation: ink-signature-in 1.15s cubic-bezier(.2,.82,.18,1) .18s forwards; }
 @keyframes ink-signature-in { 55% { opacity: .9; filter: blur(.35px); } 100% { opacity: 1; clip-path: inset(0 0 0 0); filter: none; transform: none; } }
 .cover-signature svg { position: absolute; width: 116px; height: 72px; right: 58%; top: 42%; overflow: visible; }
 .cover-signature svg path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
