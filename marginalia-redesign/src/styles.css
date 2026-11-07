@@ -326,6 +326,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .contact-letter p { margin-bottom: 22px; }
 .contact-signature { display: inline-block; margin-top: 4px; color: var(--blue); transform: rotate(-2deg); }
 .contact-signature .ink-signature { font: 48px/.8 var(--hand); letter-spacing: .015em; }
+.contact-letter.is-visible .ink-signature-deferred { animation: ink-signature-in 1.15s cubic-bezier(.2,.82,.18,1) .18s forwards; }
 .booking-card { grid-column: 1 / -1; justify-self: center; display: grid; grid-template-columns: 42px minmax(0,1fr) 18px; gap: 14px; align-items: center; width: min(680px,72%); min-height: 72px; margin-top: -28px; padding: 12px 17px; border: 1px solid color-mix(in srgb,var(--blue) 24%,var(--hairline)); border-radius: 16px; background: color-mix(in srgb,var(--charcoal) 5%,var(--paper)); box-shadow: 0 12px 32px rgba(20,20,24,.06); transition: transform .28s ease,border-color .28s ease,box-shadow .28s ease; }
 .booking-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb,var(--blue) 62%,var(--hairline)); box-shadow: 0 18px 42px rgba(20,20,24,.1); }
 .booking-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 11px; background: color-mix(in srgb,var(--blue) 25%,var(--paper)); color: var(--ink); font: 23px var(--sans); }

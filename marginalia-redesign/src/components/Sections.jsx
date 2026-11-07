@@ -9,26 +9,7 @@ function Scribble({ children, className = '' }) {
 }
 
 function InkSignature({ children, defer = false }) {
-  const ref = useRef(null)
-  const [revealed, setRevealed] = useState(!defer)
-
-  useEffect(() => {
-    if (!defer || revealed) return
-    const node = ref.current
-    if (!node || !('IntersectionObserver' in window)) {
-      setRevealed(true)
-      return
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      setRevealed(true)
-      observer.disconnect()
-    }, { threshold: .35 })
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [defer, revealed])
-
-  return <span ref={ref} className={`ink-signature${revealed ? ' is-revealed' : ''}`} aria-label={children}>{children}</span>
+  return <span className={`ink-signature${defer ? ' ink-signature-deferred' : ' is-revealed'}`} aria-label={children}>{children}</span>
 }
 
 function PortraitNote({ children, className = '' }) {
