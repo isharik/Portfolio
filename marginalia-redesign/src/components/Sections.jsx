@@ -117,6 +117,7 @@ export function Experience() {
   const viewportRef = useRef(null)
   const trackRef = useRef(null)
   const wheelLockRef = useRef(false)
+  const entryLandingRef = useRef(false)
   const previousTopRef = useRef(null)
   const toggleExperience = index => {
     setExpanded(current => current === index ? null : index)
@@ -148,8 +149,9 @@ export function Experience() {
       // gesture, not a request to skip Invisible Technologies.  This keeps
       // wheel and trackpad input predictable when arriving from Education.
       const isEnteringFromEducation = direction > 0 && bounds.top > 0 && bounds.top <= viewport * .72
-      if (isEnteringFromEducation) {
+      if (isEnteringFromEducation && !entryLandingRef.current) {
         event.preventDefault()
+        entryLandingRef.current = true
         if (scrollFocus !== 0) setScrollFocus(0)
         wheelLockRef.current = true
         window.setTimeout(() => { wheelLockRef.current = false }, 420)
@@ -193,6 +195,9 @@ export function Experience() {
       const top = section.getBoundingClientRect().top
       const previousTop = previousTopRef.current
       const viewport = window.innerHeight || 1
+      // Re-arm the landing gesture once the reader has moved away from the
+      // stage, so a future arrival from Education again opens on role one.
+      if (top > viewport * .8 || top < -viewport * .4) entryLandingRef.current = false
       if (previousTop !== null) {
         // Entering from Education always starts the map at Invisible.
         if (previousTop > viewport * .62 && top <= viewport * .62) setScrollFocus(0)
