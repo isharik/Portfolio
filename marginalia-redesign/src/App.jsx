@@ -42,6 +42,7 @@ export default function App() {
     const play = event => {
       const target = event.target.closest('button,a,[role="button"]')
       if (!target) return
+      if (target.closest('.lamp-toggle')) return
       const source = target.closest('.folio-index') || target.matches('a') ? navigation : click
       const sound = source.cloneNode()
       sound.volume = .11

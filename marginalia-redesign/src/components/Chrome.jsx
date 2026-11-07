@@ -23,8 +23,17 @@ export function SiteChrome({ theme, onTheme }) {
   const [open, setOpen] = useState(true)
   const [playing, setPlaying] = useState(false)
   const audioRef = useRef(null)
+  const lampSoundRef = useRef(null)
   const lampStartY = useRef(null)
   const lampWasPulled = useRef(false)
+
+  const playLampSound = () => {
+    const sound = lampSoundRef.current
+    if (!sound) return
+    sound.volume = .16
+    sound.currentTime = 0
+    sound.play().catch(() => {})
+  }
 
   const handleLampPointerDown = event => {
     lampStartY.current = event.clientY
@@ -36,6 +45,7 @@ export function SiteChrome({ theme, onTheme }) {
     lampStartY.current = null
     if (startY !== null && event.clientY - startY > 12) {
       lampWasPulled.current = true
+      playLampSound()
       onTheme()
     }
   }
@@ -74,6 +84,7 @@ export function SiteChrome({ theme, onTheme }) {
         </button>
         <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
         <audio ref={audioRef} src="/recruiter-intro.mp3" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
+        <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>
       <nav className={`folio-index ${open ? 'is-open' : ''}`} aria-label="Portfolio index">
         {sections.map(([id, label, icon], index) => (
@@ -87,6 +98,7 @@ export function SiteChrome({ theme, onTheme }) {
           lampWasPulled.current = false
           return
         }
+        playLampSound()
         onTheme()
       }} aria-label={`Pull down or click to switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>
         <span className="lamp-cap" /><span className="lamp-bulb" /><span className="lamp-chain" /><span className="lamp-pull" />

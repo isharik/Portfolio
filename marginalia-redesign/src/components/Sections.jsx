@@ -244,6 +244,23 @@ export function Skills() {
 
 export function Projects() {
   const [selected, setSelected] = useState(null)
+
+  useEffect(() => {
+    const preload = () => {
+      projects.forEach(project => {
+        const image = new Image()
+        image.decoding = 'async'
+        image.src = project.image
+      })
+    }
+    const idle = window.requestIdleCallback?.(preload, { timeout: 1200 })
+    if (!idle) {
+      const timer = window.setTimeout(preload, 180)
+      return () => window.clearTimeout(timer)
+    }
+    return () => window.cancelIdleCallback?.(idle)
+  }, [])
+
   return (
     <section id="projects" data-label="Projects" className="sheet paper-sheet projects-sheet">
       <Reveal className="projects-heading"><h2>Projects.</h2><div className="ink-underline short" /><Scribble>work that left the notebook</Scribble></Reveal>
