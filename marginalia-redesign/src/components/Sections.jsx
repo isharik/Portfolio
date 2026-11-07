@@ -245,7 +245,7 @@ export function Skills() {
 export function Projects() {
   const [selected, setSelected] = useState(null)
   return (
-    <section id="projects" data-label="Projects" className="sheet charcoal-sheet projects-sheet">
+    <section id="projects" data-label="Projects" className="sheet paper-sheet projects-sheet">
       <Reveal className="projects-heading"><h2>Projects.</h2><div className="ink-underline short" /><Scribble>work that left the notebook</Scribble></Reveal>
       <div className="project-gallery">
         {projects.map((project, index) => {
@@ -286,7 +286,7 @@ export function Facts() {
     { icon: '☕', title: 'Always learning', text: 'New tools are interesting; knowing when to use them is the real craft.' },
   ]
   return (
-    <section data-label="Beyond the CV" className="sheet charcoal-sheet facts-sheet">
+    <section data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond the CV</h2><div className="ink-underline" /></Reveal>
       <div className="facts-grid">
