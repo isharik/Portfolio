@@ -15,15 +15,20 @@ export default function App() {
 
   useEffect(() => {
     if (!ready) return
-    const nodes = document.querySelectorAll('.reveal')
+    // Experience owns its full-height scroll stage. Applying the generic
+    // section fade to that sticky container can hide it before its map ends.
+    const nodes = [...document.querySelectorAll('.reveal, .sheet, .folio-footer')]
+      .filter(node => node.id !== 'experience')
+    nodes.forEach(node => node.classList.add('scroll-reveal'))
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach(node => node.classList.add('is-visible'))
+      return
+    }
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
-        }
+        entry.target.classList.toggle('is-visible', entry.isIntersecting)
       })
-    }, { threshold: 0.13, rootMargin: '0px 0px -8%' })
+    }, { threshold: 0.08, rootMargin: '-4% 0px -4%' })
     nodes.forEach(node => observer.observe(node))
     return () => observer.disconnect()
   }, [ready])

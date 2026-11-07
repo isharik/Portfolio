@@ -23,6 +23,22 @@ export function SiteChrome({ theme, onTheme }) {
   const [open, setOpen] = useState(true)
   const [playing, setPlaying] = useState(false)
   const audioRef = useRef(null)
+  const lampStartY = useRef(null)
+  const lampWasPulled = useRef(false)
+
+  const handleLampPointerDown = event => {
+    lampStartY.current = event.clientY
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+
+  const handleLampPointerUp = event => {
+    const startY = lampStartY.current
+    lampStartY.current = null
+    if (startY !== null && event.clientY - startY > 12) {
+      lampWasPulled.current = true
+      onTheme()
+    }
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,7 +82,13 @@ export function SiteChrome({ theme, onTheme }) {
           </a>
         ))}
       </nav>
-      <button className={`lamp-toggle ${theme === 'light' ? 'is-lit' : ''}`} onClick={onTheme} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>
+      <button className={`lamp-toggle ${theme === 'light' ? 'is-lit' : ''}`} onPointerDown={handleLampPointerDown} onPointerUp={handleLampPointerUp} onPointerCancel={() => { lampStartY.current = null }} onClick={() => {
+        if (lampWasPulled.current) {
+          lampWasPulled.current = false
+          return
+        }
+        onTheme()
+      }} aria-label={`Pull down or click to switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>
         <span className="lamp-cap" /><span className="lamp-bulb" /><span className="lamp-chain" /><span className="lamp-pull" />
       </button>
     </>

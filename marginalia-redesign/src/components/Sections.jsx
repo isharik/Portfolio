@@ -8,6 +8,10 @@ function Scribble({ children, className = '' }) {
   return <span className={`scribble ${className}`}>{children}</span>
 }
 
+function InkSignature({ children }) {
+  return <span className="ink-signature" aria-label={children}>{children}</span>
+}
+
 function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
@@ -19,13 +23,13 @@ export function Cover() {
         <div className="cover-kicker">AI QUALITY · CUSTOMER CLARITY · RELIABLE OPERATIONS</div>
         <h1><TextRoll>Portfolio</TextRoll></h1>
         <div className="orbit-stroke" aria-hidden="true"><i /></div>
-        <Scribble className="cover-signature">Sharik Hussain
+        <Scribble className="cover-signature"><InkSignature>Sharik Hussain</InkSignature>
           <svg viewBox="0 0 150 86" aria-hidden="true"><path d="M142 4 C122 18 114 42 86 48 C61 54 42 45 19 67" /><path d="M19 67 L35 64 M19 67 L27 52" /></svg>
         </Scribble>
         <div className="role-pill">Working with AI, support, and quality</div>
-        <Scribble className="cover-scroll">scroll
+        <a className="cover-scroll scribble" href="#about" aria-label="Scroll to explore the portfolio">scroll
           <svg viewBox="0 0 40 76" aria-hidden="true"><path d="M13 3 C29 13 8 25 18 36 C29 47 10 53 20 61" /><path d="M12 58 L20 68 L29 58" /></svg>
-        </Scribble>
+        </a>
       </Reveal>
       <div className="sheet-foot"><span>India — 2026</span><span>Customer Support · Content · AI</span></div>
     </section>
@@ -60,7 +64,7 @@ function QRPattern() {
   useEffect(() => {
     if (!canvasRef.current) return
     QRCode.toCanvas(canvasRef.current, 'https://portfolio-isharik.vercel.app/resume.pdf', {
-      width: 150,
+      width: 134,
       margin: 1,
       color: { dark: '#171719', light: '#ffffff' },
       errorCorrectionLevel: 'H',
@@ -96,19 +100,80 @@ export function Education() {
 
 export function Experience() {
   const [expanded, setExpanded] = useState(null)
+  const [scrollFocus, setScrollFocus] = useState(0)
+  const sectionRef = useRef(null)
+  const viewportRef = useRef(null)
+  const trackRef = useRef(null)
+  const wheelLockRef = useRef(false)
   const toggleExperience = index => {
     setExpanded(current => current === index ? null : index)
+    setScrollFocus(index)
   }
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const positionTrack = () => {
+      const mapViewport = viewportRef.current
+      const mapTrack = trackRef.current
+      if (mapViewport && mapTrack) {
+        const trackTravel = Math.max(0, mapTrack.scrollWidth - mapViewport.clientWidth)
+        const progress = experiences.length > 1 ? scrollFocus / (experiences.length - 1) : 0
+        // Integer pixel movement avoids sub-pixel text rasterisation inside
+        // the cards while the horizontal track is in motion.
+        mapTrack.style.transform = `translateX(${-Math.round(trackTravel * progress)}px)`
+      }
+    }
+
+    const handleWheel = event => {
+      const direction = Math.sign(event.deltaY)
+      if (!direction) return
+      const bounds = section.getBoundingClientRect()
+      const viewport = window.innerHeight || 1
+      // Capture as soon as the experience stage enters the reading zone —
+      // not only when the pointer happens to be over a card.
+      const isExperienceInControl = bounds.top <= viewport * .58 && bounds.bottom >= viewport * .42
+      if (!isExperienceInControl) return
+
+      if (wheelLockRef.current) {
+        event.preventDefault()
+        return
+      }
+
+      const nextIndex = Math.max(0, Math.min(experiences.length - 1, scrollFocus + direction))
+      // At either end, release native scroll so the reader can continue to
+      // Skills or back to Education. Everywhere else, the wheel owns the map.
+      if (nextIndex === scrollFocus) return
+
+      event.preventDefault()
+      wheelLockRef.current = true
+      setScrollFocus(nextIndex)
+      window.setTimeout(() => { wheelLockRef.current = false }, 680)
+    }
+
+    positionTrack()
+    window.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('resize', positionTrack)
+    return () => {
+      window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('resize', positionTrack)
+    }
+  }, [scrollFocus])
+
   return (
-    <section id="experience" data-label="Experience" className="sheet paper-sheet experience-sheet">
-      <Reveal className="experience-heading">
-        <h2>Experience</h2><div className="ink-underline" />
-        <Scribble>the work behind the work ↓</Scribble>
-      </Reveal>
-      <div className="experience-list">
-        {experiences.map((item, index) => (
+    <section ref={sectionRef} id="experience" data-label="Experience" className="sheet paper-sheet experience-sheet">
+      <div className={`experience-pin ${expanded !== null ? 'has-expanded' : ''}`}>
+        <Reveal className="experience-heading">
+          <h2>Experience</h2><div className="ink-underline" />
+          <Scribble>the work behind the work ↓</Scribble>
+        </Reveal>
+        <div ref={viewportRef} className="experience-map-viewport">
+          <span className="experience-map-line" aria-hidden="true" />
+          <div ref={trackRef} className="experience-list">
+          {experiences.map((item, index) => (
           <article
-            className={`experience-row ${expanded === index ? 'is-expanded' : ''}`}
+            className={`experience-row ${expanded === index ? 'is-expanded' : ''} ${scrollFocus === index ? 'is-scroll-focus' : ''} ${index < scrollFocus ? 'is-scroll-past' : 'is-scroll-next'}`}
             key={item.company}
             role="button"
             tabIndex={0}
@@ -133,7 +198,9 @@ export function Experience() {
               <div><span>Quality review</span><span>Clear documentation</span><span>Remote collaboration</span></div>
             </div>}
           </article>
-        ))}
+          ))}
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -181,16 +248,19 @@ export function Projects() {
     <section id="projects" data-label="Projects" className="sheet charcoal-sheet projects-sheet">
       <Reveal className="projects-heading"><h2>Projects.</h2><div className="ink-underline short" /><Scribble>work that left the notebook</Scribble></Reveal>
       <div className="project-gallery">
-        {projects.map((project, index) => (
+        {projects.map((project, index) => {
+          const phonePreview = project.title === 'Onchain Wizard' ? '/logos/pharos-network.png' : (project.phoneImage || project.image)
+          return (
           <Reveal className="project-item" key={project.title}>
             <Scribble className="project-note">{project.note} ↓</Scribble>
             <button className="device" onClick={() => setSelected(project)} aria-label={`View ${project.title} details`}>
               <div className="device-speaker" />
-              <div className="device-screen"><img src={project.phoneImage || project.image} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
+              <div className={`device-screen project-screen-${index}`}><img src={phonePreview} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
             </button>
             <Scribble className="project-number">{index + 1}. {project.title}</Scribble>
           </Reveal>
-        ))}
+          )
+        })}
       </div>
       {selected && <div className="project-modal" role="dialog" aria-modal="true" aria-label={`${selected.title} project details`} onClick={() => setSelected(null)}>
         <div className="project-modal-card" onClick={event => event.stopPropagation()}>
