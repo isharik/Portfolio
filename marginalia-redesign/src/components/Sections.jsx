@@ -397,7 +397,7 @@ export function Contact() {
         <p>I build where people, systems, and AI meet. If your team needs careful evaluation, dependable operations, clear customer communication, or thoughtful ecosystem content, I would love to hear what you are working on.</p>
         <p>I am comfortable with complex workflows, honest feedback, and the patient work required to make technology more useful.</p>
         <p>Let’s make something clear, reliable, and worth shipping.</p>
-        <div className="crt-signature" data-text="Sharik" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
+        <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
       </Reveal>
       <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
         <span className="booking-icon" aria-hidden="true">◷</span>
