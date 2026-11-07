@@ -53,7 +53,7 @@ export const projects = [
   { title: 'Proxima', note: 'agent marketplace', image: '/projects/proxima.png', phoneImage: '/projects/proxima-mobile.png', url: 'https://proxima-byecho.vercel.app/', description: 'A transparent marketplace for hiring autonomous agents on BNB Smart Chain.' },
   { title: 'Pharos Octobot', note: 'AI financial copilot', image: '/projects/octobot-v2.png', phoneImage: '/projects/octobot-mobile.png', url: 'https://pharos-octobot-by-echo.streamlit.app/', description: 'Conversational on-chain context and guidance for the Pharos ecosystem.' },
   { title: 'Onchain Wizard', note: 'developer workspace', image: '/projects/pharos-onchain-wizard.jpg', phoneImage: '/projects/wizard-mobile.png', url: 'https://pros-onchain-wizard.vercel.app/', description: 'Read chain data, monitor contracts, and prepare wallet-authorized actions.' },
-  { title: 'Pulse OS', note: 'AI operating system', image: '/projects/pulseos.png', phoneImage: '/projects/pulseos-mobile.png', url: 'https://pulse-os-one.vercel.app/', description: 'A unified AI-powered workspace for business operations.' },
+  { title: 'Pulse OS', note: 'AI operating system', image: '/projects/pulseos.png', phoneImage: '/projects/pulseos-phone.png', url: 'https://pulse-os-one.vercel.app/', description: 'A unified AI-powered workspace for business operations.' },
   { title: 'Prosper Atlas', note: '3D ecosystem map', image: '/projects/prosper.png', phoneImage: '/projects/prosper-mobile.png', url: 'https://prosper-atlas-echoplex.vercel.app/', description: 'An interactive map of the Prosper ecosystem on Pharos.' },
 ]
 
