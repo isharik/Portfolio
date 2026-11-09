@@ -380,11 +380,14 @@ export function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(form)),
       })
-      if (!response.ok) throw new Error('Message could not be sent.')
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}))
+        throw new Error(payload.error || 'Message could not be sent.')
+      }
       event.currentTarget.reset()
       setMessageStatus('Message sent — thank you.')
-    } catch {
-      setMessageStatus('Unable to send right now. Please email me directly.')
+    } catch (error) {
+      setMessageStatus(error.message || 'Unable to send right now. Please email me directly.')
     } finally {
       setIsSending(false)
     }
