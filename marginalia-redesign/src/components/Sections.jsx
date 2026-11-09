@@ -24,7 +24,7 @@ function MessageSphere({ phase = 'sending' }) {
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return undefined
 
-    const size = 156
+    const size = 188
     const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
     canvas.width = size * pixelRatio
     canvas.height = size * pixelRatio
@@ -41,8 +41,10 @@ function MessageSphere({ phase = 'sending' }) {
     }
 
     const styles = getComputedStyle(document.documentElement)
+    const highlight = styles.getPropertyValue('--sphere-highlight').trim() || '#707cff'
+    const success = styles.getPropertyValue('--sphere-success').trim() || '#49c77a'
     const ink = phase === 'complete'
-      ? '#49c77a'
+      ? success
       : (styles.getPropertyValue('--ink').trim() || '#f0efeb')
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let frame = 0
@@ -62,20 +64,28 @@ function MessageSphere({ phase = 'sending' }) {
         const rotatedZ = dot.z * cosine - dot.x * sine
         const rotatedY = dot.y * tiltCosine - rotatedZ * tiltSine
         const depth = rotatedZ * tiltCosine + dot.y * tiltSine
-        return { x: rotatedX, y: rotatedY, depth }
+        return { x: rotatedX, y: rotatedY, depth, waveSeed: dot.x * 5 + dot.y * 8 + dot.z * 3 }
       }).sort((a, b) => a.depth - b.depth)
 
       context.clearRect(0, 0, size, size)
-      context.fillStyle = ink
       projected.forEach(dot => {
         const perspective = 1 / (1.8 - dot.depth * .5)
         const radius = (.65 + (dot.depth + 1) * .65) * perspective
+        const wave = phase === 'sending' && !reducedMotion
+          ? Math.sin(now * .008 + dot.waveSeed)
+          : 0
+        const lit = phase === 'sending' && wave > .48
+        const verticalOffset = wave * 5.5 * perspective
         context.globalAlpha = .18 + ((dot.depth + 1) / 2) * .76
+        context.fillStyle = lit ? highlight : ink
+        context.shadowColor = lit ? highlight : 'transparent'
+        context.shadowBlur = lit ? 5 : 0
         context.beginPath()
-        context.arc(size / 2 + dot.x * 57 * perspective, size / 2 - dot.y * 57 * perspective, radius, 0, Math.PI * 2)
+        context.arc(size / 2 + dot.x * 69 * perspective, size / 2 - dot.y * 69 * perspective + verticalOffset, radius + (lit ? .32 : 0), 0, Math.PI * 2)
         context.fill()
       })
       context.globalAlpha = 1
+      context.shadowBlur = 0
       if (!reducedMotion) frame = requestAnimationFrame(draw)
     }
 
