@@ -114,10 +114,12 @@ export function SiteChrome({ theme, onTheme }) {
               <div className="voice-vinyl" aria-hidden="true"><i /><b /></div>
               <div className="voice-popover-copy">
                 <small>Personal voice note</small>
-                <strong>Meet Sharik · Intro</strong>
+                <strong>Meet Sharik</strong>
                 <span className="voice-wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>
               </div>
-              <button className="voice-popover-play" onClick={togglePlayback} aria-label={playing ? 'Pause voice note' : 'Play voice note'}><span>{playing ? 'Ⅱ' : '▶'}</span></button>
+              <button className={`voice-popover-play ${playing ? 'is-paused-state' : ''}`} onClick={togglePlayback} aria-label={playing ? 'Pause voice note' : 'Play voice note'}>
+                {playing ? <span className="voice-pause-mark" aria-hidden="true"><i /><i /></span> : <span className="voice-play-mark" aria-hidden="true" />}
+              </button>
               <button className="voice-popover-close" onClick={dismissVoiceNote} aria-label="Close voice note player">×</button>
             </section>
           )}
