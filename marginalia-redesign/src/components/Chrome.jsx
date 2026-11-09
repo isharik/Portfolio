@@ -22,6 +22,7 @@ export function SiteChrome({ theme, onTheme }) {
   const [active, setActive] = useState('Cover')
   const [open, setOpen] = useState(true)
   const [playing, setPlaying] = useState(false)
+  const [voiceOpen, setVoiceOpen] = useState(false)
   const audioRef = useRef(null)
   const lampSoundRef = useRef(null)
   const lampStartY = useRef(null)
@@ -62,6 +63,39 @@ export function SiteChrome({ theme, onTheme }) {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = event => {
+      if (event.key !== 'Escape' || !voiceOpen) return
+      audioRef.current?.pause()
+      setVoiceOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [voiceOpen])
+
+  const openVoiceNote = () => {
+    setVoiceOpen(true)
+    const audio = audioRef.current
+    if (!audio) return
+    audio.play().catch(() => {})
+  }
+
+  const togglePlayback = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (audio.paused) audio.play().catch(() => {})
+    else audio.pause()
+  }
+
+  const dismissVoiceNote = () => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
+    }
+    setVoiceOpen(false)
+  }
+
   return (
     <>
       <header className="folio-header">
@@ -69,21 +103,27 @@ export function SiteChrome({ theme, onTheme }) {
         <button className="index-button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
           Curriculum Vitae <span>{open ? '−' : '+'}</span>
         </button>
-        <button
-          className={`header-voice ${playing ? 'is-playing' : ''}`}
-          onClick={() => {
-            const audio = audioRef.current
-            if (!audio) return
-            if (playing) audio.pause()
-            else audio.play()
-          }}
-        >
-          <i aria-hidden>{playing ? 'Ⅱ' : '▶'}</i>
-          <span>voice note</span>
-          <b aria-hidden><u /><u /><u /><u /></b>
-        </button>
+        <div className="header-voice-wrap">
+          <button className={`header-voice ${playing ? 'is-playing' : ''}`} onClick={openVoiceNote} aria-haspopup="dialog" aria-expanded={voiceOpen}>
+            <i aria-hidden>{playing ? 'Ⅱ' : '▶'}</i>
+            <span>voice note</span>
+            <b aria-hidden><u /><u /><u /><u /></b>
+          </button>
+          {voiceOpen && (
+            <section className={`voice-popover ${playing ? 'is-playing' : ''}`} role="dialog" aria-label="Personal voice note player">
+              <div className="voice-vinyl" aria-hidden="true"><i /><b /></div>
+              <div className="voice-popover-copy">
+                <small>Personal voice note</small>
+                <strong>Meet Sharik · Intro</strong>
+                <span className="voice-wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>
+              </div>
+              <button className="voice-popover-play" onClick={togglePlayback} aria-label={playing ? 'Pause voice note' : 'Play voice note'}><span>{playing ? 'Ⅱ' : '▶'}</span></button>
+              <button className="voice-popover-close" onClick={dismissVoiceNote} aria-label="Close voice note player">×</button>
+            </section>
+          )}
+        </div>
         <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
-        <audio ref={audioRef} src="/recruiter-intro.mp3" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
+        <audio ref={audioRef} src="/recruiter-intro.mp3" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setVoiceOpen(false) }} />
         <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>
       <nav className={`folio-index ${open ? 'is-open' : ''}`} aria-label="Portfolio index">
