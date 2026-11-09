@@ -365,6 +365,31 @@ export function Facts() {
 }
 
 export function Contact() {
+  const [messageOpen, setMessageOpen] = useState(false)
+  const [messageStatus, setMessageStatus] = useState('')
+  const [isSending, setIsSending] = useState(false)
+
+  const sendDiscordMessage = async event => {
+    event.preventDefault()
+    const form = new FormData(event.currentTarget)
+    setIsSending(true)
+    setMessageStatus('')
+    try {
+      const response = await fetch('/api/discord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(form)),
+      })
+      if (!response.ok) throw new Error('Message could not be sent.')
+      event.currentTarget.reset()
+      setMessageStatus('Message sent — thank you.')
+    } catch {
+      setMessageStatus('Unable to send right now. Please email me directly.')
+    } finally {
+      setIsSending(false)
+    }
+  }
+
   return (
     <section id="contact" data-label="Contact" className="sheet paper-sheet contact-sheet">
       <Reveal className="contact-left">
@@ -380,11 +405,34 @@ export function Contact() {
         <p>Let’s make something clear, reliable, and worth shipping.</p>
         <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
       </Reveal>
-      <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
-        <span className="booking-icon" aria-hidden="true">◷</span>
-        <span><b>Book a 30-min call</b><small>Pick any open slot — we meet on Google Meet</small></span>
-        <i aria-hidden>↗</i>
-      </a>
+      <div className="contact-actions">
+        <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
+          <span className="booking-icon" aria-hidden="true">◷</span>
+          <span><b>Book a 30-min call</b><small>Pick an open slot on Google Meet</small></span>
+          <i aria-hidden>↗</i>
+        </a>
+        <button className="booking-card discord-card" type="button" onClick={() => { setMessageStatus(''); setMessageOpen(true) }}>
+          <span className="booking-icon" aria-hidden="true">✦</span>
+          <span><b>Send a message</b><small>Share an opportunity or idea</small></span>
+          <i aria-hidden>↗</i>
+        </button>
+      </div>
+      {messageOpen && <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
+        <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
+          <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
+          <Scribble>let’s talk</Scribble>
+          <h3 id="discord-message-title">Send Sharik a message</h3>
+          <p>Tell me what you’re building, hiring for, or hoping to solve. Your note will reach me privately on Discord.</p>
+          <form onSubmit={sendDiscordMessage}>
+            <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
+            <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
+            <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
+            <label>Message<textarea name="message" required rows="4" maxLength="1500" /></label>
+            <button className="discord-submit" type="submit" disabled={isSending}>{isSending ? 'Sending…' : 'Send message ↗'}</button>
+            <p className="discord-status" aria-live="polite">{messageStatus}</p>
+          </form>
+        </section>
+      </div>}
     </section>
   )
 }

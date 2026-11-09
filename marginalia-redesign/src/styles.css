@@ -355,14 +355,23 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .contact-signature { display: inline-block; margin-top: 4px; color: var(--blue); transform: rotate(-2deg); }
 .contact-signature .ink-signature { font: 48px/.8 var(--hand); letter-spacing: .015em; }
 .contact-letter.is-visible .ink-signature-deferred { animation: ink-signature-in 1.15s cubic-bezier(.2,.82,.18,1) .18s forwards; }
-.booking-card { grid-column: 1 / -1; justify-self: center; display: grid; grid-template-columns: 42px minmax(0,1fr) 18px; gap: 14px; align-items: center; width: min(680px,72%); min-height: 72px; margin-top: -28px; padding: 12px 17px; border: 1px solid color-mix(in srgb,var(--blue) 24%,var(--hairline)); border-radius: 16px; background: color-mix(in srgb,var(--charcoal) 5%,var(--paper)); box-shadow: 0 12px 32px rgba(20,20,24,.06); transition: transform .28s ease,border-color .28s ease,box-shadow .28s ease; }
+.contact-actions { grid-column: 1 / -1; justify-self: center; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; width: min(700px,78%); margin-top: -28px; }
+.booking-card { display: grid; grid-template-columns: 38px minmax(0,1fr) 16px; gap: 11px; align-items: center; min-height: 64px; padding: 10px 14px; border: 1px solid color-mix(in srgb,var(--blue) 24%,var(--hairline)); border-radius: 14px; background: color-mix(in srgb,var(--charcoal) 5%,var(--paper)); box-shadow: 0 12px 32px rgba(20,20,24,.06); color: inherit; text-align: left; transition: transform .28s ease,border-color .28s ease,box-shadow .28s ease; }
 .booking-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb,var(--blue) 62%,var(--hairline)); box-shadow: 0 18px 42px rgba(20,20,24,.1); }
-.booking-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 11px; background: color-mix(in srgb,var(--blue) 25%,var(--paper)); color: var(--ink); font: 23px var(--sans); }
+.booking-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 10px; background: color-mix(in srgb,var(--blue) 25%,var(--paper)); color: var(--ink); font: 20px var(--sans); }
 .booking-card > span:nth-child(2) { display: grid; gap: 5px; }
-.booking-card b { font-size: 18px; letter-spacing: -.02em; }
-.booking-card small { color: var(--soft-ink); font-size: 13px; }
+.booking-card b { font-size: 15px; letter-spacing: -.02em; }
+.booking-card small { color: var(--soft-ink); font-size: 11px; }
 .booking-card > i { color: var(--soft-ink); font-style: normal; font-size: 18px; transition: color .2s ease,transform .2s ease; }
 .booking-card:hover > i { color: var(--blue); transform: translate(2px,-2px); }
+.discord-card { width: 100%; font: inherit; cursor: pointer; }
+.discord-dialog-backdrop { position: fixed; z-index: 220; inset: 0; display: grid; place-items: center; padding: 24px; background: color-mix(in srgb,var(--ink) 38%,transparent); backdrop-filter: blur(8px); animation: modal-fade .2s ease both; }
+.discord-dialog { position: relative; width: min(100%,500px); padding: 30px; border: 1px solid color-mix(in srgb,var(--blue) 38%,var(--hairline)); border-radius: 18px; background: var(--paper); color: var(--ink); box-shadow: 0 24px 60px color-mix(in srgb,var(--ink) 25%,transparent); transform-origin: 50% 30%; animation: voice-popover-in .28s var(--ease-out) both; }
+.discord-dialog .scribble { display: block; margin-bottom: 10px; font-size: 21px; }.discord-dialog h3 { margin: 0 0 8px; font: 31px/1 var(--serif); }.discord-dialog > p { max-width: 410px; margin: 0 0 21px; color: var(--soft-ink); line-height: 1.5; }
+.discord-dialog form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }.discord-dialog label { display: grid; gap: 6px; color: var(--soft-ink); font-size: 12px; }.discord-dialog label:nth-of-type(3),.discord-dialog label:nth-of-type(4) { grid-column: 1 / -1; }
+.discord-dialog input,.discord-dialog select,.discord-dialog textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--hairline); border-radius: 9px; outline: none; background: color-mix(in srgb,var(--paper-2) 74%,var(--paper)); color: var(--ink); font: 14px var(--sans); padding: 10px 11px; resize: vertical; transition: border-color .2s ease,box-shadow .2s ease; }.discord-dialog input:focus,.discord-dialog select:focus,.discord-dialog textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb,var(--blue) 15%,transparent); }
+.discord-submit { grid-column: 1 / -1; justify-self: start; border: 1px solid var(--blue); border-radius: 999px; background: color-mix(in srgb,var(--blue) 12%,var(--paper)); color: var(--ink); padding: 10px 16px; cursor: pointer; transition: transform .2s var(--ease-out),background .2s ease; }.discord-submit:hover:not(:disabled) { transform: translateY(-2px); background: color-mix(in srgb,var(--blue) 22%,var(--paper)); }.discord-submit:disabled { opacity: .65; cursor: wait; }
+.discord-dialog-close { position: absolute; top: 13px; right: 14px; display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--hairline); border-radius: 50%; background: transparent; color: var(--soft-ink); cursor: pointer; font-size: 19px; }.discord-status { grid-column: 1 / -1; min-height: 18px; margin: -4px 0 0; color: var(--blue); font-size: 12px; }
 
 .folio-footer { min-height: 175px; padding: 72px 58px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--hairline); color: var(--soft-ink); font-size: 13px; }
 .folio-footer a { justify-self: end; color: var(--blue); font: 22px var(--hand); }
@@ -458,11 +467,12 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .facts-grid { grid-template-columns: 1fr; gap: 36px; margin-top: 45px; }
   .contact-sheet { gap: 55px; }
   .contact-letter { font-size: 24px; }
-  .booking-card { grid-template-columns: 44px minmax(0,1fr) 16px; min-height: 82px; margin-top: 0; padding: 14px; gap: 12px; }
-  .booking-card { width: 100%; }
+  .contact-actions { width: 100%; margin-top: 0; grid-template-columns: 1fr; }
+  .booking-card { grid-template-columns: 44px minmax(0,1fr) 16px; min-height: 72px; padding: 14px; gap: 12px; }
   .booking-icon { width: 42px; height: 42px; border-radius: 11px; font-size: 23px; }
   .booking-card b { font-size: 16px; }
   .booking-card small { font-size: 11px; line-height: 1.4; }
+  .discord-dialog { padding: 25px 20px; }.discord-dialog form { grid-template-columns: 1fr; }.discord-dialog label { grid-column: 1 / -1!important; }
   .folio-footer { width: 100%; padding: 48px 22px 80px; grid-template-columns: 1fr 1fr; gap: 24px; }
   .theme-toggle { right: 12px; bottom: 12px; }
 }
