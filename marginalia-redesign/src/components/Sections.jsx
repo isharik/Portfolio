@@ -16,7 +16,7 @@ function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
 
-function MessageSphere({ phase = 'sending' }) {
+function MessageSphere({ phase = 'sending', size = 188 }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -24,8 +24,8 @@ function MessageSphere({ phase = 'sending' }) {
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return undefined
 
-    const size = 188
     const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
+    const sphereRadius = size * .367
     canvas.width = size * pixelRatio
     canvas.height = size * pixelRatio
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
@@ -70,18 +70,18 @@ function MessageSphere({ phase = 'sending' }) {
       context.clearRect(0, 0, size, size)
       projected.forEach(dot => {
         const perspective = 1 / (1.8 - dot.depth * .5)
-        const radius = (.65 + (dot.depth + 1) * .65) * perspective
+        const radius = (.65 + (dot.depth + 1) * .65) * perspective * (size / 188)
         const wave = phase === 'sending' && !reducedMotion
           ? Math.sin(now * .008 + dot.waveSeed)
           : 0
         const lit = phase === 'sending' && wave > .48
-        const verticalOffset = wave * 5.5 * perspective
+        const verticalOffset = wave * size * .029 * perspective
         context.globalAlpha = .18 + ((dot.depth + 1) / 2) * .76
         context.fillStyle = lit ? highlight : ink
         context.shadowColor = lit ? highlight : 'transparent'
         context.shadowBlur = lit ? 5 : 0
         context.beginPath()
-        context.arc(size / 2 + dot.x * 69 * perspective, size / 2 - dot.y * 69 * perspective + verticalOffset, radius + (lit ? .32 : 0), 0, Math.PI * 2)
+        context.arc(size / 2 + dot.x * sphereRadius * perspective, size / 2 - dot.y * sphereRadius * perspective + verticalOffset, radius + (lit ? .32 : 0), 0, Math.PI * 2)
         context.fill()
       })
       context.globalAlpha = 1
@@ -91,9 +91,9 @@ function MessageSphere({ phase = 'sending' }) {
 
     frame = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(frame)
-  }, [phase])
+  }, [phase, size])
 
-  return <div className={`message-sphere-stage is-${phase}`} aria-hidden="true"><canvas className="message-sphere" ref={canvasRef} /></div>
+  return <div className={`message-sphere-stage is-${phase}`} style={{ '--sphere-size': `${size}px` }} aria-hidden="true"><canvas className="message-sphere" ref={canvasRef} /></div>
 }
 
 export function Cover() {
@@ -513,13 +513,13 @@ export function Contact() {
           <i aria-hidden>↗</i>
         </button>
       </div>
-      {messageOpen && <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
+      {messageOpen && (isSending ? <div className="message-sending-screen" role="status" aria-live="polite">
+        <MessageSphere phase={sendPhase} size={264} />
+        <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
+      </div> : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
-          {isSending ? <div className="message-processing" role="status" aria-live="polite">
-            <MessageSphere phase={sendPhase} />
-            <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
-          </div> : messageSent ? <div className="message-success" role="status">
+          {messageSent ? <div className="message-success" role="status">
             <span className="message-success-mark" aria-hidden="true">✓</span>
             <Scribble>received</Scribble>
             <h3 id="discord-message-title">Message sent</h3>
@@ -538,7 +538,7 @@ export function Contact() {
           </form>
           </>}
         </section>
-      </div>}
+      </div>)}
     </section>
   )
 }
