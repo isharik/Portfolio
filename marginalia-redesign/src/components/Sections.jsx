@@ -453,7 +453,7 @@ export function Contact() {
   const [sendPhase, setSendPhase] = useState('sending')
 
   useEffect(() => {
-    if (!isSending) return undefined
+    if (!isSending && !messageSent) return undefined
 
     const previousBodyOverflow = document.body.style.overflow
     const previousHtmlOverflow = document.documentElement.style.overflow
@@ -464,7 +464,7 @@ export function Contact() {
       document.body.style.overflow = previousBodyOverflow
       document.documentElement.style.overflow = previousHtmlOverflow
     }
-  }, [isSending])
+  }, [isSending, messageSent])
 
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
 
@@ -528,19 +528,20 @@ export function Contact() {
           <i aria-hidden>↗</i>
         </button>
       </div>
-      {messageOpen && (isSending ? createPortal(<div className="message-sending-screen" role="status" aria-live="polite">
-        <MessageSphere phase={sendPhase} size={264} />
-        <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
+      {messageOpen && ((isSending || messageSent) ? createPortal(<div className={`message-sending-screen${messageSent ? ' is-sent' : ''}`} role="status" aria-live="polite">
+        {isSending ? <><MessageSphere phase={sendPhase} size={264} />
+          <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
+        </> : <div className="message-sent-popover">
+          <span className="message-success-mark" aria-hidden="true">✓</span>
+          <Scribble>received</Scribble>
+          <h3 id="discord-message-title">Message sent</h3>
+          <p>Thank you — I’ll reply to the email you provided as soon as I can.</p>
+          <button className="discord-submit message-back" type="button" onClick={() => { setMessageSent(false); setMessageStatus('') }}>← Send another message</button>
+        </div>}
       </div>, document.body) : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
-          {messageSent ? <div className="message-success" role="status">
-            <span className="message-success-mark" aria-hidden="true">✓</span>
-            <Scribble>received</Scribble>
-            <h3 id="discord-message-title">Message sent</h3>
-            <p>Thank you — I’ll reply to the email you provided as soon as I can.</p>
-            <button className="discord-submit message-back" type="button" onClick={() => { setMessageSent(false); setMessageStatus('') }}>← Send another message</button>
-          </div> : <>
+          <>
           <Scribble>let’s talk</Scribble>
           <h3 id="discord-message-title">Send me a message</h3>
           <p>Tell me what you’re building, hiring for, or hoping to solve. I’ll reply to the email you provide.</p>
@@ -551,7 +552,7 @@ export function Contact() {
             <label className="message-field">Message<textarea name="message" required rows="4" maxLength="1500" /><button className="message-send-icon" type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5 20 12 4 18.5l2.2-5.2L13 12 6.2 10.7z" /></svg></button></label>
             <p className="discord-status" aria-live="polite">{messageStatus}</p>
           </form>
-          </>}
+          </>
         </section>
       </div>)}
     </section>
