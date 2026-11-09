@@ -24,9 +24,14 @@ export default function App() {
       nodes.forEach(node => node.classList.add('is-visible'))
       return
     }
+    // A reveal is a one-way state. Toggling it back off around an
+    // intersection threshold made completed sections replay their vertical
+    // transition while the reader continued down the page, causing flicker.
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        entry.target.classList.toggle('is-visible', entry.isIntersecting)
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        observer.unobserve(entry.target)
       })
     }, { threshold: 0.08, rootMargin: '-4% 0px -4%' })
     nodes.forEach(node => observer.observe(node))
