@@ -368,10 +368,12 @@ export function Contact() {
   const [messageOpen, setMessageOpen] = useState(false)
   const [messageStatus, setMessageStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [messageSent, setMessageSent] = useState(false)
 
-  const sendDiscordMessage = async event => {
+  const sendMessage = async event => {
     event.preventDefault()
-    const form = new FormData(event.currentTarget)
+    const formElement = event.currentTarget
+    const form = new FormData(formElement)
     setIsSending(true)
     setMessageStatus('')
     try {
@@ -384,8 +386,8 @@ export function Contact() {
         const payload = await response.json().catch(() => ({}))
         throw new Error(payload.error || 'Message could not be sent.')
       }
-      event.currentTarget.reset()
-      setMessageStatus('Message sent — thank you.')
+      formElement.reset()
+      setMessageSent(true)
     } catch (error) {
       setMessageStatus(error.message || 'Unable to send right now. Please email me directly.')
     } finally {
@@ -414,26 +416,34 @@ export function Contact() {
           <span><b>Book a 30-min call</b><small>Pick an open slot on Google Meet</small></span>
           <i aria-hidden>↗</i>
         </a>
-        <button className="booking-card discord-card" type="button" onClick={() => { setMessageStatus(''); setMessageOpen(true) }}>
+        <button className="booking-card discord-card" type="button" onClick={() => { setMessageStatus(''); setMessageSent(false); setMessageOpen(true) }}>
           <span className="booking-icon" aria-hidden="true">✦</span>
-          <span><b>Send a message</b><small>Share an opportunity or idea</small></span>
+          <span><b>Email me here</b><small>Send a message or opportunity</small></span>
           <i aria-hidden>↗</i>
         </button>
       </div>
       {messageOpen && <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
+          {messageSent ? <div className="message-success" role="status">
+            <span className="message-success-mark" aria-hidden="true">👍</span>
+            <Scribble>received</Scribble>
+            <h3 id="discord-message-title">Message sent</h3>
+            <p>Thank you — I’ll reply to the email you provided as soon as I can.</p>
+            <button className="discord-submit message-back" type="button" onClick={() => { setMessageSent(false); setMessageStatus('') }}>← Send another message</button>
+          </div> : <>
           <Scribble>let’s talk</Scribble>
-          <h3 id="discord-message-title">Send Sharik a message</h3>
-          <p>Tell me what you’re building, hiring for, or hoping to solve. Your note will reach me privately on Discord.</p>
-          <form onSubmit={sendDiscordMessage}>
+          <h3 id="discord-message-title">Send me a message</h3>
+          <p>Tell me what you’re building, hiring for, or hoping to solve. I’ll reply to the email you provide.</p>
+          <form onSubmit={sendMessage}>
             <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
             <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
             <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
             <label>Message<textarea name="message" required rows="4" maxLength="1500" /></label>
-            <button className="discord-submit" type="submit" disabled={isSending}>{isSending ? 'Sending…' : 'Send message ↗'}</button>
+            <button className={`discord-submit ${isSending ? 'is-sending' : ''}`} type="submit" disabled={isSending}>{isSending ? <><span className="send-loader" aria-hidden="true" />Sending message…</> : 'Send message ↗'}</button>
             <p className="discord-status" aria-live="polite">{messageStatus}</p>
           </form>
+          </>}
         </section>
       </div>}
     </section>
