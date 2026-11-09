@@ -16,7 +16,7 @@ function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
 
-function MessageSphere() {
+function MessageSphere({ phase = 'sending' }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function MessageSphere() {
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return undefined
 
-    const size = 118
+    const size = 156
     const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
     canvas.width = size * pixelRatio
     canvas.height = size * pixelRatio
@@ -41,7 +41,9 @@ function MessageSphere() {
     }
 
     const styles = getComputedStyle(document.documentElement)
-    const ink = styles.getPropertyValue('--ink').trim() || '#f0efeb'
+    const ink = phase === 'complete'
+      ? '#49c77a'
+      : (styles.getPropertyValue('--ink').trim() || '#f0efeb')
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let frame = 0
     let angle = 0
@@ -70,7 +72,7 @@ function MessageSphere() {
         const radius = (.65 + (dot.depth + 1) * .65) * perspective
         context.globalAlpha = .18 + ((dot.depth + 1) / 2) * .76
         context.beginPath()
-        context.arc(size / 2 + dot.x * 43 * perspective, size / 2 - dot.y * 43 * perspective, radius, 0, Math.PI * 2)
+        context.arc(size / 2 + dot.x * 57 * perspective, size / 2 - dot.y * 57 * perspective, radius, 0, Math.PI * 2)
         context.fill()
       })
       context.globalAlpha = 1
@@ -79,9 +81,9 @@ function MessageSphere() {
 
     frame = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(frame)
-  }, [])
+  }, [phase])
 
-  return <canvas className="message-sphere" ref={canvasRef} aria-hidden="true" />
+  return <div className={`message-sphere-stage is-${phase}`} aria-hidden="true"><canvas className="message-sphere" ref={canvasRef} /></div>
 }
 
 export function Cover() {
@@ -437,6 +439,7 @@ export function Contact() {
   const [messageStatus, setMessageStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [messageSent, setMessageSent] = useState(false)
+  const [sendPhase, setSendPhase] = useState('sending')
 
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
 
@@ -446,6 +449,7 @@ export function Contact() {
     const form = new FormData(formElement)
     const startedAt = performance.now()
     setIsSending(true)
+    setSendPhase('sending')
     setMessageStatus('')
     try {
       const response = await fetch('/api/discord', {
@@ -459,13 +463,16 @@ export function Contact() {
       }
       // Let the compact send-orbit complete even when the endpoint responds
       // instantly, so the confirmation never feels like a visual flash.
-      await wait(Math.max(0, 3200 - (performance.now() - startedAt)))
+      await wait(Math.max(0, 2700 - (performance.now() - startedAt)))
+      setSendPhase('complete')
+      await wait(680)
       formElement.reset()
       setMessageSent(true)
     } catch (error) {
       setMessageStatus(error.message || 'Unable to send right now. Please email me directly.')
     } finally {
       setIsSending(false)
+      setSendPhase('sending')
     }
   }
 
@@ -500,7 +507,7 @@ export function Contact() {
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
           {isSending ? <div className="message-processing" role="status" aria-live="polite">
-            <MessageSphere />
+            <MessageSphere phase={sendPhase} />
             <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
           </div> : messageSent ? <div className="message-success" role="status">
             <span className="message-success-mark" aria-hidden="true">✓</span>
