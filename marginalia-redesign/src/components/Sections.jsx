@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import QRCode from 'qrcode'
 import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
@@ -451,6 +452,20 @@ export function Contact() {
   const [messageSent, setMessageSent] = useState(false)
   const [sendPhase, setSendPhase] = useState('sending')
 
+  useEffect(() => {
+    if (!isSending) return undefined
+
+    const previousBodyOverflow = document.body.style.overflow
+    const previousHtmlOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousHtmlOverflow
+    }
+  }, [isSending])
+
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
 
   const sendMessage = async event => {
@@ -513,10 +528,10 @@ export function Contact() {
           <i aria-hidden>↗</i>
         </button>
       </div>
-      {messageOpen && (isSending ? <div className="message-sending-screen" role="status" aria-live="polite">
+      {messageOpen && (isSending ? createPortal(<div className="message-sending-screen" role="status" aria-live="polite">
         <MessageSphere phase={sendPhase} size={264} />
         <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
-      </div> : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
+      </div>, document.body) : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
           {messageSent ? <div className="message-success" role="status">
