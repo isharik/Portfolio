@@ -391,7 +391,7 @@ export function Contact() {
       }
       // Let the compact send-orbit complete even when the endpoint responds
       // instantly, so the confirmation never feels like a visual flash.
-      await wait(Math.max(0, 780 - (performance.now() - startedAt)))
+      await wait(Math.max(0, 3200 - (performance.now() - startedAt)))
       formElement.reset()
       setMessageSent(true)
     } catch (error) {
@@ -433,9 +433,7 @@ export function Contact() {
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
           {isSending ? <div className="message-processing" role="status" aria-live="polite">
             <div className="message-orbit" aria-hidden="true"><i /><b /></div>
-            <Scribble>sending</Scribble>
-            <h3>Sending your message</h3>
-            <p>One moment — this is on its way.</p>
+            <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
           </div> : messageSent ? <div className="message-success" role="status">
             <span className="message-success-mark" aria-hidden="true">✓</span>
             <Scribble>received</Scribble>
@@ -450,8 +448,7 @@ export function Contact() {
             <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
             <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
             <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
-            <label>Message<textarea name="message" required rows="4" maxLength="1500" /></label>
-            <button className={`discord-submit ${isSending ? 'is-sending' : ''}`} type="submit" disabled={isSending}>{isSending ? <><span className="send-loader" aria-hidden="true" />Sending message…</> : 'Send message ↗'}</button>
+            <label className="message-field">Message<textarea name="message" required rows="4" maxLength="1500" /><button className="message-send-icon" type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5 20 12 4 18.5l2.2-5.2L13 12 6.2 10.7z" /></svg></button></label>
             <p className="discord-status" aria-live="polite">{messageStatus}</p>
           </form>
           </>}
