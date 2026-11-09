@@ -16,6 +16,74 @@ function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
 
+function MessageSphere() {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const context = canvas?.getContext('2d')
+    if (!canvas || !context) return undefined
+
+    const size = 118
+    const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
+    canvas.width = size * pixelRatio
+    canvas.height = size * pixelRatio
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+
+    const dots = []
+    for (let ring = 0; ring <= 15; ring += 1) {
+      const latitude = (ring / 15) * Math.PI
+      const count = Math.max(5, Math.round(Math.sin(latitude) * 27))
+      for (let point = 0; point < count; point += 1) {
+        const longitude = (point / count) * Math.PI * 2 + ring * .31
+        dots.push({ x: Math.sin(latitude) * Math.cos(longitude), y: Math.cos(latitude), z: Math.sin(latitude) * Math.sin(longitude) })
+      }
+    }
+
+    const styles = getComputedStyle(document.documentElement)
+    const ink = styles.getPropertyValue('--ink').trim() || '#f0efeb'
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let frame = 0
+    let angle = 0
+    let previous = performance.now()
+
+    const draw = now => {
+      const delta = Math.min(.04, (now - previous) / 1000)
+      previous = now
+      if (!reducedMotion) angle += delta * 1.35
+      const cosine = Math.cos(angle)
+      const sine = Math.sin(angle)
+      const tiltCosine = Math.cos(.38)
+      const tiltSine = Math.sin(.38)
+      const projected = dots.map(dot => {
+        const rotatedX = dot.x * cosine + dot.z * sine
+        const rotatedZ = dot.z * cosine - dot.x * sine
+        const rotatedY = dot.y * tiltCosine - rotatedZ * tiltSine
+        const depth = rotatedZ * tiltCosine + dot.y * tiltSine
+        return { x: rotatedX, y: rotatedY, depth }
+      }).sort((a, b) => a.depth - b.depth)
+
+      context.clearRect(0, 0, size, size)
+      context.fillStyle = ink
+      projected.forEach(dot => {
+        const perspective = 1 / (1.8 - dot.depth * .5)
+        const radius = (.65 + (dot.depth + 1) * .65) * perspective
+        context.globalAlpha = .18 + ((dot.depth + 1) / 2) * .76
+        context.beginPath()
+        context.arc(size / 2 + dot.x * 43 * perspective, size / 2 - dot.y * 43 * perspective, radius, 0, Math.PI * 2)
+        context.fill()
+      })
+      context.globalAlpha = 1
+      if (!reducedMotion) frame = requestAnimationFrame(draw)
+    }
+
+    frame = requestAnimationFrame(draw)
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  return <canvas className="message-sphere" ref={canvasRef} aria-hidden="true" />
+}
+
 export function Cover() {
   return (
     <section id="home" data-label="Cover" className="sheet cover-sheet paper-sheet">
@@ -432,7 +500,7 @@ export function Contact() {
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
           {isSending ? <div className="message-processing" role="status" aria-live="polite">
-            <div className="message-orbit" aria-hidden="true"><i /><b /></div>
+            <MessageSphere />
             <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
           </div> : messageSent ? <div className="message-success" role="status">
             <span className="message-success-mark" aria-hidden="true">✓</span>
