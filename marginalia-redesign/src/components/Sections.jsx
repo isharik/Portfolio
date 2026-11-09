@@ -370,10 +370,13 @@ export function Contact() {
   const [isSending, setIsSending] = useState(false)
   const [messageSent, setMessageSent] = useState(false)
 
+  const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
+
   const sendMessage = async event => {
     event.preventDefault()
     const formElement = event.currentTarget
     const form = new FormData(formElement)
+    const startedAt = performance.now()
     setIsSending(true)
     setMessageStatus('')
     try {
@@ -386,6 +389,9 @@ export function Contact() {
         const payload = await response.json().catch(() => ({}))
         throw new Error(payload.error || 'Message could not be sent.')
       }
+      // Let the compact send-orbit complete even when the endpoint responds
+      // instantly, so the confirmation never feels like a visual flash.
+      await wait(Math.max(0, 780 - (performance.now() - startedAt)))
       formElement.reset()
       setMessageSent(true)
     } catch (error) {
@@ -425,8 +431,13 @@ export function Contact() {
       {messageOpen && <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
           <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
-          {messageSent ? <div className="message-success" role="status">
-            <span className="message-success-mark" aria-hidden="true">👍</span>
+          {isSending ? <div className="message-processing" role="status" aria-live="polite">
+            <div className="message-orbit" aria-hidden="true"><i /><b /></div>
+            <Scribble>sending</Scribble>
+            <h3>Sending your message</h3>
+            <p>One moment — this is on its way.</p>
+          </div> : messageSent ? <div className="message-success" role="status">
+            <span className="message-success-mark" aria-hidden="true">✓</span>
             <Scribble>received</Scribble>
             <h3 id="discord-message-title">Message sent</h3>
             <p>Thank you — I’ll reply to the email you provided as soon as I can.</p>
