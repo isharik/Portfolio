@@ -428,20 +428,52 @@ export function Projects() {
 }
 
 export function Facts() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const wheelLock = useRef(0)
+  const wheelDistance = useRef(0)
   const personalFacts = [
-    { icon: '🎮', title: 'Gaming', text: 'Strategy, worlds, and systems that reward curiosity.' },
-    { icon: '🎬', title: 'Movies', text: 'Science fiction, thrillers, and stories with something to unpack.' },
-    { icon: '₿', title: 'Crypto & Web3', text: 'On-chain products, ecosystems, and the communities forming around them.' },
-    { icon: '✎', title: 'Content creation', text: 'Threads and explainers that make emerging technology easier to enter.' },
-    { icon: '◉', title: 'Human in the loop', text: 'I care about the judgment behind quality AI systems.' },
-    { icon: '☕', title: 'Always learning', text: 'New tools are interesting; knowing when to use them is the real craft.' },
+    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS · @echoplexfps', text: 'FPS clips, strategy sessions, and game worlds that reward curiosity.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube' },
+    { icon: '𝕏', eyebrow: 'Profile 02', title: 'Content creation', handle: 'X · @isharik99', text: 'Threads and explainers that make emerging technology easier to enter.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile' },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'I have probably watched your favourite show — give me a film and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies' },
+    { icon: '₿', eyebrow: 'Field notes 04', title: 'Crypto & Web3', handle: 'X · @isharik99', text: 'On-chain products, ecosystems, and the communities forming around them.', highlights: ['Pharos ecosystem', 'Wallet-aware flows', 'Web3 content & communities'], href: 'https://x.com/isharik99', action: 'Read on X' },
   ]
+  const activeFact = personalFacts[activeIndex]
+  const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
+  const handleWheel = event => {
+    if (Math.abs(event.deltaY) < 4) return
+    const now = performance.now()
+    if (now - wheelLock.current < 520) return
+    wheelDistance.current += event.deltaY
+    if (Math.abs(wheelDistance.current) < 34) return
+    const direction = wheelDistance.current > 0 ? 1 : -1
+    wheelDistance.current = 0
+    if ((direction > 0 && activeIndex === personalFacts.length - 1) || (direction < 0 && activeIndex === 0)) return
+    event.preventDefault()
+    wheelLock.current = now
+    move(direction)
+  }
   return (
-    <section data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
+    <section data-label="Beyond the CV" className="sheet paper-sheet facts-sheet" onWheel={handleWheel}>
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
-      <Reveal className="facts-heading"><h2>Beyond the CV</h2><div className="ink-underline" /></Reveal>
-      <div className="facts-grid">
-        {personalFacts.map(fact => <Reveal className="fact" key={fact.title}><strong>{fact.icon}</strong><h3>{fact.title}</h3><p>{fact.text}</p></Reveal>)}
+      <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
+      <div className="facts-orbits" aria-hidden="true"><i /><i /><i /></div>
+      <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
+        <div className="facts-stage" key={activeFact.title}>
+          {activeFact.artwork === 'movies' && <div className="movie-collage" aria-hidden="true"><i /><i /><i /></div>}
+          <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
+          <div className="facts-stage-main">
+            <strong className="facts-stage-icon" aria-hidden="true">{activeFact.icon}</strong>
+            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></div>
+          </div>
+          <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
+          {activeFact.href ? <a className="facts-link" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} <b>↗</b></a> : <span className="facts-link is-static">{activeFact.action}</span>}
+        </div>
+        <nav className="facts-controls" aria-label="Change Beyond the CV card">
+          <button type="button" onClick={() => move(-1)} disabled={activeIndex === 0} aria-label="Previous card">←</button>
+          <div>{personalFacts.map((fact, index) => <button type="button" className={index === activeIndex ? 'is-active' : ''} onClick={() => setActiveIndex(index)} key={fact.title} aria-label={`Show ${fact.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}</div>
+          <button type="button" onClick={() => move(1)} disabled={activeIndex === personalFacts.length - 1} aria-label="Next card">→</button>
+        </nav>
+        <p className="facts-scroll-hint">Scroll or use the arrows to turn the page</p>
       </div>
     </section>
   )
@@ -565,15 +597,15 @@ export function Contact() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="discord-message-title"
-          onPointerDownCapture={event => event.stopPropagation()}
-          onClickCapture={event => event.stopPropagation()}
+          onPointerDown={event => event.stopPropagation()}
+          onClick={event => event.stopPropagation()}
         >
-          <button className="discord-dialog-close" type="button" onClick={closeMessage} aria-label="Close message form">×</button>
+          <button className="discord-dialog-close" type="button" onPointerDown={event => { event.preventDefault(); event.stopPropagation(); closeMessage() }} onClick={event => { event.stopPropagation(); closeMessage() }} aria-label="Close message form">×</button>
           <>
           <Scribble>let’s talk</Scribble>
           <h3 id="discord-message-title">Send me a message</h3>
           <p>Tell me what you’re building, hiring for, or hoping to solve. I’ll reply to the email you provide.</p>
-          <form onSubmit={sendMessage} onPointerDownCapture={event => event.stopPropagation()}>
+          <form onSubmit={sendMessage} onPointerDown={event => event.stopPropagation()}>
             <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
             <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
             <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
