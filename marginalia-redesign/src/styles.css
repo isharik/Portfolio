@@ -436,8 +436,15 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .sheet-foot { left: 22px; right: 22px; font-size: 10px; }
   .about-sheet, .education-sheet, .contact-sheet { grid-template-columns: 1fr; }
   .about-sheet { gap: 40px; }
-  .portrait-notes { min-height: 540px; transform: none; margin-inline: -10px; }
-  .portrait-notes .n1 { left: 10%; }.portrait-notes .n2 { right: 5%; }.portrait-notes .n3 { left: -3%; }.portrait-notes .n4 { right: 0; }.portrait-notes .n5 { left: 15%; bottom: -1%; }.portrait-notes .n6 { right: 11%; bottom: -1%; }
+  .portrait-notes { min-height: 590px; transform: none; margin-inline: -10px; }
+  .portrait-notes .n1 { left: 11%; top: 8px; }.portrait-notes .n2 { right: 7%; top: 8px; }
+  .portrait-notes .n3 { left: 1%; top: 42%; }.portrait-notes .n4 { right: 2%; top: 42%; }
+  /* Keep the lower annotations independent, below the portrait, and point each
+     arrow back toward the frame rather than toward the other annotation. */
+  .portrait-notes .n5 { left: 15%; bottom: -4%; }
+  .portrait-notes .n6 { right: 13%; bottom: -4%; }
+  .portrait-notes .n5 svg { left: calc(100% + 14px); top: -52px; transform: rotate(-101deg); }
+  .portrait-notes .n6 svg { right: calc(100% + 14px); top: -52px; transform: scaleX(-1) rotate(-101deg); }
   .about-copy p { font-size: 15px; }
   .education-sheet { padding-top: 104px; }
   .education-main { grid-template-columns: 1fr; row-gap: 46px; padding: 28px 20px 24px 42px; }
@@ -454,14 +461,20 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .languages-card { padding: 22px 20px; }
   .language-list > div { grid-template-columns: 78px 76px 1fr; gap: 6px; font-size: 13px; }
   .credential-list li::before { left: -26px; }
-  .credential-list a { grid-template-columns: 22px 38px minmax(0,1fr) auto; grid-template-rows: 23px 19px 18px; gap: 3px 8px; min-height: 73px; padding: 11px 0; }
-  .credential-list a > i { grid-column: 1; grid-row: 1 / span 3; }
-  .credential-list a > .credential-logo { grid-column: 2; grid-row: 1 / span 3; }
-  .credential-list a > b { grid-column: 3; grid-row: 1; font-size: 16px; }
-  .credential-list a > span:not(.credential-logo) { grid-column: 3; grid-row: 2; font-size: 11px; }
-  .credential-list a > span:nth-of-type(2) { grid-column: 4; grid-row: 1; font-size: 10px; }
-  .credential-list a > em { grid-column: 3 / -1; grid-row: 3; font-size: 10px; }
-  .credential-list a > u { grid-column: 4; grid-row: 3; }
+  /* Mobile credentials use one text column with a dedicated action column.
+     This prevents long degree names from colliding with their dates and CTAs. */
+  .credential-list a { grid-template-columns: 16px 40px minmax(0,1fr) 32px; grid-template-rows: auto 18px 18px 18px; gap: 3px 8px; min-height: 0; padding: 14px 0 16px; align-items: start; }
+  .credential-list a > i { grid-column: 1; grid-row: 1 / span 4; align-self: center; }
+  .credential-list a > .credential-logo { grid-column: 2; grid-row: 1 / span 4; align-self: center; }
+  .credential-list a > b { grid-column: 3; grid-row: 1; min-width: 0; font-size: clamp(15px,4.35vw,17px); line-height: 1.08; overflow-wrap: anywhere; }
+  .credential-list a > span:not(.credential-logo) { grid-column: 3; grid-row: 2; min-width: 0; font-size: 11px; line-height: 1.2; }
+  .credential-list a > span:nth-of-type(2) { grid-column: 3; grid-row: 2; align-self: center; text-align: left; font-size: 11px; }
+  .credential-list a > span:nth-of-type(3) { grid-column: 3; grid-row: 3; font-size: 11px; }
+  .credential-list a > em { grid-column: 3; grid-row: 4; min-width: 0; font-size: 10px; line-height: 1.25; }
+  .credential-list a > u { grid-column: 4; grid-row: 1 / span 4; position: relative; align-self: center; justify-self: end; width: 28px; height: 28px; color: transparent; font-family: Arial,sans-serif; font-size: 0; }
+  .credential-list a > u::before { content: ''; position: absolute; left: 8px; top: 8px; width: 9px; height: 9px; border-top: 2px solid var(--blue); border-right: 2px solid var(--blue); transform: rotate(45deg); }
+  .credential-list a > u::after { content: ''; position: absolute; left: 6px; top: 15px; width: 13px; height: 2px; background: var(--blue); transform: rotate(-45deg); transform-origin: left center; }
+  .credential-list a[aria-disabled="true"]::after { display: none; }
   .experience-heading { display: block; }
   .experience-heading .ink-underline { top: auto; bottom: -9px; left: 0; }
   .experience-heading .scribble { display: block; margin: 25px 0; }
