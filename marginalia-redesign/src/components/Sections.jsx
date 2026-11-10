@@ -250,15 +250,8 @@ export function Education() {
           })}
         </div>
 
-        <aside className="education-rail-language-card" aria-label="Language profile">
-          <span className="education-rail-pin" aria-hidden="true" />
-          <Scribble>language<br />spectrum</Scribble>
-          {languages.map(language => <div key={language.name}><strong>{language.name}</strong><span aria-label={`${language.level} fluency`}><i style={{ width: `${language.value}%` }} /></span><small>{language.level}</small></div>)}
-        </aside>
-
-        <div className="education-rail-cv">
-          <span className="education-rail-cv-string" aria-hidden="true" />
-          <span className="education-rail-cv-card"><QRPattern /><Scribble>curriculum<br />vitae ↗</Scribble></span>
+        <div className="education-rail-cv" aria-label="Download curriculum vitae">
+          <span className="education-rail-cv-card"><QRPattern /><Scribble>download my<br />curriculum vitae ↗</Scribble></span>
         </div>
 
       </div>
