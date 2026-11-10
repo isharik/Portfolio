@@ -443,8 +443,18 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
      arrow back toward the frame rather than toward the other annotation. */
   .portrait-notes .n5 { left: 15%; bottom: -4%; }
   .portrait-notes .n6 { right: 13%; bottom: -4%; }
-  .portrait-notes .n5 svg { left: calc(100% + 14px); top: -52px; transform: rotate(-101deg); }
-  .portrait-notes .n6 svg { right: calc(100% + 14px); top: -52px; transform: scaleX(-1) rotate(-101deg); }
+  /* Every note owns a separate frame target on phones; do not let arrows meet
+     in the centre of the photo. */
+  .portrait-notes .n1 svg { left: -8px; top: 30px; width: 38px; transform: none; }
+  .portrait-notes .n2 svg { left: calc(100% - 36px); right: auto; top: 30px; width: 38px; transform: none; }
+  .portrait-notes .n3 { left: -7%; font-size: 21px; }
+  .portrait-notes .n3 svg { left: -2px; top: 28px; width: 38px; transform: none; }
+  .portrait-notes .n4 { right: -1%; font-size: 21px; }
+  .portrait-notes .n4 svg { left: calc(100% - 10px); right: auto; top: 28px; width: 38px; transform: scaleX(-1); }
+  .portrait-notes .n5 svg,.portrait-notes .n6 svg { display: none; }
+  .portrait-notes .n5::after,.portrait-notes .n6::after { content: ''; position: absolute; top: -34px; width: 20px; height: 23px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 0 80% 0 0; }
+  .portrait-notes .n5::after { right: 4px; transform: rotate(-66deg); }
+  .portrait-notes .n6::after { left: 4px; transform: scaleX(-1) rotate(-66deg); }
   .about-copy p { font-size: 15px; }
   .education-sheet { padding-top: 104px; }
   .education-main { grid-template-columns: 1fr; row-gap: 46px; padding: 28px 20px 24px 42px; }
