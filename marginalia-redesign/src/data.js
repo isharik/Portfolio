@@ -17,7 +17,7 @@ export const profile = {
 }
 
 export const credentials = [
-  { title: 'B.E. Computer Science', org: 'MIET · India', period: '2019 — 2023', note: 'GPA 3.1 / 4.0', href: null, logo: '/logos/miet.png' },
+  { title: 'Bachelor of Engineering in Computer Science', org: 'MIET · India', period: '2019 — 2023', note: 'GPA 3.1 / 4.0', href: null, logo: '/logos/miet.png' },
   { title: 'Certified System Administrator', org: 'Micro1', period: '2025', note: 'System administration', href: 'https://micro1-portal-data.s3.amazonaws.com/engineer-certificates/1759308472-4893f61f-5c08-4178-8451-d4131afc3683.jpg', logo: '/logos/micro1-mark.svg' },
   { title: 'AWS Academy Graduate', org: 'Amazon Web Services', period: '2025', note: 'Cloud foundations', href: 'https://www.credly.com/badges/f77ea8b0-a683-4d04-97f4-34a61a49076f/print', logo: null },
   { title: 'Pharos Network Storyteller', org: 'Pharos Network', period: '2025 — Present', note: 'Selected ecosystem contributor', href: 'https://x.com/isharik99', logo: '/logos/pharos-network.png' },

@@ -167,22 +167,24 @@ export function Education() {
             </a>
           </li>)}
         </ul>
-      </Reveal>
-      <Reveal className="education-aside">
-        <div className="education-postcards">
-          <div className="education-card cv-card">
-            <div className="cv-card-copy"><Scribble>scan me</Scribble><small>CURRICULUM / 2026</small></div>
-            <QRPattern />
-            <Scribble className="cv-card-title">my curriculum vitae ↗</Scribble>
-            <span className="education-stamp" aria-label="Signed by Sharik"><b>✦</b><Scribble>Sharik</Scribble></span>
-            <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
-            <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
-          </div>
-          <div className="education-card languages-card">
-            <div className="languages-card-head"><Scribble>languages</Scribble><span aria-hidden>☕</span></div>
-            <p>Words I use to make technology feel human.</p>
-            <div className="language-list">
-              {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
+        <div className="education-aside">
+          <div className="education-postcards">
+            <div className="education-card cv-card">
+              <div className="cv-card-copy"><Scribble>scan me</Scribble><small>CURRICULUM / 2026</small></div>
+              <QRPattern />
+              <Scribble className="cv-card-title">my curriculum vitae ↗</Scribble>
+              <span className="education-stamp" aria-label="Signed by Sharik"><b>✦</b><Scribble>Sharik</Scribble></span>
+              <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
+              <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
+            </div>
+            <div className="education-card languages-card">
+              <div className="languages-card-head"><Scribble>languages</Scribble><span aria-hidden>☕</span></div>
+              <p>Words I use to make technology feel human.</p>
+              <div className="language-list">
+                {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
+              </div>
+              <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
+              <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -551,7 +553,7 @@ export function Contact() {
             <button className="message-home" type="button" onClick={returnToPortfolio}>Back to portfolio ↑</button>
           </div>
         </div>}
-      </div>, document.body) : <div
+      </div>, document.body) : createPortal(<div
         className="discord-dialog-backdrop"
         role="presentation"
         onPointerDown={event => {
@@ -563,15 +565,15 @@ export function Contact() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="discord-message-title"
-          onPointerDown={event => event.stopPropagation()}
-          onClick={event => event.stopPropagation()}
+          onPointerDownCapture={event => event.stopPropagation()}
+          onClickCapture={event => event.stopPropagation()}
         >
           <button className="discord-dialog-close" type="button" onClick={closeMessage} aria-label="Close message form">×</button>
           <>
           <Scribble>let’s talk</Scribble>
           <h3 id="discord-message-title">Send me a message</h3>
           <p>Tell me what you’re building, hiring for, or hoping to solve. I’ll reply to the email you provide.</p>
-          <form onSubmit={sendMessage}>
+          <form onSubmit={sendMessage} onPointerDownCapture={event => event.stopPropagation()}>
             <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
             <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
             <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
@@ -580,7 +582,7 @@ export function Contact() {
           </form>
           </>
         </section>
-      </div>)}
+      </div>, document.body))}
     </section>
   )
 }
