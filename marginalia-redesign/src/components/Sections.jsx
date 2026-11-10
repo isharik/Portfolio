@@ -551,8 +551,21 @@ export function Contact() {
             <button className="message-home" type="button" onClick={returnToPortfolio}>Back to portfolio ↑</button>
           </div>
         </div>}
-      </div>, document.body) : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={closeMessage}>
-        <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
+      </div>, document.body) : <div
+        className="discord-dialog-backdrop"
+        role="presentation"
+        onPointerDown={event => {
+          if (event.target === event.currentTarget) closeMessage()
+        }}
+      >
+        <section
+          className="discord-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="discord-message-title"
+          onPointerDown={event => event.stopPropagation()}
+          onClick={event => event.stopPropagation()}
+        >
           <button className="discord-dialog-close" type="button" onClick={closeMessage} aria-label="Close message form">×</button>
           <>
           <Scribble>let’s talk</Scribble>
@@ -562,7 +575,7 @@ export function Contact() {
             <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
             <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
             <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
-            <label className="message-field">Message<textarea name="message" required rows="4" maxLength="1500" /><button className="message-send-icon" type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5 20 12 4 18.5l2.2-5.2L13 12 6.2 10.7z" /></svg></button></label>
+            <label className="message-field">Message<textarea name="message" required rows="4" maxLength="1500" /><button className="message-send-icon" type="submit" aria-label="Send message" onPointerDown={event => event.stopPropagation()}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5 20 12 4 18.5l2.2-5.2L13 12 6.2 10.7z" /></svg></button></label>
             <p className="discord-status" aria-live="polite">{messageStatus}</p>
           </form>
           </>
