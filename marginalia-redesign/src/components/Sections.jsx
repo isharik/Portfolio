@@ -429,42 +429,55 @@ export function Projects() {
 
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const factsRef = useRef(null)
+  const activeIndexRef = useRef(0)
   const wheelLock = useRef(0)
   const wheelDistance = useRef(0)
   const personalFacts = [
-    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS · @echoplexfps', text: 'FPS clips, strategy sessions, and game worlds that reward curiosity.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube' },
-    { icon: '𝕏', eyebrow: 'Profile 02', title: 'Content creation', handle: 'X · @isharik99', text: 'Threads and explainers that make emerging technology easier to enter.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile' },
-    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'I have probably watched your favourite show — give me a film and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies' },
-    { icon: '₿', eyebrow: 'Field notes 04', title: 'Crypto & Web3', handle: 'X · @isharik99', text: 'On-chain products, ecosystems, and the communities forming around them.', highlights: ['Pharos ecosystem', 'Wallet-aware flows', 'Web3 content & communities'], href: 'https://x.com/isharik99', action: 'Read on X' },
+    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'FPS sessions, strategy worlds & rabbit holes', text: 'A small corner for sharp gameplay, systems worth learning, and the occasional game that refuses to let go.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'EchoPlex FPS', profile: 'youtube' },
+    { icon: 'x', eyebrow: 'Profile 02', title: 'Content creation', handle: '@isharik99 · notes in public', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', profile: 'x' },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies' },
+    { icon: '₿', eyebrow: 'Field notes 04', title: 'Crypto & Web3', handle: 'On-chain systems, human context', text: 'I follow the products, communities, and decision-making that turn Web3 from a buzzword into something useful.', highlights: ['Pharos ecosystem', 'Wallet-aware flows', 'Web3 content & communities'], href: 'https://x.com/isharik99', action: 'Read on X', artwork: 'web3' },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
-  const handleWheel = event => {
-    if (Math.abs(event.deltaY) < 4) return
-    const now = performance.now()
-    if (now - wheelLock.current < 520) return
-    wheelDistance.current += event.deltaY
-    if (Math.abs(wheelDistance.current) < 34) return
-    const direction = wheelDistance.current > 0 ? 1 : -1
-    wheelDistance.current = 0
-    if ((direction > 0 && activeIndex === personalFacts.length - 1) || (direction < 0 && activeIndex === 0)) return
-    event.preventDefault()
-    wheelLock.current = now
-    move(direction)
-  }
+  useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
+  useEffect(() => {
+    const node = factsRef.current
+    if (!node) return undefined
+    const onWheel = event => {
+      if (Math.abs(event.deltaY) < 3) return
+      const direction = event.deltaY > 0 ? 1 : -1
+      const current = activeIndexRef.current
+      const isPastEdge = (direction < 0 && current === 0) || (direction > 0 && current === personalFacts.length - 1)
+      if (isPastEdge) return
+      event.preventDefault()
+      const now = performance.now()
+      wheelDistance.current += event.deltaY
+      if (now - wheelLock.current < 430 || Math.abs(wheelDistance.current) < 24) return
+      wheelDistance.current = 0
+      wheelLock.current = now
+      setActiveIndex(index => Math.min(personalFacts.length - 1, Math.max(0, index + direction)))
+    }
+    node.addEventListener('wheel', onWheel, { passive: false })
+    return () => node.removeEventListener('wheel', onWheel)
+  }, [])
   return (
-    <section data-label="Beyond the CV" className="sheet paper-sheet facts-sheet" onWheel={handleWheel}>
+    <section ref={factsRef} data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
       <div className="facts-orbits" aria-hidden="true"><i /><i /><i /></div>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
-        <div className="facts-stage" key={activeFact.title}>
+        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''}`} key={activeFact.title}>
           {activeFact.artwork === 'movies' && <div className="movie-collage" aria-hidden="true"><i /><i /><i /></div>}
+          {activeFact.artwork === 'web3' && <div className="web3-collage" aria-hidden="true"><i /><i /><i /></div>}
           <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
           <div className="facts-stage-main">
-            <strong className="facts-stage-icon" aria-hidden="true">{activeFact.icon}</strong>
+            <strong className={`facts-stage-icon ${activeFact.icon === 'x' ? 'is-x' : ''}`} aria-hidden="true">{activeFact.icon === 'x' ? <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg> : activeFact.icon}</strong>
             <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></div>
           </div>
+          {activeFact.profile === 'youtube' && <aside className="fact-profile-card fact-youtube-card" aria-label="EchoPlex FPS channel preview"><img src="https://unavatar.io/youtube/echoplexfps" alt="EchoPlex FPS channel avatar" /><div><span>YouTube channel</span><b>Featured gameplay</b><small>FPS · strategy · worlds</small></div></aside>}
+          {activeFact.profile === 'x' && <aside className="fact-profile-card fact-x-card" aria-label="X profile preview"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg></strong><div><b>@isharik99</b><span>AI, support & Web3 — made clearer.</span><small>Recent notes in public</small></div></aside>}
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
           {activeFact.href ? <a className="facts-link" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} <b>↗</b></a> : <span className="facts-link is-static">{activeFact.action}</span>}
         </div>
