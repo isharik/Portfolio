@@ -155,41 +155,129 @@ function QRPattern() {
 }
 
 export function Education() {
+  const [activeCredential, setActiveCredential] = useState(null)
+  const [offsets, setOffsets] = useState(() => credentials.map(() => ({ x: 0, y: 0 })))
+  const pointerRef = useRef(null)
+  const active = activeCredential === null ? null : credentials[activeCredential]
+
+  const startDrag = (event, index) => {
+    if (event.button !== undefined && event.button !== 0) return
+    const current = offsets[index]
+    pointerRef.current = {
+      index,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: current.x,
+      originY: current.y,
+      moved: false,
+    }
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+
+  const moveDrag = event => {
+    const drag = pointerRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    const x = event.clientX - drag.startX
+    const y = event.clientY - drag.startY
+    if (Math.abs(x) + Math.abs(y) > 5) drag.moved = true
+    setOffsets(current => current.map((offset, index) => index === drag.index
+      ? { x: Math.max(-150, Math.min(150, drag.originX + x)), y: Math.max(-72, Math.min(96, drag.originY + y)) }
+      : offset))
+  }
+
+  const endDrag = event => {
+    const drag = pointerRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    event.currentTarget.releasePointerCapture?.(event.pointerId)
+    pointerRef.current = null
+    if (!drag.moved) setActiveCredential(drag.index)
+  }
+
   return (
-    <section id="education" data-label="Education" className="sheet paper-sheet education-sheet">
-      <Reveal className="education-main">
-        <h2>Education</h2><div className="ink-underline short" />
-        <p className="section-intro">A computer science foundation strengthened through hands-on AI operations, systems work, and ecosystem contribution.</p>
-        <ul className="credential-list">
-          {credentials.map(item => <li key={item.title}>
-            <a href={item.href || undefined} target={item.href ? '_blank' : undefined} rel={item.href ? 'noreferrer' : undefined} aria-disabled={!item.href}>
-              <i aria-hidden>•</i><span className="credential-logo">{item.logo ? <img src={item.logo} alt="" /> : <b className="aws-mark">aws</b>}</span><b>{item.title}</b><span>{item.org}</span><span>{item.period}</span><em>{item.note}</em>{item.href && <u>↗</u>}
-            </a>
-          </li>)}
-        </ul>
-        <div className="education-aside">
-          <div className="education-postcards">
-            <div className="education-card cv-card">
-              <div className="cv-card-copy"><Scribble>scan me</Scribble><small>CURRICULUM / 2026</small></div>
-              <QRPattern />
-              <Scribble className="cv-card-title">my curriculum vitae ↗</Scribble>
-              <span className="education-stamp" aria-label="Signed by Sharik"><b>✦</b><Scribble>Sharik</Scribble></span>
-              <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
-              <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
-            </div>
-            <div className="education-card languages-card">
-              <div className="languages-card-head"><Scribble>languages</Scribble><span aria-hidden>☕</span></div>
-              <p>Words I use to make technology feel human.</p>
-              <div className="language-list">
-                {languages.map(lang => <div key={lang.name}><b>{lang.name}</b><span>{lang.level}</span><i><u style={{ width: `${lang.value}%` }} /></i></div>)}
-              </div>
-              <span className="ticket-notch ticket-notch-left" aria-hidden="true" />
-              <span className="ticket-notch ticket-notch-right" aria-hidden="true" />
-            </div>
-          </div>
+    <>
+      <section id="education" data-label="Education" className="sheet education-rail">
+      <div className="education-rail-wall">
+        <header className="education-rail-heading">
+          <span>learning gallery / 2019 — now</span>
+          <h2>Education</h2>
+          <Scribble>follow the learning trail ↘<br />tap a frame to open its story</Scribble>
+        </header>
+
+        <div className="education-rail-track" aria-hidden="true"><i /><i /><i /><i /><i /><i /></div>
+        <div className="education-rail-hint" aria-hidden="true">hold · move · discover</div>
+
+        <div className="education-rail-frames" role="group" aria-label="Draggable education credentials">
+          {credentials.map((credential, index) => {
+            const image = index === 3 ? '/logos/pharos-mark.png' : credential.logo
+            const offset = offsets[index]
+            return (
+              <button
+                className={`education-rail-frame frame-${index} ${activeCredential === index ? 'is-selected' : ''}`}
+                key={credential.title}
+                type="button"
+                aria-pressed={activeCredential === index}
+                style={{ '--drag-x': `${offset.x}px`, '--drag-y': `${offset.y}px` }}
+                onPointerDown={event => startDrag(event, index)}
+                onPointerMove={moveDrag}
+                onPointerUp={endDrag}
+                onPointerCancel={endDrag}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    setActiveCredential(index)
+                  }
+                }}
+              >
+                <span className="education-rail-hook" aria-hidden="true"><i /><b /></span>
+                <span className="education-rail-string" aria-hidden="true" />
+                <span className="education-rail-mat">
+                  <span className="education-rail-art">
+                    {image ? <img src={image} alt="" /> : <span className="education-rail-aws">aws</span>}
+                    <i aria-hidden="true">✦</i>
+                  </span>
+                  <span className="education-rail-copy">
+                    <small>0{index + 1} / credential</small>
+                    <strong>{credential.title}</strong>
+                    <em>{credential.org}</em>
+                    <b>{credential.period}</b>
+                  </span>
+                  <span className="education-rail-feather" aria-hidden="true">❦</span>
+                </span>
+                <span className="education-rail-caption">{index === 0 ? 'degree' : 'open story'} ↗</span>
+              </button>
+            )
+          })}
         </div>
-      </Reveal>
-    </section>
+
+        <aside className="education-rail-language-card" aria-label="Language profile">
+          <span className="education-rail-pin" aria-hidden="true" />
+          <Scribble>language<br />spectrum</Scribble>
+          {languages.map(language => <div key={language.name}><strong>{language.name}</strong><span aria-label={`${language.level} fluency`}><i style={{ width: `${language.value}%` }} /></span><small>{language.level}</small></div>)}
+        </aside>
+
+        <div className="education-rail-cv">
+          <span className="education-rail-cv-string" aria-hidden="true" />
+          <span className="education-rail-cv-card"><QRPattern /><Scribble>curriculum<br />vitae ↗</Scribble></span>
+        </div>
+
+      </div>
+      </section>
+      {active && createPortal(
+        <div className="education-rail-modal" role="presentation" onPointerDown={event => {
+          if (event.target === event.currentTarget) setActiveCredential(null)
+        }}>
+          <article className="education-rail-detail" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
+            <button type="button" className="education-rail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">×</button>
+            <span>opened chapter / 0{activeCredential + 1}</span>
+            <h3 id="education-credential-title">{active.title}</h3>
+            <p>{active.org} · {active.period}</p>
+            <strong>{active.note}</strong>
+            <p className="education-rail-detail-copy">A milestone in a practice built around reliable systems, clear communication, and work that helps people move forward.</p>
+            {active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential ↗</a> : <b>Degree completed ✓</b>}
+          </article>
+        </div>, document.body)}
+    </>
   )
 }
 
