@@ -467,6 +467,15 @@ export function Contact() {
   }, [isSending, messageSent])
 
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
+  const closeMessage = () => {
+    setMessageOpen(false)
+    setMessageSent(false)
+    setMessageStatus('')
+  }
+  const returnToPortfolio = () => {
+    closeMessage()
+    window.setTimeout(() => document.getElementById('home')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
+  }
 
   const sendMessage = async event => {
     event.preventDefault()
@@ -532,15 +541,19 @@ export function Contact() {
         {isSending ? <><MessageSphere phase={sendPhase} size={264} />
           <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
         </> : <div className="message-sent-popover">
+          <button className="message-success-close" type="button" onClick={closeMessage} aria-label="Close message confirmation">×</button>
           <span className="message-success-mark" aria-hidden="true">✓</span>
           <Scribble>received</Scribble>
           <h3 id="discord-message-title">Message sent</h3>
           <p>Thank you — I’ll reply to the email you provided as soon as I can.</p>
-          <button className="discord-submit message-back" type="button" onClick={() => { setMessageSent(false); setMessageStatus('') }}>← Send another message</button>
+          <div className="message-sent-actions">
+            <button className="discord-submit message-back" type="button" onClick={() => { setMessageSent(false); setMessageStatus('') }}>← Send another message</button>
+            <button className="message-home" type="button" onClick={returnToPortfolio}>Back to portfolio ↑</button>
+          </div>
         </div>}
-      </div>, document.body) : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={() => setMessageOpen(false)}>
+      </div>, document.body) : <div className="discord-dialog-backdrop" role="presentation" onMouseDown={closeMessage}>
         <section className="discord-dialog" role="dialog" aria-modal="true" aria-labelledby="discord-message-title" onMouseDown={event => event.stopPropagation()}>
-          <button className="discord-dialog-close" type="button" onClick={() => setMessageOpen(false)} aria-label="Close message form">×</button>
+          <button className="discord-dialog-close" type="button" onClick={closeMessage} aria-label="Close message form">×</button>
           <>
           <Scribble>let’s talk</Scribble>
           <h3 id="discord-message-title">Send me a message</h3>
