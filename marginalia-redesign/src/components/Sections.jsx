@@ -427,6 +427,10 @@ export function Projects() {
   )
 }
 
+function XMark({ className = '' }) {
+  return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg>
+}
+
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
   const factsRef = useRef(null)
@@ -434,10 +438,10 @@ export function Facts() {
   const wheelLock = useRef(0)
   const wheelDistance = useRef(0)
   const personalFacts = [
-    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'FPS sessions, strategy worlds & rabbit holes', text: 'A small corner for sharp gameplay, systems worth learning, and the occasional game that refuses to let go.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'EchoPlex FPS', profile: 'youtube' },
-    { icon: 'x', eyebrow: 'Profile 02', title: 'Content creation', handle: '@isharik99 · notes in public', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', profile: 'x' },
-    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies' },
-    { icon: '₿', eyebrow: 'Field notes 04', title: 'Crypto & Web3', handle: 'On-chain systems, human context', text: 'I follow the products, communities, and decision-making that turn Web3 from a buzzword into something useful.', highlights: ['Pharos ecosystem', 'Wallet-aware flows', 'Web3 content & communities'], href: 'https://x.com/isharik99', action: 'Read on X', artwork: 'web3' },
+    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps' },
+    { icon: 'x', eyebrow: 'Profile 02', title: 'Content creation', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: 'https://unavatar.io/x/isharik99', note: 'AI, support & Web3 — made clearer.' },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png' },
+    { icon: '₿', eyebrow: 'Field notes 04', title: 'Crypto & Web3', handle: '@isharik99 on X', text: 'I follow the products, communities, and decision-making that turn Web3 from a buzzword into something useful.', highlights: ['Pharos ecosystem', 'Wallet-aware flows', 'Web3 content & communities'], href: 'https://x.com/isharik99', action: 'Read on X', brand: 'x', background: 'https://unavatar.io/x/isharik99', note: 'On-chain products, ecosystems & community notes.' },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
@@ -468,16 +472,13 @@ export function Facts() {
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
       <div className="facts-orbits" aria-hidden="true"><i /><i /><i /></div>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
-        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''}`} key={activeFact.title}>
-          {activeFact.artwork === 'movies' && <div className="movie-collage" aria-hidden="true"><i /><i /><i /></div>}
-          {activeFact.artwork === 'web3' && <div className="web3-collage" aria-hidden="true"><i /><i /><i /></div>}
+        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title}>
+          {activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
           <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
           <div className="facts-stage-main">
-            <strong className={`facts-stage-icon ${activeFact.icon === 'x' ? 'is-x' : ''}`} aria-hidden="true">{activeFact.icon === 'x' ? <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg> : activeFact.icon}</strong>
-            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></div>
+            <strong className={`facts-stage-icon ${activeFact.icon === 'x' ? 'is-x' : ''}`} aria-hidden="true">{activeFact.icon === 'x' ? <XMark /> : activeFact.icon}</strong>
+            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.note && <span className="facts-note-preview"><XMark />{activeFact.note}</span>}</div>
           </div>
-          {activeFact.profile === 'youtube' && <aside className="fact-profile-card fact-youtube-card" aria-label="EchoPlex FPS channel preview"><img src="https://unavatar.io/youtube/echoplexfps" alt="EchoPlex FPS channel avatar" /><div><span>YouTube channel</span><b>Featured gameplay</b><small>FPS · strategy · worlds</small></div></aside>}
-          {activeFact.profile === 'x' && <aside className="fact-profile-card fact-x-card" aria-label="X profile preview"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg></strong><div><b>@isharik99</b><span>AI, support & Web3 — made clearer.</span><small>Recent notes in public</small></div></aside>}
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
           {activeFact.href ? <a className="facts-link" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} <b>↗</b></a> : <span className="facts-link is-static">{activeFact.action}</span>}
         </div>
