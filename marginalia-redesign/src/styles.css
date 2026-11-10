@@ -1006,3 +1006,47 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .qr { width:58px; }
   .education-rail-cv-card .scribble { font-size:15px; }
 }
+
+/* Center the physical rail, with a clearer CV marker at its lower endpoint. */
+.education-rail-track { right:16%; left:14%; }
+.education-rail-cv {
+  right:3.25%;
+  bottom:1.5%;
+  width:258px;
+  transform:rotate(-1deg);
+}
+.education-rail-cv-card { min-height:122px; padding:14px 16px; }
+.education-rail-cv-card .qr {
+  width:104px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.education-rail-cv-card .scribble {
+  max-width:118px;
+  color:var(--ink);
+  font-size:22px;
+  font-weight:700;
+  line-height:.9;
+  text-shadow:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+.education-rail-cv-card::before {
+  color:var(--ink);
+  font-size:13px;
+  font-weight:700;
+  -webkit-font-smoothing:antialiased;
+}
+@media (max-width:850px) {
+  .education-rail-track { right:6%; left:6%; }
+  .education-rail-cv { right:5%; bottom:4%; width:39%; }
+}
+@media (max-width:520px) {
+  .education-rail-track { right:4%; left:4%; }
+  .education-rail-cv { width:43%; right:4%; bottom:4%; }
+  .education-rail-cv-card .qr { width:58px; }
+  .education-rail-cv-card .scribble { font-size:15px; }
+}
