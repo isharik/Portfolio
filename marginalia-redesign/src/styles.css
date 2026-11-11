@@ -1007,6 +1007,14 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .scribble { font-size:15px; }
 }
 
+/* Nudge the credential gallery toward the visual centre without changing its spacing. */
+@media (min-width:851px) {
+  .education-rail-frame.frame-0 { left:16%; }
+  .education-rail-frame.frame-1 { left:34%; }
+  .education-rail-frame.frame-2 { left:52%; }
+  .education-rail-frame.frame-3 { left:68%; }
+}
+
 /* Center the physical rail, with a clearer CV marker at its lower endpoint. */
 .education-rail-track { right:16%; left:14%; }
 .education-rail-cv {
