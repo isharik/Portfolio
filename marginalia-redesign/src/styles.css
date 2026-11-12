@@ -1017,7 +1017,44 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .scribble { font-size:15px; }
 }
 
-/* Final Education bento geometry — deliberately placed after legacy variants. */
+/* Education uses the same title rhythm as Experience; card geometry stays untouched. */
+.education-atlas-heading {
+  position: relative;
+  width: min(1710px, 90vw);
+  max-width: none;
+  min-height: 126px;
+  margin: 0 auto;
+  text-align: left;
+}
+.education-atlas-heading h2 {
+  width: fit-content;
+  margin: 0;
+}
+.education-atlas-heading .education-heading-note {
+  display: block;
+  position: absolute;
+  left: clamp(270px, 27vw, 425px);
+  right: auto;
+  bottom: 16px;
+  width: max-content;
+  margin: 0;
+  color: var(--blue);
+  font: 600 clamp(18px, 1.55vw, 24px) / .92 var(--hand);
+  letter-spacing: .01em;
+  transform: rotate(-2deg);
+}
+@media (max-width: 620px) {
+  .education-atlas-heading { width: min(100%, 440px); min-height: 128px; }
+  .education-atlas-heading .education-heading-note {
+    left: auto;
+    right: 0;
+    bottom: 2px;
+    font-size: 17px;
+  }
+}
+
+/* Disabled superseded Education geometry. It changed the credential-card scale,
+   so the established card layout below remains the single source of truth.
 .education-atlas {
   min-height: auto !important;
   padding: clamp(58px, 6.5vh, 78px) 5vw 54px !important;
@@ -1161,6 +1198,8 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-atlas-heading .education-heading-note { left: auto !important; right: 0 !important; bottom: 2px !important; font-size: 17px !important; }
   .education-atlas-heading h2 { font-size: clamp(58px, 17vw, 78px) !important; }
 }
+
+*/
 
 /* Education: aligned with the portfolio heading system, with a compact readable bento. */
 .education-atlas {
