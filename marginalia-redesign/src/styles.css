@@ -1017,6 +1017,151 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .scribble { font-size:15px; }
 }
 
+/* Final Education bento geometry — deliberately placed after legacy variants. */
+.education-atlas {
+  min-height: auto !important;
+  padding: clamp(58px, 6.5vh, 78px) 5vw 54px !important;
+}
+.education-atlas-heading {
+  position: relative !important;
+  width: min(1710px, 90vw) !important;
+  max-width: none !important;
+  min-height: 128px;
+  margin: 0 auto !important;
+  text-align: left !important;
+}
+.education-atlas-heading .education-atlas-kicker { display: none !important; }
+.education-atlas-heading h2 {
+  width: fit-content !important;
+  margin: 0 !important;
+  font-size: clamp(66px, 6.4vw, 104px) !important;
+  line-height: .86 !important;
+}
+.education-atlas-heading h2::after {
+  width: 132px !important;
+  margin: 14px 0 0 5px !important;
+}
+.education-atlas-heading .education-heading-note {
+  display: block !important;
+  position: absolute !important;
+  left: clamp(270px, 27vw, 425px) !important;
+  right: auto !important;
+  bottom: 17px !important;
+  width: max-content;
+  margin: 0 !important;
+  color: var(--blue);
+  font: 600 clamp(18px, 1.55vw, 24px) / .92 var(--hand);
+  letter-spacing: .01em;
+  transform: rotate(-2deg);
+}
+.education-atlas-heading > p,
+.education-atlas-heading > .scribble:not(.education-heading-note),
+.education-atlas-note { display: none !important; }
+
+@media (min-width: 901px) {
+  .education-atlas-stage {
+    display: grid !important;
+    position: relative !important;
+    width: min(1420px, 84vw) !important;
+    height: 686px !important;
+    min-height: 0 !important;
+    margin: 4px auto 0 !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 276px !important;
+    grid-template-rows: 276px 276px 110px !important;
+    grid-template-areas:
+      "degree degree cv"
+      "degree degree pharos"
+      "micro aws ." !important;
+    gap: 14px !important;
+  }
+  .education-atlas-stage > .education-atlas-card,
+  .education-atlas-stage > .education-atlas-cv {
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  .atlas-card-0 { grid-area: degree !important; }
+  .atlas-card-1 { grid-area: micro !important; }
+  .atlas-card-2 { grid-area: aws !important; }
+  .atlas-card-3 { grid-area: pharos !important; }
+  .education-atlas-cv { grid-area: cv !important; }
+
+  .atlas-card-0 {
+    display: grid !important;
+    grid-template-columns: 28px 78px minmax(0, 1fr) !important;
+    grid-template-rows: auto 1fr auto !important;
+    gap: 11px 17px !important;
+    padding: 30px !important;
+  }
+  .atlas-card-0 .education-atlas-card-art { width: 78px !important; height: 78px !important; }
+  .atlas-card-0 .education-atlas-card-copy { display: flex !important; grid-column: 3 !important; grid-row: 1 / span 2 !important; padding-bottom: 8px; }
+  .atlas-card-0 .education-atlas-card-copy strong { font-size: clamp(28px, 2.45vw, 39px) !important; line-height: .94 !important; }
+  .atlas-card-0 .education-atlas-card-meta { justify-content: space-between; padding-top: 14px; }
+  .atlas-card-0 .education-atlas-card-copy em { font-size: 15px !important; }
+  .atlas-card-0 .education-atlas-card-copy b { font-size: 12px !important; }
+
+  .education-atlas-cv {
+    display: grid !important;
+    grid-template-columns: 116px minmax(0, 1fr) !important;
+    align-content: center !important;
+    gap: 12px !important;
+    padding: 18px !important;
+  }
+  .education-atlas-cv .qr,
+  .education-atlas-cv .qr canvas { width: 116px !important; height: 116px !important; }
+  .education-atlas-cv .scribble { font-size: 20px !important; line-height: .86 !important; }
+
+  .atlas-card-3 {
+    display: grid !important;
+    grid-template-columns: 18px 54px minmax(0, 1fr) !important;
+    grid-template-rows: auto 1fr auto !important;
+    gap: 8px 10px !important;
+    padding: 18px !important;
+  }
+  .atlas-card-3 .education-atlas-card-art { width: 54px !important; height: 54px !important; }
+  .atlas-card-3 .education-atlas-card-copy { display: flex !important; grid-column: 3 !important; grid-row: 1 / span 2 !important; }
+  .atlas-card-3 .education-atlas-card-copy strong { font-size: 20px !important; line-height: .98 !important; }
+  .atlas-card-3 .education-atlas-card-meta { margin-top: 10px !important; gap: 4px 8px !important; }
+  .atlas-card-3 .education-atlas-card-copy em,
+  .atlas-card-3 .education-atlas-card-copy b { font-size: 11px !important; line-height: 1.1 !important; }
+
+  .atlas-card-1,
+  .atlas-card-2 {
+    display: grid !important;
+    grid-template-columns: 14px 42px minmax(0, 1fr) !important;
+    grid-template-rows: 1fr auto !important;
+    gap: 5px 9px !important;
+    padding: 13px 14px !important;
+  }
+  .atlas-card-1 .education-atlas-card-art,
+  .atlas-card-2 .education-atlas-card-art { width: 42px !important; height: 42px !important; }
+  .atlas-card-1 .education-atlas-card-copy,
+  .atlas-card-2 .education-atlas-card-copy { display: flex !important; grid-column: 3 !important; grid-row: 1 !important; }
+  .atlas-card-1 .education-atlas-card-copy small,
+  .atlas-card-2 .education-atlas-card-copy small,
+  .atlas-card-1 .education-atlas-card-meta,
+  .atlas-card-2 .education-atlas-card-meta { display: none !important; }
+  .atlas-card-1 .education-atlas-card-copy strong,
+  .atlas-card-2 .education-atlas-card-copy strong { font-size: 15px !important; line-height: 1 !important; }
+}
+@media (max-width: 900px) {
+  .education-atlas-heading { min-height: 114px; }
+  .education-atlas-heading .education-heading-note { left: min(52vw, 360px) !important; bottom: 14px !important; }
+}
+@media (max-width: 620px) {
+  .education-atlas-heading { width: min(100%, 440px) !important; min-height: 128px; }
+  .education-atlas-heading .education-heading-note { left: auto !important; right: 0 !important; bottom: 2px !important; font-size: 17px !important; }
+  .education-atlas-heading h2 { font-size: clamp(58px, 17vw, 78px) !important; }
+}
+
 /* Education: aligned with the portfolio heading system, with a compact readable bento. */
 .education-atlas {
   min-height: auto;
