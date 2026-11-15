@@ -157,6 +157,19 @@ function QRPattern() {
 export function Education() {
   const [activeCredential, setActiveCredential] = useState(null)
   const active = activeCredential === null ? null : credentials[activeCredential]
+  const credentialStories = [
+    'Four years of computer science foundations — systems thinking, software practice, and the patience to make complex work understandable.',
+    'A focused systems credential built around dependable administration, clear operational ownership, and repeatable support.',
+    'A practical cloud foundation covering the services, concepts, and disciplined habits behind reliable digital products.',
+    'An ongoing ecosystem practice: turning technical ideas into useful, accessible stories for the people building with them.',
+  ]
+
+  useEffect(() => {
+    if (activeCredential === null) return undefined
+    const onKeyDown = event => { if (event.key === 'Escape') setActiveCredential(null) }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [activeCredential])
 
   return (
     <>
@@ -207,17 +220,16 @@ export function Education() {
         </div>
       </section>
       {active && createPortal(
-        <div className="education-rail-modal" role="presentation" onPointerDown={event => {
+        <div className="education-detail-modal" role="presentation" onPointerDown={event => {
           if (event.target === event.currentTarget) setActiveCredential(null)
         }}>
-          <article className="education-rail-detail" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
-            <button type="button" className="education-rail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">×</button>
-            <span>opened chapter / 0{activeCredential + 1}</span>
+          <article className="education-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
+            <header className="education-detail-header"><span>Credential record / 0{activeCredential + 1}</span><button type="button" className="education-detail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">Close ×</button></header>
             <h3 id="education-credential-title">{active.title}</h3>
-            <p>{active.org} · {active.period}</p>
-            <strong>{active.note}</strong>
-            <p className="education-rail-detail-copy">A milestone in a practice built around reliable systems, clear communication, and work that helps people move forward.</p>
-            {active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential ↗</a> : <b>Degree completed ✓</b>}
+            <div className="education-detail-meta"><div><span>Organisation</span><strong>{active.org}</strong></div><div><span>Timeframe</span><strong>{active.period}</strong></div></div>
+            <div className="education-detail-focus"><span>Focus</span><strong>{active.note}</strong></div>
+            <p>{credentialStories[activeCredential]}</p>
+            <footer>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}<small>Press Esc or select Close to return</small></footer>
           </article>
         </div>, document.body)}
     </>
@@ -497,7 +509,7 @@ function ContributionGrid() {
 }
 
 function ScrambleProjectLabel({ active, title }) {
-  const target = `Open ${title} ↗`
+  const target = `Open ${title} ⟡`
   const outputRef = useRef(null)
   useEffect(() => {
     const output = outputRef.current
@@ -511,7 +523,7 @@ function ScrambleProjectLabel({ active, title }) {
     const characters = '01<>[]{}/\\|=~^'
     const settleTimes = glyphs.map((_, index) => {
       const scatter = Math.sin(index * 7.31 + glyphs.length * 1.7) * .5 + .5
-      return (index + scatter * 2.5) * 36
+      return (index + scatter * 2.5) * 22
     })
     const end = Math.max(...settleTimes)
     let written = -Infinity
@@ -520,7 +532,7 @@ function ScrambleProjectLabel({ active, title }) {
     const tick = now => {
       const elapsed = now - start
       if (elapsed >= end) return write(target)
-      if (now - written >= 45) {
+      if (now - written >= 28) {
         written = now
         write(glyphs.map((glyph, index) => /\s/.test(glyph) || elapsed >= settleTimes[index] ? glyph : characters[Math.floor(Math.random() * characters.length)]).join(''))
       }
