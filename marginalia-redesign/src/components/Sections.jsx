@@ -163,6 +163,7 @@ export function Education() {
     'A practical cloud foundation covering the services, concepts, and disciplined habits behind reliable digital products.',
     'An ongoing ecosystem practice: turning technical ideas into useful, accessible stories for the people building with them.',
   ]
+  const activeImage = activeCredential === 3 ? '/logos/pharos-mark.png' : active?.logo
 
   useEffect(() => {
     if (activeCredential === null) return undefined
@@ -223,13 +224,15 @@ export function Education() {
         <div className="education-detail-modal" role="presentation" onPointerDown={event => {
           if (event.target === event.currentTarget) setActiveCredential(null)
         }}>
-          <article className="education-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
-            <header className="education-detail-header"><span>Credential record / 0{activeCredential + 1}</span><button type="button" className="education-detail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">Close ×</button></header>
-            <h3 id="education-credential-title">{active.title}</h3>
-            <div className="education-detail-meta"><div><span>Organisation</span><strong>{active.org}</strong></div><div><span>Timeframe</span><strong>{active.period}</strong></div></div>
-            <div className="education-detail-focus"><span>Focus</span><strong>{active.note}</strong></div>
-            <p>{credentialStories[activeCredential]}</p>
-            <footer>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}<small>Press Esc or select Close to return</small></footer>
+          <article key={activeCredential} className="education-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
+            <header className="education-detail-header education-detail-item"><span>Credential record</span><div><b>0{activeCredential + 1}</b><span>/ 0{credentials.length}</span></div><button type="button" className="education-detail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">Close <i aria-hidden="true">×</i></button></header>
+            <div className="education-detail-title-row education-detail-item">
+              <div className="education-detail-mark">{activeImage ? <img src={activeImage} alt="" /> : <span className="education-detail-aws">aws</span>}</div>
+              <div><span>{activeCredential === 0 ? 'Degree / foundation' : 'Credential / practice'}</span><h3 id="education-credential-title">{active.title}</h3></div>
+            </div>
+            <div className="education-detail-meta education-detail-item"><div><span>Organisation</span><strong>{active.org}</strong></div><div><span>Timeframe</span><strong>{active.period}</strong></div></div>
+            <div className="education-detail-focus education-detail-item"><span>What this adds</span><strong>{active.note}</strong><p>{credentialStories[activeCredential]}</p></div>
+            <footer className="education-detail-footer education-detail-item"><div className="education-detail-nav"><button type="button" disabled={activeCredential === 0} onClick={() => setActiveCredential(index => index - 1)} aria-label="Previous credential">←</button><span>Browse record</span><button type="button" disabled={activeCredential === credentials.length - 1} onClick={() => setActiveCredential(index => index + 1)} aria-label="Next credential">→</button></div>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}</footer>
           </article>
         </div>, document.body)}
     </>
