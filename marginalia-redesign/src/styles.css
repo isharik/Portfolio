@@ -2216,3 +2216,42 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @keyframes education-panel-item { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
 @media (max-width:560px) { .education-detail-sheet { padding:20px; border-radius:18px; }.education-detail-header { grid-template-columns:1fr auto; }.education-detail-header > div { display:none; }.education-detail-title-row { grid-template-columns:54px minmax(0,1fr); gap:13px; }.education-detail-mark { width:54px; height:54px; border-radius:14px 6px 14px 6px; }.education-detail-sheet h3 { font-size:clamp(29px,9vw,40px); }.education-detail-footer { align-items:flex-start; flex-direction:column-reverse; gap:8px; }.education-detail-focus { padding:14px; } }
 @media (prefers-reduced-motion:reduce) { .education-detail-sheet,.education-detail-item { animation:none; opacity:1; } }
+
+/* Pharos card: organisation and timeframe form one deliberate metadata line. */
+.atlas-card-3 .education-atlas-card-copy {
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  align-self:stretch;
+  min-height:0;
+}
+.atlas-card-3 .education-atlas-card-copy small { align-self:start; }
+.atlas-card-3 .education-atlas-card-copy strong { align-self:start; margin-bottom:8px; }
+.atlas-card-3 .education-atlas-card-meta {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  margin-top:auto;
+  padding-top:7px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 13%,transparent);
+}
+.atlas-card-3 .education-atlas-card-meta em,
+.atlas-card-3 .education-atlas-card-meta b {
+  position:static;
+  display:block;
+  margin:0;
+  white-space:nowrap;
+  line-height:1;
+}
+.atlas-card-3 .education-atlas-card-meta em { justify-self:start; }
+.atlas-card-3 .education-atlas-card-meta b { justify-self:end; text-align:right; }
+:root[data-theme='dark'] .atlas-card-3 .education-atlas-card-meta { border-top-color:rgba(255,255,255,.16); }
+@media (max-width:620px) {
+  .atlas-card-3 .education-atlas-card-meta { gap:8px; }
+  .atlas-card-3 .education-atlas-card-meta em,.atlas-card-3 .education-atlas-card-meta b { font-size:9px; }
+}
+
+/* Official AWS artwork uses the same contained, dark-mark treatment in both views. */
+.atlas-card-2 .education-atlas-card-art { background:#161d2b; }
+.atlas-card-2 .education-atlas-card-art img { width:100%; height:100%; object-fit:cover; }
+.education-detail-mark img[src$='aws-academy.jpg'] { width:100%; height:100%; object-fit:cover; }
