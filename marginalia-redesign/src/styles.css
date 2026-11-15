@@ -938,11 +938,18 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @media (max-width: 700px) { .contribution-trace { margin-top: 32px; padding: 18px 15px 14px; }.contribution-heading { align-items: start; flex-direction: column; gap: 8px; }.contribution-calendar { padding: 12px 7px 10px; }.contribution-grid { grid-template-rows: repeat(7, 7px); gap: 2px; }.contribution-days { grid-template-rows: repeat(7, 7px); gap: 2px; padding-top: 18px; font-size: 8px; line-height: 7px; }.contribution-months { font-size: 7px; }.contribution-footer { align-items: flex-start; flex-direction: column; gap: 9px; font-size: 10px; }.project-modal-meta { grid-template-columns: 1fr; }.project-modal-card { padding: 42px 22px 25px; } }
 @media (prefers-reduced-motion: reduce) { .project-item, .device-copy i, .device-copy b, .contribution-cell { transition: none; } }
 
-/* Project detail: midnight ink, not flat gray, with quiet technical drafting marks. */
-.project-modal { background:rgba(5, 10, 18, .76); }
-.project-modal-card { isolation:isolate; overflow:auto; border-color:rgba(168, 189, 255, .24); background:radial-gradient(circle at 86% 10%, rgba(87, 111, 255, .28), transparent 30%), radial-gradient(circle at 10% 95%, rgba(39, 177, 169, .16), transparent 33%), #101827; box-shadow:0 34px 100px rgba(0,0,0,.55); }
-.project-modal-card::before,.project-modal-card::after { content:''; position:absolute; z-index:-1; pointer-events:none; }.project-modal-card::before { inset:18px; border:1px dashed rgba(177, 192, 255, .16); }.project-modal-card::after { width:230px; aspect-ratio:1; right:-110px; bottom:-125px; border:1px solid rgba(150, 177, 255, .26); border-radius:50%; box-shadow:0 0 0 34px rgba(150,177,255,.05),0 0 0 68px rgba(150,177,255,.035); }
-.project-modal-card > a { background:#8b9dff; color:#101827; }.project-modal-close { color:rgba(239,243,255,.82); }.project-modal-card p { color:rgba(236,241,255,.76); }.project-modal-meta > div { border-color:rgba(181,195,255,.18); background:rgba(4,10,23,.22); }
+/* The phone overlay is type, never a button. The extra selector wins over the older generic label rule. */
+.device-copy .project-scramble { max-width:none; overflow:visible; padding:0; border-radius:0; background:transparent; color:#fff; }
+.device-copy .project-scramble > span { display:block; padding:0; border-radius:0; background:transparent; color:inherit; }
+
+/* A quiet, rounded project sheet with a physical but restrained entrance. */
+.project-modal { background:rgba(16,18,21,.54); backdrop-filter:blur(14px); perspective:1200px; }
+.project-modal-card { isolation:auto; overflow:auto; border:1px solid rgba(28,31,35,.14); border-radius:24px; background:#f4f1ea; color:#191b1f; box-shadow:0 30px 80px rgba(0,0,0,.28); animation:project-modal-parallax .52s cubic-bezier(.16,.82,.24,1) both; transform-origin:50% 42%; }
+.project-modal-card::before,.project-modal-card::after { display:none; }
+.project-modal-card h3 { color:#191b1f; }.project-modal-card p { color:#55595e; }.project-modal-close { color:#4e5358; }.project-modal-card > a { background:#1c2025; color:#f8f6f0; }.project-modal-meta > div { border-color:rgba(28,31,35,.12); background:rgba(255,255,255,.52); }.project-modal-meta span,.project-modal-meta li::before { color:#5e6fd6; }
+:root[data-theme='dark'] .project-modal { background:rgba(0,0,0,.62); }.project-modal-card { border-color:rgba(255,255,255,.12); background:#1a1d21; color:#f2f0eb; box-shadow:0 30px 80px rgba(0,0,0,.55); }.project-modal-card h3 { color:#f2f0eb; }:root[data-theme='dark'] .project-modal-card p { color:rgba(242,240,235,.7); }:root[data-theme='dark'] .project-modal-close { color:rgba(242,240,235,.7); }:root[data-theme='dark'] .project-modal-meta > div { border-color:rgba(255,255,255,.12); background:rgba(255,255,255,.035); }
+@keyframes project-modal-parallax { from { opacity:0; transform:perspective(1200px) translateY(34px) rotateX(9deg) rotateY(-2deg) scale(.94); } 58% { opacity:1; transform:perspective(1200px) translateY(-3px) rotateX(-1.2deg) rotateY(.4deg) scale(1.008); } to { opacity:1; transform:perspective(1200px) translateY(0) rotateX(0) rotateY(0) scale(1); } }
+@media (prefers-reduced-motion:reduce) { .project-modal-card { animation:none; } }
 
 /* Dark-mode education marks keep their own light paper tile and a high-contrast silhouette. */
 :root[data-theme='dark'] .education-atlas-card-art { background:#f6f7fb; border-color:rgba(255,255,255,.25); }
