@@ -2108,3 +2108,25 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .folio-footer { background-image:linear-gradient(rgba(244,243,239,.56), rgba(244,243,239,.7)), url('/images/footer-sky.png'); background-position:center; background-size:cover; }
 .folio-footer::before { display:none; }
 :root[data-theme='dark'] .folio-footer { background-image:linear-gradient(rgba(10,12,15,.48), rgba(10,12,15,.66)), url('/images/footer-sky.png'); }
+
+/* Footer sky remains legible but visibly present in both themes. */
+:root[data-theme='dark'] .folio-footer {
+  background-color:#101724;
+  background-image:linear-gradient(rgba(10,16,27,.18), rgba(10,16,27,.38)), url('/images/footer-sky.png');
+  background-size:cover;
+  background-position:50% 50%;
+  animation:footer-sky-drift 24s ease-in-out infinite alternate;
+}
+@keyframes footer-sky-drift { from { background-position:48% 48%; } to { background-position:52% 54%; } }
+
+/* Match the project-name scale beneath each phone and override the old compact label rule. */
+.device-copy .project-scramble,
+.device-copy .project-scramble > span {
+  font-family:var(--hand) !important;
+  font-size:clamp(17px,1.65vw,25px) !important;
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:.01em;
+  white-space:normal;
+}
+@media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
