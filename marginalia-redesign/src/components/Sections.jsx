@@ -409,6 +409,7 @@ export function Skills() {
 
 export function Projects() {
   const [selected, setSelected] = useState(null)
+  const [focusedProject, setFocusedProject] = useState(null)
 
   useEffect(() => {
     const preload = () => {
@@ -435,27 +436,100 @@ export function Projects() {
           return (
           <Reveal className="project-item" key={project.title}>
             <Scribble className="project-note">{project.note} ↓</Scribble>
-            <button className="device" onClick={() => setSelected(project)} aria-label={`View ${project.title} details`}>
+            <button className={`device${focusedProject === index ? ' is-active' : ''}`} onPointerEnter={() => setFocusedProject(index)} onPointerLeave={() => setFocusedProject(null)} onFocus={() => setFocusedProject(index)} onBlur={() => setFocusedProject(null)} onClick={() => setSelected(project)} aria-label={`Open ${project.title} project details`}>
               <div className="device-speaker" />
-              <div className={`device-screen project-screen-${index}`}><img src={phonePreview} alt="" /><div className="device-shade" /><div className="device-copy"><span>Open project ↗</span></div></div>
+              <div className={`device-screen project-screen-${index}`}><img src={phonePreview} alt="" /><div className="device-shade" /><div className="device-copy"><i aria-hidden="true">✦</i><i aria-hidden="true">◌</i><ScrambleProjectLabel active={focusedProject === index} title={project.title} /></div></div>
             </button>
             <Scribble className="project-number">{index + 1}. {project.title}</Scribble>
           </Reveal>
           )
         })}
       </div>
+      <ContributionGrid />
       {selected && <div className="project-modal" role="dialog" aria-modal="true" aria-label={`${selected.title} project details`} onClick={() => setSelected(null)}>
         <div className="project-modal-card" onClick={event => event.stopPropagation()}>
           <button className="project-modal-close" onClick={() => setSelected(null)}>close ×</button>
           <Scribble>{selected.note}</Scribble>
           <h3>{selected.title}</h3>
           <p>{selected.description}</p>
+          <div className="project-modal-meta">
+            <div><span>Built around</span><ul>{selected.stack.map(item => <li key={item}>{item}</li>)}</ul></div>
+            <div><span>Inside the project</span><ul>{selected.highlights.map(item => <li key={item}>{item}</li>)}</ul></div>
+          </div>
           <img src={selected.image} alt={`${selected.title} preview`} />
           <a href={selected.url} target="_blank" rel="noreferrer">Visit live project ↗</a>
         </div>
       </div>}
     </section>
   )
+}
+
+function ContributionGrid() {
+  const [hovered, setHovered] = useState(null)
+  const months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
+  const activity = (week, day) => {
+    // Intentional uneven months: the twelve monthly totals add to exactly 626.
+    const monthlyTotals = [12, 20, 36, 48, 74, 83, 63, 42, 77, 60, 68, 43]
+    const month = Math.min(11, Math.floor((week * 12) / 52))
+    const startWeek = Math.floor((month * 52) / 12)
+    const weeksInMonth = Math.floor(((month + 1) * 52) / 12) - startWeek
+    const cellsInMonth = weeksInMonth * 7
+    const localCell = (week - startWeek) * 7 + day
+    const total = monthlyTotals[month]
+    const baseLevel = Math.floor(total / cellsInMonth)
+    const remainder = total % cellsInMonth
+    // 17 is coprime to both 28 and 35 cells, giving each month a stable scattered pattern.
+    const scatterRank = (localCell * 17 + 5) % cellsInMonth
+    return baseLevel + (scatterRank < remainder ? 1 : 0)
+  }
+  return <Reveal className="contribution-trace">
+    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile">🐙 GitHub activity ↗</a></div>
+    <div className="contribution-calendar" role="grid" aria-label="626 GitHub contributions in the last year">
+      <div className="contribution-days" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>
+      <div className="contribution-grid-wrap"><div className="contribution-months" aria-hidden="true">{months.map(month => <span key={month}>{month}</span>)}</div><div className="contribution-grid">{Array.from({ length: 52 }, (_, week) => Array.from({ length: 7 }, (_, day) => {
+        const level = activity(week, day)
+        const key = `${week}-${day}`
+        return <button type="button" key={key} className={`contribution-cell level-${level}`} onPointerEnter={() => setHovered({ level, week })} onPointerLeave={() => setHovered(null)} aria-label={`${level ? level : 'No'} contribution${level === 1 ? '' : 's'}`} />
+      }))}</div></div>
+    </div>
+    <div className="contribution-footer"><span>{hovered ? `${hovered.level || 'No'} contribution${hovered?.level === 1 ? '' : 's'}` : 'Hover to inspect'}</span><span><i className="level-1" /><i className="level-2" /><i className="level-3" /><i className="level-4" /></span></div>
+  </Reveal>
+}
+
+function ScrambleProjectLabel({ active, title }) {
+  const target = `Open ${title} ↗`
+  const outputRef = useRef(null)
+  useEffect(() => {
+    const output = outputRef.current
+    if (!output) return undefined
+    const write = value => { output.textContent = value }
+    if (!active || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      write(target)
+      return undefined
+    }
+    const glyphs = [...target]
+    const characters = '01<>[]{}/\\|=~^'
+    const settleTimes = glyphs.map((_, index) => {
+      const scatter = Math.sin(index * 7.31 + glyphs.length * 1.7) * .5 + .5
+      return (index + scatter * 2.5) * 36
+    })
+    const end = Math.max(...settleTimes)
+    let written = -Infinity
+    let animationId = 0
+    const start = performance.now()
+    const tick = now => {
+      const elapsed = now - start
+      if (elapsed >= end) return write(target)
+      if (now - written >= 45) {
+        written = now
+        write(glyphs.map((glyph, index) => /\s/.test(glyph) || elapsed >= settleTimes[index] ? glyph : characters[Math.floor(Math.random() * characters.length)]).join(''))
+      }
+      animationId = requestAnimationFrame(tick)
+    }
+    animationId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(animationId)
+  }, [active, target])
+  return <span className="project-scramble" aria-label={target}><span ref={outputRef}>{target}</span></span>
 }
 
 function XMark({ className = '' }) {
