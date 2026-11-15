@@ -2096,3 +2096,15 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .project-modal-card img { max-height:180px; margin:16px 0; }.project-modal-card > a { padding:9px 14px; font-size:13px; }
 :root[data-theme='dark'] .project-modal-meta > div { background:#20242a; border-color:rgba(255,255,255,.12); }:root[data-theme='dark'] .project-modal-meta li { color:rgba(242,240,235,.8); }
 @media (max-width:620px) { .education-atlas-heading { display:block; }.education-atlas-heading .education-heading-note { margin:18px 0 0; }.project-modal-card { width:calc(100% - 24px); padding:40px 20px 20px; border-radius:18px; }.project-modal-card img { max-height:140px; } }
+
+/* The project action reads like a handwritten annotation, not a compact UI label. */
+.project-scramble { font:700 clamp(14px,1.3vw,19px)/1.05 var(--hand); letter-spacing:.015em; text-shadow:0 2px 10px rgba(0,0,0,.8); }
+
+/* Keep the handwritten archive note on one clean line beside the title. */
+.education-atlas-heading .education-heading-note { position:static !important; flex:0 0 auto; white-space:nowrap; transform:rotate(-2deg); }
+.education-atlas-heading h2::after { border-radius:0; transform:none; }
+
+/* New quiet footer sky — intentionally simple so the existing footer type remains legible. */
+.folio-footer { background-image:linear-gradient(rgba(244,243,239,.56), rgba(244,243,239,.7)), url('/images/footer-sky.png'); background-position:center; background-size:cover; }
+.folio-footer::before { display:none; }
+:root[data-theme='dark'] .folio-footer { background-image:linear-gradient(rgba(10,12,15,.48), rgba(10,12,15,.66)), url('/images/footer-sky.png'); }
