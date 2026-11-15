@@ -2292,8 +2292,13 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   box-shadow:0 3px 8px rgba(20,29,45,.16);
 }
 :root:not([data-theme='dark']) .atlas-card-2 .education-atlas-card-art img {
-  transform:scale(1.28);
-  filter:brightness(1.12) contrast(1.08);
+  /* The general logo rule uses multiply for transparent artwork. The supplied
+     AWS image is already a dark artwork with a white mark, so restore its
+     own pixels rather than blending that white ink into the navy tile. */
+  transform:scale(1.18);
+  filter:brightness(1.16) contrast(1.12);
+  mix-blend-mode:normal !important;
+  opacity:1;
 }
 :root[data-theme='dark'] .atlas-card-0 .education-atlas-card-meta { border-top-color:rgba(255,255,255,.16); }
 @media (max-width:620px) {
