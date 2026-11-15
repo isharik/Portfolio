@@ -1063,6 +1063,43 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .scribble { font-size:15px; }
 }
 
+/* Education heading follows the same left-title / handwritten-note rhythm as Experience.
+   The stage below stays completely independent, preserving the bento geometry. */
+.education-atlas-heading {
+  max-width:none;
+  margin-inline:0;
+  text-align:left;
+  display:flex;
+  align-items:flex-end;
+  gap:34px;
+}
+.education-atlas-heading .education-atlas-kicker { display:none; }
+.education-atlas-heading h2 { margin:0; font-size:clamp(68px,7.6vw,110px); }
+.education-atlas-heading .education-heading-note {
+  display:block;
+  width:auto;
+  margin:0 0 12px;
+  color:var(--blue);
+  font-size:clamp(18px,1.55vw,24px);
+  line-height:.95;
+  transform:rotate(-2deg);
+}
+
+/* Do not invert these source marks in dark mode: their original ink/color is legible on a clean paper tile. */
+:root[data-theme='dark'] .education-atlas-card-art {
+  background:#f7f7f5;
+  border-color:rgba(255,255,255,.22);
+}
+:root[data-theme='dark'] .education-atlas-card-art img {
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  opacity:1;
+}
+@media (max-width:620px) {
+  .education-atlas-heading { display:block; }
+  .education-atlas-heading .education-heading-note { margin:18px 0 0; }
+}
+
 /* Education uses the same title rhythm as Experience; card geometry stays untouched. */
 .education-atlas-heading {
   position: relative;
@@ -2041,3 +2078,21 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .education-rail-cv-card .qr { width:58px; }
   .education-rail-cv-card .scribble { font-size:15px; }
 }
+
+/* Final, isolated Education header alignment — the stage/grid coordinates stay untouched. */
+.education-atlas-heading { max-width:none; margin-inline:0; text-align:left; display:flex; align-items:flex-end; gap:34px; }
+.education-atlas-heading .education-atlas-kicker { display:none; }
+.education-atlas-heading h2 { margin:0; font-size:clamp(68px,7.6vw,110px); }
+.education-atlas-heading .education-heading-note { display:block; width:auto; margin:0 0 12px; color:var(--blue); font-size:clamp(18px,1.55vw,24px); line-height:.95; transform:rotate(-2deg); }
+
+/* Original source colors read correctly against a paper tile in dark mode. */
+:root[data-theme='dark'] .education-atlas-card-art { background:#f7f7f5; border-color:rgba(255,255,255,.22); }
+:root[data-theme='dark'] .education-atlas-card-art img { filter:none !important; mix-blend-mode:normal !important; opacity:1; }
+
+/* Compact, crisp project details — all panels are deliberately light in light mode. */
+.project-modal-card { width:min(760px, calc(100% - 32px)); max-height:calc(100svh - 44px); padding:28px 32px 24px; border-radius:20px; }
+.project-modal-card h3 { margin:8px 0; font-size:clamp(38px,5.2vw,64px); }.project-modal-card p { margin:0; font-size:15px; line-height:1.5; }
+.project-modal-meta { gap:10px; margin:16px 0 0; }.project-modal-meta > div { padding:13px 14px; background:#fffdf8; border-color:rgba(28,31,35,.11); }.project-modal-meta span { margin-bottom:7px; }.project-modal-meta ul { gap:5px; }.project-modal-meta li { color:#3e4348; font-size:13px; }
+.project-modal-card img { max-height:180px; margin:16px 0; }.project-modal-card > a { padding:9px 14px; font-size:13px; }
+:root[data-theme='dark'] .project-modal-meta > div { background:#20242a; border-color:rgba(255,255,255,.12); }:root[data-theme='dark'] .project-modal-meta li { color:rgba(242,240,235,.8); }
+@media (max-width:620px) { .education-atlas-heading { display:block; }.education-atlas-heading .education-heading-note { margin:18px 0 0; }.project-modal-card { width:calc(100% - 24px); padding:40px 20px 20px; border-radius:18px; }.project-modal-card img { max-height:140px; } }
