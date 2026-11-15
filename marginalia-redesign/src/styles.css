@@ -2255,3 +2255,48 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .atlas-card-2 .education-atlas-card-art { background:#161d2b; }
 .atlas-card-2 .education-atlas-card-art img { width:100%; height:100%; object-fit:cover; }
 .education-detail-mark img[src$='aws-academy.jpg'] { width:100%; height:100%; object-fit:cover; }
+
+/* Degree metadata follows the same single-row rhythm as the Pharos credential. */
+.atlas-card-0 .education-atlas-card-copy {
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  align-self:stretch;
+  min-height:0;
+}
+.atlas-card-0 .education-atlas-card-copy small { align-self:start; }
+.atlas-card-0 .education-atlas-card-copy strong { align-self:start; margin-bottom:12px; }
+.atlas-card-0 .education-atlas-card-meta {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  margin-top:auto;
+  padding-top:10px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 13%,transparent);
+}
+.atlas-card-0 .education-atlas-card-meta em,
+.atlas-card-0 .education-atlas-card-meta b {
+  position:static;
+  display:block;
+  margin:0;
+  white-space:nowrap;
+  line-height:1;
+}
+.atlas-card-0 .education-atlas-card-meta em { justify-self:start; }
+.atlas-card-0 .education-atlas-card-meta b { justify-self:end; text-align:right; }
+
+/* Give the supplied AWS mark a crisp, visible light-mode brand tile. */
+:root:not([data-theme='dark']) .atlas-card-2 .education-atlas-card-art {
+  border-color:rgba(25,36,61,.22);
+  background:#172033;
+  box-shadow:0 3px 8px rgba(20,29,45,.16);
+}
+:root:not([data-theme='dark']) .atlas-card-2 .education-atlas-card-art img {
+  transform:scale(1.28);
+  filter:brightness(1.12) contrast(1.08);
+}
+:root[data-theme='dark'] .atlas-card-0 .education-atlas-card-meta { border-top-color:rgba(255,255,255,.16); }
+@media (max-width:620px) {
+  .atlas-card-0 .education-atlas-card-meta { gap:9px; }
+  .atlas-card-0 .education-atlas-card-meta em,.atlas-card-0 .education-atlas-card-meta b { font-size:10px; }
+}
