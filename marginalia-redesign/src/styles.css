@@ -2130,7 +2130,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
   font-family:'Orbitron Local',monospace !important;
-  font-size:clamp(10px,.82vw,12.5px) !important;
+  font-size:clamp(11.5px,.96vw,15px) !important;
   font-weight:400;
   line-height:1;
   letter-spacing:.055em;
