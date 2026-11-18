@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=Orbitron:wght@400;500&display=swap');
 
 :root {
   --paper: #f4f3ef;
@@ -2119,15 +2119,15 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 }
 @keyframes footer-sky-drift { from { background-position:48% 48%; } to { background-position:52% 54%; } }
 
-/* Match the project-name scale beneath each phone and override the old compact label rule. */
+/* Orbitron keeps the animated project action legible without turning it into a button. */
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
-  font-family:var(--hand) !important;
-  font-size:clamp(17px,1.65vw,25px) !important;
-  font-weight:700;
-  line-height:1.08;
-  letter-spacing:.01em;
-  white-space:normal;
+  font-family:'Orbitron',var(--mono),monospace !important;
+  font-size:clamp(10.5px,1.03vw,16px) !important;
+  font-weight:400;
+  line-height:1;
+  letter-spacing:-.055em;
+  white-space:nowrap;
 }
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 
