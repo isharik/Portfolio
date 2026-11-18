@@ -2130,10 +2130,11 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
   font-family:'Orbitron Local',monospace !important;
-  font-size:clamp(10.5px,1.03vw,16px) !important;
+  font-size:clamp(9.8px,.93vw,14.5px) !important;
   font-weight:400;
   line-height:1;
-  letter-spacing:-.055em;
+  letter-spacing:-.018em;
+  word-spacing:.13em;
   white-space:nowrap;
 }
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
