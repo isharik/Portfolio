@@ -2148,10 +2148,11 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   text-align:center;
   transform:translateY(calc(-50% - 3px));
 }
+.device-copy .project-scramble > span { display:block; width:100%; text-align:center; }
 .device-copy .project-scramble::after {
   content:'OPEN';
-  display:inline-block;
-  margin-left:.9em;
+  display:table;
+  margin:.9em auto 0;
   padding:.48em .7em .43em;
   border:1px solid rgba(255,255,255,.76);
   border-radius:999px;
