@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=Orbitron:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+@font-face {
+  font-family:'Orbitron Local';
+  src:url('/fonts/Orbitron-Regular.ttf') format('truetype');
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+}
 
 :root {
   --paper: #f4f3ef;
@@ -2122,7 +2129,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 /* Orbitron keeps the animated project action legible without turning it into a button. */
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
-  font-family:'Orbitron',var(--mono),monospace !important;
+  font-family:'Orbitron Local',monospace !important;
   font-size:clamp(10.5px,1.03vw,16px) !important;
   font-weight:400;
   line-height:1;
