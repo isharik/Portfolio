@@ -2130,13 +2130,14 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
   font-family:'Orbitron Local',monospace !important;
-  font-size:clamp(9.6px,.9vw,14px) !important;
+  font-size:clamp(9.3px,.87vw,13.6px) !important;
   font-weight:400;
   line-height:1;
-  letter-spacing:.025em;
-  word-spacing:.24em;
+  letter-spacing:.035em;
+  word-spacing:.3em;
   white-space:nowrap;
 }
+.device-copy .project-scramble { width:100%; text-align:center; transform:translateY(-3px); }
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 
 /* Footer copy has its own explicit contrast layer over the sky in dark mode. */

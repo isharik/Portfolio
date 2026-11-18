@@ -512,7 +512,7 @@ function ContributionGrid() {
 }
 
 function ScrambleProjectLabel({ active, title }) {
-  const target = `Open ${title} ⟡`
+  const target = `Open ${title}`
   const outputRef = useRef(null)
   useEffect(() => {
     const output = outputRef.current
