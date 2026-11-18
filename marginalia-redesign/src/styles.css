@@ -2126,15 +2126,15 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 }
 @keyframes footer-sky-drift { from { background-position:48% 48%; } to { background-position:52% 54%; } }
 
-/* Orbitron keeps the animated project action legible without turning it into a button. */
+/* Every phone uses one compact, crisp Orbitron treatment; only the name is scrambled. */
 .device-copy .project-scramble,
 .device-copy .project-scramble > span {
   font-family:'Orbitron Local',monospace !important;
-  font-size:clamp(9.5px,.86vw,13.2px) !important;
+  font-size:clamp(10px,.82vw,12.5px) !important;
   font-weight:400;
   line-height:1;
-  letter-spacing:.04em;
-  word-spacing:.28em;
+  letter-spacing:.055em;
+  word-spacing:.2em;
   white-space:nowrap;
   -webkit-font-smoothing:antialiased;
   text-rendering:geometricPrecision;
@@ -2149,27 +2149,19 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   transform:translateY(calc(-50% - 3px));
 }
 .device-copy .project-scramble::after {
-  content:'↗';
+  content:'OPEN';
   display:inline-block;
-  margin-left:.48em;
+  margin-left:.9em;
+  padding:.48em .7em .43em;
+  border:1px solid rgba(255,255,255,.76);
+  border-radius:999px;
   color:#fff;
   font-family:var(--sans);
-  font-size:.92em;
+  font-size:.58em;
   font-weight:600;
+  letter-spacing:.12em;
   line-height:1;
-  vertical-align:.08em;
-}
-/* Long labels retain the same centered treatment, with a compact optical scale. */
-.project-device-1 .project-scramble,
-.project-device-2 .project-scramble,
-.project-device-4 .project-scramble,
-.project-device-1 .project-scramble > span,
-.project-device-2 .project-scramble > span,
-.project-device-4 .project-scramble > span {
-  font-size:clamp(8.4px,.72vw,11.4px) !important;
-  letter-spacing:.026em;
-  word-spacing:.22em;
-  text-align:center;
+  vertical-align:.16em;
 }
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 
