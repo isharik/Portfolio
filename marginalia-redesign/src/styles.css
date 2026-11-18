@@ -2138,6 +2138,26 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   white-space:nowrap;
 }
 .device-copy .project-scramble { width:100%; text-align:center; transform:translateY(-3px); }
+/* Longer project names get their own compact optical scale, so their complete labels stay centered. */
+.project-device-1 .project-scramble,
+.project-device-2 .project-scramble {
+  position:absolute;
+  z-index:1;
+  inset:50% 8px auto;
+  width:auto;
+  transform:translateY(calc(-50% - 3px));
+}
+.project-device-1 .project-scramble,
+.project-device-2 .project-scramble,
+.project-device-4 .project-scramble,
+.project-device-1 .project-scramble > span,
+.project-device-2 .project-scramble > span,
+.project-device-4 .project-scramble > span {
+  font-size:clamp(8.3px,.74vw,11.6px) !important;
+  letter-spacing:.02em;
+  word-spacing:.2em;
+  text-align:center;
+}
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 
 /* Footer copy has its own explicit contrast layer over the sky in dark mode. */
