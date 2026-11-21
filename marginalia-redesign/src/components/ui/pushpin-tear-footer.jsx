@@ -650,7 +650,7 @@ export default function PushpinTearFooter({
      </button>
      <span style={{ width: ".6em" }}/>
      {socials.map((l, i) => (<A key={i} href={l.href} className="tpf-ib" label={l.label}>
-       <Icon name={l.icon}/>
+       {l.mark ?? <Icon name={l.icon}/>}
       </A>))}
     </div>
     <A href={logoHref} className="tpf-logo tpf-h" label={name + ", home"} style={H(1)}>

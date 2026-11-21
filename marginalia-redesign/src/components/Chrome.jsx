@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import VoiceNote from './ui/VoiceNote'
 
 const sections = [
   ['home', 'Cover', 'home'], ['about', 'Hello', 'user'], ['education', 'Education', 'education'], ['experience', 'Experience', 'briefcase'],
@@ -23,9 +24,6 @@ export function SiteChrome({ theme, onTheme }) {
   const [open, setOpen] = useState(true)
   const [isScrolledAway, setIsScrolledAway] = useState(false)
   const [isPeekOpen, setIsPeekOpen] = useState(false)
-  const [playing, setPlaying] = useState(false)
-  const [voiceOpen, setVoiceOpen] = useState(false)
-  const audioRef = useRef(null)
   const lampSoundRef = useRef(null)
   const lampStartY = useRef(null)
   const lampWasPulled = useRef(false)
@@ -91,38 +89,6 @@ export function SiteChrome({ theme, onTheme }) {
     }
   }, [])
 
-  useEffect(() => {
-    const onKeyDown = event => {
-      if (event.key !== 'Escape' || !voiceOpen) return
-      audioRef.current?.pause()
-      setVoiceOpen(false)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [voiceOpen])
-
-  const openVoiceNote = () => {
-    setVoiceOpen(true)
-    const audio = audioRef.current
-    if (!audio) return
-    audio.play().catch(() => {})
-  }
-
-  const togglePlayback = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (audio.paused) audio.play().catch(() => {})
-    else audio.pause()
-  }
-
-  const dismissVoiceNote = () => {
-    const audio = audioRef.current
-    if (audio) {
-      audio.pause()
-      audio.currentTime = 0
-    }
-    setVoiceOpen(false)
-  }
 
   const isDormant = isScrolledAway && !isPeekOpen
 
@@ -142,29 +108,8 @@ export function SiteChrome({ theme, onTheme }) {
         <button className="index-button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
           Curriculum Vitae <span>{open ? '−' : '+'}</span>
         </button>
-        <div className="header-voice-wrap">
-          <button className={`header-voice ${playing ? 'is-playing' : ''}`} onClick={openVoiceNote} aria-haspopup="dialog" aria-expanded={voiceOpen}>
-            <i aria-hidden>{playing ? 'Ⅱ' : '▶'}</i>
-            <span>voice note</span>
-            <b aria-hidden><u /><u /><u /><u /></b>
-          </button>
-          {voiceOpen && (
-            <section className={`voice-popover ${playing ? 'is-playing' : ''}`} role="dialog" aria-label="Personal voice note player">
-              <div className="voice-art-stage" aria-hidden="true"><div className="voice-player-art"><span>SH</span><small>voice note</small></div><div className="voice-vinyl"><i /><b /></div></div>
-              <div className="voice-popover-copy">
-                <small>Personal voice note</small>
-                <strong>Meet Sharik</strong>
-                <span className="voice-wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>
-              </div>
-              <button className={`voice-popover-play ${playing ? 'is-paused-state' : ''}`} onClick={togglePlayback} aria-label={playing ? 'Pause voice note' : 'Play voice note'}>
-                {playing ? <span className="voice-pause-mark" aria-hidden="true"><i /><i /></span> : <span className="voice-play-mark" aria-hidden="true" />}
-              </button>
-              <button className="voice-popover-close" onClick={dismissVoiceNote} aria-label="Close voice note player">×</button>
-            </section>
-          )}
-        </div>
+        <VoiceNote />
         <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
-        <audio ref={audioRef} src="/recruiter-intro.mp3" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setVoiceOpen(false) }} />
         <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>
       <nav className={`folio-index ${open && !isDormant ? 'is-open' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} aria-label="Portfolio index">

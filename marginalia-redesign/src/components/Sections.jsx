@@ -4,6 +4,7 @@ import QRCode from 'qrcode'
 import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
+import ProjectDetail from './ui/ProjectDetail'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 
 function Scribble({ children, className = '' }) {
@@ -476,20 +477,7 @@ export function Projects() {
         })}
       </div>
       <ContributionGrid />
-      {selected && <div className="project-modal" role="dialog" aria-modal="true" aria-label={`${selected.title} project details`} onClick={() => setSelected(null)}>
-        <div className="project-modal-card" onClick={event => event.stopPropagation()}>
-          <button className="project-modal-close" onClick={() => setSelected(null)}>close ×</button>
-          <Scribble>{selected.note}</Scribble>
-          <h3>{selected.title}</h3>
-          <p>{selected.description}</p>
-          <div className="project-modal-meta">
-            <div><span>Built around</span><ul>{selected.stack.map(item => <li key={item}>{item}</li>)}</ul></div>
-            <div><span>Inside the project</span><ul>{selected.highlights.map(item => <li key={item}>{item}</li>)}</ul></div>
-          </div>
-          <img src={selected.image} alt={`${selected.title} preview`} />
-          <a href={selected.url} target="_blank" rel="noreferrer">Visit live project ↗</a>
-        </div>
-      </div>}
+      {selected && <ProjectDetail project={selected} onClose={() => setSelected(null)} />}
     </section>
   )
 }
@@ -827,6 +815,7 @@ function PortfolioFooter({ theme, onEmail }) {
         </>
       }
       socials={[
+        { icon: 'github', label: 'GitHub', href: profile.socials.github, mark: <GitHubMark className="tpf-ico" /> },
         { icon: 'linkedin', label: 'LinkedIn', href: profile.socials.linkedin },
         { icon: 'x', label: 'X', href: profile.socials.x },
       ]}
