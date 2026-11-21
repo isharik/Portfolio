@@ -469,7 +469,12 @@ export function Projects() {
             <Scribble className="project-note">{project.note} ↓</Scribble>
             <button className={`device project-device-${index}${focusedProject === index ? ' is-active' : ''}`} onPointerEnter={() => setFocusedProject(index)} onPointerLeave={() => setFocusedProject(null)} onMouseEnter={() => setFocusedProject(index)} onMouseLeave={() => setFocusedProject(null)} onFocus={() => setFocusedProject(index)} onBlur={() => setFocusedProject(null)} onClick={() => setSelected(project)} aria-label={`Open ${project.title} project details`}>
               <div className="device-speaker" />
-              <div className={`device-screen project-screen-${index}`}><img src={phonePreview} alt="" loading="eager" decoding="async" fetchPriority="high" /><div className="device-shade" /><div className="device-copy"><ScrambleProjectLabel active={focusedProject === index} title={project.title} /></div></div>
+              <div className={`device-screen project-screen-${index}`}>
+                <img src={phonePreview} alt="" loading="eager" decoding="async" fetchPriority="high" />
+                <div className="device-shade" />
+                {project.phoneHeading && <div className="device-wallpaper-title" aria-hidden="true">{project.phoneHeading}</div>}
+                <div className="device-copy"><ScrambleProjectLabel active={focusedProject === index} title={project.title} /></div>
+              </div>
             </button>
             <Scribble className="project-number">{index + 1}. {project.title}</Scribble>
           </Reveal>
