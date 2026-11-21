@@ -16,6 +16,7 @@ function DancingLetter({ letter, index }) {
   const [scope, animate] = useAnimate()
   const reducedMotion = useReducedMotion()
   const [keyframes, transition, transformOrigin] = effects[index % effects.length]
+  const entrance = { duration: .56, delay: index * .055, ease: [.22, .75, .24, 1] }
 
   return (
     <motion.span
@@ -25,7 +26,23 @@ function DancingLetter({ letter, index }) {
         if (!reducedMotion && scope.current) animate(scope.current, keyframes, transition)
       }}
     >
-      <span ref={scope} style={{ transformOrigin }}>{letter}</span>
+      {!reducedMotion && (
+        <motion.span
+          className="text-roll-face text-roll-front"
+          initial={{ rotateX: 0, opacity: 1 }}
+          animate={{ rotateX: 90, opacity: .15 }}
+          transition={entrance}
+        >{letter}</motion.span>
+      )}
+      <motion.span
+        className="text-roll-face text-roll-back"
+        initial={reducedMotion ? false : { rotateX: 90, opacity: .15 }}
+        animate={{ rotateX: 0, opacity: 1 }}
+        transition={reducedMotion ? { duration: 0 } : { ...entrance, delay: entrance.delay + .12 }}
+      >
+        <span ref={scope} className="dancing-glyph" style={{ transformOrigin }}>{letter}</span>
+      </motion.span>
+      <span className="text-roll-space">{letter}</span>
     </motion.span>
   )
 }

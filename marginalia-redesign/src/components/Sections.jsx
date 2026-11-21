@@ -674,10 +674,18 @@ export function ThankYou() {
       <Reveal className="thank-you-paper">
         <span className="thank-you-clip" aria-hidden="true" />
         <span className="thank-you-pin" aria-hidden="true" />
-        <h2 id="thank-you-title">Thank you.</h2>
-        <p>Thanks for taking the time to read through my work. I care about making complex technology easier to understand and use, and I hope you found something here that stayed with you.</p>
-        <p>See you around,</p>
-        <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
+        <span className="thank-you-pen" aria-hidden="true" />
+        <div className="contact-left">
+          <img src="/profile-photo.webp" alt="Sharik Hussain" />
+          <h2 id="thank-you-title">Thank you</h2>
+          <div className="ink-underline" aria-hidden="true" />
+        </div>
+        <div className="contact-letter">
+          <p>I build where people, systems, and AI meet. If your team needs careful evaluation, dependable operations, clear customer communication, or thoughtful ecosystem content, I would love to hear what you are working on.</p>
+          <p>I am comfortable with complex workflows, honest feedback, and the patient work required to make technology more useful.</p>
+          <p>Let’s make something clear, reliable, and worth shipping.</p>
+          <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
+        </div>
       </Reveal>
     </section>
   )
@@ -829,6 +837,7 @@ function PortfolioFooter({ theme, onEmail }) {
       sheetInk="#f5f3ee"
       paperInk={dark ? '#f0efeb' : '#282831'}
       fontSans="var(--sans)"
+      height="clamp(410px, 54svh, 540px)"
       seed={23}
     />
   )
