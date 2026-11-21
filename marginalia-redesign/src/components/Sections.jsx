@@ -883,7 +883,7 @@ function PortfolioFooter({ theme, onEmail }) {
       contactActions={
         <>
           <button type="button" className="tpf-contact-primary" aria-haspopup="dialog" onClick={onEmail}>Email me here</button>
-          <a href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">Book a slot <span aria-hidden="true">↗</span></a>
+          <a href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">Schedule a call <span aria-hidden="true">↗</span></a>
         </>
       }
       socials={[
