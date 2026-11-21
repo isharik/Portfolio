@@ -277,13 +277,13 @@ function useReducedMotion() {
   }, [])
   return reduced
 }
-function A({ href, className, label, children, style }) {
+function A({ href, className, label, children, style, download }) {
   const onClick = (e) => {
     if (!href || href === "#")
       e.preventDefault()
   }
   const out = !!href && /^https?:/.test(href)
-  return (<a href={href || "#"} className={className} aria-label={label} title={label} onClick={onClick} style={style} {...(out ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+  return (<a href={href || "#"} className={className} aria-label={label} title={label} onClick={onClick} style={style} download={download} {...(out ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
    {children}
   </a>)
 }
@@ -668,7 +668,7 @@ export default function PushpinTearFooter({
    </div>
 
    {primaryLink && (<div className="tpf-z tpf-news tpf-h" style={H(3)}>
-     <A href={primaryLink.href} className="tpf-pill tpf-primary">
+     <A href={primaryLink.href} className="tpf-pill tpf-primary" download={primaryLink.download}>
       <span>{primaryLink.label}</span>
       <span className="tpf-knob"><Icon name="arrow"/></span>
      </A>

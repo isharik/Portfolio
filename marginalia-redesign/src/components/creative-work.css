@@ -1,6 +1,6 @@
 .sheet.creative-work {
   min-height: 0;
-  padding: clamp(28px, 6svh, 64px) 5%;
+  padding: clamp(42px, 9svh, 88px) 5%;
 }
 
 .creative-heading {
@@ -18,17 +18,17 @@
   line-height: .95;
 }
 
-.creative-heading p {
+.creative-heading .scribble {
   margin: 0;
-  color: var(--soft-ink);
-  font: 15px/1.4 var(--sans);
+  font-size: clamp(21px, 2.35vw, 30px);
+  line-height: 1.12;
 }
 
 .creative-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 1.5vw, 24px);
-  margin: clamp(14px, 3svh, 30px) 0;
+  margin: clamp(22px, 4svh, 40px) 0;
   padding: 0;
   list-style: none;
 }
@@ -96,22 +96,36 @@
 .creative-footer {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
   gap: 8px 24px;
   border-top: 1px solid var(--hairline);
-  padding-top: 12px;
+  padding-top: clamp(18px, 3svh, 28px);
 }
 
 .creative-tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px 14px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
-  color: var(--soft-ink);
-  font: 12px/1.4 var(--sans);
+}
+
+.creative-tools li {
+  display: grid;
+  width: 42px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--paper) 92%, white);
+}
+
+.creative-tools img {
+  display: block;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .creative-more { font: 600 13px/1.4 var(--sans); }
@@ -168,11 +182,14 @@ html:has(.creative-dialog[open]) { overflow: hidden; }
 }
 
 @media (max-width: 640px) {
+  .sheet.creative-work { padding-block: 42px; }
   .creative-heading { display: grid; }
   .creative-grid { grid-template-columns: 1fr; }
   .creative-cut { grid-template-columns: 40% minmax(0, 1fr); align-items: center; gap: 12px; }
   .creative-play { width: 32px; height: 32px; }
   .creative-duration { inset: auto 4px 4px auto; font-size: 10px; }
+  .creative-tools li { width: 35px; }
+  .creative-tools img { width: 23px; height: 23px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

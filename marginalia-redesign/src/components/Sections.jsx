@@ -694,10 +694,7 @@ export function Facts() {
 export function ThankYou() {
   return (
     <section id="thank-you" className="sheet paper-sheet thank-you-sheet" aria-labelledby="thank-you-title">
-      <Reveal className="thank-you-paper">
-        <span className="thank-you-clip" aria-hidden="true" />
-        <span className="thank-you-pin" aria-hidden="true" />
-        <span className="thank-you-pen" aria-hidden="true" />
+      <Reveal className="thank-you-content">
         <div className="contact-left">
           <img src="/profile-photo.webp" alt="Sharik Hussain" />
           <h2 id="thank-you-title">Thank you</h2>
@@ -841,7 +838,7 @@ function PortfolioFooter({ theme, onEmail }) {
       name={profile.name}
       logo={<span className="tpf-portfolio-monogram" aria-hidden="true">SH</span>}
       logoHref="#home"
-      primaryLink={{ label: 'Curriculum Vitae', href: '/resume.pdf' }}
+      primaryLink={{ label: 'Download resume', href: '/resume.pdf', download: true }}
       timeZone={null}
       contactActions={
         <>

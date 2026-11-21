@@ -27,6 +27,20 @@ export function SiteChrome({ theme, onTheme }) {
   const lampSoundRef = useRef(null)
   const lampStartY = useRef(null)
   const lampWasPulled = useRef(false)
+  const sectionScroll = useRef(0)
+
+  const keepIndexOpenWhileScrolling = () => {
+    window.clearTimeout(sectionScroll.current)
+    sectionScroll.current = window.setTimeout(() => { sectionScroll.current = 0 }, 180)
+  }
+
+  const followSectionLink = (event, label) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    setActive(label)
+    setIsScrolledAway(false)
+    setIsPeekOpen(false)
+    keepIndexOpenWhileScrolling()
+  }
 
   const playLampSound = () => {
     const sound = lampSoundRef.current
@@ -53,7 +67,11 @@ export function SiteChrome({ theme, onTheme }) {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => entry.isIntersecting && setActive(entry.target.dataset.label || 'Cover')),
+      entries => {
+        if (sectionScroll.current) return
+        const visible = entries.find(entry => entry.isIntersecting)
+        if (visible) setActive(visible.target.dataset.label || 'Cover')
+      },
       { rootMargin: '-35% 0px -55%' },
     )
     sections.forEach(([id]) => {
@@ -69,7 +87,9 @@ export function SiteChrome({ theme, onTheme }) {
     const updateVisibility = () => {
       const currentY = window.scrollY
       const delta = currentY - previousY
-      if (currentY < 72 || delta < -4) {
+      if (sectionScroll.current) {
+        keepIndexOpenWhileScrolling()
+      } else if (currentY < 72 || delta < -4) {
         setIsScrolledAway(false)
         setIsPeekOpen(false)
       } else if (delta > 4 && currentY > 120) {
@@ -85,6 +105,7 @@ export function SiteChrome({ theme, onTheme }) {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.clearTimeout(sectionScroll.current)
       if (frame) window.cancelAnimationFrame(frame)
     }
   }, [])
@@ -101,7 +122,7 @@ export function SiteChrome({ theme, onTheme }) {
         onClick={() => { setIsPeekOpen(true); setOpen(true) }}
         aria-label="Reveal portfolio navigation"
       >
-        <span aria-hidden="true">SH</span><b>Sharik Hussain <em>· his pitch</em></b>
+        <span aria-hidden="true">SH</span><b>Sharik Hussain</b>
       </button>
       <header className={`folio-header ${isDormant ? 'is-dormant' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} onPointerLeave={() => { if (isScrolledAway) setIsPeekOpen(false) }}>
         <a className="header-year" href="#home">2026</a>
@@ -112,10 +133,11 @@ export function SiteChrome({ theme, onTheme }) {
         <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
         <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>
-      <nav className={`folio-index ${open && !isDormant ? 'is-open' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} aria-label="Portfolio index">
-        {sections.map(([id, label, icon], index) => (
-          <a href={`#${id}`} key={id} aria-label={label} className={active === label ? 'is-active' : ''}>
-            <b aria-hidden><NavIcon name={icon} /></b><span>{label}</span><small>{String(index + 1).padStart(2, '0')}</small>
+      <nav className={`folio-index ${open && !isDormant ? 'is-open' : ''}`} inert={!open || isDormant} aria-label="Portfolio index">
+        {sections.map(([id, label, icon]) => (
+          <a href={`#${id}`} key={id} aria-label={label} aria-current={active === label ? 'location' : undefined}
+            className={active === label ? 'is-active' : ''} onClick={event => followSectionLink(event, label)}>
+            <b aria-hidden="true"><NavIcon name={icon} /></b><span className="folio-index-label"><span>{label}</span></span>
           </a>
         ))}
       </nav>

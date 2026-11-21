@@ -3,11 +3,20 @@ import { profile } from '../data'
 import './creative-work.css'
 
 const clips = [
-  { title: 'Pharos — Direct Transition', file: 'pharos-direct-transition', duration: '1:04' },
-  { title: 'Pharos A2A', file: 'pharos-a2a', duration: '0:40' },
-  { title: 'World to Value', file: 'world-to-value', duration: '0:44' },
+  { title: 'Pharos Network', file: 'pharos-direct-transition', duration: '1:04' },
+  { title: 'A2A', file: 'pharos-a2a', duration: '0:40' },
+  { title: 'Curve Volt Value', file: 'world-to-value', duration: '0:44' },
 ]
-const editingTools = ['Plotr', 'Codex', 'After Effects', 'DaVinci Resolve', 'Filmora']
+const editingTools = [
+  { name: 'Plotr', icon: 'plotr.jpg' },
+  { name: 'Codex', icon: 'codex.svg' },
+  { name: 'After Effects', icon: 'after-effects.svg' },
+  { name: 'DaVinci Resolve', icon: 'davinci.svg' },
+  { name: 'Filmora', icon: 'filmora.svg' },
+  { name: 'Claude', icon: 'claude.svg' },
+  { name: 'Photoshop', icon: 'photoshop.svg' },
+  { name: 'HyperFrames', icon: 'hyperframes.svg' },
+]
 
 export default function CreativeWork() {
   const dialog = useRef(null)
@@ -21,7 +30,7 @@ export default function CreativeWork() {
     <section id="creative-work" className="sheet paper-sheet creative-work" aria-labelledby="creative-work-title">
       <header className="creative-heading">
         <h2 id="creative-work-title">Creative Work.</h2>
-        <p>Video editing, motion design, and visual storytelling.</p>
+        <p className="scribble">Video editing, motion design, and visual storytelling.</p>
       </header>
       <ol className="creative-grid" aria-label="Selected video work">
         {clips.map((clip, index) => (
@@ -42,7 +51,11 @@ export default function CreativeWork() {
       </ol>
       <div className="creative-footer">
         <ul className="creative-tools" aria-label="Editing and creative tools">
-          {editingTools.map(tool => <li key={tool}>{tool}</li>)}
+          {editingTools.map(({ name, icon }) => (
+            <li key={name}>
+              <img src={`/images/creative-${icon}`} alt={name} title={name} width="28" height="28" />
+            </li>
+          ))}
         </ul>
         <a className="creative-more" href={profile.socials.x} target="_blank" rel="noreferrer">More on X <span aria-hidden="true">↗</span></a>
       </div>
