@@ -554,6 +554,13 @@ function XMark({ className = '' }) {
   return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg>
 }
 
+function SpotifyMark() {
+  return <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+    <circle cx="12" cy="12" r="11" fill="currentColor" />
+    <path d="M6.2 9c4.5-1.2 8.3-.8 11.7 1.2M7 12.2c3.6-.9 6.9-.5 9.9 1.2M7.8 15.2c2.9-.6 5.5-.3 7.9 1" fill="none" stroke="var(--paper)" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+}
+
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [exploring, setExploring] = useState(false)
@@ -565,7 +572,24 @@ export function Facts() {
     { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps', samples: [{ label: 'Featured video 01', href: 'https://youtu.be/H0FTvvO9M-M?si=_TZrwOcNDmq_0S8Q', image: 'https://i.ytimg.com/vi/H0FTvvO9M-M/hqdefault.jpg' }, { label: 'Featured video 02', href: 'https://youtu.be/WXv7XTAmK7Q?si=gLOjgdXKCahfGU86', image: 'https://i.ytimg.com/vi/WXv7XTAmK7Q/hqdefault.jpg' }, { label: 'Featured video 03', href: 'https://youtu.be/ZXEWtwVu60M?si=6JC0iv74V1L2OEdu', image: 'https://i.ytimg.com/vi/ZXEWtwVu60M/hqdefault.jpg' }] },
     { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-post-1.jpg' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-post-2.jpg' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-post-3.jpg' }] },
     { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
-    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
+    {
+      icon: <SpotifyMark />,
+      eyebrow: 'Playlist 04',
+      title: 'Music',
+      handle: 'SPOTSICK · Spotify',
+      text: 'A mix of late-night R&B, melodic rap, and songs I keep coming back to.',
+      highlights: ['R&B', 'Melodic rap', 'On rotation'],
+      href: 'https://open.spotify.com/playlist/0XaLZ6o0QcPYsjzqeUa0wM?si=23875b7f4d704e99',
+      action: 'Open SPOTSICK on Spotify',
+      brand: 'spotify',
+      background: '/images/spotify-spotsick.jpg',
+      samples: [
+        { label: 'anders', track: 'Bad Guy', href: 'https://open.spotify.com/track/5w4enr0FN8ZTwxmfnACz2f', image: '/images/spotify-anders.jpg' },
+        { label: 'ZAYN', track: 'Tightrope', href: 'https://open.spotify.com/track/44ngiCPfS8FfdJOqN0eULl', image: '/images/spotify-zayn.jpg' },
+        { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', image: '/images/spotify-drake.jpg' },
+      ],
+    },
+    { icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
@@ -641,9 +665,10 @@ export function Facts() {
           <section className="facts-modal-card" onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
             <header><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header>
+            {activeFact.brand === 'spotify' && <p className="facts-music-picks">Three artists tied for the most appearances in the playlist.</p>}
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
-                const preview = <><div><img src={sample.image} alt="" decoding="async" /></div><b>{sample.label}</b></>
+                const preview = <><div><img src={sample.image} alt="" decoding="async" /></div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
                 return sample.href
                   ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample">{preview}</a>
                   : <div key={sample.label} className="facts-sample is-static">{preview}</div>

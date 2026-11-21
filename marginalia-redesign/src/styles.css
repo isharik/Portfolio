@@ -2249,6 +2249,13 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   margin-inline:auto;
 }
 .facts-sample-grid.has-instagram .facts-sample > div { aspect-ratio:3 / 4; }
+.has-spotify .facts-background { opacity:.36; background-position:right center; }
+.has-spotify .facts-stage-icon { color:color-mix(in srgb,#17874a 78%,var(--ink)); }
+:root[data-theme=dark] .has-spotify .facts-stage-icon { color:#63d393; }
+.facts-modal-card .facts-music-picks { margin-top:22px; color:var(--ink); font-weight:600; }
+.facts-music-picks + .facts-sample-grid { margin-top:12px; }
+.facts-sample-grid.has-spotify .facts-sample > div { aspect-ratio:1; }
+.facts-sample-grid.has-spotify .facts-sample small { color:var(--soft-ink); font-size:12px; line-height:1.4; }
 @media (max-width:700px) {
   .facts-sample-grid.has-instagram .facts-sample { grid-template-columns:minmax(0,1fr); }
   .facts-sample-grid.has-instagram { gap:6px; }

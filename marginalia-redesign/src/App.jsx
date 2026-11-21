@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { SiteChrome } from './components/Chrome'
 import { About, Cover, Education, Experience, Facts, Footer, Projects, Skills, ThankYou } from './components/Sections'
 import Preloader from './components/Preloader'
+import CreativeWork from './components/CreativeWork'
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('marginalia-theme') || 'light')
@@ -69,6 +70,7 @@ export default function App() {
         <Experience />
         <Skills />
         <Projects />
+        <CreativeWork />
         <Facts />
         <ThankYou />
       </main>
