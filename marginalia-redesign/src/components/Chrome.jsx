@@ -21,6 +21,8 @@ function NavIcon({ name }) {
 export function SiteChrome({ theme, onTheme }) {
   const [active, setActive] = useState('Cover')
   const [open, setOpen] = useState(true)
+  const [isScrolledAway, setIsScrolledAway] = useState(false)
+  const [isPeekOpen, setIsPeekOpen] = useState(false)
   const [playing, setPlaying] = useState(false)
   const [voiceOpen, setVoiceOpen] = useState(false)
   const audioRef = useRef(null)
@@ -64,6 +66,32 @@ export function SiteChrome({ theme, onTheme }) {
   }, [])
 
   useEffect(() => {
+    let previousY = window.scrollY
+    let frame = 0
+    const updateVisibility = () => {
+      const currentY = window.scrollY
+      const delta = currentY - previousY
+      if (currentY < 72 || delta < -4) {
+        setIsScrolledAway(false)
+        setIsPeekOpen(false)
+      } else if (delta > 4 && currentY > 120) {
+        setIsScrolledAway(true)
+        setIsPeekOpen(false)
+      }
+      previousY = currentY
+      frame = 0
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateVisibility)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  useEffect(() => {
     const onKeyDown = event => {
       if (event.key !== 'Escape' || !voiceOpen) return
       audioRef.current?.pause()
@@ -96,9 +124,20 @@ export function SiteChrome({ theme, onTheme }) {
     setVoiceOpen(false)
   }
 
+  const isDormant = isScrolledAway && !isPeekOpen
+
   return (
     <>
-      <header className="folio-header">
+      <button
+        className={`cv-peek ${isScrolledAway ? 'is-visible' : ''} ${isPeekOpen ? 'is-awake' : ''}`}
+        onPointerEnter={() => setIsPeekOpen(true)}
+        onFocus={() => setIsPeekOpen(true)}
+        onClick={() => { setIsPeekOpen(true); setOpen(true) }}
+        aria-label="Reveal portfolio navigation"
+      >
+        <span aria-hidden="true">CV</span><b>Curriculum Vitae</b>
+      </button>
+      <header className={`folio-header ${isDormant ? 'is-dormant' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} onPointerLeave={() => { if (isScrolledAway) setIsPeekOpen(false) }}>
         <a className="header-year" href="#home">2026</a>
         <button className="index-button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
           Curriculum Vitae <span>{open ? '−' : '+'}</span>
@@ -128,7 +167,7 @@ export function SiteChrome({ theme, onTheme }) {
         <audio ref={audioRef} src="/recruiter-intro.mp3" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setVoiceOpen(false) }} />
         <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>
-      <nav className={`folio-index ${open ? 'is-open' : ''}`} aria-label="Portfolio index">
+      <nav className={`folio-index ${open && !isDormant ? 'is-open' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} aria-label="Portfolio index">
         {sections.map(([id, label, icon], index) => (
           <a href={`#${id}`} key={id} aria-label={label} className={active === label ? 'is-active' : ''}>
             <b aria-hidden><NavIcon name={icon} /></b><span>{label}</span><small>{String(index + 1).padStart(2, '0')}</small>

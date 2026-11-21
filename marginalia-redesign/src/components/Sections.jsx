@@ -13,6 +13,10 @@ function InkSignature({ children, defer = false }) {
   return <span className={`ink-signature${defer ? ' ink-signature-deferred' : ' is-revealed'}`} aria-label={children}>{children}</span>
 }
 
+function GitHubMark({ className = '' }) {
+  return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.011-1.04-.016-2.04-3.338.725-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.085 1.839 1.237 1.839 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.775.419-1.305.762-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23A11.48 11.48 0 0 1 12 3.806c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.431.372.815 1.102.815 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z" /></svg>
+}
+
 function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
@@ -101,8 +105,8 @@ export function Cover() {
   return (
     <section id="home" data-label="Cover" className="sheet cover-sheet paper-sheet">
       <Reveal className="cover-stage">
-        <div className="cover-kicker">AI QUALITY · CUSTOMER CLARITY · RELIABLE OPERATIONS</div>
-        <h1><TextRoll>Portfolio</TextRoll></h1>
+        <div className="cover-kicker"><span>AI quality</span><i>·</i><span>customer clarity</span><i>·</i><span>reliable operations</span></div>
+        <a className="cover-title" href="#about" aria-label="Explore Sharik Hussain's portfolio"><h1><TextRoll>Portfolio</TextRoll></h1></a>
         <div className="orbit-stroke" aria-hidden="true"><i /></div>
         <Scribble className="cover-signature"><InkSignature>Sharik Hussain</InkSignature>
           <svg viewBox="0 0 150 86" aria-hidden="true"><path d="M142 4 C122 18 114 42 86 48 C61 54 42 45 19 67" /><path d="M19 67 L35 64 M19 67 L27 52" /></svg>
@@ -388,6 +392,7 @@ export function Experience() {
 
 export function Skills() {
   const [activeSkill, setActiveSkill] = useState(0)
+  const [activeCapability, setActiveCapability] = useState('')
   const supportSkills = [
     'Customer Communication', 'Real-time Support', 'Ticket Resolution', 'Technical Troubleshooting',
     'CRM Management', 'Confidentiality Protocols', 'Process Documentation', 'Operational SOPs',
@@ -414,8 +419,8 @@ export function Skills() {
       </Reveal>
       <p className="skills-copy">Practical capability across AI evaluation, technical operations, customer experience, content, and repeatable process design.</p>
       <div className="skill-columns">
-        <div className="skill-column"><h3>Customer &amp; support</h3>{supportSkills.map(skill => <div key={skill}><span>•</span>{skill}</div>)}</div>
-        <div className="skill-column"><h3>AI &amp; development</h3>{technicalSkills.map(skill => <div key={skill}><span>•</span>{skill}</div>)}</div>
+        <div className="skill-column"><h3>Customer &amp; support</h3>{supportSkills.map(skill => <button type="button" key={skill} aria-pressed={activeCapability === skill} className={activeCapability === skill ? 'is-highlighted' : ''} onClick={() => setActiveCapability(skill)}><span>•</span>{skill}</button>)}</div>
+        <div className="skill-column"><h3>AI &amp; development</h3>{technicalSkills.map(skill => <button type="button" key={skill} aria-pressed={activeCapability === skill} className={activeCapability === skill ? 'is-highlighted' : ''} onClick={() => setActiveCapability(skill)}><span>•</span>{skill}</button>)}</div>
       </div>
       <Scribble className="toolkit-note">there’s always more in the toolkit ✎</Scribble>
     </section>
@@ -507,7 +512,7 @@ function ContributionGrid() {
     return baseLevel + (scatterRank < remainder ? 1 : 0)
   }
   return <Reveal className="contribution-trace">
-    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile">🐙 GitHub activity ↗</a></div>
+    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile"><GitHubMark />GitHub activity <span aria-hidden="true">↗</span></a></div>
     <div className="contribution-calendar" role="grid" aria-label="626 GitHub contributions in the last year">
       <div className="contribution-days" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>
       <div className="contribution-grid-wrap"><div className="contribution-months" aria-hidden="true">{months.map(month => <span key={month}>{month}</span>)}</div><div className="contribution-grid">{Array.from({ length: 52 }, (_, week) => Array.from({ length: 7 }, (_, day) => {

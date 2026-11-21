@@ -67,6 +67,15 @@ button { color: inherit; font: inherit; }
 .sheet + .sheet { border-top: 1px solid var(--hairline); }
 
 .folio-header { position: fixed; z-index: 100; inset: 0 0 auto; height: 54px; padding: 0 72px 0 34px; display: grid; grid-template-columns: auto auto 142px 1fr auto; gap: 18px; align-items: center; border-bottom: 1px solid var(--hairline); color: var(--ink); background: color-mix(in srgb, var(--paper) 94%, transparent); box-shadow: 0 1px 0 color-mix(in srgb,var(--ink) 4%,transparent); backdrop-filter: blur(15px); }
+.folio-header,.folio-index { will-change: transform,opacity; }
+.folio-header { transform-origin: 7% 0; transition: opacity .24s ease,transform .38s cubic-bezier(.2,.84,.2,1),filter .24s ease; }
+.folio-header.is-dormant { opacity: 0; pointer-events: none; filter: blur(4px); transform: perspective(900px) translateY(-26px) rotateX(7deg) scale(.985); }
+.folio-header.is-peek-open { animation: header-peek-in .42s cubic-bezier(.2,.88,.2,1) both; }
+.cv-peek { position: fixed; z-index: 108; top: 10px; left: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; opacity: 0; pointer-events: none; border: 1px solid color-mix(in srgb,var(--ink) 18%,transparent); border-radius: 999px; background: color-mix(in srgb,var(--paper) 90%,transparent); color: var(--ink); box-shadow: 0 8px 22px color-mix(in srgb,var(--ink) 12%,transparent),inset 0 1px color-mix(in srgb,var(--paper) 75%,white); backdrop-filter: blur(14px); cursor: pointer; transform: perspective(800px) translateX(-18px) rotateY(16deg) scale(.92); transform-origin: left center; transition: opacity .22s ease,transform .35s cubic-bezier(.2,.84,.2,1),background .2s ease,border-color .2s ease; }
+.cv-peek.is-visible { opacity: 1; pointer-events: auto; transform: perspective(800px) translateX(0) rotateY(0) scale(1); }
+.cv-peek.is-awake { opacity: 0; pointer-events: none; transform: translateX(-8px) scale(.96); }
+.cv-peek span { display:grid; width:28px; height:28px; place-items:center; border-radius:50%; background:color-mix(in srgb,var(--blue) 13%,var(--paper)); color:var(--blue); font:700 9px/1 var(--mono); letter-spacing:.03em; }.cv-peek b { font:600 11px/1 var(--sans); letter-spacing:.015em; white-space:nowrap; }.cv-peek:hover { border-color:color-mix(in srgb,var(--blue) 52%,var(--hairline)); background:color-mix(in srgb,var(--blue) 8%,var(--paper)); }
+@keyframes header-peek-in { from { opacity:0; transform:perspective(900px) translateY(-18px) rotateX(8deg) scale(.985); } to { opacity:1; transform:perspective(900px) translateY(0) rotateX(0) scale(1); } }
 .header-year { font-weight: 600; font-size: 13px; }
 .index-button { appearance: none; justify-self: start; border: 0; background: none; cursor: pointer; letter-spacing: .01em; }
 .index-button span { display: inline-grid; place-items: center; width: 22px; }
@@ -147,12 +156,15 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 /* cover */
 .cover-sheet { min-height: 100vh; display: grid; place-items: center; }
 .cover-stage { position: relative; width: 100%; text-align: center; }
-.cover-stage h1 { margin: 0; font-size: clamp(160px, 22vw, 330px); line-height: .72; }
+.cover-title { display:inline-block; color:inherit; text-decoration:none; transform-origin:50% 62%; transition:transform .34s cubic-bezier(.2,.85,.2,1),filter .3s ease; }
+.cover-stage h1 { margin: 0; font-size: clamp(160px, 22vw, 330px); line-height: .72; transition:letter-spacing .34s cubic-bezier(.2,.85,.2,1),text-shadow .34s ease; }
+.cover-title:hover,.cover-title:focus-visible { transform:perspective(1000px) translateY(-5px) rotateX(4deg) rotateY(-2deg) scale(1.015); filter:drop-shadow(0 15px 13px color-mix(in srgb,var(--blue) 15%,transparent)); outline:none; }.cover-title:hover h1,.cover-title:focus-visible h1 { letter-spacing:-.035em; text-shadow:1px 1px 0 color-mix(in srgb,var(--blue) 35%,transparent),-1px -1px 0 color-mix(in srgb,var(--paper) 75%,transparent); }
 .text-roll-letter { position: relative; display: inline-block; width: auto; perspective: 10000px; transform-style: preserve-3d; }
 .text-roll-face { position: absolute; display: inline-block; backface-visibility: hidden; }
 .text-roll-front { transform-origin: 50% 25%; }.text-roll-back { transform-origin: 50% 100%; }
 .text-roll-space { visibility: hidden; }
-.cover-kicker { position: absolute; left: 50%; top: -88px; transform: translateX(-50%); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--soft-ink); }
+.cover-kicker { position: absolute; left: 50%; top: -88px; display:flex; align-items:center; gap:.58em; transform: translateX(-50%); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--soft-ink); white-space:nowrap; }
+.cover-kicker span { position:relative; padding-bottom:5px; }.cover-kicker span::after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; opacity:.8; background:var(--blue); clip-path:polygon(0 55%,17% 25%,32% 68%,50% 33%,67% 63%,84% 24%,100% 48%,100% 83%,84% 58%,67% 88%,50% 58%,32% 91%,17% 52%,0 80%); }
 .cover-signature { position: absolute; right: 6%; top: -34%; font-size: clamp(42px, 5vw, 76px); transform: rotate(-6deg); }
 .ink-signature { display: inline-block; white-space: nowrap; opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(1.5px); transform: translate(-3px,3px) rotate(-2deg); }
 .ink-signature.is-revealed { animation: ink-signature-in 1.15s cubic-bezier(.2,.82,.18,1) .18s forwards; }
@@ -299,7 +311,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .skills-copy { max-width: 430px; color: var(--soft-ink); line-height: 1.6; align-self: start; }
 .skill-columns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 42px; align-content: start; padding-top: 2px; }
 .skill-column h3 { margin: 0 0 8px; padding-bottom: 8px; border-bottom: 2px solid var(--blue); color: var(--ink); font: 23px var(--hand); }
-.skill-column > div { padding: 7px 0; border-bottom: 1px solid var(--hairline); color: var(--soft-ink); font-size: 13px; }
+.skill-column > button { display:block; width:100%; padding:7px 0; border:0; border-bottom:1px solid var(--hairline); background:transparent; color:var(--soft-ink); cursor:pointer; font:13px var(--sans); text-align:left; transition:color .18s ease,padding-left .2s var(--ease-out),background .2s ease; }.skill-column > button:hover,.skill-column > button:focus-visible,.skill-column > button.is-highlighted { padding-left:8px; background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 12%,transparent),transparent 86%); color:var(--ink); outline:none; }.skill-column > button:focus-visible { box-shadow:inset 2px 0 var(--blue); }
 .skill-column span { margin-right: 14px; color: var(--ink); }
 .toolkit-note { position: absolute; left: 5%; bottom: 54px; }
 
@@ -932,7 +944,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .contribution-trace { width: min(900px, 100%); margin: 54px auto 0; padding: 25px 28px 18px; border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); border-radius: 17px; background: color-mix(in srgb, var(--paper) 90%, var(--blue) 10%); box-shadow: 0 14px 32px rgba(22, 21, 20, .08); }
 .contribution-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 15px; }
 .contribution-heading > div { display: grid; gap: 5px; }
-.contribution-heading > a { color:var(--ink); font:700 10px/1 var(--mono); letter-spacing:.04em; text-decoration:none; transition:color .18s ease,transform .18s ease; }.contribution-heading > a:hover { color:var(--blue); transform:translateY(-1px); }
+.contribution-heading > a { display:inline-flex; align-items:center; gap:6px; color:var(--ink); font:700 10px/1 var(--mono); letter-spacing:.04em; text-decoration:none; transition:color .18s ease,transform .18s ease; }.contribution-heading > a svg { width:15px; height:15px; flex:none; }.contribution-heading > a:hover { color:var(--blue); transform:translateY(-1px); }
 .contribution-heading strong { font: 600 18px/1.1 var(--sans); color: var(--ink); }.contribution-heading small { font: 500 12px/1 var(--sans); color: var(--muted); }
 .contribution-calendar { display: flex; gap: 9px; padding: 15px 12px 12px; border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--ink) 3%, transparent); overflow: hidden; }
 .contribution-days { display: grid; grid-template-rows: repeat(7, 10px); gap: 3px; padding-top: 19px; font: 700 9px/10px var(--sans); color: var(--muted); }
