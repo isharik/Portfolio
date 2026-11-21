@@ -595,7 +595,17 @@ export function Facts() {
         image: `https://i.ytimg.com/vi/${sample.videoId}/hqdefault.jpg`,
       })),
     },
-    { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-post-1.jpg' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-post-2.jpg' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-post-3.jpg' }] },
+    {
+      icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99',
+      text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.',
+      highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'],
+      href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg',
+      samples: [
+        { label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-on-chain-notes.webp' },
+        { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-field-note.webp' },
+        { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-community-update.webp' },
+      ],
+    },
     { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
     {
       icon: <SpotifyMark />,

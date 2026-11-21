@@ -2336,6 +2336,16 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .voice-art-stage .voice-vinyl { position:absolute; z-index:1; left:-22px; top:7px; width:60px; height:60px; transition:transform .38s var(--ease-out); }.voice-popover:hover .voice-art-stage .voice-vinyl { transform:translateX(-18px); }.voice-art-stage .voice-vinyl::after { inset:19px; }.voice-art-stage .voice-vinyl i { inset:8px 29px 9px; }.voice-art-stage .voice-vinyl b { top:27px; left:27px; }
 .voice-popover-copy { gap:7px; }.voice-popover-copy strong { font-size:22px; }.voice-wave { position:relative; padding-bottom:8px; }.voice-wave::after { content:''; position:absolute; left:0; right:6px; bottom:0; height:2px; border-radius:99px; background:color-mix(in srgb,var(--blue) 35%,var(--hairline)); }.voice-popover-play { width:40px; height:40px; border-radius:50%; }.voice-popover-close { width:25px; height:25px; }
 .contribution-heading > a .github-mark { width:19px; height:19px; color:var(--ink); }
+.facts-sample-grid.has-x a.facts-sample {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.facts-sample-grid.has-x .facts-sample > div { background: #0a0a0e; }
+.facts-sample-grid.has-x .facts-sample:last-child > div { background: #fff; }
+.facts-sample-grid.has-x .facts-sample img { position: absolute; inset: 0; object-fit: contain; }
+.facts-sample-grid.has-x .facts-sample:is(:hover, :focus-visible),
+.facts-sample-grid.has-x .facts-sample:is(:hover, :focus-visible) img { transform: none; }
+.facts-sample-grid.has-x .facts-sample:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
 .facts-sample-grid.has-instagram {
   grid-template-columns:repeat(3,minmax(0,1fr));
   width:min(100%, 780px);
