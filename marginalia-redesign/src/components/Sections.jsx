@@ -577,16 +577,21 @@ export function Facts() {
       eyebrow: 'Playlist 04',
       title: 'Music',
       handle: 'SPOTSICK · Spotify',
-      text: 'A mix of late-night R&B, melodic rap, and songs I keep coming back to.',
-      highlights: ['R&B', 'Melodic rap', 'On rotation'],
+      text: 'From late-night R&B and melodic rap to alternative rock. Explore SPOTSICK and a few favorites beyond the playlist.',
+      highlights: ['R&B', 'Alternative rock', 'On rotation'],
       href: 'https://open.spotify.com/playlist/0XaLZ6o0QcPYsjzqeUa0wM?si=23875b7f4d704e99',
       action: 'Open SPOTSICK on Spotify',
       brand: 'spotify',
       background: '/images/spotify-spotsick.jpg',
       samples: [
-        { label: 'anders', track: 'Bad Guy', href: 'https://open.spotify.com/track/5w4enr0FN8ZTwxmfnACz2f', image: '/images/spotify-anders.jpg' },
-        { label: 'ZAYN', track: 'Tightrope', href: 'https://open.spotify.com/track/44ngiCPfS8FfdJOqN0eULl', image: '/images/spotify-zayn.jpg' },
-        { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', image: '/images/spotify-drake.jpg' },
+        { label: 'keshi', track: 'like i need u', href: 'https://open.spotify.com/track/7ivYWXqrPLs66YwakDuSim', image: '/images/spotify-album-keshi.jpg' },
+        { label: 'ZAYN', track: 'Tightrope', href: 'https://open.spotify.com/track/44ngiCPfS8FfdJOqN0eULl', image: '/images/spotify-album-zayn.jpg' },
+        { label: 'Radiohead', track: 'Creep', href: 'https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r', image: '/images/spotify-album-radiohead.jpg' },
+        { label: 'Aerosmith', track: 'Dream On', href: 'https://open.spotify.com/track/5Ih9gbqyxCzTJ43nuSuKnC', image: '/images/spotify-album-aerosmith.jpg' },
+        { label: 'Nirvana', track: 'Smells Like Teen Spirit', href: 'https://open.spotify.com/track/4CeeEOM32jQcH3eN9Q2dGj', image: '/images/spotify-album-nirvana.jpg' },
+        { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', image: '/images/spotify-album-drake.jpg' },
+        { label: 'Tame Impala', track: 'Loser', href: 'https://open.spotify.com/track/7bxaFZ1O3cHkgLKMsdC3xR', image: '/images/spotify-album-tame-impala.jpg' },
+        { label: 'Magnus Ferrell', track: 'Asleep Talking', href: 'https://open.spotify.com/track/5dBXBY5CsYxEjC20ewA9EU', image: '/images/spotify-album-magnus-ferrell.jpg' },
       ],
     },
     { icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
@@ -665,7 +670,7 @@ export function Facts() {
           <section className="facts-modal-card" onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
             <header><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header>
-            {activeFact.brand === 'spotify' && <p className="facts-music-picks">Three artists tied for the most appearances in the playlist.</p>}
+            {activeFact.brand === 'spotify' && <p className="facts-music-picks">Artists on rotation</p>}
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
                 const preview = <><div><img src={sample.image} alt="" decoding="async" /></div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
