@@ -135,7 +135,7 @@ export function SiteChrome({ theme, onTheme }) {
         onClick={() => { setIsPeekOpen(true); setOpen(true) }}
         aria-label="Reveal portfolio navigation"
       >
-        <span aria-hidden="true">CV</span><b>Curriculum Vitae</b>
+        <span aria-hidden="true">SH</span><b>Sharik Hussain <em>· his pitch</em></b>
       </button>
       <header className={`folio-header ${isDormant ? 'is-dormant' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} onPointerLeave={() => { if (isScrolledAway) setIsPeekOpen(false) }}>
         <a className="header-year" href="#home">2026</a>

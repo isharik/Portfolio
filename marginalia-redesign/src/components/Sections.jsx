@@ -567,15 +567,16 @@ function XMark({ className = '' }) {
 
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [exploring, setExploring] = useState(false)
   const factsRef = useRef(null)
   const activeIndexRef = useRef(0)
   const wheelLock = useRef(0)
   const wheelDistance = useRef(0)
   const personalFacts = [
-    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps' },
-    { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: 'https://unavatar.io/x/isharik99', note: 'AI, support & Web3 — made clearer.' },
-    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png' },
-    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp' },
+    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps', samples: [{ label: 'Featured video 01', href: 'https://youtu.be/H0FTvvO9M-M?si=_TZrwOcNDmq_0S8Q', image: 'https://i.ytimg.com/vi/H0FTvvO9M-M/hqdefault.jpg' }, { label: 'Featured video 02', href: 'https://youtu.be/WXv7XTAmK7Q?si=gLOjgdXKCahfGU86', image: 'https://i.ytimg.com/vi/WXv7XTAmK7Q/hqdefault.jpg' }, { label: 'Featured video 03', href: 'https://youtu.be/ZXEWtwVu60M?si=6JC0iv74V1L2OEdu', image: 'https://i.ytimg.com/vi/ZXEWtwVu60M/hqdefault.jpg' }] },
+    { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: 'https://unavatar.io/x/isharik99', note: 'AI, support & Web3 — made clearer.', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20' }] },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/movies-collage.png' }, { label: 'Thriller shelf', image: '/movies-collage.png' }, { label: 'TV archive', image: '/movies-collage.png' }] },
+    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Visual study 01', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/photography-background.webp' }, { label: 'Visual study 02', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/photography-background.webp' }, { label: 'Visual study 03', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/photography-background.webp' }] },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
@@ -598,6 +599,12 @@ export function Facts() {
     return () => window.cancelIdleCallback?.(idle)
   }, [])
   useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
+  useEffect(() => {
+    if (!exploring) return undefined
+    const onKeyDown = event => event.key === 'Escape' && setExploring(false)
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [exploring])
   useEffect(() => {
     const node = factsRef.current
     if (!node) return undefined
@@ -622,7 +629,6 @@ export function Facts() {
     <section ref={factsRef} data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
-      <div className="facts-orbits" aria-hidden="true"><i /><i /><i /></div>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
         <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title}>
           {activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
@@ -632,7 +638,7 @@ export function Facts() {
             <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.note && <span className="facts-note-preview"><XMark />{activeFact.note}</span>}</div>
           </div>
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
-          {activeFact.href ? <a className="facts-link" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} <b>↗</b></a> : <span className="facts-link is-static">{activeFact.action}</span>}
+          <button type="button" className="facts-link facts-explore" onClick={() => setExploring(true)}>Explore <b>+</b></button>
         </div>
         <nav className="facts-controls" aria-label="Change Beyond the CV card">
           <button type="button" onClick={() => move(-1)} disabled={activeIndex === 0} aria-label="Previous card">←</button>
@@ -641,6 +647,7 @@ export function Facts() {
         </nav>
         <p className="facts-scroll-hint">Scroll or use the arrows to turn the page</p>
       </div>
+      {exploring && createPortal(<div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}><section className="facts-modal-card" onClick={event => event.stopPropagation()}><button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button><header><span>{activeFact.eyebrow}</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header><div className="facts-sample-grid">{activeFact.samples.map(sample => sample.href ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample"><div>{sample.image ? <img src={sample.image} alt="" loading="eager" decoding="async" /> : <XMark />}</div><b>{sample.label}</b><span>Open ↗</span></a> : <div key={sample.label} className="facts-sample is-static"><div><img src={sample.image} alt="" loading="eager" decoding="async" /></div><b>{sample.label}</b><span>on the shelf</span></div>)}</div>{activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} ↗</a>}</section></div>, document.body)}
     </section>
   )
 }

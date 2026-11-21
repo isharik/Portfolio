@@ -5,7 +5,7 @@ export function TextRoll({ children, className = '', duration = 0.56 }) {
   return (
     <span className={className} aria-label={children}>
       {letters.map((letter, index) => (
-        <span className="text-roll-letter" aria-hidden="true" key={`${letter}-${index}`}>
+        <span className={`text-roll-letter${letter.toLowerCase() === 'o' ? ' is-orb' : ''}`} aria-hidden="true" key={`${letter}-${index}`}>
           <motion.span
             className="text-roll-face text-roll-front"
             initial={{ rotateX: 0, opacity: 1 }}
