@@ -165,12 +165,19 @@ export default function FactsMediaPreview({ sample, onClose }) {
             Full video on YouTube <span aria-hidden="true">↗</span>
           </a>
         )}
-        {photos.length > 1 && (
-          <div className="facts-preview-pagination" role="group" aria-label="Browse photos">
-            <button type="button" onClick={() => movePhoto(-1)} aria-disabled={photoIndex === 0} aria-label="Previous photo">←</button>
-            <span role="status">{photoIndex + 1} / {photos.length}</span>
-            <button type="button" onClick={() => movePhoto(1)} aria-disabled={photoIndex === photos.length - 1} aria-label="Next photo">→</button>
-          </div>
+        {photo && (
+          <footer className="facts-photo-footer">
+            {photos.length > 1 && (
+              <div className="facts-preview-pagination" role="group" aria-label="Browse photos">
+                <button type="button" onClick={() => movePhoto(-1)} aria-disabled={photoIndex === 0} aria-label="Previous photo">←</button>
+                <span role="status">{photoIndex + 1} / {photos.length}</span>
+                <button type="button" onClick={() => movePhoto(1)} aria-disabled={photoIndex === photos.length - 1} aria-label="Next photo">→</button>
+              </div>
+            )}
+            <a className="facts-preview-source facts-photo-source" href={sample.href} target="_blank" rel="noreferrer">
+              Open on Instagram <span aria-hidden="true">↗</span>
+            </a>
+          </footer>
         )}
       </section>
     </dialog>

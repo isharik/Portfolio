@@ -96,6 +96,17 @@ html:has(.facts-preview-dialog[open]) { overflow: hidden; }
   min-height: 0;
   object-fit: contain;
 }
+.facts-photo-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.facts-photo-source {
+  margin-inline-start: auto;
+  min-height: 44px;
+  padding-inline: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--paper-2);
+  text-decoration: none;
+}
+.facts-photo-source:hover { border-color: var(--blue); }
 .facts-preview-pagination { display: flex; justify-content: center; align-items: center; gap: 10px; font: 12px var(--mono); }
 .facts-preview-pagination button {
   width: 44px;
