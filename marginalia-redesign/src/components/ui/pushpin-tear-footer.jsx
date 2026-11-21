@@ -288,6 +288,7 @@ function A({ href, className, label, children, style }) {
   </a>)
 }
 export default function PushpinTearFooter({
+  id,
   brand = "Portfolio.",
   name = "Portfolio",
   logo,
@@ -295,6 +296,7 @@ export default function PushpinTearFooter({
   socials = [],
   email = "",
   primaryLink = null,
+  contactActions = null,
   status = null,
   mark,
   timeZone = "Asia/Kolkata",
@@ -597,7 +599,7 @@ export default function PushpinTearFooter({
   const cols = columns.slice(0, 2)
   const H = (i) => ({ "--i": i })
   const cls = ["tpf", stage >= 1 && "s1", stage >= 2 && "s2", stage >= 3 && "s3", hit && "is-hit", className].filter(Boolean).join(" ")
-  return (<footer ref={rootRef} className={cls} style={vars} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave}>
+  return (<footer id={id} data-label={contactActions ? "Contact" : undefined} ref={rootRef} className={cls} style={vars} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave}>
 
    <svg ref={svgRef} className="tpf-stage" aria-hidden="true">
     <defs>
@@ -654,7 +656,7 @@ export default function PushpinTearFooter({
     <A href={logoHref} className="tpf-logo tpf-h" label={name + ", home"} style={H(1)}>
      {logo ?? <KMark />}
     </A>
-    <div className="tpf-h" style={{ ...H(2), position: "relative" }}>
+    {email && <div className="tpf-h" style={{ ...H(2), position: "relative" }}>
      <button type="button" className="tpf-mail" onClick={copyEmail} aria-label={"Copy " + email} title="Copy email">
       <span>{email}</span>
       <Icon name="copy"/>
@@ -662,7 +664,7 @@ export default function PushpinTearFooter({
      <span className={"tpf-toast" + (toast ? " on" : "")} role="status" aria-live="polite">
       {toast}
      </span>
-    </div>
+    </div>}
    </div>
 
    {primaryLink && (<div className="tpf-z tpf-news tpf-h" style={H(3)}>
@@ -671,6 +673,12 @@ export default function PushpinTearFooter({
       <span className="tpf-knob"><Icon name="arrow"/></span>
      </A>
     </div>)}
+
+   {contactActions && (
+     <div className="tpf-z tpf-contact-actions tpf-h" style={H(4)}>
+       {contactActions}
+     </div>
+   )}
 
    {mark && <span className="tpf-z tpf-flank tpf-h" style={{ ...H(4), left: "24%" }}>{mark}</span>}
    {timeZone && (<span className="tpf-z tpf-flank tpf-h" style={{ ...H(4), left: "76%" }} title={"Local time · " + timeZone}>

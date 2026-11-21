@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { SiteChrome } from './components/Chrome'
-import { About, Contact, Cover, Education, Experience, Facts, Footer, Projects, Skills } from './components/Sections'
+import { About, Cover, Education, Experience, Facts, Footer, Projects, Skills, ThankYou } from './components/Sections'
 import Preloader from './components/Preloader'
 
 export default function App() {
@@ -70,7 +70,7 @@ export default function App() {
         <Skills />
         <Projects />
         <Facts />
-        <Contact />
+        <ThankYou />
       </main>
       <Footer theme={theme} />
     </div>

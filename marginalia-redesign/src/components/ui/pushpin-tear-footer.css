@@ -130,6 +130,32 @@
 .tpf-portfolio-monogram { font: 1.25em/1 var(--serif); letter-spacing: -.035em; }
 .tpf-portfolio .tpf-top { top: 8%; }
 .tpf-portfolio .tpf-brand { top: 69%; }
+.tpf-contact-actions {
+  inset: 27% 5% auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.tpf-contact-actions > :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45em;
+  min-height: 44px;
+  padding: .65em 1.15em;
+  border: 1px solid color-mix(in srgb,var(--tpf-on-sheet) 55%,transparent);
+  border-radius: 999px;
+  font-size: var(--fs);
+  transition: transform 150ms var(--ease), background-color 150ms ease;
+}
+.tpf-contact-actions > .tpf-contact-primary {
+  background: var(--tpf-on-sheet);
+  color: var(--tpf-sheet);
+}
+.tpf-contact-actions > a:hover { background: color-mix(in srgb,var(--tpf-on-sheet) 12%,transparent); }
+.tpf-contact-actions > :is(button, a):active { transform: scale(.97); }
+.tpf-contact-actions > .tpf-contact-primary:focus-visible { outline-color: var(--tpf-on-sheet); }
 @container (max-width: 620px) {
   .tpf-portfolio .tpf-top { top: 9%; }
   .tpf-portfolio .tpf-brand { top: 70%; }

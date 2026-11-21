@@ -577,7 +577,7 @@ export function Facts() {
     { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps', samples: [{ label: 'Featured video 01', href: 'https://youtu.be/H0FTvvO9M-M?si=_TZrwOcNDmq_0S8Q', image: 'https://i.ytimg.com/vi/H0FTvvO9M-M/hqdefault.jpg' }, { label: 'Featured video 02', href: 'https://youtu.be/WXv7XTAmK7Q?si=gLOjgdXKCahfGU86', image: 'https://i.ytimg.com/vi/WXv7XTAmK7Q/hqdefault.jpg' }, { label: 'Featured video 03', href: 'https://youtu.be/ZXEWtwVu60M?si=6JC0iv74V1L2OEdu', image: 'https://i.ytimg.com/vi/ZXEWtwVu60M/hqdefault.jpg' }] },
     { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-post-1.jpg' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-post-2.jpg' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-post-3.jpg' }] },
     { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
-    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }] },
+    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
@@ -668,7 +668,22 @@ export function Facts() {
   )
 }
 
-export function Contact() {
+export function ThankYou() {
+  return (
+    <section id="thank-you" className="sheet paper-sheet thank-you-sheet" aria-labelledby="thank-you-title">
+      <Reveal className="thank-you-paper">
+        <span className="thank-you-clip" aria-hidden="true" />
+        <span className="thank-you-pin" aria-hidden="true" />
+        <h2 id="thank-you-title">Thank you.</h2>
+        <p>Thanks for taking the time to read through my work. I care about making complex technology easier to understand and use, and I hope you found something here that stayed with you.</p>
+        <p>See you around,</p>
+        <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
+      </Reveal>
+    </section>
+  )
+}
+
+export function Footer({ theme }) {
   const [messageOpen, setMessageOpen] = useState(false)
   const [messageStatus, setMessageStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
@@ -734,32 +749,8 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" data-label="Contact" className="sheet paper-sheet contact-sheet">
-      <Reveal className="contact-left">
-        <img src="/profile-photo.webp" alt="Sharik Hussain" />
-        <h2>Thank you</h2><div className="ink-underline" />
-        <b>Get in touch:</b>
-        <a href={`mailto:${profile.email}`}>{profile.email}</a>
-        <div className="contact-links"><a href={profile.socials.github}>GitHub</a><a href={profile.socials.x}>X / Twitter</a><a href={profile.socials.linkedin}>LinkedIn</a></div>
-      </Reveal>
-      <Reveal className="contact-letter">
-        <p>I build where people, systems, and AI meet. If your team needs careful evaluation, dependable operations, clear customer communication, or thoughtful ecosystem content, I would love to hear what you are working on.</p>
-        <p>I am comfortable with complex workflows, honest feedback, and the patient work required to make technology more useful.</p>
-        <p>Let’s make something clear, reliable, and worth shipping.</p>
-        <div className="contact-signature" aria-label="Signed by Sharik"><InkSignature defer>Sharik</InkSignature></div>
-      </Reveal>
-      <div className="contact-actions">
-        <a className="booking-card" href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">
-          <span className="booking-icon" aria-hidden="true">◷</span>
-          <span><b>Book a 30-min call</b><small>Pick an open slot on Google Meet</small></span>
-          <i aria-hidden>↗</i>
-        </a>
-        <button className="booking-card discord-card" type="button" onClick={() => { setMessageStatus(''); setMessageSent(false); setMessageOpen(true) }}>
-          <span className="booking-icon" aria-hidden="true">✦</span>
-          <span><b>Email me here</b><small>Send a message or opportunity</small></span>
-          <i aria-hidden>↗</i>
-        </button>
-      </div>
+    <>
+      <PortfolioFooter theme={theme} onEmail={() => setMessageOpen(true)} />
       {messageOpen && ((isSending || messageSent) ? createPortal(<div className={`message-sending-screen${messageSent ? ' is-sent' : ''}`} role="status" aria-live="polite">
         {isSending ? <><MessageSphere phase={sendPhase} size={264} />
           <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
@@ -804,51 +795,33 @@ export function Contact() {
           </>
         </section>
       </div>, document.body))}
-    </section>
+    </>
   )
 }
 
-export function Footer({ theme }) {
+function PortfolioFooter({ theme, onEmail }) {
   const dark = theme === 'dark'
 
   return (
     <PushpinTearFooter
+      id="contact"
       className="tpf-portfolio"
       brand="Portfolio."
       name={profile.name}
       logo={<span className="tpf-portfolio-monogram" aria-hidden="true">SH</span>}
       logoHref="#home"
-      email={profile.email}
       primaryLink={{ label: 'Curriculum Vitae', href: '/resume.pdf' }}
-      status={{ label: 'Get in touch', href: '#contact' }}
-      mark={profile.location}
-      timeZone="Asia/Kolkata"
-      timeLabel="IST"
+      timeZone={null}
+      contactActions={
+        <>
+          <button type="button" className="tpf-contact-primary" aria-haspopup="dialog" onClick={onEmail}>Email me here</button>
+          <a href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">Book a slot <span aria-hidden="true">↗</span></a>
+        </>
+      }
       socials={[
-        { icon: 'github', label: 'GitHub', href: profile.socials.github },
         { icon: 'linkedin', label: 'LinkedIn', href: profile.socials.linkedin },
         { icon: 'x', label: 'X', href: profile.socials.x },
       ]}
-      columns={[
-        {
-          title: 'Portfolio',
-          links: [{ label: 'About', href: '#about' }, { label: 'Experience', href: '#experience' }],
-          cta: { label: 'work.', href: '#projects' },
-        },
-        {
-          title: 'Contact',
-          links: [
-            { label: 'Email me', href: `mailto:${profile.email}` },
-            { label: 'Book a call', href: 'https://calendly.com/sharikhussain99/30min' },
-          ],
-          cta: { label: 'say hi.', href: '#contact' },
-        },
-      ]}
-      sideLinks={[
-        { icon: 'doc', label: 'Résumé', href: '/resume.pdf' },
-        { icon: 'globe', label: 'GitHub', href: profile.socials.github },
-      ]}
-      chat={{ label: 'Contact', href: '#contact' }}
       copyright="© 2026 Sharik Hussain"
       handle={{ label: '@isharik99', href: profile.socials.x }}
       sheet={dark ? '#303443' : '#44495d'}
