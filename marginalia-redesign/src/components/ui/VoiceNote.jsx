@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 
 const glyphs = {
-  play: <path d="m9 5 12 7-12 7z" fill="currentColor" stroke="none" />,
-  pause: <path d="M9 5v14m6-14v14" strokeWidth="3" />,
+  play: <path d="m8 5 11 7-11 7z" />,
+  pause: <path d="M9 6v12m6-12v12" />,
+  restart: <path d="M5 6v12m13-12-9 6 9 6z" />,
   back: <path d="M6 9a7 7 0 1 1-1 7M6 4v5h5" />,
   forward: <path d="M18 9a7 7 0 1 0 1 7m-1-12v5h-5" />,
   repeat: <path d="M4 11V9a3 3 0 0 1 3-3h13m-3-3 3 3-3 3M20 13v2a3 3 0 0 1-3 3H4m3-3-3 3 3 3" />,
@@ -51,7 +52,7 @@ export default function VoiceNote() {
       }}>
         <div className="voice-note-player">
           <button className="voice-note-close" type="button" onClick={() => dialog.current.close()} aria-label="Close voice note">×</button>
-          <img className={`voice-note-art ${playing ? 'is-spinning' : ''}`} src="/profile-photo.webp" alt="Sharik Hussain" />
+          <img className={`voice-note-art ${playing ? 'is-spinning' : ''}`} src="/images/voice-vinyl.png" alt="Black vinyl record" width="720" height="720" />
           <h2 id="voice-note-title">Meet Sharik</h2>
           <p>Sharik Hussain</p>
           <div className="voice-note-progress">
@@ -61,6 +62,7 @@ export default function VoiceNote() {
             <span>{formatTime(duration)}</span>
           </div>
           <div className="voice-note-controls">
+            <button type="button" aria-label="Restart voice note" disabled={!duration} onClick={() => seek(0)}><Icon name="restart" /></button>
             <button type="button" aria-label="Go back 10 seconds" disabled={!duration} onClick={() => seek(time - 10)}><Icon name="back" /></button>
             <button type="button" className="voice-note-play" aria-label={playing ? 'Pause' : 'Play'} onClick={() => playing ? audio.current.pause() : play()}><Icon name={playing ? 'pause' : 'play'} /></button>
             <button type="button" aria-label="Go forward 10 seconds" disabled={!duration} onClick={() => seek(time + 10)}><Icon name="forward" /></button>
