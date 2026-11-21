@@ -150,7 +150,7 @@ export function SiteChrome({ theme, onTheme }) {
           </button>
           {voiceOpen && (
             <section className={`voice-popover ${playing ? 'is-playing' : ''}`} role="dialog" aria-label="Personal voice note player">
-              <div className="voice-vinyl" aria-hidden="true"><i /><b /></div>
+              <div className="voice-art-stage" aria-hidden="true"><div className="voice-player-art"><span>SH</span><small>voice note</small></div><div className="voice-vinyl"><i /><b /></div></div>
               <div className="voice-popover-copy">
                 <small>Personal voice note</small>
                 <strong>Meet Sharik</strong>
