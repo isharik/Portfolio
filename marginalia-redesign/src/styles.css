@@ -158,7 +158,10 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .cover-stage { position: relative; width: 100%; text-align: center; }
 .cover-title { display:inline-block; color:inherit; text-decoration:none; transform-origin:50% 62%; transition:transform .34s cubic-bezier(.2,.85,.2,1),filter .3s ease; }
 .cover-stage h1 { margin: 0; font-size: clamp(160px, 22vw, 330px); line-height: .72; transition:letter-spacing .34s cubic-bezier(.2,.85,.2,1),text-shadow .34s ease; }
-.cover-title:hover,.cover-title:focus-visible { filter:drop-shadow(0 15px 13px color-mix(in srgb,var(--blue) 15%,transparent)); outline:none; }.cover-title:hover h1,.cover-title:focus-visible h1 { letter-spacing:-.045em; text-shadow:1px 1px 0 color-mix(in srgb,var(--blue) 30%,transparent),-1px -1px 0 color-mix(in srgb,var(--paper) 75%,transparent); }.cover-title:hover .text-roll-letter,.cover-title:focus-visible .text-roll-letter { animation:portfolio-letter-alive .82s cubic-bezier(.2,.85,.2,1) both; }.cover-title:hover .text-roll-letter:nth-child(2n),.cover-title:focus-visible .text-roll-letter:nth-child(2n) { animation-delay:.055s; }.cover-title:hover .text-roll-letter:nth-child(3n),.cover-title:focus-visible .text-roll-letter:nth-child(3n) { animation-delay:.105s; }.cover-title:hover .text-roll-letter.is-orb .text-roll-face,.cover-title:focus-visible .text-roll-letter.is-orb .text-roll-face { color:transparent; background:linear-gradient(130deg,#f2f3fb 0%,#9aabd2 23%,#fff 42%,#7185b4 64%,#ecedf4 83%); -webkit-background-clip:text; background-clip:text; text-shadow:0 0 7px rgba(255,255,255,.45),0 3px 8px color-mix(in srgb,var(--blue) 38%,transparent); }.cover-title:hover .text-roll-letter.is-orb::after,.cover-title:focus-visible .text-roll-letter.is-orb::after { content:''; position:absolute; z-index:3; left:30%; top:22%; width:28%; height:14%; border-radius:50%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.86),transparent); filter:blur(1px); transform:rotate(-22deg); pointer-events:none; }@keyframes portfolio-letter-alive { 0% { transform:translateY(0) rotate(0) scale(1); } 38% { transform:translateY(-.035em) rotate(-1.2deg) scale(1.018,.975); } 70% { transform:translateY(.012em) rotate(.5deg) scale(.992,1.01); } 100% { transform:translateY(0) rotate(0) scale(1); } }
+.cover-title:focus-visible { outline:2px solid var(--blue); outline-offset:8px; }
+.dancing-title { display:inline-block; perspective:1000px; }
+.dancing-letter { display:inline-block; transform-style:preserve-3d; }
+.dancing-letter > span { display:inline-block; pointer-events:none; }
 .text-roll-letter { position: relative; display: inline-block; width: auto; perspective: 10000px; transform-style: preserve-3d; }
 .text-roll-face { position: absolute; display: inline-block; backface-visibility: hidden; }
 .text-roll-front { transform-origin: 50% 25%; }.text-roll-back { transform-origin: 50% 100%; }
@@ -2196,9 +2199,9 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .device-copy .project-scramble > span {
   font-family:"Times New Roman",Times,serif !important;
   font-size:clamp(14px,1.14vw,18px) !important;
-  font-weight:700;
+  font-weight:400;
   letter-spacing:.035em;
-  word-spacing:.35em;
+  word-spacing:.09em;
   text-indent:0;
   text-rendering:geometricPrecision;
   -webkit-font-smoothing:antialiased;
@@ -2207,8 +2210,14 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 /* Beyond the CV opens into a focused, source-linked lightbox instead of
    cramming proof into the carousel itself. */
 .facts-orbits { display:none; }
-.facts-stage { cursor:pointer; }.facts-stage:focus-visible { outline:2px solid var(--blue); outline-offset:6px; }.facts-stage::before { content:''; position:absolute; z-index:1; left:34px; right:34px; bottom:74px; height:1px; background:color-mix(in srgb,var(--ink) 17%,transparent); pointer-events:none; }.facts-stage:hover { border-color:color-mix(in srgb,var(--blue) 48%,var(--hairline)); box-shadow:0 27px 55px color-mix(in srgb,var(--ink) 16%,transparent),inset 0 1px color-mix(in srgb,var(--paper) 82%,white); }.facts-stage-main { padding-bottom:17px; border-bottom:1px solid color-mix(in srgb,var(--ink) 16%,transparent); }.facts-highlights { margin-top:17px; }
-.facts-explore { position:relative; z-index:4; padding:0; border:0; background:transparent; cursor:pointer; }
+.facts-stage { cursor:pointer; }
+.facts-stage:has(.facts-explore:focus-visible) { outline:2px solid var(--blue); outline-offset:6px; }
+.facts-stage > .facts-stage-top { padding-bottom:0; border-bottom:0; }
+.facts-stage:hover { border-color:color-mix(in srgb,var(--blue) 48%,var(--hairline)); }
+.facts-highlights { margin-top:20px; }
+.facts-stage > .facts-explore { position:static; padding:0; border:0; background:transparent; cursor:pointer; }
+.facts-explore::after { content:''; position:absolute; inset:0; z-index:3; }
+.facts-explore:focus-visible { outline:none; }
 .facts-modal { position:fixed; z-index:260; inset:0; display:grid; place-items:center; padding:24px; background:color-mix(in srgb,var(--ink) 54%,transparent); backdrop-filter:blur(13px) saturate(1.05); animation:facts-modal-fade .2s ease both; }
 .facts-modal-card { position:relative; width:min(980px,100%); max-height:calc(100svh - 48px); overflow:auto; padding:32px; border:1px solid color-mix(in srgb,var(--ink) 16%,var(--hairline)); border-radius:28px 21px 26px 20px; background:var(--paper); color:var(--ink); box-shadow:0 32px 100px color-mix(in srgb,var(--ink) 31%,transparent),inset 0 1px color-mix(in srgb,var(--paper) 80%,white); transform-origin:50% 38%; animation:facts-modal-card-in .46s cubic-bezier(.18,.88,.24,1) both; }
 .facts-modal-card header { max-width:650px; }.facts-modal-card header > span { display:block; margin-bottom:10px; color:var(--soft-ink); font:10px/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; }.facts-modal-card h3 { margin:8px 0 11px; font:clamp(44px,6vw,76px)/.9 var(--serif); letter-spacing:-.05em; }.facts-modal-card p { margin:0; color:var(--soft-ink); font-size:15px; line-height:1.5; }
@@ -2219,8 +2228,6 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @media (max-width:700px) { .facts-modal { padding:14px; }.facts-modal-card { max-height:calc(100svh - 28px); padding:30px 18px 20px; border-radius:21px 16px 20px 15px; }.facts-modal-card h3 { font-size:42px; }.facts-sample-grid { grid-template-columns:1fr; gap:10px; }.facts-sample { grid-template-columns:116px minmax(0,1fr); align-items:center; column-gap:12px; }.facts-sample > div { grid-row:1 / span 2; }.facts-sample span { grid-column:2; } }
 @media (prefers-reduced-motion:reduce) { .cover-title:hover .text-roll-letter,.cover-title:focus-visible .text-roll-letter,.facts-modal,.facts-modal-card { animation:none; }.facts-sample,.facts-sample img { transition:none; } }
 
-/* Keep the home title still: the interaction is a material finish, not motion. */
-.cover-title:hover .text-roll-letter,.cover-title:focus-visible .text-roll-letter { animation:none; }
 .cover-kicker span::after { display:none; }.cover-kicker::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:color-mix(in srgb,var(--blue) 76%,var(--ink)); }
 
 /* A compact record player, anchored under Curriculum Vitae rather than in the
@@ -2229,7 +2236,12 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .voice-art-stage { position:relative; width:72px; height:72px; }.voice-player-art { position:absolute; z-index:2; inset:0; display:grid; align-content:center; justify-items:center; gap:3px; overflow:hidden; border:1px solid color-mix(in srgb,var(--blue) 44%,var(--hairline)); border-radius:16px 12px 15px 11px; background:linear-gradient(140deg,color-mix(in srgb,var(--blue) 34%,var(--paper)),var(--charcoal)); color:#fff; box-shadow:inset 0 1px rgba(255,255,255,.24); }.voice-player-art::after { content:''; position:absolute; inset:-40%; background:linear-gradient(118deg,transparent 46%,rgba(255,255,255,.28) 50%,transparent 54%); transform:rotate(20deg); }.voice-player-art span,.voice-player-art small { position:relative; z-index:1; }.voice-player-art span { font:600 26px/.8 var(--serif); letter-spacing:-.07em; }.voice-player-art small { font:8px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
 .voice-art-stage .voice-vinyl { position:absolute; z-index:1; left:-22px; top:7px; width:60px; height:60px; transition:transform .38s var(--ease-out); }.voice-popover:hover .voice-art-stage .voice-vinyl { transform:translateX(-18px); }.voice-art-stage .voice-vinyl::after { inset:19px; }.voice-art-stage .voice-vinyl i { inset:8px 29px 9px; }.voice-art-stage .voice-vinyl b { top:27px; left:27px; }
 .voice-popover-copy { gap:7px; }.voice-popover-copy strong { font-size:22px; }.voice-wave { position:relative; padding-bottom:8px; }.voice-wave::after { content:''; position:absolute; left:0; right:6px; bottom:0; height:2px; border-radius:99px; background:color-mix(in srgb,var(--blue) 35%,var(--hairline)); }.voice-popover-play { width:40px; height:40px; border-radius:50%; }.voice-popover-close { width:25px; height:25px; }
-.github-mark { display:grid; width:18px; height:18px; place-items:center; border-radius:50%; background:#181717; color:#fff; box-shadow:0 2px 5px rgba(0,0,0,.22); }.contribution-heading > a .github-mark svg { width:13px; height:13px; }
+.contribution-heading > a .github-mark { width:19px; height:19px; color:var(--ink); }
+.facts-sample-grid.has-instagram { grid-template-columns:repeat(2,minmax(0,1fr)); max-width:570px; }
+.facts-sample-grid.has-instagram .facts-sample > div { aspect-ratio:3 / 4; }
+@media (max-width:700px) {
+  .facts-sample-grid.has-instagram .facts-sample { grid-template-columns:minmax(0,1fr); }
+}
 @media (max-width:760px) { .voice-popover { top:62px; left:16px; width:min(390px,calc(100vw - 32px)); grid-template-columns:64px minmax(0,1fr) 38px 24px; gap:10px; }.voice-art-stage { width:62px; height:62px; }.voice-art-stage .voice-vinyl { width:52px; height:52px; }.voice-popover-copy strong { font-size:18px; } }
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 

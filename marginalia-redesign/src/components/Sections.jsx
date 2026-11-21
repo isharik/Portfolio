@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import QRCode from 'qrcode'
 import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
+import PushpinTearFooter from './ui/pushpin-tear-footer'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 
 function Scribble({ children, className = '' }) {
@@ -14,7 +15,7 @@ function InkSignature({ children, defer = false }) {
 }
 
 function GitHubMark({ className = '' }) {
-  return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.011-1.04-.016-2.04-3.338.725-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.085 1.839 1.237 1.839 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.775.419-1.305.762-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23A11.48 11.48 0 0 1 12 3.806c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.431.372.815 1.102.815 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z" /></svg>
+  return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.226 17.284c-2.965-.36-5.054-2.493-5.054-5.256 0-1.123.404-2.336 1.078-3.144-.292-.741-.247-2.314.09-2.965.898-.112 2.111.36 2.83 1.01.853-.269 1.752-.404 2.853-.404 1.1 0 1.999.135 2.807.382.696-.629 1.932-1.1 2.83-.988.315.606.36 2.179.067 2.942.72.854 1.101 2 1.101 3.167 0 2.763-2.089 4.852-5.098 5.234.763.494 1.28 1.572 1.28 2.807v2.336c0 .674.561 1.056 1.235.786 4.066-1.55 7.255-5.615 7.255-10.646C23.5 6.188 18.334 1 11.978 1 5.62 1 .5 6.188.5 12.545c0 4.986 3.167 9.12 7.435 10.669.606.225 1.19-.18 1.19-.786V20.63a2.9 2.9 0 0 1-1.078.224c-1.483 0-2.359-.808-2.987-2.313-.247-.607-.517-.966-1.034-1.033-.27-.023-.359-.135-.359-.27 0-.27.45-.471.898-.471.652 0 1.213.404 1.797 1.235.45.651.921.943 1.483.943.561 0 .92-.202 1.437-.719.382-.381.674-.718.944-.943" /></svg>
 }
 
 function PortraitNote({ children, className = '' }) {
@@ -512,7 +513,7 @@ function ContributionGrid() {
     return baseLevel + (scatterRank < remainder ? 1 : 0)
   }
   return <Reveal className="contribution-trace">
-    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile"><i className="github-mark"><GitHubMark /></i>GitHub activity <span aria-hidden="true">↗</span></a></div>
+    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile"><GitHubMark className="github-mark" />GitHub activity <span aria-hidden="true">↗</span></a></div>
     <div className="contribution-calendar" role="grid" aria-label="626 GitHub contributions in the last year">
       <div className="contribution-days" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>
       <div className="contribution-grid-wrap"><div className="contribution-months" aria-hidden="true">{months.map(month => <span key={month}>{month}</span>)}</div><div className="contribution-grid">{Array.from({ length: 52 }, (_, week) => Array.from({ length: 7 }, (_, day) => {
@@ -574,9 +575,9 @@ export function Facts() {
   const wheelDistance = useRef(0)
   const personalFacts = [
     { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps', samples: [{ label: 'Featured video 01', href: 'https://youtu.be/H0FTvvO9M-M?si=_TZrwOcNDmq_0S8Q', image: 'https://i.ytimg.com/vi/H0FTvvO9M-M/hqdefault.jpg' }, { label: 'Featured video 02', href: 'https://youtu.be/WXv7XTAmK7Q?si=gLOjgdXKCahfGU86', image: 'https://i.ytimg.com/vi/WXv7XTAmK7Q/hqdefault.jpg' }, { label: 'Featured video 03', href: 'https://youtu.be/ZXEWtwVu60M?si=6JC0iv74V1L2OEdu', image: 'https://i.ytimg.com/vi/ZXEWtwVu60M/hqdefault.jpg' }] },
-    { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/projects/pharos-onchain-wizard.jpg', note: 'AI, support & Web3 — made clearer.', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20' }] },
-    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/images/thriller-shelf.jpg', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
-    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Visual study 01', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/photography-background.webp' }, { label: 'Visual study 02', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/photography-background.webp' }, { label: 'Visual study 03', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/photography-background.webp' }] },
+    { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-post-1.jpg' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-post-2.jpg' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-post-3.jpg' }] },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
+    { icon: 'instagram', eyebrow: 'Photography 04', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }] },
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
@@ -630,15 +631,15 @@ export function Facts() {
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
-        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title} role="button" tabIndex={0} onClick={() => setExploring(true)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setExploring(true) } }} aria-label={`Explore ${activeFact.title}`}>
+        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title}>
           {activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
           <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
           <div className="facts-stage-main">
             <strong className={`facts-stage-icon ${activeFact.icon === 'x' ? 'is-x' : ''}`} aria-hidden="true">{activeFact.icon === 'x' ? <XMark /> : activeFact.icon === 'instagram' ? <svg viewBox="0 0 24 24" width="35" height="35" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : activeFact.icon}</strong>
-            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.note && <span className="facts-note-preview"><XMark />{activeFact.note}</span>}</div>
+            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></div>
           </div>
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
-          <button type="button" className="facts-link facts-explore" onClick={() => setExploring(true)}>Explore <b>+</b></button>
+          <button type="button" className="facts-link facts-explore" aria-label={`Explore ${activeFact.title}`} onClick={() => setExploring(true)}>Explore <b aria-hidden="true">+</b></button>
         </div>
         <nav className="facts-controls" aria-label="Change Beyond the CV card">
           <button type="button" onClick={() => move(-1)} disabled={activeIndex === 0} aria-label="Previous card">←</button>
@@ -647,7 +648,22 @@ export function Facts() {
         </nav>
         <p className="facts-scroll-hint">Scroll or use the arrows to turn the page</p>
       </div>
-      {exploring && createPortal(<div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}><section className="facts-modal-card" onClick={event => event.stopPropagation()}><button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button><header><span>{activeFact.eyebrow}</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header><div className="facts-sample-grid">{activeFact.samples.map(sample => sample.href ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample"><div>{sample.image ? <img src={sample.image} alt="" loading="eager" decoding="async" /> : <XMark />}</div><b>{sample.label}</b><span>Open ↗</span></a> : <div key={sample.label} className="facts-sample is-static"><div><img src={sample.image} alt="" loading="eager" decoding="async" /></div><b>{sample.label}</b><span>on the shelf</span></div>)}</div>{activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action} ↗</a>}</section></div>, document.body)}
+      {exploring && createPortal(
+        <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>
+          <section className="facts-modal-card" onClick={event => event.stopPropagation()}>
+            <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
+            <header><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header>
+            <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
+              {activeFact.samples.map(sample => {
+                const preview = <><div><img src={sample.image} alt="" decoding="async" /></div><b>{sample.label}</b></>
+                return sample.href
+                  ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample">{preview}</a>
+                  : <div key={sample.label} className="facts-sample is-static">{preview}</div>
+              })}
+            </div>
+            {activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action}</a>}
+          </section>
+        </div>, document.body)}
     </section>
   )
 }
@@ -792,6 +808,55 @@ export function Contact() {
   )
 }
 
-export function Footer() {
-  return <footer className="folio-footer paper-sheet"><span>Portfolio 2026</span><span>Curriculum Vitae</span><span>Sharik Hussain</span><a href="#home">back to top ↑</a></footer>
+export function Footer({ theme }) {
+  const dark = theme === 'dark'
+
+  return (
+    <PushpinTearFooter
+      className="tpf-portfolio"
+      brand="Portfolio."
+      name={profile.name}
+      logo={<span className="tpf-portfolio-monogram" aria-hidden="true">SH</span>}
+      logoHref="#home"
+      email={profile.email}
+      primaryLink={{ label: 'Curriculum Vitae', href: '/resume.pdf' }}
+      status={{ label: 'Get in touch', href: '#contact' }}
+      mark={profile.location}
+      timeZone="Asia/Kolkata"
+      timeLabel="IST"
+      socials={[
+        { icon: 'github', label: 'GitHub', href: profile.socials.github },
+        { icon: 'linkedin', label: 'LinkedIn', href: profile.socials.linkedin },
+        { icon: 'x', label: 'X', href: profile.socials.x },
+      ]}
+      columns={[
+        {
+          title: 'Portfolio',
+          links: [{ label: 'About', href: '#about' }, { label: 'Experience', href: '#experience' }],
+          cta: { label: 'work.', href: '#projects' },
+        },
+        {
+          title: 'Contact',
+          links: [
+            { label: 'Email me', href: `mailto:${profile.email}` },
+            { label: 'Book a call', href: 'https://calendly.com/sharikhussain99/30min' },
+          ],
+          cta: { label: 'say hi.', href: '#contact' },
+        },
+      ]}
+      sideLinks={[
+        { icon: 'doc', label: 'Résumé', href: '/resume.pdf' },
+        { icon: 'globe', label: 'GitHub', href: profile.socials.github },
+      ]}
+      chat={{ label: 'Contact', href: '#contact' }}
+      copyright="© 2026 Sharik Hussain"
+      handle={{ label: '@isharik99', href: profile.socials.x }}
+      sheet={dark ? '#303443' : '#44495d'}
+      paper={dark ? '#15151b' : '#f4f3ef'}
+      sheetInk="#f5f3ee"
+      paperInk={dark ? '#f0efeb' : '#282831'}
+      fontSans="var(--sans)"
+      seed={23}
+    />
+  )
 }

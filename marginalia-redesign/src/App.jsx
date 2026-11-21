@@ -17,7 +17,7 @@ export default function App() {
     if (!ready) return
     // Experience owns its full-height scroll stage. Applying the generic
     // section fade to that sticky container can hide it before its map ends.
-    const nodes = [...document.querySelectorAll('.reveal, .sheet, .folio-footer')]
+    const nodes = [...document.querySelectorAll('.reveal, .sheet')]
       .filter(node => node.id !== 'experience')
     nodes.forEach(node => node.classList.add('scroll-reveal'))
     if (!('IntersectionObserver' in window)) {
@@ -72,7 +72,7 @@ export default function App() {
         <Facts />
         <Contact />
       </main>
-      <Footer />
+      <Footer theme={theme} />
     </div>
   )
 }
