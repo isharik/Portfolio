@@ -1,0 +1,247 @@
+html:has(.facts-preview-dialog[open]) { overflow: hidden; }
+
+.facts-preview-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(calc(100% - 28px), 720px);
+  max-height: calc(100dvh - 28px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 22px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 24px 64px rgb(0 0 0 / .25);
+}
+
+.facts-preview-dialog.is-vinyl { width: min(calc(100% - 28px), 720px); }
+.facts-preview-dialog::backdrop { background: rgb(13 14 20 / .64); backdrop-filter: blur(6px); }
+.facts-preview-dialog[open] { animation: facts-preview-in .26s var(--ease-out) both; }
+@keyframes facts-preview-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+}
+
+.facts-preview-body { display: grid; gap: 14px; padding: clamp(14px, 4vw, 24px); }
+.facts-preview-body header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.facts-preview-body header p { margin: 0 0 5px; color: var(--soft-ink); font: 12px/1.4 var(--sans); }
+.facts-preview-body h3 { margin: 0; font: clamp(23px, 4.5vw, 35px)/1.05 var(--serif); }
+.facts-preview-close {
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+.facts-preview-close { flex: 0 0 44px; font: 24px/1 var(--sans); }
+.facts-preview-source { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.facts-preview-status { min-height: 1.4em; margin: 0; color: var(--soft-ink); font: 13px/1.4 var(--sans); }
+.facts-preview-controls, .facts-preview-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.facts-preview-footer { justify-content: space-between; }
+.is-vinyl .facts-preview-body { padding-top: 26px; }
+.is-vinyl .facts-preview-body > header {
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--hairline);
+}
+.facts-vinyl-transport { display: flex; align-items: center; gap: 7px; }
+.facts-vinyl-action {
+  display: grid;
+  position: relative;
+  isolation: isolate;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+}
+.facts-vinyl-action::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: scale .16s ease;
+}
+.facts-vinyl-action:active::before { scale: .9; }
+.facts-vinyl-source { margin-inline-start: auto; gap: 6px; text-decoration: none; white-space: nowrap; }
+.facts-vinyl-source svg { flex: none; }
+.facts-vinyl-source:hover > span:first-of-type { text-decoration: underline; }
+.is-vinyl .facts-preview-controls {
+  justify-content: space-between;
+  border-top: 1px solid var(--hairline);
+  padding-top: 10px;
+}
+.facts-video-preview { display: block; width: 100%; min-height: 200px; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; background: #101116; }
+.facts-instagram-preview {
+  display: block;
+  width: 390px;
+  max-width: 100%;
+  height: 770px;
+  margin-inline: auto;
+  border: 0;
+  border-radius: 10px;
+  background: var(--paper-2);
+  zoom: .76;
+}
+@media (max-height: 790px), (max-width: 400px) {
+  .facts-instagram-preview { zoom: .68; }
+}
+@media (max-height: 675px), (max-width: 345px) {
+  .facts-instagram-preview { zoom: .59; }
+}
+@media (max-height: 595px) {
+  .facts-instagram-preview { zoom: .50; }
+}
+.facts-preview-pagination { display: flex; align-items: center; gap: 9px; font: 12px var(--mono); }
+.facts-preview-pagination button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+.facts-preview-pagination button:disabled { opacity: .4; cursor: default; }
+
+.facts-turntable {
+  position: relative;
+  width: min(100%, 390px, 54dvh);
+  max-width: 100%;
+  aspect-ratio: 1.52;
+  justify-self: center;
+  overflow: hidden;
+  border: 1px solid #73747a;
+  border-radius: 13px;
+  background: repeating-linear-gradient(0deg, #ffffff04 0 1px, transparent 1px 3px), linear-gradient(145deg, #494b52, #232428 65%, #292b30);
+  box-shadow: inset 0 1px 1px #ffffff45, inset 0 -4px 0 #09090b77;
+}
+
+.facts-platter,
+.facts-record-drop {
+  position: absolute;
+  inset: 51% auto auto 37%;
+  width: 56%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+}
+
+.facts-deck-brand {
+  position: absolute;
+  z-index: 1;
+  right: 6%;
+  bottom: 8%;
+  width: min(22%, 84px);
+  aspect-ratio: 170 / 20;
+  background: linear-gradient(#ededef, #a6a9ae);
+  mask: url('/images/beyond-bose-wordmark.svg') center / contain no-repeat;
+}
+.facts-platter {
+  width: 59%;
+  background: repeating-conic-gradient(#73757b 0deg .8deg, #252629 1deg 3deg);
+  border: 1px solid #999aa0;
+  box-shadow: 0 5px 10px #09090b, inset 0 0 0 1px #43454a;
+}
+.facts-record-drop { animation: facts-record-seat .54s var(--ease-out) both; }
+@keyframes facts-record-seat {
+  from { opacity: 0; transform: translate(24%, -30%) scale(1.11) rotate(-18deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.facts-record {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #101013;
+  animation: facts-record-spin 1.8s linear infinite paused;
+}
+.facts-record-surface { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; scale: 1.07; }
+.facts-record-label { position: relative; width: 34%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 1px #252526; }
+.facts-record i { position: absolute; width: 4%; aspect-ratio: 1; border-radius: 50%; background: #d7d7db; box-shadow: 0 0 0 2px #19191b; }
+.facts-turntable.is-playing .facts-record { animation-play-state: running; }
+@keyframes facts-record-spin { to { transform: rotate(1turn); } }
+
+.facts-tonearm {
+  position: absolute;
+  top: 10%;
+  left: 72%;
+  width: 15%;
+  height: 65%;
+  filter: drop-shadow(2px 3px 2px #09090b);
+  transform: rotate(0deg);
+  transform-origin: 82% 7.4%;
+  transition: transform 180ms var(--ease-out);
+}
+.facts-tonearm svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.facts-turntable.is-cued .facts-tonearm,
+.facts-preview-body:has([data-cue="true"]:active) .facts-tonearm {
+  transform: rotate(26deg);
+  transition-duration: 0s;
+}
+.facts-deck-pitch {
+  position: absolute;
+  top: 47%;
+  right: 6%;
+  width: 4px;
+  height: 28%;
+  border-radius: 2px;
+  background: #101114;
+  box-shadow: inset 1px 1px 1px #000, 0 0 0 1px #46474d;
+}
+.facts-deck-pitch i { position: absolute; top: 46%; left: -4px; width: 12px; height: 6px; border-radius: 1px; background: #adaeb4; box-shadow: 0 2px 2px #111; }
+
+button.facts-sample { width: 100%; text-align: left; cursor: pointer; }
+.facts-sample-play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  width: 32px;
+  aspect-ratio: 1;
+  place-items: center;
+  translate: -50% -50%;
+  border: 1px solid #ffffffc0;
+  border-radius: 50%;
+  background: #0009;
+  color: white;
+  font-size: 11px;
+}
+
+@media (min-width: 620px) {
+  .is-vinyl .facts-preview-body {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    gap: 14px 23px;
+    padding: 24px;
+  }
+  .is-vinyl .facts-preview-body > header { grid-column: 2; grid-row: 1; padding: 5px 44px 0 0; border: 0; }
+  .is-vinyl .facts-preview-close { position: absolute; top: 16px; right: 16px; width: 44px; }
+  .is-vinyl .facts-turntable { grid-column: 1; grid-row: 1 / 3; width: 100%; }
+  .is-vinyl .facts-preview-controls { grid-column: 2; grid-row: 2; }
+}
+
+@media (min-width: 1040px) {
+  .facts-modal-card.is-spotsick { width: min(1120px, 100%); }
+  .facts-modal-card.is-spotsick .facts-sample-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .facts-preview-dialog[open], .facts-record-drop, .facts-record { animation: none; }
+  .facts-tonearm, .facts-vinyl-action::before { transition: none; }
+}

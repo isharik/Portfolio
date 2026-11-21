@@ -5,6 +5,7 @@ import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
+import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 
 function Scribble({ children, className = '' }) {
@@ -559,22 +560,31 @@ function XMark({ className = '' }) {
   return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg>
 }
 
-function SpotifyMark() {
-  return <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
-    <circle cx="12" cy="12" r="11" fill="currentColor" />
-    <path d="M6.2 9c4.5-1.2 8.3-.8 11.7 1.2M7 12.2c3.6-.9 6.9-.5 9.9 1.2M7.8 15.2c2.9-.6 5.5-.3 7.9 1" fill="none" stroke="var(--paper)" strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-}
-
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [exploring, setExploring] = useState(false)
+  const [previewSample, setPreviewSample] = useState(null)
   const factsRef = useRef(null)
   const activeIndexRef = useRef(0)
   const wheelLock = useRef(0)
   const wheelDistance = useRef(0)
   const personalFacts = [
-    { icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS', text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.', highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'], href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube', background: 'https://unavatar.io/youtube/echoplexfps', samples: [{ label: 'Featured video 01', href: 'https://youtu.be/H0FTvvO9M-M?si=_TZrwOcNDmq_0S8Q', image: 'https://i.ytimg.com/vi/H0FTvvO9M-M/hqdefault.jpg' }, { label: 'Featured video 02', href: 'https://youtu.be/WXv7XTAmK7Q?si=gLOjgdXKCahfGU86', image: 'https://i.ytimg.com/vi/WXv7XTAmK7Q/hqdefault.jpg' }, { label: 'Featured video 03', href: 'https://youtu.be/ZXEWtwVu60M?si=6JC0iv74V1L2OEdu', image: 'https://i.ytimg.com/vi/ZXEWtwVu60M/hqdefault.jpg' }] },
+    {
+      icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS',
+      text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.',
+      highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'],
+      href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube',
+      background: 'https://unavatar.io/youtube/echoplexfps',
+      samples: [
+        { label: "Can't Aim Use My Sens", videoId: 'H0FTvvO9M-M' },
+        { label: 'High Sens — 0.5 800 DPI', videoId: 'WXv7XTAmK7Q' },
+        { label: 'Neon Needs a Nerf', videoId: 'ZXEWtwVu60M' },
+      ].map(sample => ({
+        ...sample,
+        href: `https://youtu.be/${sample.videoId}`,
+        image: `https://i.ytimg.com/vi/${sample.videoId}/hqdefault.jpg`,
+      })),
+    },
     { icon: 'x', eyebrow: 'Profile 02', title: 'Web3', handle: '@isharik99', text: 'Short, useful explainers about support, AI, and emerging ecosystems — written so technical ideas stay human.', highlights: ['Customer support notes', 'AI & Web3 explainers', 'Community stories'], href: 'https://x.com/isharik99', action: 'Open X profile', brand: 'x', background: '/images/x-isharik99.jpg', samples: [{ label: 'On-chain notes', href: 'https://x.com/isharik99/status/2123675012360200555?a=SJDCaqTyoIG-m6XNx90&s=20', image: '/images/x-post-1.jpg' }, { label: 'Field note', href: 'https://x.com/isharik99/status/2123051684117221601?a=yb_y-BeWPxAbcVs0mXI&s=20', image: '/images/x-post-2.jpg' }, { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-post-3.jpg' }] },
     { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
     {
@@ -589,19 +599,21 @@ export function Facts() {
       brand: 'spotify',
       background: '/images/spotify-spotsick.jpg',
       samples: [
-        { label: 'keshi', track: 'like i need u', href: 'https://open.spotify.com/track/7ivYWXqrPLs66YwakDuSim', image: '/images/spotify-album-keshi.jpg' },
-        { label: 'ZAYN', track: 'Tightrope', href: 'https://open.spotify.com/track/44ngiCPfS8FfdJOqN0eULl', image: '/images/spotify-album-zayn.jpg' },
-        { label: 'Radiohead', track: 'Creep', href: 'https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r', image: '/images/spotify-album-radiohead.jpg' },
-        { label: 'Aerosmith', track: 'Dream On', href: 'https://open.spotify.com/track/5Ih9gbqyxCzTJ43nuSuKnC', image: '/images/spotify-album-aerosmith.jpg' },
-        { label: 'Nirvana', track: 'Smells Like Teen Spirit', href: 'https://open.spotify.com/track/4CeeEOM32jQcH3eN9Q2dGj', image: '/images/spotify-album-nirvana.jpg' },
-        { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', image: '/images/spotify-album-drake.jpg' },
-        { label: 'Tame Impala', track: 'Loser', href: 'https://open.spotify.com/track/7bxaFZ1O3cHkgLKMsdC3xR', image: '/images/spotify-album-tame-impala.jpg' },
-        { label: 'Magnus Ferrell', track: 'Asleep Talking', href: 'https://open.spotify.com/track/5dBXBY5CsYxEjC20ewA9EU', image: '/images/spotify-album-magnus-ferrell.jpg' },
+        { label: 'keshi', track: 'like i need u', href: 'https://open.spotify.com/track/7ivYWXqrPLs66YwakDuSim', previewId: '7155cf57d50392b853aea96a7befaace69cd6e01', image: '/images/spotify-album-keshi.jpg' },
+        { label: 'ZAYN', track: 'Tightrope', href: 'https://open.spotify.com/track/44ngiCPfS8FfdJOqN0eULl', previewId: 'df236bbecfa0a1ede504f501c5b50cca29fbcfa6', image: '/images/spotify-album-zayn.jpg' },
+        { label: 'Radiohead', track: 'Creep', href: 'https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r', previewId: 'f3d864283774529a2378100c912bfacb614db751', image: '/images/spotify-album-radiohead.jpg' },
+        { label: 'Aerosmith', track: 'Dream On', href: 'https://open.spotify.com/track/5Ih9gbqyxCzTJ43nuSuKnC', previewId: 'a7af61cf950a1014dad001a35a21329211050aaa', image: '/images/spotify-album-aerosmith.jpg' },
+        { label: 'Nirvana', track: 'Smells Like Teen Spirit', href: 'https://open.spotify.com/track/4CeeEOM32jQcH3eN9Q2dGj', previewId: '91219ebc0d0505a1001c4b854f8b2451fcec95b8', image: '/images/spotify-album-nirvana.jpg' },
+        { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', previewId: 'b185a4dc8c70ad2fe9a8846fab83241ea3418921', image: '/images/spotify-album-drake.jpg' },
+        { label: 'Tame Impala', track: 'Loser', href: 'https://open.spotify.com/track/7bxaFZ1O3cHkgLKMsdC3xR', previewId: '0015e9347a45b62215447eba657b2fc3ce279d2d', image: '/images/spotify-album-tame-impala.jpg' },
+        { label: 'Magnus Ferrell', track: 'Asleep Talking', href: 'https://open.spotify.com/track/5dBXBY5CsYxEjC20ewA9EU', previewId: 'b6b92667f8443403c5c961fffe0de457e1fc5dc8', image: '/images/spotify-album-magnus-ferrell.jpg' },
       ],
     },
     { icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
   ]
   const activeFact = personalFacts[activeIndex]
+  const isPostGallery = activeFact.brand === 'instagram'
+  const postIndex = isPostGallery ? activeFact.samples.findIndex(sample => sample.href === previewSample?.href) : -1
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
   useEffect(() => {
     const preloadBackgrounds = () => {
@@ -623,11 +635,11 @@ export function Facts() {
   }, [])
   useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
   useEffect(() => {
-    if (!exploring) return undefined
+    if (!exploring || previewSample) return undefined
     const onKeyDown = event => event.key === 'Escape' && setExploring(false)
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [exploring])
+  }, [exploring, previewSample])
   useEffect(() => {
     const node = factsRef.current
     if (!node) return undefined
@@ -672,13 +684,19 @@ export function Facts() {
       </div>
       {exploring && createPortal(
         <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>
-          <section className="facts-modal-card" onClick={event => event.stopPropagation()}>
+          <section className={`facts-modal-card${activeFact.brand === 'spotify' ? ' is-spotsick' : ''}`} onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
             <header><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header>
             {activeFact.brand === 'spotify' && <p className="facts-music-picks">Artists on rotation</p>}
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
-                const preview = <><div><img src={sample.image} alt="" decoding="async" /></div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
+                const canPlay = sample.track || sample.videoId
+                const canPreview = canPlay || isPostGallery
+                const preview = <><div><img src={sample.image} alt="" decoding="async" />{canPlay && <i className="facts-sample-play" aria-hidden="true">▶</i>}</div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
+                if (canPreview) return (
+                  <button key={sample.label} type="button" aria-haspopup="dialog" className="facts-sample"
+                    onClick={() => setPreviewSample(sample)}>{preview}</button>
+                )
                 return sample.href
                   ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample">{preview}</a>
                   : <div key={sample.label} className="facts-sample is-static">{preview}</div>
@@ -686,6 +704,14 @@ export function Facts() {
             </div>
             {activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action}</a>}
           </section>
+          {previewSample && (
+            <FactsMediaPreview sample={previewSample} onClose={() => setPreviewSample(null)}
+              gallery={postIndex < 0 ? undefined : {
+                index: postIndex,
+                count: activeFact.samples.length,
+                onNavigate: direction => setPreviewSample(activeFact.samples[postIndex + direction]),
+              }} />
+          )}
         </div>, document.body)}
     </section>
   )
