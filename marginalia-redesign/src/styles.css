@@ -2339,11 +2339,11 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   background:linear-gradient(#a9b0bd,#4e5669);
 }
 
-.facts-stage:not(.has-instagram) > .facts-highlights {
+.facts-stage > .facts-highlights {
   margin-top:auto;
   padding-top:clamp(32px,6vh,60px);
 }
-.facts-stage:not(.has-instagram) > .facts-explore { margin-top:28px; }
+.facts-stage > .facts-explore { margin-top:28px; }
 
 @media (min-width:901px) {
   .education-atlas-stage { grid-template-columns:repeat(6,minmax(0,1fr)); }
