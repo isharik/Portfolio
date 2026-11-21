@@ -560,6 +560,16 @@ function XMark({ className = '' }) {
   return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.494h2.039L6.486 3.24H4.298L17.61 20.647Z" /></svg>
 }
 
+function instagramSample(label, path, photoCount) {
+  const code = path.split('/').at(-1)
+  return {
+    label,
+    href: `https://www.instagram.com/purelyvisual_/${path}/`,
+    image: `/images/instagram-${code}.jpg`,
+    photos: Array.from({ length: photoCount }, (_, index) => `/images/instagram-${code}-photo-${index + 1}.webp`),
+  }
+}
+
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [exploring, setExploring] = useState(false)
@@ -609,11 +619,20 @@ export function Facts() {
         { label: 'Magnus Ferrell', track: 'Asleep Talking', href: 'https://open.spotify.com/track/5dBXBY5CsYxEjC20ewA9EU', previewId: 'b6b92667f8443403c5c961fffe0de457e1fc5dc8', image: '/images/spotify-album-magnus-ferrell.jpg' },
       ],
     },
-    { icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_', text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.', highlights: ['Photography', 'Visual storytelling', 'Creative content'], href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram', background: '/photography-background.webp', samples: [{ label: 'Cloud 9', href: 'https://www.instagram.com/purelyvisual_/p/DcyNHViCezh/', image: '/images/instagram-DcyNHViCezh.jpg' }, { label: 'Side questing', href: 'https://www.instagram.com/purelyvisual_/p/DWYhfPdkYNm/', image: '/images/instagram-DWYhfPdkYNm.jpg' }, { label: 'Mountain reel', href: 'https://www.instagram.com/purelyvisual_/reel/DWWNV1TkW1U/', image: '/images/instagram-DWWNV1TkW1U.jpg' }] },
+    {
+      icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_',
+      text: 'A space for photography, visual stories, and content — noticing the details and sharing a different perspective.',
+      highlights: ['Photography', 'Visual storytelling', 'Creative content'],
+      href: 'https://www.instagram.com/purelyvisual_/', action: 'Open Instagram', brand: 'instagram',
+      background: '/photography-background.webp',
+      samples: [
+        instagramSample('Cloud 9', 'p/DcyNHViCezh', 4),
+        instagramSample('Side questing', 'p/DWYhfPdkYNm', 5),
+        instagramSample('Mountain reel', 'reel/DWWNV1TkW1U', 1),
+      ],
+    },
   ]
   const activeFact = personalFacts[activeIndex]
-  const isPostGallery = activeFact.brand === 'instagram'
-  const postIndex = isPostGallery ? activeFact.samples.findIndex(sample => sample.href === previewSample?.href) : -1
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
   useEffect(() => {
     const preloadBackgrounds = () => {
@@ -691,7 +710,7 @@ export function Facts() {
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
                 const canPlay = sample.track || sample.videoId
-                const canPreview = canPlay || isPostGallery
+                const canPreview = canPlay || sample.photos
                 const preview = <><div><img src={sample.image} alt="" decoding="async" />{canPlay && <i className="facts-sample-play" aria-hidden="true">▶</i>}</div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
                 if (canPreview) return (
                   <button key={sample.label} type="button" aria-haspopup="dialog" className="facts-sample"
@@ -705,12 +724,7 @@ export function Facts() {
             {activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action}</a>}
           </section>
           {previewSample && (
-            <FactsMediaPreview sample={previewSample} onClose={() => setPreviewSample(null)}
-              gallery={postIndex < 0 ? undefined : {
-                index: postIndex,
-                count: activeFact.samples.length,
-                onNavigate: direction => setPreviewSample(activeFact.samples[postIndex + direction]),
-              }} />
+            <FactsMediaPreview sample={previewSample} onClose={() => setPreviewSample(null)} />
           )}
         </div>, document.body)}
     </section>

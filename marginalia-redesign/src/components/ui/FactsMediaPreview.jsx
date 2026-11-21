@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import './facts-media-preview.css'
 
 const musicPreviewSeconds = 11
+const tonearmCueMs = 150
 
 export function SpotifyMark({ size = 34 }) {
   return <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -12,17 +13,22 @@ export function SpotifyMark({ size = 34 }) {
 
 function VinylPreview({ sample }) {
   const audioRef = useRef(null)
+  const cueTimer = useRef(0)
   const [status, setStatus] = useState('ready')
   const playing = status === 'playing'
   const cued = playing || status === 'starting'
 
   useLayoutEffect(() => {
     const audio = audioRef.current
-    return () => audio.pause()
+    return () => {
+      window.clearTimeout(cueTimer.current)
+      audio.pause()
+    }
   }, [])
 
   function togglePlayback() {
     const audio = audioRef.current
+    window.clearTimeout(cueTimer.current)
     if (cued) {
       audio.pause()
       setStatus('paused')
@@ -31,6 +37,11 @@ function VinylPreview({ sample }) {
     if (status === 'complete') audio.currentTime = 0
     if (status === 'unavailable') audio.load()
     setStatus('starting')
+    const animateCue = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    audio.muted = animateCue
+    if (animateCue) {
+      cueTimer.current = window.setTimeout(() => { audio.muted = false }, tonearmCueMs)
+    }
     audio.play().catch(error => {
       if (error.name !== 'AbortError') setStatus('unavailable')
     })
@@ -53,7 +64,8 @@ function VinylPreview({ sample }) {
 
   return (
     <>
-      <div className={`facts-turntable${playing ? ' is-playing' : ''}${cued ? ' is-cued' : ''}`} aria-hidden="true">
+      <div className={`facts-turntable${playing ? ' is-playing' : ''}${cued ? ' is-cued' : ''}`}
+        style={{ '--facts-cue-time': `${tonearmCueMs}ms` }} aria-hidden="true">
         <span className="facts-deck-brand" />
         <div className="facts-platter" />
         <div className="facts-record-drop">
@@ -101,13 +113,14 @@ function VinylPreview({ sample }) {
   )
 }
 
-export default function FactsMediaPreview({ sample, onClose, gallery }) {
+export default function FactsMediaPreview({ sample, onClose }) {
   const dialog = useRef(null)
+  const [photoIndex, setPhotoIndex] = useState(0)
   const music = Boolean(sample.track)
   const title = sample.track || sample.label
-  const hasPrevious = gallery?.index > 0
-  const hasNext = gallery?.index < gallery?.count - 1
-  const instagramPath = gallery && new URL(sample.href).pathname.match(/\/(?:p|reel)\/[^/]+/)?.[0]
+  const photos = sample.photos ?? []
+  const photo = photos[photoIndex]
+  const movePhoto = direction => setPhotoIndex(index => Math.min(photos.length - 1, Math.max(0, index + direction)))
 
   useLayoutEffect(() => {
     dialog.current.showModal()
@@ -117,14 +130,9 @@ export default function FactsMediaPreview({ sample, onClose, gallery }) {
     <dialog ref={dialog} className={`facts-preview-dialog${music ? ' is-vinyl' : ''}`}
       aria-labelledby="facts-preview-title" onClose={onClose}
       onKeyDown={event => {
-        if (!gallery) return
-        if (event.key === 'ArrowLeft' && hasPrevious) {
+        if (photos.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
           event.preventDefault()
-          gallery.onNavigate(-1)
-        }
-        if (event.key === 'ArrowRight' && hasNext) {
-          event.preventDefault()
-          gallery.onNavigate(1)
+          movePhoto(event.key === 'ArrowLeft' ? -1 : 1)
         }
       }}
       onClick={event => {
@@ -134,16 +142,16 @@ export default function FactsMediaPreview({ sample, onClose, gallery }) {
       <section className="facts-preview-body">
         <header>
           <div>
-            <p>{gallery ? 'Instagram' : music ? `${sample.label} · 11-second preview` : 'Gaming · 8-second preview'}</p>
+            {music && <p>{sample.label}</p>}
+            {sample.videoId && <p>Gaming · 8-second preview</p>}
             <h3 id="facts-preview-title">{title}</h3>
           </div>
           <button className="facts-preview-close" type="button" onClick={() => dialog.current.close()} aria-label="Close preview">×</button>
         </header>
-        {instagramPath && (
-          <iframe key={instagramPath} className="facts-instagram-preview" title={`${title} on Instagram`}
-            src={`https://www.instagram.com${instagramPath}/embed/captioned/`}
-            allow="encrypted-media; picture-in-picture; fullscreen"
-            referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+        {photo && (
+          <div className="facts-photo-stage">
+            <img src={photo} alt={photos.length > 1 ? `${title}, photo ${photoIndex + 1} of ${photos.length}` : title} />
+          </div>
         )}
         {music && <VinylPreview sample={sample} />}
         {sample.videoId && (
@@ -152,18 +160,18 @@ export default function FactsMediaPreview({ sample, onClose, gallery }) {
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
         )}
-        {!music && <footer className="facts-preview-footer">
+        {sample.videoId && (
           <a className="facts-preview-source" href={sample.href} target="_blank" rel="noreferrer">
-            {gallery ? 'Open post on Instagram' : 'Full video on YouTube'} <span aria-hidden="true">↗</span>
+            Full video on YouTube <span aria-hidden="true">↗</span>
           </a>
-          {gallery && (
-            <div className="facts-preview-pagination" aria-label="Browse posts">
-              <button type="button" onClick={() => gallery.onNavigate(-1)} disabled={!hasPrevious} aria-label="Previous post">←</button>
-              <span role="status">{gallery.index + 1} / {gallery.count}</span>
-              <button type="button" onClick={() => gallery.onNavigate(1)} disabled={!hasNext} aria-label="Next post">→</button>
-            </div>
-          )}
-        </footer>}
+        )}
+        {photos.length > 1 && (
+          <div className="facts-preview-pagination" role="group" aria-label="Browse photos">
+            <button type="button" onClick={() => movePhoto(-1)} aria-disabled={photoIndex === 0} aria-label="Previous photo">←</button>
+            <span role="status">{photoIndex + 1} / {photos.length}</span>
+            <button type="button" onClick={() => movePhoto(1)} aria-disabled={photoIndex === photos.length - 1} aria-label="Next photo">→</button>
+          </div>
+        )}
       </section>
     </dialog>
   )
