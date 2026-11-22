@@ -644,17 +644,19 @@ function MovieShelf({ samples }) {
 }
 
 function GamingShelf({ clips, onPreview }) {
-  const [feature, ...cuts] = clips
+  const openingGames = arrangedGameShelf.slice(0, 10)
+  const closingGames = arrangedGameShelf.slice(10)
+  const GameTile = ({ game }) => <a href={game.href} target="_blank" rel="noreferrer" className="facts-gaming-tile" aria-label={`${game.title} — game details`} title={game.title}>
+    <img src={game.image} alt="" loading="lazy" decoding="async" /><span>{game.title}</span>
+  </a>
   return <div className="facts-gaming-room">
     <div className="facts-gaming-identity"><span>EchoPlex FPS · game room</span><a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 ↗</a><a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex ↗</a></div>
-    <div className="facts-gaming-featured" aria-label="Featured gaming clips">
-      <button type="button" className="facts-gaming-feature" onClick={() => onPreview(feature)} aria-label={`Preview ${feature.label}`}><img src={feature.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><small>featured clip</small><strong>{feature.label}</strong></span></button>
-      <div className="facts-gaming-cuts">{cuts.map(clip => <button type="button" className="facts-gaming-cut" key={clip.videoId} onClick={() => onPreview(clip)} aria-label={`Preview ${clip.label}`}><img src={clip.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><strong>{clip.label}</strong></span></button>)}</div>
+    <div className="facts-gaming-divider"><span>game library</span><small>tactical, strange, story-led</small></div>
+    <div className="facts-gaming-board">
+      {openingGames.map(game => <GameTile key={game.title} game={game} />)}
+      <div className="facts-gaming-clip-column" aria-label="Featured gaming clips">{clips.map(clip => <button type="button" className="facts-gaming-cut" key={clip.videoId} onClick={() => onPreview(clip)} aria-label={`Preview ${clip.label}`}><img src={clip.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><strong>{clip.label}</strong></span></button>)}</div>
+      {closingGames.map(game => <GameTile key={game.title} game={game} />)}
     </div>
-    <div className="facts-gaming-divider"><span>game library</span><small>tactical, strange, story-led</small><b>{arrangedGameShelf.length} picks</b></div>
-    <div className="facts-gaming-grid">{arrangedGameShelf.map(game => <a href={game.href} key={game.title} target="_blank" rel="noreferrer" className="facts-gaming-tile" aria-label={`${game.title} — game details`} title={game.title}>
-      <img src={game.image} alt="" loading="lazy" decoding="async" /><span>{game.title}</span>
-    </a>)}</div>
   </div>
 }
 
