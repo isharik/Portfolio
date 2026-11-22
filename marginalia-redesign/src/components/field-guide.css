@@ -361,10 +361,14 @@
 
 /* A small isometric file of photographs, with the selected story lifted forward. */
 .photo-lift-gallery { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 13px; height: min(61svh, 430px); padding: 11px 14px 9px; overflow: hidden; border: 1px solid var(--guide-line); border-radius: 12px; background: var(--guide-mat); perspective: 1200px; animation: movie-wall-unfurl 820ms cubic-bezier(.23,1,.32,1) both; }
-.photo-lift-row { display: flex; justify-content: center; align-items: stretch; gap: clamp(4px, .7vw, 8px); min-height: 0; padding: 35px 6px 55px; transform: rotateX(-11deg) rotateY(40deg); transform-style: preserve-3d; }
+.photo-lift-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: 10px; min-height: 0; padding: 6px 2px 0; }
 .photo-lift-card { position: relative; flex: 0 0 30%; min-width: 0; overflow: hidden; padding: 0; border: 1px solid var(--guide-line); border-radius: 9px; background: var(--guide-surface); color: var(--guide-ink); text-align: left; cursor: pointer; backface-visibility: hidden; transform: translateZ(calc((3 - var(--photo-index)) * 12px)) rotateY(-90deg); transform-origin: center bottom; transition: flex-basis 640ms cubic-bezier(.23,1,.32,1), transform 640ms cubic-bezier(.23,1,.32,1), border-color 180ms ease, box-shadow 640ms ease; animation: photo-lift-enter 620ms cubic-bezier(.23,1,.32,1) both; animation-delay: calc(var(--photo-index) * 85ms); }
+.photo-lift-row .photo-lift-card { width: 100%; height: 100%; transform: none; transition: transform 220ms var(--ease-out), border-color 180ms ease; animation: movie-column-settle 720ms cubic-bezier(.23,1,.32,1) both; animation-delay: calc(var(--photo-index) * 75ms); }
+.photo-lift-row .photo-lift-card:is(:hover,:focus-visible) { transform: translateY(-4px); border-color: var(--guide-accent); }
 .photo-lift-card:first-child { margin-right: clamp(-75px, -7vw, -25px); }
+.photo-lift-row .photo-lift-card:first-child { margin-right: 0; }
 .photo-lift-card.is-active { flex-basis: 38%; z-index: 3; border-color: var(--guide-accent); box-shadow: 0 14px 25px color-mix(in srgb, var(--ink) 17%, transparent); transform: translateY(-34px) translateZ(58px) rotateY(-90deg); }
+.photo-lift-row .photo-lift-card.is-active { transform: none; box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 12%, transparent); }
 .photo-lift-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .photo-lift-card > span { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 35px; padding: 8px 10px; background: var(--guide-surface); color: var(--guide-ink); font: 600 12px/1.2 var(--sans); }
 .photo-lift-card > span b { color: var(--guide-accent); font-size: 16px; }
@@ -383,7 +387,7 @@
   .web3-domino-gallery { gap: 5px; height: min(42svh, 320px); }
   .web3-domino-caption { padding: 7px 5px; font-size: 10px; }
   .photo-lift-gallery { height: min(47svh, 340px); padding: 7px; }
-  .photo-lift-row { gap: 5px; padding: 28px 1px 42px; transform: rotateX(-7deg) rotateY(40deg); }
+  .photo-lift-row { gap: 5px; padding: 3px 1px 0; }
   .photo-lift-card { flex-basis: 31%; transform: rotateY(-90deg); }
   .photo-lift-card.is-active { flex-basis: 36%; transform: translateY(-28px) translateZ(65px) rotateY(-90deg); }
   .photo-lift-card > span { padding: 5px; font-size: 10px; }

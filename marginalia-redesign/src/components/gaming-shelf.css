@@ -68,6 +68,7 @@
 
 .game-library-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .game-library-clips { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.game-library-clips { padding-block: 12px; border-block: 1px solid var(--guide-line); }
 .game-library-grid > li,.game-library-clips > li { min-width: 0; }
 
 .game-library-tile > a,
@@ -102,6 +103,9 @@
   overflow-wrap: break-word;
   text-align: left;
 }
+.game-library-tile span { opacity: 0; transform: translateY(5px); transition: opacity 180ms ease, transform 180ms ease; }
+.game-library-tile > a:is(:hover,:focus-visible) span { opacity: 1; transform: none; }
+@media (hover: none) { .game-library-tile span { opacity: 1; transform: none; } }
 
 .game-library-cover {
   position: absolute;
@@ -109,7 +113,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: saturate(.76) contrast(1.04);
   transition: filter 220ms ease, transform 300ms var(--ease-out);
@@ -165,7 +169,7 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 18px color-mix(in srgb, var(--ink) 20%, transparent);
   }
-  :is(.game-library-tile > a, .game-library-clips button):hover img { filter: saturate(1) contrast(1.04); transform: scale(1.05); }
+  :is(.game-library-tile > a, .game-library-clips button):hover img { filter: saturate(1) contrast(1.04); }
 }
 
 @media (max-width: 700px) {
