@@ -1,14 +1,14 @@
 .facts-modal .facts-modal-card.is-youtube {
   --gaming-gap: clamp(5px, 1.15svh, 10px);
-  --gaming-row: clamp(62px, 12svh, 104px);
-  --gaming-clip: clamp(80px, 16svh, 145px);
+  --gaming-row: clamp(64px, 10svh, 92px);
+  --gaming-clip: clamp(88px, 14svh, 132px);
   width: min(1200px, 100%);
   padding: clamp(13px, 2.4svh, 24px) clamp(14px, 2.2vw, 32px);
-  border: 1px solid #ffffff30;
+  border: 1px solid var(--guide-line);
   border-radius: 20px;
-  background: radial-gradient(ellipse at 12% 0%, #382925, transparent 55%), #171719;
-  color: #fff7f1;
-  box-shadow: 0 24px 80px #0008;
+  background: var(--guide-surface);
+  color: var(--guide-ink);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--ink) 28%, transparent);
 }
 
 .facts-modal .facts-modal-card.is-youtube > header {
@@ -26,14 +26,14 @@
 .is-youtube .facts-modal-close {
   top: 13px;
   right: 13px;
-  background: #ffffff12;
-  border-color: #ffffff36;
-  color: #fff7f1;
+  background: var(--guide-mat);
+  border-color: var(--guide-line);
+  color: var(--guide-ink);
 }
 
 .is-youtube .facts-modal-close:is(:hover, :focus-visible) {
-  color: white;
-  border-color: #efb9a5;
+  color: var(--guide-accent);
+  border-color: var(--guide-accent);
 }
 
 .game-library { display: grid; gap: var(--gaming-gap); }
@@ -43,18 +43,18 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 5px 16px;
-  padding-block: 8px;
-  border-bottom: 1px solid #ffffff25;
+  padding-block: 6px 9px;
+  border-bottom: 1px solid var(--guide-line);
   font: 12px/1.25 var(--sans);
 }
 
 .game-library-meta h4 {
   margin: 0 auto 0 0;
   font: 600 12px/1.25 var(--sans);
-  color: #fff7f1;
+  color: var(--guide-ink);
 }
 
-.game-library-meta a { color: #efb9a5; text-underline-offset: 3px; }
+.game-library-meta a { color: var(--guide-accent); text-underline-offset: 3px; }
 .game-library-meta a:hover { text-decoration: underline; }
 
 .game-library-grid,
@@ -68,67 +68,64 @@
 
 .game-library-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .game-library-clips { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.game-library-grid > li,.game-library-clips > li { min-width: 0; }
 
 .game-library-tile > a,
 .game-library-clips button {
   position: relative;
-  display: grid;
-  align-items: center;
+  display: block;
   isolation: isolate;
   width: 100%;
   overflow: hidden;
-  border: 1px solid #ffffff29;
+  border: 1px solid var(--guide-line);
   border-radius: 9px;
-  background: #232125;
-  color: #fff7f1;
+  background: var(--guide-mat);
+  color: var(--paper);
   text-decoration: none;
-  transition: border-color 160ms ease, transform 180ms var(--ease-out);
+  transition: border-color 160ms ease, transform 180ms var(--ease-out), box-shadow 180ms ease;
 }
 
 .game-library-tile > a {
   height: var(--gaming-row);
-  grid-template-columns: minmax(0, 39%) minmax(0, 1fr);
-  gap: 6px;
-  padding: 4px 6px 4px 4px;
 }
 
 .game-library-tile span,
 .game-clip-caption {
-  font: 600 clamp(10px, 1vw, 13px)/1.15 var(--sans);
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: block;
+  padding: 16px 7px 5px;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--charcoal-2) 86%, transparent));
+  color: white;
+  font: 650 clamp(9px, .9vw, 12px)/1.13 var(--sans);
   overflow-wrap: break-word;
   text-align: left;
 }
 
-.game-library-backdrop {
+.game-library-cover {
   position: absolute;
-  z-index: -1;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: .23;
-}
-
-.game-library-cover {
-  display: block;
-  width: 100%;
-  height: calc(var(--gaming-row) - 10px);
-  object-fit: contain;
-  border-radius: 4px;
+  object-position: center;
+  filter: saturate(.76) contrast(1.04);
+  transition: filter 220ms ease, transform 300ms var(--ease-out);
 }
 
 .game-library-clips button {
-  grid-template-columns: minmax(0, min(64%, calc(var(--gaming-clip) * 16 / 9))) minmax(0, 1fr);
-  gap: 9px;
-  padding: 0 7px 0 0;
+  height: var(--gaming-clip);
+  padding: 0;
   cursor: pointer;
 }
 
 .game-clip-art {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: block;
-  aspect-ratio: 16 / 9;
-  background: #101012;
+  background: var(--guide-mat);
 }
 
 .game-clip-art img {
@@ -136,32 +133,39 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(.84);
+  transition: filter 220ms ease, transform 300ms var(--ease-out);
 }
+
+.game-clip-caption { padding: 22px 35px 9px 10px; font-size: clamp(11px, 1.1vw, 14px); }
 
 .game-clip-play {
   position: absolute;
-  bottom: 5px;
-  left: 5px;
+  z-index: 3;
+  bottom: 7px;
+  right: 8px;
   display: grid;
   place-items: center;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #121215de;
+  background: color-mix(in srgb, var(--charcoal-2) 70%, transparent);
   color: white;
   font-size: 9px;
 }
 
 .game-library :is(a, button):focus-visible {
-  outline: 2px solid #efb9a5;
+  outline: 2px solid var(--guide-accent);
   outline-offset: 1px;
 }
 
 @media (hover: hover) {
   :is(.game-library-tile > a, .game-library-clips button):hover {
-    border-color: #efb9a5;
-    transform: translateY(-2px);
+    border-color: var(--guide-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--ink) 20%, transparent);
   }
+  :is(.game-library-tile > a, .game-library-clips button):hover img { filter: saturate(1) contrast(1.04); transform: scale(1.05); }
 }
 
 @media (max-width: 700px) {
@@ -169,8 +173,7 @@
   .game-library-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .game-library-tile:last-child,
   .game-library-tile:nth-last-child(2) { grid-column: span 2; }
-  .game-library-clips button { grid-template-columns: 1fr; height: 100%; gap: 0; padding: 0; align-items: start; }
-  .game-clip-caption { display: block; padding: 6px; }
+  .game-library-clips button { height: var(--gaming-clip); }
 }
 
 @media (prefers-reduced-motion: reduce) {

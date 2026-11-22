@@ -11,6 +11,7 @@ import screenShelf from '../screenShelf.json'
 import gameShelf from '../gameShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 import './gaming-shelf.css'
+import './field-guide.css'
 
 const gameShelfOrder = [
   'Valorant', 'Far Cry 3', 'Ghost of Tsushima', 'Watch Dogs 2', 'Outer Wilds', 'Counter-Strike 2',
@@ -684,10 +685,15 @@ function MusicStrip({ samples, onPreview, previewOpen }) {
 }
 
 function MovieShelf({ samples }) {
-  return <div className="facts-screen-shelf">
-    <div className="facts-screen-grid">{samples.map(sample => <a className="facts-screen-tile" href={sample.href} target="_blank" rel="noreferrer" key={sample.title} aria-label={`${sample.title}, ${sample.genre} ${sample.kind} — more details`} title={sample.title}>
-      <img src={sample.image} alt="" loading="lazy" decoding="async" />
-    </a>)}</div>
+  const columns = Array.from({ length: 10 }, (_, index) => samples.filter((_, sampleIndex) => sampleIndex % 10 === index))
+  return <div className="movie-unfurl" aria-label="Movie and TV gallery">
+    <div className="movie-unfurl-grid">
+      {columns.map((column, index) => <div className="movie-unfurl-column" style={{ '--column-index': index }} key={index}>
+        {column.map(sample => <a className="movie-unfurl-frame" href={sample.href} target="_blank" rel="noreferrer" key={sample.title} aria-label={`${sample.title}, ${sample.genre} ${sample.kind} — more details`} title={sample.title}>
+          <img src={sample.image} alt="" loading="lazy" decoding="async" />
+        </a>)}
+      </div>)}
+    </div>
   </div>
 }
 
@@ -695,7 +701,6 @@ function GamingShelf({ clips, onPreview }) {
   const renderGame = ({ href, image, title }) => (
     <li key={title} className="game-library-tile">
       <a href={href} target="_blank" rel="noreferrer">
-        <img className="game-library-backdrop" src={image} alt="" decoding="async" />
         <img className="game-library-cover" src={image} alt="" decoding="async" />
         <span>{title}</span>
       </a>
@@ -728,16 +733,112 @@ function GamingShelf({ clips, onPreview }) {
   )
 }
 
+const fieldGuides = {
+  youtube: { cover: 'Gameplay & game shelf', action: 'View clips and games' },
+  x: { cover: 'Ecosystem field notes', action: 'Read the dispatches' },
+  movies: { cover: 'The screening room', action: 'Browse the poster wall' },
+  instagram: { cover: 'The contact sheet', action: 'View the photo stories' },
+}
+
+function FieldGuideArtwork({ fact, kind }) {
+  if (kind === 'x') return <div className="field-guide-artwork field-guide-artwork--x" aria-hidden="true">
+    <img src="/images/x-isharik99.jpg" alt="" decoding="async" />
+    <span className="field-guide-profile-caption">@isharik99 <XMark /></span>
+  </div>
+  if (kind === 'movies') return <div className="field-guide-artwork field-guide-artwork--movies" aria-hidden="true">
+    <img src="/images/cinema-stories.jpg" alt="" decoding="async" />
+  </div>
+  if (kind === 'youtube') return <div className="field-guide-artwork field-guide-artwork--youtube" aria-hidden="true">
+    <img src="/images/gaming-controller.jpg" alt="" decoding="async" />
+  </div>
+  const frames = kind === 'movies' ? fact.samples.slice(0, 4) : fact.samples
+  return (
+    <div className={`field-guide-artwork field-guide-artwork--${kind}`} aria-hidden="true">
+      {frames.map(frame => (
+        <div className="field-guide-frame" key={frame.videoId || frame.label || frame.title}>
+          <img src={frame.image} alt="" decoding="async" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function FieldGuideSamples({ kind, samples, onPreview }) {
+  return (
+    <ul className={`field-guide-samples field-guide-samples--${kind}`} aria-label={kind === 'x' ? 'Posts on X' : 'Photo stories'}>
+      {samples.map(sample => {
+        const caption = <span className="field-guide-caption">{sample.label}<span aria-hidden="true">{kind === 'x' ? '↗' : '+'}</span></span>
+        return (
+          <li key={sample.label}>
+            {kind === 'x' ? (
+              <a href={sample.href} target="_blank" rel="noreferrer">
+                <img src={sample.image} alt="" decoding="async" />
+                {caption}
+              </a>
+            ) : (
+              <button type="button" aria-haspopup="dialog" onClick={() => onPreview(sample)}>
+                <img src={sample.image} alt="" decoding="async" />
+                {caption}
+              </button>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function Web3DominoGallery({ samples }) {
+  return <ul className="web3-domino-gallery" aria-label="Posts on X">
+    {samples.map((sample, index) => <li key={sample.label} style={{ '--domino-index': index }}>
+      <a href={sample.href} target="_blank" rel="noreferrer" aria-label={`Read ${sample.label} on X`}>
+        <span className="web3-domino-image"><img src={sample.image} alt="" decoding="async" /></span>
+        <span className="web3-domino-caption"><strong>{sample.label}</strong><span aria-hidden="true">↗</span></span>
+      </a>
+    </li>)}
+  </ul>
+}
+
+function PhotoLiftGallery({ samples, onPreview }) {
+  const [active, setActive] = useState(1)
+  const select = index => index === active ? onPreview(samples[index]) : setActive(index)
+  const onKeyDown = event => {
+    if (event.key === 'ArrowRight') { event.preventDefault(); setActive(index => Math.min(samples.length - 1, index + 1)) }
+    if (event.key === 'ArrowLeft') { event.preventDefault(); setActive(index => Math.max(0, index - 1)) }
+  }
+  return <div className="photo-lift-gallery" role="region" aria-roledescription="carousel" aria-label="Photography stories" onKeyDown={onKeyDown}>
+    <div className="photo-lift-row">
+      {samples.map((sample, index) => <button type="button" className={`photo-lift-card${index === active ? ' is-active' : ''}`} key={sample.label} style={{ '--photo-index': index }} aria-label={`${sample.label}, ${index === active ? 'open photo' : 'select photo'}`} aria-current={index === active ? 'true' : undefined} onClick={() => select(index)}>
+        <img src={sample.image} alt="" decoding="async" draggable="false" />
+        <span>{sample.label}<b aria-hidden="true">{index === active ? '↗' : '+'}</b></span>
+      </button>)}
+    </div>
+    <div className="photo-lift-controls">
+      <button type="button" aria-label="Previous photo" disabled={active === 0} onClick={() => setActive(index => index - 1)}>←</button>
+      <span aria-live="polite">{String(active + 1).padStart(2, '0')} / {String(samples.length).padStart(2, '0')}</span>
+      <button type="button" aria-label="Next photo" disabled={active === samples.length - 1} onClick={() => setActive(index => index + 1)}>→</button>
+    </div>
+  </div>
+}
+
 function FactCover({ fact }) {
   const kind = fact.brand || fact.artwork
-  const image = fact.samples[0]?.image
+  const image = kind === 'spotify' ? '/images/spotify-album-the-beatles.webp' : fact.samples[0]?.image
+  if (fieldGuides[kind]) {
+    return (
+      <div className="field-guide-cover">
+        <div className="field-guide-copy">
+          <span>{fact.handle}</span>
+          <h3>{fact.title}</h3>
+          <p>{fact.text}</p>
+        </div>
+        <FieldGuideArtwork fact={fact} kind={kind} />
+      </div>
+    )
+  }
   return <div className={`facts-cover facts-cover-${kind}`}>
     <div className="facts-cover-copy"><span className="facts-cover-kicker">{fact.handle}</span><h3>{fact.title}</h3><p>{fact.text}</p></div>
-    {kind === 'youtube' && <div className="facts-cover-visual facts-cover-broadcast">{fact.samples.map((sample,index) => <span key={sample.videoId} className={`facts-game-frame is-frame-${index}`}><img src={sample.image} alt="" /></span>)}<span className="facts-cover-play" aria-hidden="true">▶</span></div>}
-    {kind === 'x' && <div className="facts-cover-visual facts-cover-dispatch"><span className="facts-dispatch-mark"><XMark /> @isharik99</span><img src={image} alt="Preview of an on-chain post" /><small>Field notes from the timeline ↗</small></div>}
-    {kind === 'movies' && <div className="facts-cover-visual facts-cover-cinema"><div className="facts-cover-posters">{fact.samples.slice(0,3).map(sample => <img key={sample.title} src={sample.image} alt={sample.title} />)}</div></div>}
     {kind === 'spotify' && <div className="facts-cover-visual facts-cover-record"><div className="facts-cover-equalizer" aria-hidden="true">{[22, 45, 76, 38, 92, 58, 28, 65, 34].map((height, index) => <b key={index} style={{ height: `${height}%` }} />)}</div><span className="facts-cover-spotify-mark" aria-hidden="true"><SpotifyMark size={20} /></span><img src={image} alt="Album art on the music shelf" /><i aria-hidden="true" /><span className="facts-cover-record-note">different artists in the mix</span></div>}
-    {kind === 'instagram' && <div className="facts-cover-visual facts-cover-polaroids">{fact.samples.map((sample,index) => <img key={sample.label} className={`is-photo-${index}`} src={sample.image} alt={sample.label} />)}<span>small frames, bigger stories</span></div>}
   </div>
 }
 
@@ -814,6 +915,8 @@ export function Facts() {
     },
   ]
   const activeFact = personalFacts[activeIndex]
+  const kind = activeFact.brand || activeFact.artwork
+  const fieldGuide = fieldGuides[kind]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
   useEffect(() => warmImagesNear(factsRef.current, personalFacts.map(fact => fact.background)), [])
   useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
@@ -848,12 +951,12 @@ export function Facts() {
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
-        <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title}>
-          {activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
-          <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
+        <div className={`facts-stage has-${kind}${fieldGuide ? ' field-guide-stage' : ''}`} key={activeFact.title}>
+          {!fieldGuide && activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
+          <div className="facts-stage-top">{fieldGuide ? <span>{fieldGuide.cover}</span> : <><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></>}</div>
           <FactCover fact={activeFact} />
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
-          <button type="button" className="facts-link facts-explore" aria-label={`Explore ${activeFact.title}`} onClick={() => setExploring(true)}>Explore <b aria-hidden="true">+</b></button>
+          <button type="button" className="facts-link facts-explore" aria-label={`Explore ${activeFact.title}`} onClick={() => setExploring(true)}>{fieldGuide?.action || 'Explore'} <b aria-hidden="true">{fieldGuide ? '↗' : '+'}</b></button>
         </div>
         <nav className="facts-controls" aria-label="Change Beyond the CV card">
           <button type="button" onClick={() => move(-1)} disabled={activeIndex === 0} aria-label="Previous card">←</button>
@@ -864,27 +967,18 @@ export function Facts() {
       </div>
       {exploring && createPortal(
         <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>
-          <section className={`facts-modal-card is-${activeFact.brand || activeFact.artwork}`} onClick={event => event.stopPropagation()}>
+          <section className={`facts-modal-card is-${kind}${fieldGuide ? ' field-guide-dialog' : ''}`} onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
             <header><span className="facts-modal-index">{activeFact.eyebrow} / Beyond the CV</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.href && <a className="facts-modal-brand" href={activeFact.href} target="_blank" rel="noreferrer" aria-label={activeFact.action}>
               {activeFact.brand === 'spotify' ? <SpotifyMark size={21} /> : activeFact.brand === 'x' ? <XMark /> : activeFact.brand === 'instagram' ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.7" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : <span className="facts-modal-brand-icon is-video" aria-hidden="true">▶</span>}
               <span>{activeFact.brand === 'spotify' ? 'SPOTSICK on Spotify' : activeFact.brand === 'youtube' ? 'EchoPlex FPS on YouTube' : activeFact.brand === 'x' ? '@isharik99 on X' : '@purelyvisual_ on Instagram'} <i aria-hidden="true">↗</i></span>
             </a>}</header>
-            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} previewOpen={Boolean(previewSample)} /> : activeFact.brand === 'youtube' ? <GamingShelf clips={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
-            <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
-              {activeFact.samples.map(sample => {
-                const canPlay = sample.track || sample.videoId
-                const canPreview = canPlay || sample.photos
-                const preview = <><div><img src={sample.image} alt="" decoding="async" />{canPlay && <i className="facts-sample-play" aria-hidden="true">▶</i>}</div><b>{sample.label}</b>{sample.genre && <small>{sample.genre}</small>}{sample.track && <small>{sample.track}</small>}</>
-                if (canPreview) return (
-                  <button key={sample.label} type="button" aria-haspopup="dialog" className="facts-sample"
-                    onClick={() => setPreviewSample(sample)}>{preview}</button>
-                )
-                return sample.href
-                  ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample">{preview}</a>
-                  : <div key={sample.label} className="facts-sample is-static">{preview}</div>
-              })}
-            </div>}
+            {kind === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} previewOpen={Boolean(previewSample)} />
+              : kind === 'youtube' ? <GamingShelf clips={activeFact.samples} onPreview={setPreviewSample} />
+              : kind === 'movies' ? <MovieShelf samples={activeFact.samples} />
+              : kind === 'x' ? <Web3DominoGallery samples={activeFact.samples} />
+              : kind === 'instagram' ? <PhotoLiftGallery samples={activeFact.samples} onPreview={setPreviewSample} />
+              : <FieldGuideSamples kind={kind} samples={activeFact.samples} onPreview={setPreviewSample} />}
           </section>
           {previewSample && (
             <FactsMediaPreview sample={previewSample} onClose={() => setPreviewSample(null)} />
