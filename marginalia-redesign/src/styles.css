@@ -2787,25 +2787,30 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 }
 @media (prefers-reduced-motion:reduce) { .facts-gaming-feature,.facts-gaming-cut,.facts-gaming-feature img,.facts-gaming-cut img { transition:none; }.facts-gaming-feature:is(:hover,:focus-visible),.facts-gaming-cut:is(:hover,:focus-visible) { transform:none; } }
 
-/* A full 10 × 3 board keeps the library and clips together in one viewport. */
+/* Four game rows bracket the full-width video strip, all within one viewport. */
 .facts-gaming-room { margin-top:13px; }
-.facts-gaming-room .facts-gaming-identity { padding-bottom:10px; }
-.facts-gaming-room .facts-gaming-divider { margin:10px 0 7px; }
-.facts-gaming-board { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:6px; }
-.facts-gaming-board .facts-gaming-tile { display:grid; grid-template-rows:50px auto; gap:3px; min-width:0; padding:3px; border-radius:6px; transform:none; }
-.facts-gaming-board .facts-gaming-tile img { min-height:0; border-radius:4px; }
-.facts-gaming-board .facts-gaming-tile span { font-size:9px; line-height:1.05; }
+.facts-modal-card.is-youtube { padding:22px 30px 14px; }
+.facts-gaming-room .facts-gaming-identity { padding-bottom:7px; }
+.facts-gaming-room .facts-gaming-divider { margin:6px 0 5px; }
+.facts-gaming-board { display:grid; gap:5px; }
+.facts-gaming-game-row { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+.facts-gaming-board .facts-gaming-tile { position:relative; display:block; min-width:0; height:65px; overflow:hidden; padding:3px; border-radius:6px; transform:none; background:#0b0c0f; }
+.facts-gaming-board .facts-gaming-tile img { display:block; width:100%; height:100%; min-height:0; border-radius:4px; object-fit:cover; object-position:center; }
+.facts-gaming-board .facts-gaming-tile span { position:absolute; right:3px; bottom:3px; left:3px; overflow:hidden; padding:12px 4px 3px; border-radius:0 0 4px 4px; background:linear-gradient(transparent,#08090de8 68%); color:#fff; font-size:9px; line-height:1.05; text-align:center; text-overflow:ellipsis; text-shadow:0 1px 2px #000; white-space:nowrap; }
 .facts-gaming-board .facts-gaming-tile:nth-child(n) { transform:none; }
 .facts-gaming-board .facts-gaming-tile:is(:hover,:focus-visible) { transform:translateY(-3px) scale(1.035); }
-.facts-gaming-clip-column { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3px; min-width:0; }
-.facts-gaming-clip-column .facts-gaming-cut { min-width:0; border-radius:6px; }
-.facts-gaming-clip-column .facts-gaming-cut > span { inset:50% auto auto 50%; display:grid; transform:translate(-50%,-50%); }
-.facts-gaming-clip-column .facts-gaming-cut i { width:22px; height:22px; font-size:7px; }
-.facts-gaming-clip-column .facts-gaming-cut strong { display:none; }
+.facts-gaming-clip-strip { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+.facts-gaming-clip-strip .facts-gaming-cut { min-width:0; aspect-ratio:16 / 4; border-radius:7px; }
+.facts-gaming-clip-strip .facts-gaming-cut > span { inset:auto 9px 7px; display:grid; grid-template-columns:20px minmax(0,1fr); align-items:center; gap:6px; }
+.facts-gaming-clip-strip .facts-gaming-cut i { width:20px; height:20px; font-size:7px; }
+.facts-gaming-clip-strip .facts-gaming-cut strong { overflow:hidden; font:600 10px/1.1 var(--sans); text-overflow:ellipsis; white-space:nowrap; }
 @media (max-width:700px) {
-  .facts-gaming-board { grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; }
+  .facts-gaming-board { gap:5px; }
+  .facts-gaming-game-row { grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; }
   .facts-gaming-board .facts-gaming-tile { grid-template-rows:58px auto; }
-  .facts-gaming-clip-column { grid-column:span 2; }
+  .facts-gaming-clip-strip { gap:5px; }
+  .facts-gaming-clip-strip .facts-gaming-cut { aspect-ratio:1.45; }
+  .facts-gaming-clip-strip .facts-gaming-cut strong { display:none; }
 }
 
 /* The portrait notes arrive together from their actual places around the photo. */
