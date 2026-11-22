@@ -10,6 +10,7 @@ import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
 import gameShelf from '../gameShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
+import './gaming-shelf.css'
 
 const gameShelfOrder = [
   'Valorant', 'Far Cry 3', 'Ghost of Tsushima', 'Watch Dogs 2', 'Outer Wilds', 'Counter-Strike 2',
@@ -644,20 +645,40 @@ function MovieShelf({ samples }) {
 }
 
 function GamingShelf({ clips, onPreview }) {
-  const openingGames = arrangedGameShelf.slice(0, 14)
-  const closingGames = arrangedGameShelf.slice(14)
-  const GameTile = ({ game }) => <a href={game.href} target="_blank" rel="noreferrer" className="facts-gaming-tile" aria-label={`${game.title} — game details`} title={game.title}>
-    <img src={game.image} alt="" loading="lazy" decoding="async" /><span>{game.title}</span>
-  </a>
-  return <div className="facts-gaming-room">
-    <div className="facts-gaming-identity"><span>EchoPlex FPS · game room</span><a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 ↗</a><a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex ↗</a></div>
-    <div className="facts-gaming-divider"><span>game library</span><small>tactical, strange, story-led</small></div>
-    <div className="facts-gaming-board">
-      <div className="facts-gaming-game-row">{openingGames.map(game => <GameTile key={game.title} game={game} />)}</div>
-      <div className="facts-gaming-clip-strip" aria-label="Featured gaming clips">{clips.map(clip => <button type="button" className="facts-gaming-cut" key={clip.videoId} onClick={() => onPreview(clip)} aria-label={`Preview ${clip.label}`}><img src={clip.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><strong>{clip.label}</strong></span></button>)}</div>
-      <div className="facts-gaming-game-row">{closingGames.map(game => <GameTile key={game.title} game={game} />)}</div>
+  const renderGame = ({ href, image, title }) => (
+    <li key={title} className="game-library-tile">
+      <a href={href} target="_blank" rel="noreferrer">
+        <img className="game-library-backdrop" src={image} alt="" decoding="async" />
+        <img className="game-library-cover" src={image} alt="" decoding="async" />
+        <span>{title}</span>
+      </a>
+    </li>
+  )
+
+  return (
+    <div className="game-library">
+      <div className="game-library-meta">
+        <h4>Game library</h4>
+        <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 <span aria-hidden="true">↗</span></a>
+        <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
+      </div>
+      <ul className="game-library-grid" aria-label="Game library, first half">{arrangedGameShelf.slice(0, 14).map(renderGame)}</ul>
+      <ul className="game-library-clips" aria-label="Valorant clips">
+        {clips.map(clip => (
+          <li key={clip.videoId}>
+            <button type="button" aria-haspopup="dialog" onClick={() => onPreview(clip)}>
+              <span className="game-clip-art">
+                <img src={clip.image} alt="" decoding="async" />
+                <span className="game-clip-play" aria-hidden="true">▶</span>
+              </span>
+              <span className="game-clip-caption">{clip.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <ul className="game-library-grid" aria-label="Game library, second half">{arrangedGameShelf.slice(14).map(renderGame)}</ul>
     </div>
-  </div>
+  )
 }
 
 function FactCover({ fact }) {
