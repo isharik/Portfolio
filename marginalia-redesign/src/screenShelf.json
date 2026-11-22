@@ -1,0 +1,212 @@
+[
+  {
+    "title": "Interstellar",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-interstellar.webp",
+    "href": "https://www.themoviedb.org/movie/157336-interstellar"
+  },
+  {
+    "title": "The Odyssey",
+    "genre": "Epic",
+    "kind": "Film",
+    "image": "/images/shelf-the-odyssey.webp",
+    "href": "https://www.themoviedb.org/movie/1368337-the-odyssey"
+  },
+  {
+    "title": "Blade Runner 2049",
+    "genre": "Neo-noir",
+    "kind": "Film",
+    "image": "/images/shelf-blade-runner-2049.webp",
+    "href": "https://www.themoviedb.org/movie/335984-blade-runner-2049"
+  },
+  {
+    "title": "Arrival",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-arrival.webp",
+    "href": "https://www.themoviedb.org/movie/329865-arrival"
+  },
+  {
+    "title": "Stalker",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-stalker.webp",
+    "href": "https://www.themoviedb.org/movie/1398-stalker"
+  },
+  {
+    "title": "Coherence",
+    "genre": "Mystery",
+    "kind": "Film",
+    "image": "/images/shelf-coherence.webp",
+    "href": "https://www.themoviedb.org/movie/220289-coherence"
+  },
+  {
+    "title": "Predestination",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-predestination.webp",
+    "href": "https://www.themoviedb.org/movie/206487-predestination"
+  },
+  {
+    "title": "The Fall",
+    "genre": "Fantasy",
+    "kind": "Film",
+    "image": "/images/shelf-the-fall.webp",
+    "href": "https://www.themoviedb.org/movie/14784-the-fall"
+  },
+  {
+    "title": "The Fountain",
+    "genre": "Drama",
+    "kind": "Film",
+    "image": "/images/shelf-the-fountain.webp",
+    "href": "https://www.themoviedb.org/movie/1381-the-fountain"
+  },
+  {
+    "title": "Moon",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-moon.webp",
+    "href": "https://www.themoviedb.org/movie/17431-moon"
+  },
+  {
+    "title": "Enemy",
+    "genre": "Thriller",
+    "kind": "Film",
+    "image": "/images/shelf-enemy.webp",
+    "href": "https://www.themoviedb.org/movie/181886-enemy"
+  },
+  {
+    "title": "The Endless",
+    "genre": "Mystery",
+    "kind": "Film",
+    "image": "/images/shelf-the-endless.webp",
+    "href": "https://www.themoviedb.org/movie/430231-the-endless"
+  },
+  {
+    "title": "Annihilation",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-annihilation.webp",
+    "href": "https://www.themoviedb.org/movie/300668-annihilation"
+  },
+  {
+    "title": "The Lobster",
+    "genre": "Satire",
+    "kind": "Film",
+    "image": "/images/shelf-the-lobster.webp",
+    "href": "https://www.themoviedb.org/movie/254320-the-lobster"
+  },
+  {
+    "title": "Primer",
+    "genre": "Science fiction",
+    "kind": "Film",
+    "image": "/images/shelf-primer.webp",
+    "href": "https://www.themoviedb.org/movie/14337-primer"
+  },
+  {
+    "title": "The Prestige",
+    "genre": "Mystery",
+    "kind": "Film",
+    "image": "/images/shelf-the-prestige.webp",
+    "href": "https://www.themoviedb.org/movie/1124-the-prestige"
+  },
+  {
+    "title": "Severance",
+    "genre": "Psychological",
+    "kind": "TV",
+    "image": "/images/shelf-severance.webp",
+    "href": "https://www.themoviedb.org/tv/95396-severance"
+  },
+  {
+    "title": "Dark",
+    "genre": "Science fiction",
+    "kind": "TV",
+    "image": "/images/shelf-dark.webp",
+    "href": "https://www.themoviedb.org/tv/70523-dark"
+  },
+  {
+    "title": "The Leftovers",
+    "genre": "Drama",
+    "kind": "TV",
+    "image": "/images/shelf-the-leftovers.webp",
+    "href": "https://www.themoviedb.org/tv/54344-the-leftovers"
+  },
+  {
+    "title": "Station Eleven",
+    "genre": "Post-apocalyptic",
+    "kind": "TV",
+    "image": "/images/shelf-station-eleven.webp",
+    "href": "https://www.themoviedb.org/tv/90972-station-eleven"
+  },
+  {
+    "title": "Mr. Robot",
+    "genre": "Thriller",
+    "kind": "TV",
+    "image": "/images/shelf-mr-robot.webp",
+    "href": "https://www.themoviedb.org/tv/62560-mr-robot"
+  },
+  {
+    "title": "Utopia",
+    "genre": "Thriller",
+    "kind": "TV",
+    "image": "/images/shelf-utopia.webp",
+    "href": "https://www.themoviedb.org/tv/46511-utopia"
+  },
+  {
+    "title": "The OA",
+    "genre": "Mystery",
+    "kind": "TV",
+    "image": "/images/shelf-the-oa.webp",
+    "href": "https://www.themoviedb.org/tv/69061-the-oa"
+  },
+  {
+    "title": "Devs",
+    "genre": "Science fiction",
+    "kind": "TV",
+    "image": "/images/shelf-devs.webp",
+    "href": "https://www.themoviedb.org/tv/81349-devs"
+  },
+  {
+    "title": "Tales from the Loop",
+    "genre": "Science fiction",
+    "kind": "TV",
+    "image": "/images/shelf-tales-from-the-loop.webp",
+    "href": "https://www.themoviedb.org/tv/93784-tales-from-the-loop"
+  },
+  {
+    "title": "Counterpart",
+    "genre": "Spy thriller",
+    "kind": "TV",
+    "image": "/images/shelf-counterpart.webp",
+    "href": "https://www.themoviedb.org/tv/63646-counterpart"
+  },
+  {
+    "title": "The Expanse",
+    "genre": "Science fiction",
+    "kind": "TV",
+    "image": "/images/shelf-the-expanse.webp",
+    "href": "https://www.themoviedb.org/tv/63639-the-expanse"
+  },
+  {
+    "title": "Undone",
+    "genre": "Drama",
+    "kind": "TV",
+    "image": "/images/shelf-undone.webp",
+    "href": "https://www.themoviedb.org/tv/86340-undone"
+  },
+  {
+    "title": "True Detective",
+    "genre": "Crime",
+    "kind": "TV",
+    "image": "/images/shelf-true-detective.webp",
+    "href": "https://www.themoviedb.org/tv/46648-true-detective"
+  },
+  {
+    "title": "Black Mirror",
+    "genre": "Anthology",
+    "kind": "TV",
+    "image": "/images/shelf-black-mirror.webp",
+    "href": "https://www.themoviedb.org/tv/42009-black-mirror"
+  }
+]

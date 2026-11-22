@@ -100,7 +100,7 @@ function VinylPreview({ sample }) {
           <SpotifyMark size={16} /> <span>Full track on Spotify</span> <span aria-hidden="true">↗</span>
         </a>
       </div>
-      <audio ref={audioRef} src={`https://p.scdn.co/mp3-preview/${sample.previewId}`} preload="auto"
+      <audio ref={audioRef} src={sample.previewUrl || `https://p.scdn.co/mp3-preview/${sample.previewId}`} preload="auto"
         onPlaying={() => setStatus('playing')}
         onWaiting={event => { if (!event.currentTarget.paused) setStatus('starting') }}
         onPause={() => setStatus(current => current === 'complete' || current === 'unavailable' ? current : 'paused')}
@@ -127,7 +127,7 @@ export default function FactsMediaPreview({ sample, onClose }) {
   }, [])
 
   return (
-    <dialog ref={dialog} className={`facts-preview-dialog${music ? ' is-vinyl' : ''}`}
+    <dialog ref={dialog} className={`facts-preview-dialog${music ? ' is-vinyl' : ''}${photos.length ? ' is-photo' : ''}`}
       aria-labelledby="facts-preview-title" onClose={onClose}
       onKeyDown={event => {
         if (photos.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
@@ -143,6 +143,7 @@ export default function FactsMediaPreview({ sample, onClose }) {
         <header>
           <div>
             {music && <p>{sample.label}</p>}
+            {photos.length > 0 && <p className="facts-photo-account">@purelyvisual_ <span aria-hidden="true">·</span> photography & content</p>}
             {sample.videoId && <p>Gaming · 8-second preview</p>}
             <h3 id="facts-preview-title">{title}</h3>
           </div>

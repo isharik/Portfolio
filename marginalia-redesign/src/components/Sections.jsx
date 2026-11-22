@@ -6,6 +6,8 @@ import { TextRoll } from './ui/TextRoll'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
+import musicRotation from '../musicRotation.json'
+import screenShelf from '../screenShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 
 function Scribble({ children, className = '' }) {
@@ -570,6 +572,80 @@ function instagramSample(label, path, photoCount) {
   }
 }
 
+function MusicStrip({ samples, onPreview }) {
+  const strip = useRef(null)
+  const paused = useRef(false)
+  const drag = useRef(null)
+  const suppressClick = useRef(false)
+  const resumeTimer = useRef(0)
+
+  useEffect(() => {
+    const node = strip.current
+    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    let frame = 0
+    let last = 0
+    const advance = now => {
+      if (last && !paused.current) {
+        node.scrollLeft += Math.min(48, now - last) * .075
+        const lap = node.scrollWidth / 2
+        if (node.scrollLeft >= lap) node.scrollLeft -= lap
+      }
+      last = now
+      frame = requestAnimationFrame(advance)
+    }
+    frame = requestAnimationFrame(advance)
+    return () => { cancelAnimationFrame(frame); window.clearTimeout(resumeTimer.current) }
+  }, [])
+
+  const browse = direction => {
+    const node = strip.current
+    if (!node) return
+    const lap = node.scrollWidth / 2
+    window.clearTimeout(resumeTimer.current)
+    paused.current = true
+    if (direction < 0 && node.scrollLeft < 220) node.scrollLeft += lap
+    node.scrollLeft += direction * 212
+    resumeTimer.current = window.setTimeout(() => { paused.current = false }, 550)
+  }
+
+  return <div className="facts-music-shelf">
+    <div className="facts-music-bar"><span>Artists on rotation <i aria-hidden="true">↝</i></span><div aria-label="Browse artists"><button type="button" onClick={() => browse(-1)} aria-label="Previous artists">←</button><button type="button" onClick={() => browse(1)} aria-label="Next artists">→</button></div></div>
+    <div className="facts-music-strip" ref={strip} onFocusCapture={() => { paused.current = true }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) paused.current = false }}
+      onPointerDown={event => { if (event.pointerType !== 'mouse' || event.button !== 0) return; drag.current = { x:event.clientX, scroll:strip.current.scrollLeft, moved:false }; paused.current = true }}
+      onPointerMove={event => { if (!drag.current) return; const distance=event.clientX-drag.current.x; if (Math.abs(distance)>5 && !drag.current.moved) { drag.current.moved=true; event.currentTarget.setPointerCapture(event.pointerId) } if (drag.current.moved) strip.current.scrollLeft=drag.current.scroll-distance }}
+      onPointerUp={event => { if (!drag.current) return; suppressClick.current=drag.current.moved; drag.current=null; paused.current=false; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId) }}
+      onPointerCancel={() => { drag.current=null; paused.current=false }}
+      onClickCapture={event => { if (suppressClick.current) { event.stopPropagation(); event.preventDefault(); suppressClick.current=false } }}
+      aria-label="Music artists and previews">
+      {[...samples, ...samples].map((sample, index) => <button key={`${sample.label}-${index}`} type="button" className="facts-music-record" tabIndex={index >= samples.length ? -1 : 0} aria-hidden={index >= samples.length ? 'true' : undefined} onClick={() => onPreview(sample)}>
+        <span className="facts-music-record-art"><img src={sample.image} alt="" loading="lazy" decoding="async" /><i aria-hidden="true">▶</i></span>
+        <strong>{sample.label}</strong><small>{sample.track}</small>
+      </button>)}
+    </div>
+  </div>
+}
+
+function MovieShelf({ samples }) {
+  return <div className="facts-screen-shelf">
+    <div className="facts-screen-grid">{samples.map(sample => <a className="facts-screen-tile" href={sample.href} target="_blank" rel="noreferrer" key={sample.title} aria-label={`${sample.title}, ${sample.genre} ${sample.kind} — more details`} title={sample.title}>
+      <img src={sample.image} alt="" loading="lazy" decoding="async" />
+    </a>)}</div>
+  </div>
+}
+
+function FactCover({ fact }) {
+  const kind = fact.brand || fact.artwork
+  const image = fact.samples[0]?.image
+  return <div className={`facts-cover facts-cover-${kind}`}>
+    <div className="facts-cover-copy"><span className="facts-cover-kicker">{fact.handle}</span><h3>{fact.title}</h3><p>{fact.text}</p></div>
+    {kind === 'youtube' && <div className="facts-cover-visual facts-cover-broadcast">{fact.samples.map((sample,index) => <span key={sample.videoId} className={`facts-game-frame is-frame-${index}`}><img src={sample.image} alt="" /></span>)}<span className="facts-cover-play" aria-hidden="true">▶</span></div>}
+    {kind === 'x' && <div className="facts-cover-visual facts-cover-dispatch"><span className="facts-dispatch-mark"><XMark /> @isharik99</span><img src={image} alt="Preview of an on-chain post" /><small>Field notes from the timeline ↗</small></div>}
+    {kind === 'movies' && <div className="facts-cover-visual facts-cover-cinema"><div className="facts-cover-posters">{fact.samples.slice(0,3).map(sample => <img key={sample.title} src={sample.image} alt={sample.title} />)}</div></div>}
+    {kind === 'spotify' && <div className="facts-cover-visual facts-cover-record"><img src={image} alt="Album art on the music shelf" /><i aria-hidden="true" /><span>different artists in the mix</span></div>}
+    {kind === 'instagram' && <div className="facts-cover-visual facts-cover-polaroids">{fact.samples.map((sample,index) => <img key={sample.label} className={`is-photo-${index}`} src={sample.image} alt={sample.label} />)}<span>small frames, bigger stories</span></div>}
+  </div>
+}
+
 export function Facts() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [exploring, setExploring] = useState(false)
@@ -606,13 +682,13 @@ export function Facts() {
         { label: 'Community update', href: 'https://x.com/isharik99/status/2065086696459489600?a=4AWLdCKWWVJZCl4MS2c&s=20', image: '/images/x-community-update.webp' },
       ],
     },
-    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Science fiction, thrillers, and every strange show worth unpacking. Give me a title and I will have an opinion.', highlights: ['Science fiction', 'Thrillers', 'Stories worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: [{ label: 'Science fiction', image: '/images/science-fiction-matrix.avif' }, { label: 'Thriller shelf', image: '/images/thriller-shelf.jpg' }, { label: 'TV archive', image: '/movies-collage.png' }] },
+    { icon: '🎬', eyebrow: 'Archive 03', title: 'Movies & TV shows', handle: 'A movie nerd, always watching', text: 'Strange worlds, sharp stories, and the ones I keep returning to.', highlights: ['Science fiction', 'Drama & thrillers', 'Series worth unpacking'], action: 'Film shelf', artwork: 'movies', background: '/movies-collage.png', samples: screenShelf },
     {
       icon: <SpotifyMark />,
       eyebrow: 'Playlist 04',
       title: 'Music',
       handle: 'SPOTSICK · Spotify',
-      text: 'From late-night R&B and melodic rap to alternative rock. Explore SPOTSICK and a few favorites beyond the playlist.',
+      text: 'The records I keep coming back to.',
       highlights: ['R&B', 'Alternative rock', 'On rotation'],
       href: 'https://open.spotify.com/playlist/0XaLZ6o0QcPYsjzqeUa0wM?si=23875b7f4d704e99',
       action: 'Open SPOTSICK on Spotify',
@@ -627,7 +703,7 @@ export function Facts() {
         { label: 'Drake', track: 'Chicago Freestyle (feat. Giveon)', href: 'https://open.spotify.com/track/4wVOKKEHUJxHCFFNUWDn0B', previewId: 'b185a4dc8c70ad2fe9a8846fab83241ea3418921', image: '/images/spotify-album-drake.jpg' },
         { label: 'Tame Impala', track: 'Loser', href: 'https://open.spotify.com/track/7bxaFZ1O3cHkgLKMsdC3xR', previewId: '0015e9347a45b62215447eba657b2fc3ce279d2d', image: '/images/spotify-album-tame-impala.jpg' },
         { label: 'Magnus Ferrell', track: 'Asleep Talking', href: 'https://open.spotify.com/track/5dBXBY5CsYxEjC20ewA9EU', previewId: 'b6b92667f8443403c5c961fffe0de457e1fc5dc8', image: '/images/spotify-album-magnus-ferrell.jpg' },
-      ],
+      ].concat(musicRotation.map(sample => ({ ...sample, href: `https://open.spotify.com/search/${encodeURIComponent(`${sample.label} ${sample.track}`)}` }))),
     },
     {
       icon: 'instagram', eyebrow: 'Photography 05', title: 'Photography & Content', handle: '@purelyvisual_',
@@ -638,7 +714,7 @@ export function Facts() {
       samples: [
         instagramSample('Cloud 9', 'p/DcyNHViCezh', 4),
         instagramSample('Side questing', 'p/DWYhfPdkYNm', 5),
-        instagramSample('Mountain reel', 'reel/DWWNV1TkW1U', 1),
+        instagramSample('The Long Way Round', 'reel/DWWNV1TkW1U', 1),
       ],
     },
   ]
@@ -697,10 +773,7 @@ export function Facts() {
         <div className={`facts-stage ${activeFact.artwork ? `has-${activeFact.artwork}` : ''} ${activeFact.brand ? `has-${activeFact.brand}` : ''}`} key={activeFact.title}>
           {activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
           <div className="facts-stage-top"><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></div>
-          <div className="facts-stage-main">
-            <strong className={`facts-stage-icon ${activeFact.icon === 'x' ? 'is-x' : ''}`} aria-hidden="true">{activeFact.icon === 'x' ? <XMark /> : activeFact.icon === 'instagram' ? <svg viewBox="0 0 24 24" width="35" height="35" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : activeFact.icon}</strong>
-            <div><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></div>
-          </div>
+          <FactCover fact={activeFact} />
           <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
           <button type="button" className="facts-link facts-explore" aria-label={`Explore ${activeFact.title}`} onClick={() => setExploring(true)}>Explore <b aria-hidden="true">+</b></button>
         </div>
@@ -713,15 +786,18 @@ export function Facts() {
       </div>
       {exploring && createPortal(
         <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>
-          <section className={`facts-modal-card${activeFact.brand === 'spotify' ? ' is-spotsick' : ''}`} onClick={event => event.stopPropagation()}>
+          <section className={`facts-modal-card is-${activeFact.brand || activeFact.artwork}`} onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
-            <header><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p></header>
-            {activeFact.brand === 'spotify' && <p className="facts-music-picks">Artists on rotation</p>}
+            <header><span className="facts-modal-index">{activeFact.eyebrow} / Beyond the CV</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.href && <a className="facts-modal-brand" href={activeFact.href} target="_blank" rel="noreferrer" aria-label={activeFact.action}>
+              {activeFact.brand === 'spotify' ? <SpotifyMark size={21} /> : activeFact.brand === 'x' ? <XMark /> : activeFact.brand === 'instagram' ? <span className="facts-modal-brand-icon" aria-hidden="true">◎</span> : <span className="facts-modal-brand-icon is-video" aria-hidden="true">▶</span>}
+              <span>{activeFact.brand === 'spotify' ? 'SPOTSICK on Spotify' : activeFact.brand === 'youtube' ? 'EchoPlex FPS on YouTube' : activeFact.brand === 'x' ? '@isharik99 on X' : '@purelyvisual_ on Instagram'} <i aria-hidden="true">↗</i></span>
+            </a>}</header>
+            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
                 const canPlay = sample.track || sample.videoId
                 const canPreview = canPlay || sample.photos
-                const preview = <><div><img src={sample.image} alt="" decoding="async" />{canPlay && <i className="facts-sample-play" aria-hidden="true">▶</i>}</div><b>{sample.label}</b>{sample.track && <small>{sample.track}</small>}</>
+                const preview = <><div><img src={sample.image} alt="" decoding="async" />{canPlay && <i className="facts-sample-play" aria-hidden="true">▶</i>}</div><b>{sample.label}</b>{sample.genre && <small>{sample.genre}</small>}{sample.track && <small>{sample.track}</small>}</>
                 if (canPreview) return (
                   <button key={sample.label} type="button" aria-haspopup="dialog" className="facts-sample"
                     onClick={() => setPreviewSample(sample)}>{preview}</button>
@@ -730,8 +806,7 @@ export function Facts() {
                   ? <a key={sample.label} href={sample.href} target="_blank" rel="noreferrer" className="facts-sample">{preview}</a>
                   : <div key={sample.label} className="facts-sample is-static">{preview}</div>
               })}
-            </div>
-            {activeFact.href && <a className="facts-modal-profile" href={activeFact.href} target="_blank" rel="noreferrer">{activeFact.action}</a>}
+            </div>}
           </section>
           {previewSample && (
             <FactsMediaPreview sample={previewSample} onClose={() => setPreviewSample(null)} />

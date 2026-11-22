@@ -52,8 +52,8 @@ export default function CreativeWork() {
       <div className="creative-footer">
         <ul className="creative-tools" aria-label="Editing and creative tools">
           {editingTools.map(({ name, icon }) => (
-            <li key={name}>
-              <img src={`/images/creative-${icon}`} alt={name} title={name} width="28" height="28" />
+            <li key={name} tabIndex={0} data-tool={name} aria-label={name}>
+              <img src={`/images/creative-${icon}`} alt="" width="28" height="28" />
             </li>
           ))}
         </ul>
