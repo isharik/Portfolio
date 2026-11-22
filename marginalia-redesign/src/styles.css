@@ -2711,6 +2711,82 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .facts-modal-brand:is(:hover,:focus-visible),.facts-modal-card:is(.is-youtube,.is-x,.is-instagram) .facts-sample:is(:hover,:focus-visible) { transform:none; }
 }
 
+/* Gaming pairs the actual channel clips with a tightly edited wall of game art. */
+.facts-modal-card.is-youtube { width:min(1060px,calc(100vw - 48px)); }
+.facts-gaming-shelf { margin-top:18px; }
+.facts-gaming-identity { display:flex; align-items:center; flex-wrap:wrap; gap:9px 26px; padding:0 2px 15px; border-bottom:1px solid #ffffff30; color:#e9d1c6; font:11px/1.3 var(--mono); }
+.facts-gaming-identity > span { color:#fff5ee; letter-spacing:.08em; }
+.facts-gaming-identity a { color:inherit; text-decoration:none; text-underline-offset:4px; transition:color 150ms ease,transform 180ms cubic-bezier(.23,1,.32,1); }
+.facts-gaming-identity a:is(:hover,:focus-visible) { color:#fff; text-decoration:underline; transform:translateY(-2px); }
+.facts-gaming-clips { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:14px; }
+.facts-gaming-clip { min-width:0; display:grid; gap:5px; padding:0; border:0; background:none; color:#f7eee9; text-align:left; cursor:pointer; transition:transform 220ms cubic-bezier(.23,1,.32,1); }
+.facts-gaming-clip > span { position:relative; display:block; height:clamp(92px,13svh,120px); overflow:hidden; border:1px solid #ffffff40; border-radius:8px; background:#17171b; }
+.facts-gaming-clip img { width:100%; height:100%; object-fit:cover; transition:transform 320ms cubic-bezier(.23,1,.32,1); }
+.facts-gaming-clip i { position:absolute; right:9px; bottom:9px; display:grid; width:27px; height:27px; place-items:center; border-radius:50%; background:#17191dbb; color:#fff; font:10px/1 var(--sans); }
+.facts-gaming-clip strong { overflow:hidden; font:600 11px/1.2 var(--sans); text-overflow:ellipsis; white-space:nowrap; }
+.facts-gaming-clip:is(:hover,:focus-visible) { transform:translateY(-4px); outline:none; }
+.facts-gaming-clip:is(:hover,:focus-visible) img { transform:scale(1.045); }
+.facts-gaming-divider { display:flex; align-items:center; gap:12px; margin:16px 0 9px; color:#edd7ca; font:16px/1 var(--hand); }
+.facts-gaming-divider::after { content:''; flex:1; height:1px; background:#ffffff32; }
+.facts-gaming-divider small { color:#c3b6ae; font:10px/1.2 var(--mono); }
+.facts-gaming-grid { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:7px; }
+.facts-gaming-tile { min-width:0; display:grid; grid-template-rows:clamp(76px,11svh,102px) auto; gap:5px; overflow:hidden; padding:4px; border:1px solid #ffffff2b; border-radius:8px; background:#ffffff0c; color:#f8eee8; text-decoration:none; transition:transform 220ms cubic-bezier(.23,1,.32,1),border-color 180ms ease,box-shadow 220ms ease; }
+.facts-gaming-tile img { width:100%; height:100%; object-fit:contain; border-radius:5px; background:#141313; }
+.facts-gaming-tile span { overflow:hidden; font:10px/1.15 var(--sans); text-align:center; text-overflow:ellipsis; white-space:nowrap; }
+.facts-gaming-tile:nth-child(5n+2) { transform:translateY(4px); }
+.facts-gaming-tile:nth-child(7n+4) { transform:translateY(-3px); }
+.facts-gaming-tile:nth-child(9n+6) { transform:translateY(2px); }
+.facts-gaming-tile:is(:hover,:focus-visible) { z-index:2; transform:translateY(-4px) scale(1.035); border-color:#e9bba8; box-shadow:0 9px 20px #0008; outline:none; }
+@media (max-width:700px) {
+  .facts-modal-card.is-youtube { width:calc(100vw - 28px); }
+  .facts-gaming-clips { gap:5px; }
+  .facts-gaming-clip > span { height:78px; }
+  .facts-gaming-clip strong { font-size:9px; }
+  .facts-gaming-divider small { display:none; }
+  .facts-gaming-grid { grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; }
+  .facts-gaming-tile { grid-template-rows:70px auto; }
+}
+@media (prefers-reduced-motion:reduce) { .facts-gaming-clip,.facts-gaming-clip img,.facts-gaming-tile { transition:none; }.facts-gaming-clip:is(:hover,:focus-visible),.facts-gaming-tile:is(:hover,:focus-visible) { transform:none; } }
+
+/* Gaming is arranged like a compact screening room: one feature, two supporting cuts, then the library. */
+.facts-modal-card.is-youtube { background:linear-gradient(135deg,#18191d 0%,#25201f 52%,#151719 100%); }
+.facts-gaming-room { margin-top:20px; }
+.facts-gaming-room .facts-gaming-identity { justify-content:flex-start; gap:10px 28px; padding:0 0 16px; color:#d9cec7; border-color:#ffffff26; }
+.facts-gaming-room .facts-gaming-identity > span { color:#f9f0e9; font-weight:600; letter-spacing:.13em; text-transform:uppercase; }
+.facts-gaming-room .facts-gaming-identity a { padding:3px 0; color:#e5b6a4; }
+.facts-gaming-featured { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(220px,.7fr); gap:12px; min-height:clamp(190px,31svh,274px); }
+.facts-gaming-feature,.facts-gaming-cut { position:relative; display:block; overflow:hidden; padding:0; border:1px solid #ffffff2e; border-radius:14px; background:#111215; color:#fff7f2; cursor:pointer; text-align:left; isolation:isolate; transition:transform 220ms cubic-bezier(.23,1,.32,1),border-color 180ms ease,box-shadow 220ms ease; }
+.facts-gaming-feature::after,.facts-gaming-cut::after { content:''; position:absolute; z-index:-1; inset:0; background:linear-gradient(180deg,transparent 32%,#090a0ed9 100%); }
+.facts-gaming-feature img,.facts-gaming-cut img { width:100%; height:100%; object-fit:cover; transition:transform 360ms cubic-bezier(.23,1,.32,1),filter 220ms ease; }
+.facts-gaming-feature > span,.facts-gaming-cut > span { position:absolute; z-index:1; inset:auto 14px 13px; display:grid; gap:5px; }
+.facts-gaming-feature i,.facts-gaming-cut i { display:grid; width:27px; height:27px; place-items:center; border:1px solid #ffffff75; border-radius:50%; background:#151518b8; color:#fff; font:10px/1 var(--sans); font-style:normal; }
+.facts-gaming-feature small { color:#e9b5a1; font:10px/1 var(--mono); letter-spacing:.09em; text-transform:uppercase; }
+.facts-gaming-feature strong { max-width:28ch; font:clamp(19px,2vw,28px)/1.04 var(--serif); }
+.facts-gaming-cuts { display:grid; grid-template-rows:repeat(2,minmax(0,1fr)); gap:12px; }
+.facts-gaming-cut > span { inset:auto 11px 10px; grid-template-columns:24px minmax(0,1fr); align-items:center; gap:8px; }
+.facts-gaming-cut i { width:24px; height:24px; font-size:8px; }
+.facts-gaming-cut strong { overflow:hidden; font:600 12px/1.2 var(--sans); text-overflow:ellipsis; white-space:nowrap; }
+.facts-gaming-feature:is(:hover,:focus-visible),.facts-gaming-cut:is(:hover,:focus-visible) { z-index:2; transform:translateY(-3px); border-color:#e7a993; box-shadow:0 16px 30px #0008; outline:none; }
+.facts-gaming-feature:is(:hover,:focus-visible) img,.facts-gaming-cut:is(:hover,:focus-visible) img { transform:scale(1.045); filter:saturate(1.08); }
+.facts-gaming-feature:active,.facts-gaming-cut:active { transform:scale(.98); }
+.facts-gaming-room .facts-gaming-divider { margin:18px 0 10px; }
+.facts-gaming-room .facts-gaming-divider span { color:#f5e6dd; }
+.facts-gaming-room .facts-gaming-divider small { margin-right:auto; }
+.facts-gaming-room .facts-gaming-divider b { color:#ddaa97; font:10px/1 var(--mono); font-weight:500; letter-spacing:.08em; text-transform:uppercase; }
+.facts-gaming-room .facts-gaming-grid { grid-template-columns:repeat(8,minmax(0,1fr)); gap:8px; }
+.facts-gaming-room .facts-gaming-tile { grid-template-rows:clamp(80px,11.5svh,108px) auto; padding:5px; border-color:#ffffff28; background:#0d0e11a1; }
+.facts-gaming-room .facts-gaming-tile img { background:#0b0c0f; }
+@media (max-width:700px) {
+  .facts-gaming-featured { grid-template-columns:1fr; min-height:0; }
+  .facts-gaming-feature { aspect-ratio:16 / 8; }
+  .facts-gaming-cuts { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; }
+  .facts-gaming-cut { aspect-ratio:16 / 9; }
+  .facts-gaming-room .facts-gaming-grid { grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; }
+  .facts-gaming-room .facts-gaming-tile { grid-template-rows:70px auto; }
+  .facts-gaming-room .facts-gaming-identity { gap:9px 16px; }
+}
+@media (prefers-reduced-motion:reduce) { .facts-gaming-feature,.facts-gaming-cut,.facts-gaming-feature img,.facts-gaming-cut img { transition:none; }.facts-gaming-feature:is(:hover,:focus-visible),.facts-gaming-cut:is(:hover,:focus-visible) { transform:none; } }
+
 /* The portrait notes arrive together from their actual places around the photo. */
 .portrait-notes .note { opacity:0; }
 .portrait-notes.is-visible .note { animation:portrait-note-gather 1000ms cubic-bezier(.23,1,.32,1) both; animation-delay:0ms; }

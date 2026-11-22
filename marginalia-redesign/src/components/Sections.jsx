@@ -8,7 +8,17 @@ import ProjectDetail from './ui/ProjectDetail'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
 import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
+import gameShelf from '../gameShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
+
+const gameShelfOrder = [
+  'Valorant', 'Far Cry 3', 'Ghost of Tsushima', 'Watch Dogs 2', 'Outer Wilds', 'Counter-Strike 2',
+  'Cyberpunk 2077', 'Far Cry Primal', 'Control', 'Ghost of Yōtei', 'Watch Dogs', 'Disco Elysium',
+  'Far Cry 5', 'Sekiro: Shadows Die Twice', 'Death Stranding', 'Far Cry 2', 'Hollow Knight', 'Watch Dogs: Legion',
+  'Elden Ring', 'Far Cry 3: Blood Dragon', 'Red Dead Redemption 2', 'Return of the Obra Dinn', 'Far Cry 6',
+  'Deathloop', 'Kingdom Come: Deliverance II', 'Far Cry New Dawn', 'NieR: Automata', 'S.T.A.L.K.E.R. 2',
+]
+const arrangedGameShelf = gameShelfOrder.map(title => gameShelf.find(game => game.title === title)).filter(Boolean)
 
 function Scribble({ children, className = '' }) {
   return <span className={`scribble ${className}`}>{children}</span>
@@ -633,6 +643,21 @@ function MovieShelf({ samples }) {
   </div>
 }
 
+function GamingShelf({ clips, onPreview }) {
+  const [feature, ...cuts] = clips
+  return <div className="facts-gaming-room">
+    <div className="facts-gaming-identity"><span>EchoPlex FPS · game room</span><a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 ↗</a><a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex ↗</a></div>
+    <div className="facts-gaming-featured" aria-label="Featured gaming clips">
+      <button type="button" className="facts-gaming-feature" onClick={() => onPreview(feature)} aria-label={`Preview ${feature.label}`}><img src={feature.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><small>featured clip</small><strong>{feature.label}</strong></span></button>
+      <div className="facts-gaming-cuts">{cuts.map(clip => <button type="button" className="facts-gaming-cut" key={clip.videoId} onClick={() => onPreview(clip)} aria-label={`Preview ${clip.label}`}><img src={clip.image} alt="" decoding="async" /><span><i aria-hidden="true">▶</i><strong>{clip.label}</strong></span></button>)}</div>
+    </div>
+    <div className="facts-gaming-divider"><span>game library</span><small>tactical, strange, story-led</small><b>{arrangedGameShelf.length} picks</b></div>
+    <div className="facts-gaming-grid">{arrangedGameShelf.map(game => <a href={game.href} key={game.title} target="_blank" rel="noreferrer" className="facts-gaming-tile" aria-label={`${game.title} — game details`} title={game.title}>
+      <img src={game.image} alt="" loading="lazy" decoding="async" /><span>{game.title}</span>
+    </a>)}</div>
+  </div>
+}
+
 function FactCover({ fact }) {
   const kind = fact.brand || fact.artwork
   const image = fact.samples[0]?.image
@@ -658,7 +683,7 @@ export function Facts() {
     {
       icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS',
       text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.',
-      highlights: ['Featured FPS sessions', 'Strategy & sandbox clips', 'Systems worth learning'],
+      highlights: ['Tactical focus', 'Long-form worlds', 'Cult discoveries'],
       href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube',
       background: 'https://unavatar.io/youtube/echoplexfps',
       samples: [
@@ -766,7 +791,7 @@ export function Facts() {
     return () => node.removeEventListener('wheel', onWheel)
   }, [])
   return (
-    <section ref={factsRef} data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
+    <section ref={factsRef} id="beyond-cv" data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
       <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
@@ -792,7 +817,7 @@ export function Facts() {
               {activeFact.brand === 'spotify' ? <SpotifyMark size={21} /> : activeFact.brand === 'x' ? <XMark /> : activeFact.brand === 'instagram' ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.7" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : <span className="facts-modal-brand-icon is-video" aria-hidden="true">▶</span>}
               <span>{activeFact.brand === 'spotify' ? 'SPOTSICK on Spotify' : activeFact.brand === 'youtube' ? 'EchoPlex FPS on YouTube' : activeFact.brand === 'x' ? '@isharik99 on X' : '@purelyvisual_ on Instagram'} <i aria-hidden="true">↗</i></span>
             </a>}</header>
-            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
+            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.brand === 'youtube' ? <GamingShelf clips={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
                 const canPlay = sample.track || sample.videoId

@@ -1,0 +1,176 @@
+[
+  {
+    "title": "Valorant",
+    "genre": "Tactical",
+    "image": "/images/game-valorant.webp",
+    "href": "https://playvalorant.com/en-us/media/"
+  },
+  {
+    "title": "Counter-Strike 2",
+    "genre": "Tactical",
+    "image": "/images/game-counter-strike-2.webp",
+    "href": "https://store.steampowered.com/app/730/"
+  },
+  {
+    "title": "Far Cry 2",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-2.webp",
+    "href": "https://store.steampowered.com/app/19900/"
+  },
+  {
+    "title": "Far Cry 3",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-3.webp",
+    "href": "https://store.steampowered.com/app/220240/"
+  },
+  {
+    "title": "Far Cry 3: Blood Dragon",
+    "genre": "Retro FPS",
+    "image": "/images/game-far-cry-3-blood-dragon.webp",
+    "href": "https://store.steampowered.com/app/233270/"
+  },
+  {
+    "title": "Far Cry 4",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-4.webp",
+    "href": "https://store.steampowered.com/app/298110/"
+  },
+  {
+    "title": "Far Cry Primal",
+    "genre": "Survival",
+    "image": "/images/game-far-cry-primal.webp",
+    "href": "https://store.steampowered.com/app/371660/"
+  },
+  {
+    "title": "Far Cry 5",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-5.webp",
+    "href": "https://store.steampowered.com/app/552520/"
+  },
+  {
+    "title": "Far Cry New Dawn",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-new-dawn.webp",
+    "href": "https://store.steampowered.com/app/939960/"
+  },
+  {
+    "title": "Far Cry 6",
+    "genre": "Open world",
+    "image": "/images/game-far-cry-6.webp",
+    "href": "https://store.steampowered.com/app/2369390/"
+  },
+  {
+    "title": "Watch Dogs",
+    "genre": "Hacking",
+    "image": "/images/game-watch-dogs.webp",
+    "href": "https://store.steampowered.com/app/243470/"
+  },
+  {
+    "title": "Watch Dogs 2",
+    "genre": "Hacking",
+    "image": "/images/game-watch-dogs-2.webp",
+    "href": "https://store.steampowered.com/app/447040/"
+  },
+  {
+    "title": "Watch Dogs: Legion",
+    "genre": "Hacking",
+    "image": "/images/game-watch-dogs-legion.webp",
+    "href": "https://store.steampowered.com/app/2239550/"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "genre": "Adventure",
+    "image": "/images/game-ghost-of-tsushima.webp",
+    "href": "https://store.steampowered.com/app/2215430/"
+  },
+  {
+    "title": "Ghost of Yōtei",
+    "genre": "Adventure",
+    "image": "/images/game-ghost-of-yo-tei.webp",
+    "href": "https://www.playstation.com/en-us/games/ghost-of-yotei/"
+  },
+  {
+    "title": "Outer Wilds",
+    "genre": "Mystery",
+    "image": "/images/game-outer-wilds.webp",
+    "href": "https://store.steampowered.com/app/753640/"
+  },
+  {
+    "title": "Disco Elysium",
+    "genre": "RPG",
+    "image": "/images/game-disco-elysium.webp",
+    "href": "https://store.steampowered.com/app/632470/"
+  },
+  {
+    "title": "Return of the Obra Dinn",
+    "genre": "Mystery",
+    "image": "/images/game-return-of-the-obra-dinn.webp",
+    "href": "https://store.steampowered.com/app/653530/"
+  },
+  {
+    "title": "Control",
+    "genre": "Paranormal",
+    "image": "/images/game-control.webp",
+    "href": "https://store.steampowered.com/app/870780/"
+  },
+  {
+    "title": "Sekiro: Shadows Die Twice",
+    "genre": "Action",
+    "image": "/images/game-sekiro-shadows-die-twice.webp",
+    "href": "https://store.steampowered.com/app/814380/"
+  },
+  {
+    "title": "Red Dead Redemption 2",
+    "genre": "Open world",
+    "image": "/images/game-red-dead-redemption-2.webp",
+    "href": "https://store.steampowered.com/app/1174180/"
+  },
+  {
+    "title": "Cyberpunk 2077",
+    "genre": "RPG",
+    "image": "/images/game-cyberpunk-2077.webp",
+    "href": "https://store.steampowered.com/app/1091500/"
+  },
+  {
+    "title": "Elden Ring",
+    "genre": "Soulslike",
+    "image": "/images/game-elden-ring.webp",
+    "href": "https://store.steampowered.com/app/1245620/"
+  },
+  {
+    "title": "Hollow Knight",
+    "genre": "Metroidvania",
+    "image": "/images/game-hollow-knight.webp",
+    "href": "https://store.steampowered.com/app/367520/"
+  },
+  {
+    "title": "Death Stranding",
+    "genre": "Adventure",
+    "image": "/images/game-death-stranding.webp",
+    "href": "https://store.steampowered.com/app/1850570/"
+  },
+  {
+    "title": "Deathloop",
+    "genre": "Immersive sim",
+    "image": "/images/game-deathloop.webp",
+    "href": "https://store.steampowered.com/app/1252330/"
+  },
+  {
+    "title": "S.T.A.L.K.E.R. 2",
+    "genre": "Survival",
+    "image": "/images/game-s-t-a-l-k-e-r-2.webp",
+    "href": "https://store.steampowered.com/app/1643320/"
+  },
+  {
+    "title": "Kingdom Come: Deliverance II",
+    "genre": "RPG",
+    "image": "/images/game-kingdom-come-deliverance-ii.webp",
+    "href": "https://store.steampowered.com/app/1771300/"
+  },
+  {
+    "title": "NieR: Automata",
+    "genre": "Action RPG",
+    "image": "/images/game-nier-automata.webp",
+    "href": "https://store.steampowered.com/app/524220/"
+  }
+]
