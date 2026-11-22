@@ -37,6 +37,28 @@ function PortraitNote({ children, className = '' }) {
   return <Scribble className={`note ${className}`}>{children}<svg viewBox="0 0 42 36" aria-hidden="true"><path d="M2 3 C17 4 27 14 34 29" /><path d="M25 25 L35 30 L36 19" /></svg></Scribble>
 }
 
+function warmImagesNear(element, sources) {
+  const load = () => {
+    for (const source of new Set(sources.filter(Boolean))) {
+      const image = new Image()
+      image.decoding = 'async'
+      image.fetchPriority = 'low'
+      image.src = source
+    }
+  }
+  if (!element || !('IntersectionObserver' in window)) {
+    const timer = window.setTimeout(load, 800)
+    return () => window.clearTimeout(timer)
+  }
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return
+    observer.disconnect()
+    load()
+  }, { rootMargin: '900px 0px' })
+  observer.observe(element)
+  return () => observer.disconnect()
+}
+
 function MessageSphere({ phase = 'sending', size = 188 }) {
   const canvasRef = useRef(null)
 
@@ -71,6 +93,9 @@ function MessageSphere({ phase = 'sending', size = 188 }) {
     let frame = 0
     let angle = 0
     let previous = performance.now()
+    const tiltCosine = Math.cos(.38)
+    const tiltSine = Math.sin(.38)
+    const projected = dots.map(dot => ({ dot, x: 0, y: 0, depth: 0, waveSeed: dot.x * 5 + dot.y * 8 + dot.z * 3 }))
 
     const draw = now => {
       const delta = Math.min(.04, (now - previous) / 1000)
@@ -78,15 +103,14 @@ function MessageSphere({ phase = 'sending', size = 188 }) {
       if (!reducedMotion) angle += delta * 1.35
       const cosine = Math.cos(angle)
       const sine = Math.sin(angle)
-      const tiltCosine = Math.cos(.38)
-      const tiltSine = Math.sin(.38)
-      const projected = dots.map(dot => {
-        const rotatedX = dot.x * cosine + dot.z * sine
+      for (const point of projected) {
+        const { dot } = point
+        point.x = dot.x * cosine + dot.z * sine
         const rotatedZ = dot.z * cosine - dot.x * sine
-        const rotatedY = dot.y * tiltCosine - rotatedZ * tiltSine
-        const depth = rotatedZ * tiltCosine + dot.y * tiltSine
-        return { x: rotatedX, y: rotatedY, depth, waveSeed: dot.x * 5 + dot.y * 8 + dot.z * 3 }
-      }).sort((a, b) => a.depth - b.depth)
+        point.y = dot.y * tiltCosine - rotatedZ * tiltSine
+        point.depth = rotatedZ * tiltCosine + dot.y * tiltSine
+      }
+      projected.sort((a, b) => a.depth - b.depth)
 
       context.clearRect(0, 0, size, size)
       projected.forEach(dot => {
@@ -268,6 +292,7 @@ export function Experience() {
   const wheelLockRef = useRef(false)
   const entryLandingRef = useRef(false)
   const previousTopRef = useRef(null)
+  const isNearExperience = useRef(true)
   const toggleExperience = index => {
     setExpanded(current => current === index ? null : index)
     setScrollFocus(index)
@@ -328,10 +353,23 @@ export function Experience() {
     }
 
     positionTrack()
-    window.addEventListener('wheel', handleWheel, { passive: false })
+    const watchWheel = () => window.addEventListener('wheel', handleWheel, { passive: false })
+    const unwatchWheel = () => window.removeEventListener('wheel', handleWheel)
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(([entry]) => {
+      isNearExperience.current = entry.isIntersecting
+      if (entry.isIntersecting) watchWheel()
+      else {
+        unwatchWheel()
+        previousTopRef.current = null
+        entryLandingRef.current = false
+      }
+    }, { rootMargin: '100% 0px' }) : null
+    if (observer) observer.observe(section)
+    else watchWheel()
     window.addEventListener('resize', positionTrack)
     return () => {
-      window.removeEventListener('wheel', handleWheel)
+      observer?.disconnect()
+      unwatchWheel()
       window.removeEventListener('resize', positionTrack)
     }
   }, [scrollFocus])
@@ -356,9 +394,20 @@ export function Experience() {
       previousTopRef.current = top
     }
 
+    let frame = 0
+    const onScroll = () => {
+      if (frame || !isNearExperience.current) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        if (isNearExperience.current) resetEntryFocus()
+      })
+    }
     resetEntryFocus()
-    window.addEventListener('scroll', resetEntryFocus, { passive: true })
-    return () => window.removeEventListener('scroll', resetEntryFocus)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(frame)
+    }
   }, [])
 
   return (
@@ -446,34 +495,12 @@ export function Skills() {
 export function Projects() {
   const [selected, setSelected] = useState(null)
   const [focusedProject, setFocusedProject] = useState(null)
+  const projectSection = useRef(null)
 
-  useEffect(() => {
-    const preload = () => {
-      projects.forEach(project => {
-        ;[project.image, project.phoneImage].filter(Boolean).forEach(source => {
-          const image = new Image()
-          image.decoding = 'async'
-          image.fetchPriority = 'high'
-          image.src = source
-          image.decode?.().catch(() => {})
-        })
-      })
-      const wizardMark = new Image()
-      wizardMark.decoding = 'async'
-      wizardMark.fetchPriority = 'high'
-      wizardMark.src = '/logos/pharos-network.png'
-      wizardMark.decode?.().catch(() => {})
-    }
-    const idle = window.requestIdleCallback?.(preload, { timeout: 1200 })
-    if (!idle) {
-      const timer = window.setTimeout(preload, 180)
-      return () => window.clearTimeout(timer)
-    }
-    return () => window.cancelIdleCallback?.(idle)
-  }, [])
+  useEffect(() => warmImagesNear(projectSection.current, projects.map(project => project.image)), [])
 
   return (
-    <section id="projects" data-label="Projects" className="sheet paper-sheet projects-sheet">
+    <section ref={projectSection} id="projects" data-label="Projects" className="sheet paper-sheet projects-sheet">
       <Reveal className="projects-heading"><h2>Projects.</h2><div className="ink-underline short" /><Scribble>work that left the notebook</Scribble></Reveal>
       <div className="project-gallery">
         {projects.map((project, index) => {
@@ -481,10 +508,10 @@ export function Projects() {
           return (
           <Reveal className="project-item" key={project.title}>
             <Scribble className="project-note">{project.note} ↓</Scribble>
-            <button className={`device project-device-${index}${focusedProject === index ? ' is-active' : ''}`} onPointerEnter={() => setFocusedProject(index)} onPointerLeave={() => setFocusedProject(null)} onMouseEnter={() => setFocusedProject(index)} onMouseLeave={() => setFocusedProject(null)} onFocus={() => setFocusedProject(index)} onBlur={() => setFocusedProject(null)} onClick={() => setSelected(project)} aria-label={`Open ${project.title} project details`}>
+            <button className={`device project-device-${index}${focusedProject === index ? ' is-active' : ''}`} onPointerEnter={() => setFocusedProject(index)} onPointerLeave={() => setFocusedProject(null)} onFocus={() => setFocusedProject(index)} onBlur={() => setFocusedProject(null)} onClick={() => setSelected(project)} aria-label={`Open ${project.title} project details`}>
               <div className="device-speaker" />
               <div className={`device-screen project-screen-${index}`}>
-                <img src={phonePreview} alt="" loading="eager" decoding="async" fetchPriority="high" />
+                <img src={phonePreview} alt="" loading="lazy" decoding="async" />
                 <div className="device-shade" />
                 {project.phoneHeading && <div className="device-wallpaper-title" aria-hidden="true">{project.phoneHeading}</div>}
                 <div className="device-copy"><ScrambleProjectLabel active={focusedProject === index} title={project.title} /></div>
@@ -583,7 +610,7 @@ function instagramSample(label, path, photoCount) {
   }
 }
 
-function MusicStrip({ samples, onPreview }) {
+function MusicStrip({ samples, onPreview, previewOpen }) {
   const strip = useRef(null)
   const paused = useRef(false)
   const drag = useRef(null)
@@ -592,21 +619,41 @@ function MusicStrip({ samples, onPreview }) {
 
   useEffect(() => {
     const node = strip.current
-    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    if (!node || previewOpen || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
     let frame = 0
     let last = 0
+    let fraction = 0
+    let lap = 0
+    const measure = () => {
+      const gap = Number.parseFloat(getComputedStyle(node).columnGap) || 0
+      lap = (node.scrollWidth + gap) / 2
+    }
+    measure()
+    const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null
+    resize?.observe(node)
+    if (!resize) window.addEventListener('resize', measure)
     const advance = now => {
-      if (last && !paused.current) {
-        node.scrollLeft += Math.min(48, now - last) * .075
-        const lap = node.scrollWidth / 2
-        if (node.scrollLeft >= lap) node.scrollLeft -= lap
+      if (last && !paused.current && lap) {
+        fraction += Math.min(48, now - last) * .075
+        const step = Math.floor(fraction)
+        if (step) {
+          const next = node.scrollLeft + step
+          node.scrollLeft = next >= lap ? next - lap : next
+          fraction -= step
+        }
       }
       last = now
       frame = requestAnimationFrame(advance)
     }
     frame = requestAnimationFrame(advance)
-    return () => { cancelAnimationFrame(frame); window.clearTimeout(resumeTimer.current) }
-  }, [])
+    return () => {
+      cancelAnimationFrame(frame)
+      resize?.disconnect()
+      if (!resize) window.removeEventListener('resize', measure)
+    }
+  }, [previewOpen])
+
+  useEffect(() => () => window.clearTimeout(resumeTimer.current), [])
 
   const browse = direction => {
     const node = strip.current
@@ -768,24 +815,7 @@ export function Facts() {
   ]
   const activeFact = personalFacts[activeIndex]
   const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
-  useEffect(() => {
-    const preloadBackgrounds = () => {
-      personalFacts.forEach(fact => {
-        if (!fact.background) return
-        const image = new Image()
-        image.decoding = 'async'
-        image.fetchPriority = 'high'
-        image.src = fact.background
-        image.decode?.().catch(() => {})
-      })
-    }
-    const idle = window.requestIdleCallback?.(preloadBackgrounds, { timeout: 700 })
-    if (!idle) {
-      const timer = window.setTimeout(preloadBackgrounds, 100)
-      return () => window.clearTimeout(timer)
-    }
-    return () => window.cancelIdleCallback?.(idle)
-  }, [])
+  useEffect(() => warmImagesNear(factsRef.current, personalFacts.map(fact => fact.background)), [])
   useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
   useEffect(() => {
     if (!exploring || previewSample) return undefined
@@ -840,7 +870,7 @@ export function Facts() {
               {activeFact.brand === 'spotify' ? <SpotifyMark size={21} /> : activeFact.brand === 'x' ? <XMark /> : activeFact.brand === 'instagram' ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.7" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : <span className="facts-modal-brand-icon is-video" aria-hidden="true">▶</span>}
               <span>{activeFact.brand === 'spotify' ? 'SPOTSICK on Spotify' : activeFact.brand === 'youtube' ? 'EchoPlex FPS on YouTube' : activeFact.brand === 'x' ? '@isharik99 on X' : '@purelyvisual_ on Instagram'} <i aria-hidden="true">↗</i></span>
             </a>}</header>
-            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.brand === 'youtube' ? <GamingShelf clips={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
+            {activeFact.brand === 'spotify' ? <MusicStrip samples={activeFact.samples} onPreview={setPreviewSample} previewOpen={Boolean(previewSample)} /> : activeFact.brand === 'youtube' ? <GamingShelf clips={activeFact.samples} onPreview={setPreviewSample} /> : activeFact.artwork === 'movies' ? <MovieShelf samples={activeFact.samples} /> :
             <div className={`facts-sample-grid has-${activeFact.brand || activeFact.artwork}`}>
               {activeFact.samples.map(sample => {
                 const canPlay = sample.track || sample.videoId

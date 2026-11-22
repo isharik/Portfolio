@@ -36,7 +36,15 @@ export default function App() {
       })
     }, { threshold: 0.08, rootMargin: '-4% 0px -4%' })
     nodes.forEach(node => observer.observe(node))
-    return () => observer.disconnect()
+    const cover = document.getElementById('home')
+    const ambientObserver = new IntersectionObserver(([entry]) => {
+      cover.classList.toggle('is-offscreen', !entry.isIntersecting)
+    })
+    if (cover) ambientObserver.observe(cover)
+    return () => {
+      observer.disconnect()
+      ambientObserver.disconnect()
+    }
   }, [ready])
 
   useEffect(() => {

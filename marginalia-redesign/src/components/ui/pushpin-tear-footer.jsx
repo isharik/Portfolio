@@ -333,7 +333,7 @@ export default function PushpinTearFooter({
   const [pin, setPin] = React.useState("idle")
   const [toast, setToast] = React.useState("")
   const [grain, setGrain] = React.useState("")
-  const s = React.useRef({
+  const [s] = React.useState(() => ({
     W: 0,
     H: 0,
     tear: makeTear(seed),
@@ -344,13 +344,16 @@ export default function PushpinTearFooter({
     t0: 0,
     dur: 1,
     raf: 0,
+    lastFrame: 0,
+    pointer: null,
+    drawnOutline: null,
     px: -1e4,
     py: -1e4,
     lift: new Array(FLAPS).fill(0),
     still: false,
     busy: false,
     seed,
-  }).current
+  }))
   s.still = still
   const later = (fn, ms) => {
     timers.current.push(window.setTimeout(fn, ms))
@@ -361,6 +364,19 @@ export default function PushpinTearFooter({
     const { W, H, tear } = s
     if (!W || !H)
       return
+    if (s.pointer) {
+      const bounds = rootRef.current?.getBoundingClientRect()
+      if (bounds?.width) {
+        s.px = s.pointer.x - bounds.left
+        s.py = s.pointer.y - bounds.top
+        const tilt = Math.max(-9, Math.min(9, (s.px / bounds.width - 0.5) * 18))
+        pinRef.current?.style.setProperty("--tilt", tilt.toFixed(2) + "deg")
+      }
+      s.pointer = null
+    }
+    const elapsed = s.lastFrame ? Math.min(50, now - s.lastFrame) : 1000 / 60
+    const damping = 1 - Math.pow(0.86, elapsed / (1000 / 60))
+    s.lastFrame = now
     let busy = false
     let ys
     const open = new Array(FLAPS).fill(1)
@@ -397,13 +413,17 @@ export default function PushpinTearFooter({
       const mx = ((XS[f.at] + XS[b]) / 2) * W
       const my = ((ys[f.at] + ys[b]) / 2) * H
       const target = s.still ? 0 : clamp01(1 - Math.hypot(s.px - mx, s.py - my) / (0.2 * Math.max(W, 520)))
-      s.lift[k] += (target - s.lift[k]) * 0.14
+      s.lift[k] += (target - s.lift[k]) * damping
       if (Math.abs(target - s.lift[k]) > 0.003)
         busy = true
       open[k] *= 1 + 0.32 * s.lift[k]
     })
-    sheetRef.current?.setAttribute("d", sheetD(ys, W, H, tear.rim))
-    rimRef.current?.setAttribute("d", sheetD(ys, W, H))
+    const outline = s.drawnOutline
+    if (outline?.ys !== ys || outline.W !== W || outline.H !== H) {
+      sheetRef.current?.setAttribute("d", sheetD(ys, W, H, tear.rim))
+      rimRef.current?.setAttribute("d", sheetD(ys, W, H))
+      s.drawnOutline = { ys, W, H }
+    }
     const draw = (k, f, o) => {
       const el = flapRefs.current[k]
       const g = gradRefs.current[k]
@@ -426,6 +446,8 @@ export default function PushpinTearFooter({
     }
     if (busy)
       s.raf = requestAnimationFrame(frame)
+    else
+      s.lastFrame = 0
   }, [s])
   const kick = React.useCallback(() => {
     if (!s.raf && typeof requestAnimationFrame !== "undefined")
@@ -436,7 +458,7 @@ export default function PushpinTearFooter({
     const el = rootRef.current
     if (!el)
       return
-    const ro = new ResizeObserver(() => {
+    const measure = () => {
       s.W = el.clientWidth
       s.H = el.clientHeight
       const svg = svgRef.current
@@ -446,10 +468,14 @@ export default function PushpinTearFooter({
         svg.setAttribute("viewBox", "0 0 " + s.W + " " + s.H)
       }
       kick()
-    })
-    ro.observe(el)
+    }
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(measure) : null
+    ro?.observe(el)
+    if (!ro) window.addEventListener("resize", measure)
+    measure()
     return () => {
-      ro.disconnect()
+      ro?.disconnect()
+      if (!ro) window.removeEventListener("resize", measure)
       cancelAnimationFrame(s.raf)
       s.raf = 0
     }
@@ -463,8 +489,10 @@ export default function PushpinTearFooter({
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  // grain tile, once
+  // Generate the grain when the footer first comes into view.
   React.useEffect(() => {
+    if (!visible || grain)
+      return
     const c = document.createElement("canvas")
     c.width = c.height = 160
     const g = c.getContext("2d")
@@ -479,7 +507,7 @@ export default function PushpinTearFooter({
     }
     g.putImageData(img, 0, 0)
     setGrain(c.toDataURL())
-  }, [])
+  }, [visible, grain])
   // the opening: chrome, pin, rip
   React.useEffect(() => {
     if (!visible || stage > 0)
@@ -522,17 +550,13 @@ export default function PushpinTearFooter({
   }, [seed, still, s, kick])
   // ---- actions ----------------------------------------------------------------
   const onPointerMove = (e) => {
-    const el = rootRef.current
-    if (!el || s.still)
+    if (s.still || e.pointerType === "touch")
       return
-    const r = el.getBoundingClientRect()
-    s.px = e.clientX - r.left
-    s.py = e.clientY - r.top
-    const tilt = Math.max(-9, Math.min(9, (s.px / r.width - 0.5) * 18))
-    pinRef.current?.style.setProperty("--tilt", tilt.toFixed(2) + "deg")
+    s.pointer = { x: e.clientX, y: e.clientY }
     kick()
   }
   const onPointerLeave = () => {
+    s.pointer = null
     s.px = s.py = -1e4
     pinRef.current?.style.setProperty("--tilt", "0deg")
     kick()

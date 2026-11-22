@@ -68,6 +68,7 @@ export function SiteChrome({ theme, onTheme }) {
   }
 
   useEffect(() => {
+    if (!('IntersectionObserver' in window)) return
     const observer = new IntersectionObserver(
       entries => {
         if (sectionScroll.current) return

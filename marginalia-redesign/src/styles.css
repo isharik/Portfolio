@@ -54,7 +54,7 @@ button { color: inherit; font: inherit; }
 .welcome-index { position: absolute; inset: 24px 34px auto; display: flex; justify-content: space-between; color: var(--soft-ink); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
 .welcome-word { color: var(--blue); font: clamp(64px,12vw,160px)/1 var(--hand); animation: welcome-word .43s cubic-bezier(.2,.8,.2,1) both; }
 .welcome-line { position: absolute; left: 8%; right: 8%; bottom: 38px; height: 1px; background: var(--hairline); }
-.welcome-line i { display: block; height: 2px; background: var(--blue); transition: width .4s ease; }
+.welcome-line i { display: block; height: 2px; background: var(--blue); transform-origin: left; transition: transform .4s ease; }
 :root[data-theme='dark'] .welcome-screen { background-image: radial-gradient(rgba(255,255,255,.045) .62px,transparent .62px); background-size: 5px 5px; }
 @keyframes welcome-word { from { opacity: 0; transform: translateY(18px) rotate(-2deg); filter: blur(4px); } 55% { opacity: 1; } to { opacity: 1; transform: none; filter: none; } }
 
@@ -80,7 +80,9 @@ button { color: inherit; font: inherit; }
 .index-button { appearance: none; justify-self: start; border: 0; background: none; cursor: pointer; letter-spacing: .01em; }
 .index-button span { display: inline-grid; place-items: center; width: 22px; }
 .header-person { justify-self: end; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; transition: transform .25s ease,color .25s ease; }
-.header-person > i { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 0 color-mix(in srgb,var(--blue) 45%,transparent); animation: name-live 2s ease-out infinite; }
+.header-person > i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+.header-person > i::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--blue); animation: name-live 2s ease-out infinite; }
+.folio-header.is-dormant .header-person > i::after, .cover-sheet.is-offscreen .cover-scroll svg { animation-play-state: paused; }
 .header-person:hover { color: var(--blue); transform: translateY(-2px); }
 .header-person em { margin-left: 14px; font-family: var(--hand); font-size: 17px; color: var(--ink); font-weight: 600; }
 .folio-index {
@@ -156,7 +158,7 @@ button { color: inherit; font: inherit; }
 .folio-index a:is(:hover, :focus-visible, .is-active) {
   background: color-mix(in srgb, var(--blue) 14%, transparent);
 }
-@keyframes name-live { 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@keyframes name-live { from { transform: scale(1); opacity: .45; } 70%, 100% { transform: scale(3); opacity: 0; } }
 .header-voice-wrap { position: relative; justify-self: start; width: 132px; isolation: isolate; }
 .header-voice-wrap::before { content: ''; position: absolute; z-index: 0; inset: -6px -9px; pointer-events: none; border-radius: 999px; background: radial-gradient(ellipse at center,color-mix(in srgb,var(--ink) 36%,transparent) 0%,color-mix(in srgb,var(--ink) 16%,transparent) 48%,transparent 78%); box-shadow: 0 0 10px color-mix(in srgb,var(--ink) 18%,transparent); }
 :root[data-theme='dark'] .header-voice-wrap::before { background: radial-gradient(ellipse at center,rgba(255,255,255,.27) 0%,rgba(255,255,255,.12) 48%,transparent 78%); box-shadow: 0 0 13px rgba(255,255,255,.2); }
@@ -204,7 +206,7 @@ button { color: inherit; font: inherit; }
 
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
-.sheet.scroll-reveal, .folio-footer.scroll-reveal { opacity: .24; transform: translateY(30px); transition: opacity 1.05s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1); will-change: opacity, transform; }
+.sheet.scroll-reveal, .folio-footer.scroll-reveal { opacity: .24; transform: translateY(30px); transition: opacity 1.05s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1); }
 .sheet.scroll-reveal.is-visible, .folio-footer.scroll-reveal.is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal, .sheet.scroll-reveal, .folio-footer.scroll-reveal { opacity: 1; transform: none; transition: none; } .ink-signature { opacity: 1; clip-path: none; filter: none; transform: none; animation: none; } .voice-popover,.voice-popover.is-playing .voice-vinyl,.voice-popover.is-playing .voice-wave i { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .message-success-mark,.message-sphere-stage { animation: none; transition: none; } }
