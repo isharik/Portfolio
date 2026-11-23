@@ -22,6 +22,10 @@
 .facts-modal .facts-modal-card.is-youtube h3 {
   font-size: clamp(34px, 7svh, 60px);
 }
+.facts-modal .facts-modal-card.is-youtube .facts-modal-brand,
+.facts-modal .facts-modal-card.is-youtube .game-library-meta a,
+.facts-modal .facts-modal-card.is-youtube h3::before { color: color-mix(in srgb, var(--blue) 36%, var(--charcoal)) !important; }
+.facts-modal .facts-modal-card.is-youtube .facts-modal-close { background: var(--chalk); color: var(--charcoal); border-color: color-mix(in srgb, var(--charcoal) 24%, transparent); }
 
 .is-youtube .facts-modal-close {
   top: 13px;
@@ -184,4 +188,122 @@
 @media (prefers-reduced-motion: reduce) {
   :is(.game-library-tile > a, .game-library-clips button) { transition: none; }
   :is(.game-library-tile > a, .game-library-clips button):hover { transform: none; }
+}
+
+/* Editorial game archive: a quiet paper header over a dark viewing bay. */
+.facts-modal .facts-modal-card.is-youtube {
+  --guide-ink: var(--charcoal);
+  --guide-muted: color-mix(in srgb, var(--charcoal) 60%, var(--chalk));
+  --guide-line: color-mix(in srgb, var(--charcoal) 23%, transparent);
+  --guide-accent: color-mix(in srgb, var(--blue) 68%, var(--charcoal));
+  --guide-surface: var(--chalk);
+  --guide-mat: color-mix(in srgb, var(--chalk) 90%, var(--charcoal));
+  --gaming-gap: clamp(5px, .9svh, 9px);
+  --gaming-row: clamp(96px, 17svh, 180px);
+  --gaming-clip: clamp(94px, 17svh, 170px);
+  width: min(1480px, calc(100vw - 32px));
+  padding: clamp(15px, 2.3svh, 26px);
+  background: var(--chalk) !important;
+  color: var(--charcoal);
+}
+.facts-modal .facts-modal-card.is-youtube > header {
+  position: relative;
+  min-height: clamp(66px, 10svh, 100px);
+  align-items: end;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+}
+.facts-modal .facts-modal-card.is-youtube h3 {
+  margin-right: auto;
+  font-size: clamp(42px, 8svh, 78px);
+  line-height: .92;
+}
+.facts-modal .facts-modal-card.is-youtube h3::before {
+  content: 'ECHOPLEX / GAME ROOM';
+  display: block;
+  margin: 0 0 7px 3px;
+  color: var(--guide-accent);
+  font: 700 clamp(9px, 1.1svh, 12px)/1 var(--sans);
+  letter-spacing: .22em;
+}
+.game-library { gap: 0; }
+.game-library-meta {
+  padding: 7px 0 11px;
+  border: 0;
+}
+.game-library-meta h4 {
+  font: 600 clamp(17px, 2.5svh, 25px)/1 var(--serif);
+  letter-spacing: -.025em;
+}
+.game-library-page { color: var(--guide-muted); font: 600 11px/1 var(--sans); font-variant-numeric: tabular-nums; }
+.game-library-paging { display: flex; gap: 5px; }
+.game-library-paging button { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid color-mix(in srgb, var(--charcoal) 30%, transparent); border-radius: 50%; background: var(--chalk); color: var(--charcoal); cursor: pointer; }
+.game-library-paging button:disabled { opacity: .35; cursor: default; }
+.game-library-paging button:not(:disabled):is(:hover,:focus-visible) { border-color: var(--guide-accent); color: var(--guide-accent); }
+.game-library-meta a { font-weight: 600; }
+.game-library-panel {
+  display: grid;
+  gap: var(--gaming-gap);
+  padding: clamp(9px, 1.25svh, 17px);
+  border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--charcoal-2) 92%, var(--ink));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--paper) 18%, transparent);
+}
+.game-library-grid { gap: var(--gaming-gap); }
+.game-library-panel .game-library-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.field-guide-dialog.is-youtube .game-library-tile > a {
+  height: var(--gaming-row);
+  border-color: color-mix(in srgb, var(--paper) 12%, transparent);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--charcoal-2) 85%, var(--paper));
+}
+.game-library-cover { filter: none; }
+.game-library-tile span {
+  padding: 12px 5px 4px;
+  font-size: clamp(9px, .95vw, 12px);
+}
+.field-guide-dialog.is-youtube .game-library-clips {
+  padding: clamp(8px, 1.25svh, 14px) 0;
+  border-color: color-mix(in srgb, var(--paper) 30%, transparent);
+}
+.field-guide-dialog.is-youtube .game-library-clips button {
+  border-color: color-mix(in srgb, var(--paper) 30%, transparent);
+  border-radius: 9px;
+  background: var(--charcoal-2);
+}
+.game-clip-caption { font-family: var(--serif); font-size: clamp(13px, 1.45vw, 20px); font-weight: 600; }
+.game-clip-play { border: 1px solid color-mix(in srgb, var(--paper) 75%, transparent); }
+@media (max-width: 700px) {
+  .facts-modal .facts-modal-card.is-youtube { --gaming-row: 105px; --gaming-clip: 100px; }
+  .game-library-panel { padding: 7px; }
+  .game-library-meta { gap: 7px 12px; }
+  .game-library-meta h4 { width: 100%; }
+  .game-library-panel .game-library-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .game-library-panel .game-library-grid > li { grid-column: auto; }
+}
+
+/* The archive remains a black canvas in both portfolio themes. */
+.facts-modal .facts-modal-card.is-youtube {
+  --gaming-row: clamp(58px, 9.5svh, 96px);
+  --gaming-clip: clamp(80px, 13.5svh, 135px);
+  background: var(--charcoal-2) !important;
+  color: var(--chalk);
+}
+.facts-modal .facts-modal-card.is-youtube > header { border-color: color-mix(in srgb, var(--chalk) 22%, transparent); }
+.facts-modal .facts-modal-card.is-youtube > header h3 { color: var(--chalk) !important; }
+.facts-modal .facts-modal-card.is-youtube h3,
+.facts-modal .facts-modal-card.is-youtube .game-library-meta h4 { color: var(--chalk); }
+.facts-modal .facts-modal-card.is-youtube h3::before,
+.facts-modal .facts-modal-card.is-youtube .facts-modal-brand,
+.facts-modal .facts-modal-card.is-youtube .game-library-meta a { color: color-mix(in srgb, var(--blue) 60%, var(--chalk)) !important; font: 600 clamp(11px, 1.15vw, 14px)/1.3 var(--sans); letter-spacing: .01em; }
+.facts-modal .facts-modal-card.is-youtube h3::before { font-size: 10px; letter-spacing: .18em; }
+.facts-modal .facts-modal-card.is-youtube .facts-modal-close { background: var(--charcoal); color: var(--chalk); border-color: color-mix(in srgb, var(--chalk) 28%, transparent); }
+.facts-modal .facts-modal-card.is-youtube .game-library-meta { border-color: color-mix(in srgb, var(--chalk) 20%, transparent); }
+.facts-modal .facts-modal-card.is-youtube .game-library-panel { background: var(--charcoal); border-color: color-mix(in srgb, var(--chalk) 24%, transparent); }
+.facts-modal .facts-modal-card.is-youtube .game-library-panel .game-library-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.facts-modal .facts-modal-card.is-youtube .game-library-tile > a { border: 0; background: var(--charcoal-2); }
+.facts-modal .facts-modal-card.is-youtube .game-library-cover { object-fit: contain; }
+@media (max-width: 700px) {
+  .facts-modal .facts-modal-card.is-youtube .game-library-panel .game-library-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }

@@ -714,6 +714,7 @@ function GamingShelf({ clips, onPreview }) {
         <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 <span aria-hidden="true">↗</span></a>
         <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
       </div>
+      <div className="game-library-panel">
       <ul className="game-library-grid" aria-label="Game library, first half">{arrangedGameShelf.slice(0, 14).map(renderGame)}</ul>
       <ul className="game-library-clips" aria-label="Valorant clips">
         {clips.map(clip => (
@@ -729,6 +730,7 @@ function GamingShelf({ clips, onPreview }) {
         ))}
       </ul>
       <ul className="game-library-grid" aria-label="Game library, second half">{arrangedGameShelf.slice(14).map(renderGame)}</ul>
+      </div>
     </div>
   )
 }
