@@ -301,6 +301,28 @@
 .facts-modal .facts-modal-card.is-youtube .facts-modal-close { background: var(--charcoal); color: var(--chalk); border-color: color-mix(in srgb, var(--chalk) 28%, transparent); }
 .facts-modal .facts-modal-card.is-youtube .game-library-meta { border-color: color-mix(in srgb, var(--chalk) 20%, transparent); }
 .facts-modal .facts-modal-card.is-youtube .game-library-panel { background: var(--charcoal); border-color: color-mix(in srgb, var(--chalk) 24%, transparent); }
+.facts-modal .facts-modal-card.is-youtube .game-library-panel { position: relative; }
+.game-library-detail {
+  position: absolute;
+  z-index: 20;
+  width: min(256px, 72vw);
+  padding: 14px 16px 15px;
+  border: 1px solid color-mix(in srgb, var(--chalk) 26%, transparent);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--charcoal-2) 94%, var(--charcoal));
+  color: var(--chalk);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--charcoal-2) 48%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease-out, transform 180ms cubic-bezier(.23,1,.32,1);
+}
+.game-library-detail[data-placement='above'] { transform: translate(-50%, -95%); }
+.game-library-detail[data-placement='below'] { transform: translate(-50%, 6px); }
+.game-library-detail[data-visible='true'][data-placement='above'] { opacity: 1; transform: translate(-50%, -100%); }
+.game-library-detail[data-visible='true'][data-placement='below'] { opacity: 1; transform: translate(-50%, 0); }
+.game-library-detail > span { display: block; margin-bottom: 5px; color: color-mix(in srgb, var(--blue) 65%, var(--chalk)); font: 700 10px/1.1 var(--sans); letter-spacing: .11em; text-transform: uppercase; }
+.game-library-detail strong { display: block; font: 600 19px/1.1 var(--serif); }
+.game-library-detail p { margin: 7px 0 0; color: color-mix(in srgb, var(--chalk) 75%, var(--charcoal)); font: 12px/1.42 var(--sans); }
 .facts-modal .facts-modal-card.is-youtube .game-library-panel .game-library-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .facts-modal .facts-modal-card.is-youtube .game-library-tile > a { border: 0; background: var(--charcoal-2); }
 .facts-modal .facts-modal-card.is-youtube .game-library-cover { object-fit: contain; }

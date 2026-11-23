@@ -21,6 +21,15 @@ const gameShelfOrder = [
   'Deathloop', 'Kingdom Come: Deliverance II', 'Far Cry New Dawn', 'NieR: Automata', 'S.T.A.L.K.E.R. 2',
 ]
 const arrangedGameShelf = gameShelfOrder.map(title => gameShelf.find(game => game.title === title)).filter(Boolean)
+const gameNotes = {
+  Valorant: '6,000+ hours over six years. The game I keep returning to for precision, teamwork, and the perfect round.',
+  'Far Cry 3': 'The Far Cry series is a favorite: open worlds, improvisation, and stories that invite detours.',
+  'Watch Dogs 2': 'Watch Dogs is where my love of playful systems and creative problem solving comes through.',
+}
+const gameNote = game => gameNotes[game.title]
+  || (game.title.startsWith('Far Cry') ? 'Part of my favorite series: open-world freedom and room to experiment.'
+    : game.title.startsWith('Watch Dogs') ? 'A world that makes hacking, exploration, and creative approaches feel connected.'
+      : `${game.genre} is the part of my game library I return to for its world and distinct point of view.`)
 
 function Scribble({ children, className = '' }) {
   return <span className={`scribble ${className}`}>{children}</span>
@@ -698,11 +707,28 @@ function MovieShelf({ samples }) {
 }
 
 function GamingShelf({ clips, onPreview }) {
-  const renderGame = ({ href, image, title }) => (
-    <li key={title} className="game-library-tile">
-      <a href={href} target="_blank" rel="noreferrer">
-        <img className="game-library-cover" src={image} alt="" decoding="async" />
-        <span>{title}</span>
+  const panelRef = useRef(null)
+  const hideTimer = useRef(null)
+  const [gameDetail, setGameDetail] = useState(null)
+  const revealGame = (game, event) => {
+    clearTimeout(hideTimer.current)
+    const panel = panelRef.current?.getBoundingClientRect()
+    const tile = event.currentTarget.getBoundingClientRect()
+    if (!panel) return
+    const above = tile.top + tile.height / 2 > panel.top + panel.height / 2
+    setGameDetail({ game, visible: true, above, x: Math.max(128, Math.min(panel.width - 128, tile.left + tile.width / 2 - panel.left)), y: above ? tile.top - panel.top - 8 : tile.bottom - panel.top + 8 })
+  }
+  const hideGame = () => {
+    setGameDetail(detail => detail ? { ...detail, visible: false } : null)
+    clearTimeout(hideTimer.current)
+    hideTimer.current = setTimeout(() => setGameDetail(null), 190)
+  }
+  useEffect(() => () => clearTimeout(hideTimer.current), [])
+  const renderGame = (game) => (
+    <li key={game.title} className="game-library-tile">
+      <a href={game.href} target="_blank" rel="noreferrer" onMouseEnter={event => revealGame(game, event)} onMouseLeave={hideGame} onFocus={event => revealGame(game, event)} onBlur={hideGame}>
+        <img className="game-library-cover" src={game.image} alt="" decoding="async" />
+        <span>{game.title}</span>
       </a>
     </li>
   )
@@ -714,7 +740,7 @@ function GamingShelf({ clips, onPreview }) {
         <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 <span aria-hidden="true">↗</span></a>
         <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
       </div>
-      <div className="game-library-panel">
+      <div className="game-library-panel" ref={panelRef}>
       <ul className="game-library-grid" aria-label="Game library, first half">{arrangedGameShelf.slice(0, 14).map(renderGame)}</ul>
       <ul className="game-library-clips" aria-label="Valorant clips">
         {clips.map(clip => (
@@ -730,6 +756,7 @@ function GamingShelf({ clips, onPreview }) {
         ))}
       </ul>
       <ul className="game-library-grid" aria-label="Game library, second half">{arrangedGameShelf.slice(14).map(renderGame)}</ul>
+      {gameDetail && <div className="game-library-detail" data-visible={gameDetail.visible} data-placement={gameDetail.above ? 'above' : 'below'} style={{ left: gameDetail.x, top: gameDetail.y }} aria-hidden="true"><span>{gameDetail.game.genre}</span><strong>{gameDetail.game.title}</strong><p>{gameNote(gameDetail.game)}</p></div>}
       </div>
     </div>
   )
