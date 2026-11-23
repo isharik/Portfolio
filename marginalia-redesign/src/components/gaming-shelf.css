@@ -323,6 +323,47 @@
 .game-library-detail > span { display: block; margin-bottom: 5px; color: color-mix(in srgb, var(--blue) 65%, var(--chalk)); font: 700 10px/1.1 var(--sans); letter-spacing: .11em; text-transform: uppercase; }
 .game-library-detail strong { display: block; font: 600 19px/1.1 var(--serif); }
 .game-library-detail p { margin: 7px 0 0; color: color-mix(in srgb, var(--chalk) 75%, var(--charcoal)); font: 12px/1.42 var(--sans); }
+.game-library-detail {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: auto;
+  padding: 20px;
+  border: 0;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--charcoal-2) 48%, transparent);
+  backdrop-filter: blur(7px);
+  box-shadow: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: none;
+  transition: opacity 190ms ease-out;
+}
+.game-library-detail[data-visible='true'] { opacity: 1; transform: none; }
+.game-library-detail-card {
+  display: grid;
+  grid-template-columns: minmax(125px, 38%) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+  align-items: center;
+  width: min(560px, 92vw);
+  min-height: 220px;
+  padding: clamp(16px, 2.4vw, 26px);
+  border: 1px solid color-mix(in srgb, var(--chalk) 28%, transparent);
+  border-radius: 17px;
+  background: var(--charcoal-2);
+  box-shadow: 0 28px 70px color-mix(in srgb, var(--charcoal-2) 60%, transparent);
+  transform: translateY(8px) scale(.98);
+  transition: transform 190ms cubic-bezier(.23,1,.32,1);
+}
+.game-library-detail[data-visible='true'] .game-library-detail-card { transform: none; }
+.game-library-detail-card img { display: block; width: 100%; max-height: 260px; object-fit: contain; }
+.game-library-detail-card > div { min-width: 0; }
+.game-library-detail-card span { color: color-mix(in srgb, var(--blue) 65%, var(--chalk)); font: 700 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.game-library-detail-card strong { display: block; margin-top: 12px; color: var(--chalk); font: 600 clamp(26px, 3vw, 38px)/1.04 var(--serif); }
+.game-library-detail-card p { margin: 13px 0 0; color: color-mix(in srgb, var(--chalk) 78%, var(--charcoal)); font: 14px/1.5 var(--sans); }
+@media (max-width: 520px) { .game-library-detail-card { grid-template-columns: 1fr; width: min(340px, 90vw); } .game-library-detail-card img { max-height: 170px; } }
 .facts-modal .facts-modal-card.is-youtube .game-library-panel .game-library-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .facts-modal .facts-modal-card.is-youtube .game-library-tile > a { border: 0; background: var(--charcoal-2); }
 .facts-modal .facts-modal-card.is-youtube .game-library-cover { object-fit: contain; }

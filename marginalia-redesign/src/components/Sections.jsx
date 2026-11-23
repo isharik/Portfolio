@@ -707,16 +707,11 @@ function MovieShelf({ samples }) {
 }
 
 function GamingShelf({ clips, onPreview }) {
-  const panelRef = useRef(null)
   const hideTimer = useRef(null)
   const [gameDetail, setGameDetail] = useState(null)
-  const revealGame = (game, event) => {
+  const revealGame = game => {
     clearTimeout(hideTimer.current)
-    const panel = panelRef.current?.getBoundingClientRect()
-    const tile = event.currentTarget.getBoundingClientRect()
-    if (!panel) return
-    const above = tile.top + tile.height / 2 > panel.top + panel.height / 2
-    setGameDetail({ game, visible: true, above, x: Math.max(128, Math.min(panel.width - 128, tile.left + tile.width / 2 - panel.left)), y: above ? tile.top - panel.top - 8 : tile.bottom - panel.top + 8 })
+    setGameDetail({ game, visible: true })
   }
   const hideGame = () => {
     setGameDetail(detail => detail ? { ...detail, visible: false } : null)
@@ -726,7 +721,7 @@ function GamingShelf({ clips, onPreview }) {
   useEffect(() => () => clearTimeout(hideTimer.current), [])
   const renderGame = (game) => (
     <li key={game.title} className="game-library-tile">
-      <a href={game.href} target="_blank" rel="noreferrer" onMouseEnter={event => revealGame(game, event)} onMouseLeave={hideGame} onFocus={event => revealGame(game, event)} onBlur={hideGame}>
+      <a href={game.href} target="_blank" rel="noreferrer" onMouseEnter={() => revealGame(game)} onMouseLeave={hideGame} onFocus={() => revealGame(game)} onBlur={hideGame} onTouchStart={event => { event.preventDefault(); revealGame(game); hideTimer.current = setTimeout(hideGame, 2600) }}>
         <img className="game-library-cover" src={game.image} alt="" decoding="async" />
         <span>{game.title}</span>
       </a>
@@ -740,7 +735,7 @@ function GamingShelf({ clips, onPreview }) {
         <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 <span aria-hidden="true">↗</span></a>
         <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
       </div>
-      <div className="game-library-panel" ref={panelRef}>
+      <div className="game-library-panel">
       <ul className="game-library-grid" aria-label="Game library, first half">{arrangedGameShelf.slice(0, 14).map(renderGame)}</ul>
       <ul className="game-library-clips" aria-label="Valorant clips">
         {clips.map(clip => (
@@ -756,8 +751,8 @@ function GamingShelf({ clips, onPreview }) {
         ))}
       </ul>
       <ul className="game-library-grid" aria-label="Game library, second half">{arrangedGameShelf.slice(14).map(renderGame)}</ul>
-      {gameDetail && <div className="game-library-detail" data-visible={gameDetail.visible} data-placement={gameDetail.above ? 'above' : 'below'} style={{ left: gameDetail.x, top: gameDetail.y }} aria-hidden="true"><span>{gameDetail.game.genre}</span><strong>{gameDetail.game.title}</strong><p>{gameNote(gameDetail.game)}</p></div>}
       </div>
+      {gameDetail && createPortal(<div className="game-library-detail" data-visible={gameDetail.visible} aria-hidden="true"><div className="game-library-detail-card"><img src={gameDetail.game.image} alt="" /><div><span>{gameDetail.game.genre}</span><strong>{gameDetail.game.title}</strong><p>{gameNote(gameDetail.game)}</p></div></div></div>, document.body)}
     </div>
   )
 }
@@ -817,8 +812,15 @@ function FieldGuideSamples({ kind, samples, onPreview }) {
   )
 }
 
+const web3Articles = [
+  { image: '/images/web3-article-apt.png', title: 'APT on Pharos: From Yield Vault to Evolving On-Chain Asset', date: 'Oct 2', href: 'https://x.com/isharik99/status/2105933520300560461' },
+  { image: '/images/web3-article-beyond-hype.png', title: 'Pharos Beyond the Hype', date: 'Jul 22', href: 'https://x.com/isharik99/status/2079838304409911448' },
+  { image: '/images/web3-article-pulse-os.png', title: 'Introducing Pulse OS', date: 'Jul 4', href: 'https://x.com/isharik99/status/2073390275557474504' },
+]
+
 function Web3DominoGallery({ samples }) {
-  return <ul className="web3-domino-gallery" aria-label="Posts on X">
+  return <div className="web3-writing">
+  <ul className="web3-domino-gallery" aria-label="Posts on X">
     {samples.map((sample, index) => <li key={sample.label} style={{ '--domino-index': index }}>
       <a href={sample.href} target="_blank" rel="noreferrer" aria-label={`Read ${sample.label} on X`}>
         <span className="web3-domino-image"><img src={sample.image} alt="" decoding="async" /></span>
@@ -826,6 +828,13 @@ function Web3DominoGallery({ samples }) {
       </a>
     </li>)}
   </ul>
+  <div className="web3-article-heading"><span>Articles</span><small>Longer thoughts, illustrated</small></div>
+  <ul className="web3-article-gallery" aria-label="Articles by Sharik Hussain">
+    {web3Articles.map((article, index) => <li key={article.title} style={{ '--domino-index': index + 3 }}>
+      <a href={article.href} target="_blank" rel="noreferrer" aria-label={`Read ${article.title} on X`}><div className="web3-article-art"><img src={article.image} alt="" decoding="async" /></div><div className="web3-article-copy"><span>{article.date} · @isharik99 <b aria-hidden="true">↗</b></span><h4>{article.title}</h4></div></a>
+    </li>)}
+  </ul>
+  </div>
 }
 
 function PhotoLiftGallery({ samples, onPreview }) {
