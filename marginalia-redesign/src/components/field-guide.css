@@ -947,7 +947,7 @@
 }
 
 /* Keep the artwork full bleed and let the pointer-driven panel change settle quickly. */
-#beyond-cv .facts-accordion-card { transition: flex-grow 460ms cubic-bezier(.22, .61, .36, 1), box-shadow 220ms ease-out; }
+#beyond-cv .facts-accordion-card { transition: flex-grow 390ms cubic-bezier(.16, 1, .3, 1), box-shadow 190ms ease-out; }
 #beyond-cv .facts-accordion-image { transform: none; transition: filter 170ms ease-out; }
 #beyond-cv .facts-accordion-card.is-active .facts-accordion-image { transform: none; will-change: filter; }
 #beyond-cv .facts-accordion-card.is-instagram .facts-accordion-image {
