@@ -88,6 +88,7 @@
 
 .game-library-tile > a {
   height: var(--gaming-row);
+  background: var(--guide-surface);
 }
 
 .game-library-tile span,
