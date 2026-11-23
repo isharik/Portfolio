@@ -124,7 +124,7 @@ button { color: inherit; font: inherit; }
   display: grid;
   flex: 0 0 20px;
   place-items: center;
-  color: color-mix(in srgb, var(--blue) 58%, var(--ink));
+  color: var(--blue);
 }
 .folio-index a svg {
   width: 20px;
@@ -2329,7 +2329,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @media (max-width:700px) { .facts-modal { padding:14px; }.facts-modal-card { max-height:calc(100svh - 28px); padding:30px 18px 20px; border-radius:21px 16px 20px 15px; }.facts-modal-card h3 { font-size:42px; }.facts-sample-grid { grid-template-columns:1fr; gap:10px; }.facts-sample { grid-template-columns:116px minmax(0,1fr); align-items:center; column-gap:12px; }.facts-sample > div { grid-row:1 / span 2; }.facts-sample span { grid-column:2; } }
 @media (prefers-reduced-motion:reduce) { .cover-title:hover .text-roll-letter,.cover-title:focus-visible .text-roll-letter,.facts-modal,.facts-modal-card { animation:none; }.facts-sample,.facts-sample img { transition:none; } }
 
-.cover-kicker span::after { display:none; }.cover-kicker::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:color-mix(in srgb,var(--blue) 76%,var(--ink)); }
+.cover-kicker span::after { display:none; }.cover-kicker::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--ink); opacity:.8; }
 
 /* A compact record player, anchored under Curriculum Vitae rather than in the
    middle of the navigation bar. */
