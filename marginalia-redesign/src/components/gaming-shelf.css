@@ -421,7 +421,7 @@
 .game-library-rail::-webkit-scrollbar { display: none; }
 .game-library-rail .game-library-tile {
   flex: 0 0 clamp(106px, 10vw, 158px);
-  height: clamp(155px, 29svh, 240px);
+  height: clamp(148px, 26svh, 220px);
   min-width: 0;
 }
 .facts-modal .facts-modal-card.is-youtube .game-library-rail .game-library-tile > a {
@@ -449,4 +449,87 @@
   .game-library-rail .game-library-tile { flex-basis: clamp(90px, 24vw, 125px); height: clamp(140px, 23svh, 185px); }
   .facts-modal .facts-modal-card.is-youtube { --gaming-clip: clamp(86px, 15svh, 125px); }
   .game-clips-heading span { display: none; }
+}
+
+/* One composed destination row replaces the scattered profile links. */
+.facts-modal .facts-modal-card.is-youtube .game-library-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: clamp(14px, 2vw, 26px);
+  align-items: center;
+  padding-block: 8px 12px;
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-meta h4 { flex: none; width: auto; margin: 0; }
+.game-library-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--chalk) 20%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--chalk) 5%, transparent);
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-links a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--chalk) !important;
+  font: 600 clamp(11px, 1vw, 13px)/1.2 'Manrope', var(--sans);
+  letter-spacing: -.015em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background-color 180ms ease-out, color 180ms ease-out;
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-links a + a { border-left: 1px solid color-mix(in srgb, var(--chalk) 20%, transparent); }
+.game-library-links a::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: color-mix(in srgb, var(--blue) 72%, var(--chalk));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms cubic-bezier(.23, 1, .32, 1);
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-links a:is(:hover, :focus-visible) {
+  transform: none;
+  background: color-mix(in srgb, var(--blue) 13%, transparent);
+  text-decoration: none;
+}
+.game-library-links a:is(:hover, :focus-visible)::before { transform: scaleX(1); }
+.game-link-label { overflow: hidden; text-overflow: ellipsis; }
+.facts-modal .facts-modal-card.is-youtube .game-library-links .game-link-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--chalk) 9%, transparent);
+  transition: transform 210ms cubic-bezier(.23, 1, .32, 1), background-color 210ms ease-out;
+}
+.game-link-icon img { display: block; width: 15px; height: 15px; filter: invert(1); }
+.game-library-links a:is(:hover, :focus-visible) .game-link-icon { transform: translateY(-1px) scale(1.08); background: color-mix(in srgb, var(--blue) 33%, transparent); }
+@media (max-width: 800px) {
+  .facts-modal .facts-modal-card.is-youtube .game-library-meta { display: block; }
+  .facts-modal .facts-modal-card.is-youtube .game-library-meta h4 { margin-bottom: 9px; }
+  .game-library-links { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .game-library-links::-webkit-scrollbar { display: none; }
+  .facts-modal .facts-modal-card.is-youtube .game-library-links a { flex: 0 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .facts-modal .facts-modal-card.is-youtube .game-library-links a,
+  .game-library-links a::before,
+  .game-link-icon { transition: none; }
 }

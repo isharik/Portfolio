@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import QRCode from 'qrcode'
 import { Reveal } from './Chrome'
@@ -771,8 +771,11 @@ function GamingShelf({ clips, onPreview }) {
     <div className="game-library">
       <div className="game-library-meta">
         <h4>Game library</h4>
-        <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer">Steam · iSharik99 <span aria-hidden="true">↗</span></a>
-        <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
+        <nav className="game-library-links" aria-label="Gaming profiles">
+          <a href="https://steamcommunity.com/search/users/?text=isharik99" target="_blank" rel="noreferrer"><span className="game-link-icon is-steam"><img src="/logos/brand-steam.svg" alt="" /></span><span className="game-link-label">Steam · iSharik99</span></a>
+          <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer"><span className="game-link-icon is-valorant"><img src="/logos/brand-valorant.svg" alt="" /></span><span className="game-link-label">Valorant · Echoplex</span></a>
+          <a href="https://www.youtube.com/@echoplexfps" target="_blank" rel="noreferrer"><span className="game-link-icon is-youtube"><img src="/logos/brand-youtube.svg" alt="" /></span><span className="game-link-label">EchoPlex FPS on YouTube</span></a>
+        </nav>
       </div>
       <div className="game-library-panel">
       <div className="game-rail-heading"><span>On the shelf <i aria-hidden="true">↝</i></span><div><button type="button" aria-label="Previous games" onClick={() => browseGames(-1)}>←</button><button type="button" aria-label="Next games" onClick={() => browseGames(1)}>→</button></div></div>
@@ -932,7 +935,8 @@ export function Facts() {
   const [exploring, setExploring] = useState(false)
   const [previewSample, setPreviewSample] = useState(null)
   const factsRef = useRef(null)
-  const personalFacts = [
+  const pointerRef = useRef({ x: null, y: null })
+  const personalFacts = useMemo(() => [
     {
       icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS',
       text: 'FPS sessions, strategy worlds, and game systems worth learning. A small corner for sharp gameplay and rabbit holes.',
@@ -995,7 +999,7 @@ export function Facts() {
         instagramSample('The Long Way Round', 'reel/DWWNV1TkW1U', 1),
       ],
     },
-  ]
+  ], [])
   const activeFact = personalFacts[activeIndex]
   const kind = activeFact.brand || activeFact.artwork
   const fieldGuide = fieldGuides[kind]
@@ -1006,18 +1010,25 @@ export function Facts() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [exploring, previewSample])
-  const accordionImages = ['/images/gaming-wallpaper.jpg', '/images/web3-wallpaper.png', '/movies-collage.png', '/images/spotify-album-the-beatles.webp', '/images/photography-wallpaper.png']
+  const accordionImages = ['/images/gaming-wallpaper.jpg', '/images/web3-wallpaper.png', '/movies-collage.png', '/images/spotify-album-the-beatles.webp', '/images/photography-architecture.jpg']
   const accordionLabels = ['Gaming', 'Web3', 'Movies', 'Music', 'Photography']
   return (
     <section ref={factsRef} id="beyond-cv" data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
       <Reveal className="facts-heading"><h2>Beyond the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
-      <div className="facts-accordion" aria-label="Beyond the CV interests">
+      <div className="facts-accordion" aria-label="Beyond the CV interests" onPointerMove={event => {
+        if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
+        const previous = pointerRef.current
+        if (previous.x !== null && Math.hypot(event.clientX - previous.x, event.clientY - previous.y) < 6) return
+        pointerRef.current = { x: event.clientX, y: event.clientY }
+        const card = event.target.closest('.facts-accordion-card')
+        if (card) setActiveIndex(Number(card.dataset.index))
+      }} onPointerLeave={() => { pointerRef.current = { x: null, y: null } }}>
         {personalFacts.map((fact, index) => <div
           key={fact.title}
+          data-index={index}
           className={`facts-accordion-card is-${fact.brand || fact.artwork}${activeIndex === index ? ' is-active' : ''}`}
           style={{ '--accordion-image': `url("${accordionImages[index]}")` }}
-          onMouseEnter={() => setActiveIndex(index)}
         >
           <button type="button" className="facts-accordion-select" onFocus={() => setActiveIndex(index)} onClick={() => { setActiveIndex(index); setExploring(true) }} onKeyDown={event => {
             if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
@@ -1027,10 +1038,11 @@ export function Facts() {
             }
           }} aria-label={`Open ${fact.title} details`} aria-expanded={activeIndex === index} aria-haspopup="dialog" />
           <span className="facts-accordion-image" aria-hidden="true" />
+          {index === 3 && <span className="facts-accordion-equalizer" aria-hidden="true">{[12, 25, 18, 34, 21, 29, 15, 23, 11].map((height, bar) => <i key={bar} style={{ height }} />)}</span>}
           <span className="facts-accordion-vertical" aria-hidden="true">{accordionLabels[index]}</span>
           <span className="facts-accordion-content">
             <span className="facts-accordion-index">{String(index + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span>
-            <span className="facts-accordion-details">{index === 3 && <span className="facts-accordion-handle">{fact.handle}</span>}<span className="facts-accordion-description">{fact.text}</span><span className="facts-accordion-tags">{fact.highlights.map(item => <span key={item}>{item}</span>)}</span></span>
+            <span className="facts-accordion-details">{index === 3 && <span className="facts-accordion-handle"><SpotifyMark size={19} /> Spotify</span>}<span className="facts-accordion-description">{fact.text}</span><span className="facts-accordion-tags">{fact.highlights.map(item => <span key={item}>{item}</span>)}</span></span>
             <span className="facts-accordion-meta"><span className="facts-accordion-title">{fact.title}</span><button type="button" className="facts-accordion-cta" tabIndex={activeIndex === index ? 0 : -1} aria-label={`Explore ${fact.title}`} aria-haspopup="dialog" onClick={() => { setActiveIndex(index); setExploring(true) }}>{index === 1 ? '@isharik99' : 'Explore'} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5" /><path d="m9 15 6-6" /></svg></button></span>
           </span>
         </div>)}
@@ -1039,7 +1051,7 @@ export function Facts() {
         <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>
           <section className={`facts-modal-card is-${kind}${fieldGuide ? ' field-guide-dialog' : ''}`} onClick={event => event.stopPropagation()}>
             <button type="button" className="facts-modal-close" onClick={() => setExploring(false)} aria-label="Close highlights">×</button>
-            <header><span className="facts-modal-index">{activeFact.eyebrow} / Beyond the CV</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.href && <a className="facts-modal-brand" href={activeFact.href} target="_blank" rel="noreferrer" aria-label={activeFact.action}>
+            <header><span className="facts-modal-index">{activeFact.eyebrow} / Beyond the CV</span><Scribble>{activeFact.handle}</Scribble><h3>{activeFact.title}</h3><p>{activeFact.text}</p>{activeFact.href && kind !== 'youtube' && <a className="facts-modal-brand" href={activeFact.href} target="_blank" rel="noreferrer" aria-label={activeFact.action}>
               {activeFact.brand === 'spotify' ? <SpotifyMark size={21} /> : activeFact.brand === 'x' ? <XMark /> : activeFact.brand === 'instagram' ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.7" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> : <span className="facts-modal-brand-icon is-video" aria-hidden="true">▶</span>}
               <span>{activeFact.brand === 'spotify' ? 'SPOTSICK on Spotify' : activeFact.brand === 'youtube' ? 'EchoPlex FPS on YouTube' : activeFact.brand === 'x' ? '@isharik99 on X' : '@purelyvisual_ on Instagram'} <i aria-hidden="true">↗</i></span>
             </a>}</header>

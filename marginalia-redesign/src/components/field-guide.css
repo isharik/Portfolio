@@ -890,3 +890,76 @@
   #beyond-cv .facts-accordion-card { flex-grow: .7; }
   #beyond-cv .facts-accordion-card.is-active { flex-grow: 3; }
 }
+
+/* Center the capped gallery and carry the music image into its quiet side. */
+#beyond-cv .facts-heading { max-width: 1240px; margin-inline: auto; }
+#beyond-cv .facts-accordion { margin-inline: auto; }
+#beyond-cv .facts-note { right: max(5%, calc((100% - 1240px) / 2)); }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image::before {
+  display: block;
+  inset: 0;
+  background-image: repeating-radial-gradient(circle at 20% 53%, transparent 0 8px, rgba(237,247,238,.09) 9px, transparent 10px);
+  background-size: 75% 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  filter: none;
+}
+#beyond-cv .facts-accordion-equalizer {
+  position: absolute;
+  z-index: 2;
+  top: 55px;
+  left: clamp(17px, 1.8vw, 28px);
+  display: flex;
+  align-items: end;
+  gap: 5px;
+  height: 34px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 330ms ease 130ms, transform 450ms var(--ease-out) 130ms;
+}
+#beyond-cv .facts-accordion-equalizer i { width: 3px; border-radius: 3px; background: rgba(232,245,233,.5); }
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-equalizer { opacity: 1; transform: translateY(0); }
+@media (max-width: 720px) {
+  #beyond-cv .facts-note { right: 22px; }
+  #beyond-cv .facts-accordion-equalizer { top: 41px; left: 16px; transform: scale(.7); transform-origin: left top; }
+  #beyond-cv .facts-accordion-card.is-active .facts-accordion-equalizer { transform: scale(.7); }
+}
+@media (prefers-reduced-motion: reduce) { #beyond-cv .facts-accordion-equalizer { transition: none; } }
+
+/* Hover reveals copy without repainting text or the whole section. */
+#beyond-cv .facts-accordion-card { contain: layout paint; }
+@media (hover: hover) {
+  #beyond-cv .facts-accordion-card.is-active .facts-accordion-details {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition-delay: 0ms;
+  }
+  #beyond-cv .facts-accordion-card.is-active:is(:hover, :focus-within) .facts-accordion-details {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 90ms;
+  }
+  #beyond-cv .facts-accordion-card.is-active:is(:hover, :focus-within) .facts-accordion-image { filter: blur(2px); }
+  #beyond-cv .facts-accordion-card.is-movies.is-active:is(:hover, :focus-within) .facts-accordion-image { filter: grayscale(1) blur(2px); }
+}
+
+/* Keep the artwork full bleed and let the pointer-driven panel change settle quickly. */
+#beyond-cv .facts-accordion-card { transition: flex-grow 460ms cubic-bezier(.22, .61, .36, 1), box-shadow 220ms ease-out; }
+#beyond-cv .facts-accordion-image { transform: none; transition: filter 170ms ease-out; }
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-image { transform: none; will-change: filter; }
+#beyond-cv .facts-accordion-card.is-instagram .facts-accordion-image {
+  background-size: cover;
+  background-position: center 48%;
+  background-repeat: no-repeat;
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-details { transition: opacity 190ms ease-out, transform 230ms cubic-bezier(.23, 1, .32, 1), visibility 190ms; }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-handle { display: inline-flex; align-items: center; gap: 8px; font-family: 'Manrope', var(--sans); font-size: clamp(13px, 1.35vw, 17px); font-weight: 700; letter-spacing: -.02em; }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-handle svg { flex: none; width: 19px; height: 19px; }
+@media (prefers-reduced-motion: reduce) {
+  #beyond-cv .facts-accordion-card,
+  #beyond-cv .facts-accordion-image,
+  #beyond-cv .facts-accordion-details { transition-duration: 100ms; transition-delay: 0ms; }
+}
