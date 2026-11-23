@@ -370,3 +370,83 @@
 @media (max-width: 700px) {
   .facts-modal .facts-modal-card.is-youtube .game-library-panel .game-library-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* Continuous game shelf: the artwork itself is the card. */
+.facts-modal .facts-modal-card.is-youtube {
+  --gaming-clip: clamp(122px, 22svh, 188px);
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-panel {
+  gap: clamp(9px, 1.5svh, 15px);
+  padding: clamp(10px, 1.4svh, 16px);
+  overflow: hidden;
+}
+.game-rail-heading,.game-clips-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: color-mix(in srgb, var(--chalk) 75%, var(--charcoal));
+  font: 600 11px/1.2 var(--sans);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.game-rail-heading i { color: var(--blue); font: 20px/0 var(--serif); }
+.game-rail-heading > div { display: flex; gap: 6px; }
+.game-rail-heading button {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border: 1px solid color-mix(in srgb, var(--chalk) 25%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--chalk);
+  cursor: pointer;
+}
+.game-rail-heading button:is(:hover,:focus-visible) { border-color: var(--blue); color: var(--blue); }
+.game-library-rail {
+  display: flex;
+  gap: clamp(9px, 1.1vw, 16px);
+  margin: 0;
+  padding: 0 0 5px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  list-style: none;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  touch-action: pan-x;
+  cursor: grab;
+}
+.game-library-rail:active { cursor: grabbing; }
+.game-library-rail::-webkit-scrollbar { display: none; }
+.game-library-rail .game-library-tile {
+  flex: 0 0 clamp(106px, 10vw, 158px);
+  height: clamp(155px, 29svh, 240px);
+  min-width: 0;
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-rail .game-library-tile > a {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-rail .game-library-cover {
+  object-fit: fill;
+  filter: none;
+}
+.game-library-rail .game-library-tile > a:is(:hover,:focus-visible) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--charcoal-2) 70%, transparent);
+}
+.game-clips-heading { padding-top: clamp(10px, 1.5svh, 15px); border-top: 1px solid color-mix(in srgb, var(--chalk) 23%, transparent); }
+.game-clips-heading span { color: color-mix(in srgb, var(--chalk) 52%, var(--charcoal)); font-size: 10px; letter-spacing: .03em; text-transform: none; }
+.facts-modal .facts-modal-card.is-youtube .game-library-clips { padding: 0; border: 0; }
+.facts-modal .facts-modal-card.is-youtube .game-library-clips button { height: var(--gaming-clip); }
+@media (max-width: 700px) {
+  .game-library-rail .game-library-tile { flex-basis: clamp(90px, 24vw, 125px); height: clamp(140px, 23svh, 185px); }
+  .facts-modal .facts-modal-card.is-youtube { --gaming-clip: clamp(86px, 15svh, 125px); }
+  .game-clips-heading span { display: none; }
+}

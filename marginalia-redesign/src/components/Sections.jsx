@@ -708,7 +708,46 @@ function MovieShelf({ samples }) {
 
 function GamingShelf({ clips, onPreview }) {
   const hideTimer = useRef(null)
+  const rail = useRef(null)
+  const railPaused = useRef(false)
+  const railDrag = useRef(null)
+  const suppressRailClick = useRef(false)
   const [gameDetail, setGameDetail] = useState(null)
+  useEffect(() => {
+    const node = rail.current
+    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    let frame = 0
+    let previous = 0
+    let remainder = 0
+    let lap = 0
+    const measure = () => { lap = (node.scrollWidth + (Number.parseFloat(getComputedStyle(node).columnGap) || 0)) / 2 }
+    measure()
+    const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null
+    resize?.observe(node)
+    if (!resize) window.addEventListener('resize', measure)
+    const advance = now => {
+      if (previous && !railPaused.current && lap) {
+        remainder += Math.min(48, now - previous) * .055
+        const step = Math.floor(remainder)
+        if (step) {
+          node.scrollLeft = (node.scrollLeft + step) % lap
+          remainder -= step
+        }
+      }
+      previous = now
+      frame = requestAnimationFrame(advance)
+    }
+    frame = requestAnimationFrame(advance)
+    return () => { cancelAnimationFrame(frame); resize?.disconnect(); if (!resize) window.removeEventListener('resize', measure) }
+  }, [])
+  const browseGames = direction => {
+    const node = rail.current
+    if (!node) return
+    const lap = node.scrollWidth / 2
+    if (direction < 0 && node.scrollLeft < 190) node.scrollLeft += lap
+    node.scrollLeft += direction * 190
+    if (node.scrollLeft >= lap) node.scrollLeft -= lap
+  }
   const revealGame = game => {
     clearTimeout(hideTimer.current)
     setGameDetail({ game, visible: true })
@@ -719,9 +758,9 @@ function GamingShelf({ clips, onPreview }) {
     hideTimer.current = setTimeout(() => setGameDetail(null), 190)
   }
   useEffect(() => () => clearTimeout(hideTimer.current), [])
-  const renderGame = (game) => (
-    <li key={game.title} className="game-library-tile">
-      <a href={game.href} target="_blank" rel="noreferrer" onMouseEnter={() => revealGame(game)} onMouseLeave={hideGame} onFocus={() => revealGame(game)} onBlur={hideGame} onTouchStart={event => { event.preventDefault(); revealGame(game); hideTimer.current = setTimeout(hideGame, 2600) }}>
+  const renderGame = (game, index) => (
+    <li key={`${game.title}-${index}`} className="game-library-tile" aria-hidden={index >= arrangedGameShelf.length ? 'true' : undefined}>
+      <a href={game.href} target="_blank" rel="noreferrer" tabIndex={index >= arrangedGameShelf.length ? -1 : 0} onMouseEnter={() => { railPaused.current = true; revealGame(game) }} onMouseLeave={() => { hideGame(); railPaused.current = false }} onFocus={() => { railPaused.current = true; revealGame(game) }} onBlur={() => { hideGame(); railPaused.current = false }} onTouchStart={event => { event.preventDefault(); railPaused.current = true; revealGame(game); hideTimer.current = setTimeout(() => { hideGame(); railPaused.current = false }, 2600) }}>
         <img className="game-library-cover" src={game.image} alt="" decoding="async" />
         <span>{game.title}</span>
       </a>
@@ -736,7 +775,16 @@ function GamingShelf({ clips, onPreview }) {
         <a href="https://tracker.gg/valorant/search?query=Echoplex" target="_blank" rel="noreferrer">Valorant · Echoplex <span aria-hidden="true">↗</span></a>
       </div>
       <div className="game-library-panel">
-      <ul className="game-library-grid" aria-label="Game library, first half">{arrangedGameShelf.slice(0, 14).map(renderGame)}</ul>
+      <div className="game-rail-heading"><span>On the shelf <i aria-hidden="true">↝</i></span><div><button type="button" aria-label="Previous games" onClick={() => browseGames(-1)}>←</button><button type="button" aria-label="Next games" onClick={() => browseGames(1)}>→</button></div></div>
+      <ul className="game-library-rail" ref={rail} aria-label="Scrolling game library" onPointerEnter={() => { railPaused.current = true }} onPointerLeave={() => { railPaused.current = false }} onFocusCapture={() => { railPaused.current = true }} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) railPaused.current = false }}
+        onPointerDown={event => { if (event.pointerType !== 'mouse' || event.button !== 0) return; railDrag.current = { x: event.clientX, scroll: rail.current.scrollLeft, moved: false }; railPaused.current = true }}
+        onPointerMove={event => { if (!railDrag.current) return; const distance = event.clientX - railDrag.current.x; if (Math.abs(distance) > 5 && !railDrag.current.moved) { railDrag.current.moved = true; event.currentTarget.setPointerCapture(event.pointerId) } if (railDrag.current.moved) rail.current.scrollLeft = railDrag.current.scroll - distance }}
+        onPointerUp={event => { if (!railDrag.current) return; suppressRailClick.current = railDrag.current.moved; railDrag.current = null; railPaused.current = false; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId) }}
+        onPointerCancel={() => { railDrag.current = null; railPaused.current = false }}
+        onClickCapture={event => { if (suppressRailClick.current) { event.stopPropagation(); event.preventDefault(); suppressRailClick.current = false } }}>
+        {[...arrangedGameShelf, ...arrangedGameShelf].map(renderGame)}
+      </ul>
+      <div className="game-clips-heading">From the game room <span>three moments on YouTube</span></div>
       <ul className="game-library-clips" aria-label="Valorant clips">
         {clips.map(clip => (
           <li key={clip.videoId}>
@@ -750,7 +798,6 @@ function GamingShelf({ clips, onPreview }) {
           </li>
         ))}
       </ul>
-      <ul className="game-library-grid" aria-label="Game library, second half">{arrangedGameShelf.slice(14).map(renderGame)}</ul>
       </div>
       {gameDetail && createPortal(<div className="game-library-detail" data-visible={gameDetail.visible} aria-hidden="true"><div className="game-library-detail-card"><img src={gameDetail.game.image} alt="" /><div><span>{gameDetail.game.genre}</span><strong>{gameDetail.game.title}</strong><p>{gameNote(gameDetail.game)}</p></div></div></div>, document.body)}
     </div>
@@ -828,10 +875,10 @@ function Web3DominoGallery({ samples }) {
       </a>
     </li>)}
   </ul>
-  <div className="web3-article-heading"><span>Articles</span><small>Longer thoughts, illustrated</small></div>
+  <div className="web3-article-heading"><span>From the notebook</span><small>Articles · @isharik99 on X</small></div>
   <ul className="web3-article-gallery" aria-label="Articles by Sharik Hussain">
     {web3Articles.map((article, index) => <li key={article.title} style={{ '--domino-index': index + 3 }}>
-      <a href={article.href} target="_blank" rel="noreferrer" aria-label={`Read ${article.title} on X`}><div className="web3-article-art"><img src={article.image} alt="" decoding="async" /></div><div className="web3-article-copy"><span>{article.date} · @isharik99 <b aria-hidden="true">↗</b></span><h4>{article.title}</h4></div></a>
+      <a href={article.href} target="_blank" rel="noreferrer" aria-label={`Read ${article.title} on X`}><div className="web3-article-art"><img src={article.image} alt={article.title} decoding="async" /></div></a>
     </li>)}
   </ul>
   </div>
@@ -885,13 +932,10 @@ export function Facts() {
   const [exploring, setExploring] = useState(false)
   const [previewSample, setPreviewSample] = useState(null)
   const factsRef = useRef(null)
-  const activeIndexRef = useRef(0)
-  const wheelLock = useRef(0)
-  const wheelDistance = useRef(0)
   const personalFacts = [
     {
       icon: '🎮', eyebrow: 'Channel 01', title: 'Gaming', handle: 'EchoPlex FPS',
-      text: 'FPS sessions, strategy worlds, and game systems worth learning — a small corner for sharp gameplay and rabbit holes.',
+      text: 'FPS sessions, strategy worlds, and game systems worth learning. A small corner for sharp gameplay and rabbit holes.',
       highlights: ['Tactical focus', 'Long-form worlds', 'Cult discoveries'],
       href: 'https://www.youtube.com/@echoplexfps', action: 'Visit YouTube', brand: 'youtube',
       background: 'https://unavatar.io/youtube/echoplexfps',
@@ -955,53 +999,41 @@ export function Facts() {
   const activeFact = personalFacts[activeIndex]
   const kind = activeFact.brand || activeFact.artwork
   const fieldGuide = fieldGuides[kind]
-  const move = direction => setActiveIndex(current => Math.min(personalFacts.length - 1, Math.max(0, current + direction)))
   useEffect(() => warmImagesNear(factsRef.current, personalFacts.map(fact => fact.background)), [])
-  useEffect(() => { activeIndexRef.current = activeIndex }, [activeIndex])
   useEffect(() => {
     if (!exploring || previewSample) return undefined
     const onKeyDown = event => event.key === 'Escape' && setExploring(false)
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [exploring, previewSample])
-  useEffect(() => {
-    const node = factsRef.current
-    if (!node) return undefined
-    const onWheel = event => {
-      if (Math.abs(event.deltaY) < 3) return
-      const direction = event.deltaY > 0 ? 1 : -1
-      const current = activeIndexRef.current
-      const isPastEdge = (direction < 0 && current === 0) || (direction > 0 && current === personalFacts.length - 1)
-      if (isPastEdge) return
-      event.preventDefault()
-      const now = performance.now()
-      wheelDistance.current += event.deltaY
-      if (now - wheelLock.current < 430 || Math.abs(wheelDistance.current) < 24) return
-      wheelDistance.current = 0
-      wheelLock.current = now
-      setActiveIndex(index => Math.min(personalFacts.length - 1, Math.max(0, index + direction)))
-    }
-    node.addEventListener('wheel', onWheel, { passive: false })
-    return () => node.removeEventListener('wheel', onWheel)
-  }, [])
+  const accordionImages = ['/images/gaming-wallpaper.jpg', '/images/web3-wallpaper.png', '/movies-collage.png', '/images/spotify-album-the-beatles.webp', '/images/photography-wallpaper.png']
+  const accordionLabels = ['Gaming', 'Web3', 'Movies', 'Music', 'Photography']
   return (
     <section ref={factsRef} id="beyond-cv" data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
       <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
-      <Reveal className="facts-heading"><h2>Beyond<br />the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
-      <div className="facts-carousel" aria-roledescription="carousel" aria-label="Beyond the CV interests">
-        <div className={`facts-stage has-${kind}${fieldGuide ? ' field-guide-stage' : ''}`} key={activeFact.title}>
-          {!fieldGuide && activeFact.background && <div className="facts-background" style={{ backgroundImage: `url(${activeFact.background})` }} aria-hidden="true" />}
-          <div className="facts-stage-top">{fieldGuide ? <span>{fieldGuide.cover}</span> : <><span>{String(activeIndex + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span><span>{activeFact.eyebrow}</span></>}</div>
-          <FactCover fact={activeFact} />
-          <ul className="facts-highlights">{activeFact.highlights.map(item => <li key={item}>{item}</li>)}</ul>
-          <button type="button" className="facts-link facts-explore" aria-label={`Explore ${activeFact.title}`} onClick={() => setExploring(true)}>{fieldGuide?.action || 'Explore'} <b aria-hidden="true">{fieldGuide ? '↗' : '+'}</b></button>
-        </div>
-        <nav className="facts-controls" aria-label="Change Beyond the CV card">
-          <button type="button" onClick={() => move(-1)} disabled={activeIndex === 0} aria-label="Previous card">←</button>
-          <div>{personalFacts.map((fact, index) => <button type="button" className={index === activeIndex ? 'is-active' : ''} onClick={() => setActiveIndex(index)} key={fact.title} aria-label={`Show ${fact.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}</div>
-          <button type="button" onClick={() => move(1)} disabled={activeIndex === personalFacts.length - 1} aria-label="Next card">→</button>
-        </nav>
-        <p className="facts-scroll-hint">Scroll or use the arrows to turn the page</p>
+      <Reveal className="facts-heading"><h2>Beyond the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
+      <div className="facts-accordion" aria-label="Beyond the CV interests">
+        {personalFacts.map((fact, index) => <div
+          key={fact.title}
+          className={`facts-accordion-card is-${fact.brand || fact.artwork}${activeIndex === index ? ' is-active' : ''}`}
+          style={{ '--accordion-image': `url("${accordionImages[index]}")` }}
+          onMouseEnter={() => setActiveIndex(index)}
+        >
+          <button type="button" className="facts-accordion-select" onFocus={() => setActiveIndex(index)} onClick={() => { setActiveIndex(index); setExploring(true) }} onKeyDown={event => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+              event.preventDefault()
+              const next = (index + (event.key === 'ArrowRight' ? 1 : -1) + personalFacts.length) % personalFacts.length
+              factsRef.current?.querySelectorAll('.facts-accordion-select')[next]?.focus()
+            }
+          }} aria-label={`Open ${fact.title} details`} aria-expanded={activeIndex === index} aria-haspopup="dialog" />
+          <span className="facts-accordion-image" aria-hidden="true" />
+          <span className="facts-accordion-vertical" aria-hidden="true">{accordionLabels[index]}</span>
+          <span className="facts-accordion-content">
+            <span className="facts-accordion-index">{String(index + 1).padStart(2, '0')} / {String(personalFacts.length).padStart(2, '0')}</span>
+            <span className="facts-accordion-details">{index === 3 && <span className="facts-accordion-handle">{fact.handle}</span>}<span className="facts-accordion-description">{fact.text}</span><span className="facts-accordion-tags">{fact.highlights.map(item => <span key={item}>{item}</span>)}</span></span>
+            <span className="facts-accordion-meta"><span className="facts-accordion-title">{fact.title}</span><button type="button" className="facts-accordion-cta" tabIndex={activeIndex === index ? 0 : -1} aria-label={`Explore ${fact.title}`} aria-haspopup="dialog" onClick={() => { setActiveIndex(index); setExploring(true) }}>{index === 1 ? '@isharik99' : 'Explore'} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5" /><path d="m9 15 6-6" /></svg></button></span>
+          </span>
+        </div>)}
       </div>
       {exploring && createPortal(
         <div className="facts-modal" role="dialog" aria-modal="true" aria-label={`${activeFact.title} highlights`} onClick={() => setExploring(false)}>

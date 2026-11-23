@@ -417,3 +417,476 @@
   .movie-unfurl-grid,.movie-unfurl-column,.web3-domino-gallery li,.web3-article-gallery li,.photo-lift-gallery,.photo-lift-card,.field-guide-dialog.is-youtube .game-library,.field-guide-dialog.is-youtube .game-library > :is(.game-library-grid,.game-library-clips) { animation: none; }
   .photo-lift-card { transition: none; }
 }
+
+/* Articles use a cinematic image window and a compact editorial label. */
+.web3-writing { gap: clamp(8px, 1.3svh, 13px); }
+.web3-writing .web3-domino-gallery { height: min(28svh, 215px); }
+.web3-article-heading { padding-top: 9px; }
+.web3-article-gallery { height: min(29svh, 230px); gap: clamp(8px, 1.2vw, 16px); }
+.web3-article-gallery a {
+  grid-template-rows: minmax(0, 1fr) auto;
+  border: 1px solid color-mix(in srgb, var(--guide-accent) 26%, var(--guide-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--guide-surface) 92%, var(--blue));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.web3-article-art { position: relative; background: color-mix(in srgb, var(--guide-surface) 75%, var(--ink)); }
+.web3-article-art img { object-fit: cover; object-position: center top; }
+.web3-article-copy {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 45px;
+  padding: 8px 12px;
+  border-top: 1px solid color-mix(in srgb, var(--guide-accent) 22%, var(--guide-line));
+}
+.web3-article-copy .web3-article-index { color: var(--guide-accent); font: 700 10px/1 var(--sans); letter-spacing: .1em; }
+.web3-article-copy h4 { min-width: 0; margin: 0; overflow: hidden; color: var(--guide-ink); font: 600 clamp(13px, 1.35vw, 17px)/1.14 var(--serif); text-overflow: ellipsis; white-space: nowrap; }
+.web3-article-copy .web3-article-date { display: flex; align-items: center; gap: 8px; color: var(--guide-muted); font: 600 10px/1 var(--sans); white-space: nowrap; }
+.web3-article-copy b { float: none; color: var(--guide-accent); font-size: 16px; }
+.web3-article-gallery a:is(:hover,:focus-visible) { transform: translateY(-5px); box-shadow: 0 18px 34px color-mix(in srgb, var(--ink) 16%, transparent); }
+@media (max-width: 620px) {
+  .web3-writing .web3-domino-gallery { height: min(23svh, 180px); }
+  .web3-article-gallery { height: min(25svh, 185px); gap: 5px; }
+  .web3-article-copy { min-height: 37px; padding: 5px; gap: 4px; }
+  .web3-article-copy h4 { font-size: 10px; }
+  .web3-article-copy .web3-article-date { font-size: 0; gap: 0; }
+  .web3-article-copy b { font-size: 14px; }
+}
+
+/* Beyond the CV: one cool atmospheric stage across the introduction and carousel. */
+#beyond-cv.facts-sheet {
+  --facts-glass: color-mix(in srgb, var(--paper) 78%, transparent);
+  --facts-stroke: color-mix(in srgb, var(--blue) 20%, var(--hairline));
+  background:
+    radial-gradient(ellipse 45% 62% at 72% 39%, color-mix(in srgb, var(--blue) 19%, transparent), transparent 74%),
+    radial-gradient(ellipse 31% 38% at 10% 85%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 78%),
+    linear-gradient(140deg, color-mix(in srgb, var(--paper) 94%, white), color-mix(in srgb, var(--paper) 91%, var(--blue)) 58%, var(--paper));
+}
+#beyond-cv.facts-sheet::before {
+  content: '';
+  position: absolute;
+  width: min(60vw, 850px);
+  aspect-ratio: 1;
+  right: -17%;
+  top: -34%;
+  border: 1px solid color-mix(in srgb, var(--blue) 13%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 72px color-mix(in srgb, var(--blue) 2%, transparent), 0 0 0 145px color-mix(in srgb, var(--blue) 2%, transparent);
+  pointer-events: none;
+}
+#beyond-cv .facts-heading { position: relative; }
+#beyond-cv .facts-carousel { gap: 16px 23px; }
+#beyond-cv .facts-stage {
+  border: 1px solid var(--facts-stroke);
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse 62% 65% at 80% 14%, color-mix(in srgb, var(--blue) 15%, transparent), transparent 78%),
+    linear-gradient(145deg, color-mix(in srgb, var(--paper) 91%, transparent), var(--facts-glass));
+  box-shadow: 0 30px 70px color-mix(in srgb, var(--ink) 11%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 88%, white);
+  backdrop-filter: blur(15px);
+  transition: transform 360ms var(--ease-out), box-shadow 360ms var(--ease-out), border-color 240ms ease;
+}
+#beyond-cv .facts-stage:hover {
+  border-color: color-mix(in srgb, var(--blue) 40%, var(--facts-stroke));
+  box-shadow: 0 36px 76px color-mix(in srgb, var(--ink) 14%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 90%, white);
+}
+#beyond-cv .facts-stage > .facts-stage-top { border-bottom-color: var(--facts-stroke); }
+#beyond-cv .facts-stage > .facts-highlights li {
+  border-color: var(--facts-stroke);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 73%, transparent);
+  backdrop-filter: blur(8px);
+  transition: transform 220ms var(--ease-out), background 220ms ease, border-color 220ms ease;
+}
+#beyond-cv .facts-stage > .facts-highlights li:hover { transform: translateY(-2px); border-color: var(--blue); background: color-mix(in srgb, var(--paper) 85%, var(--blue)); }
+#beyond-cv .facts-stage > .facts-explore { border-top-color: var(--facts-stroke); }
+#beyond-cv .facts-controls > button {
+  border-color: var(--facts-stroke);
+  background: color-mix(in srgb, var(--paper) 79%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 8%, transparent);
+  backdrop-filter: blur(10px);
+}
+#beyond-cv .facts-controls > button:hover:not(:disabled),#beyond-cv .facts-controls > button:focus-visible { box-shadow: 0 12px 24px color-mix(in srgb, var(--blue) 16%, transparent); }
+@media (max-width: 700px) {
+  #beyond-cv.facts-sheet::before { width: 85vw; right: -44%; top: 12%; }
+  #beyond-cv .facts-carousel { gap: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { #beyond-cv .facts-stage,#beyond-cv .facts-stage > .facts-highlights li { transition: none; } }
+
+/* A single reading cabinet, with the supplied article screenshots as complete frames. */
+.web3-writing {
+  padding: clamp(9px, 1.5vw, 18px);
+  border: 1px solid color-mix(in srgb, var(--guide-accent) 24%, var(--guide-line));
+  border-radius: 18px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--guide-surface) 92%, var(--blue)), var(--guide-surface));
+}
+.web3-writing .web3-domino-gallery { grid-template-columns: 1.25fr 1fr 1fr; gap: 10px; height: min(27svh, 205px); }
+.web3-domino-gallery a { border-radius: 12px; box-shadow: 0 10px 22px color-mix(in srgb, var(--ink) 8%, transparent); }
+.web3-domino-caption { border-top-color: color-mix(in srgb, var(--guide-accent) 22%, var(--guide-line)); }
+.web3-article-heading { margin-top: 2px; }
+.web3-article-gallery { grid-template-columns: 1.1fr 1fr 1fr; height: min(30svh, 230px); }
+.web3-article-gallery a {
+  display: block;
+  padding: clamp(5px, .7vw, 9px);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--guide-surface) 88%, var(--ink));
+  box-shadow: 0 12px 27px color-mix(in srgb, var(--ink) 13%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 86%, transparent);
+}
+.web3-article-art { height: 100%; border-radius: 7px; background: color-mix(in srgb, var(--charcoal) 94%, var(--paper)); }
+.web3-article-art img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.web3-article-gallery a:is(:hover,:focus-visible) img { transform: scale(1.025); }
+@media (max-width: 620px) {
+  .web3-writing { padding: 7px; }
+  .web3-writing .web3-domino-gallery { gap: 5px; height: min(23svh, 170px); }
+  .web3-article-gallery { gap: 5px; height: min(22svh, 155px); }
+  .web3-article-gallery a { padding: 3px; }
+}
+
+/* Popup typography is lighter and consistent; outer section type stays unchanged. */
+.facts-modal .facts-modal-card.field-guide-dialog > header h3,
+.facts-modal .facts-modal-card.is-spotify > header h3 {
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: -.045em;
+  line-height: 1.06;
+}
+.facts-modal .facts-modal-card.is-youtube .game-library-meta h4 { font-family: var(--sans); font-weight: 500; letter-spacing: -.025em; }
+.facts-modal .facts-modal-card.is-youtube .game-clip-caption { font-family: var(--sans); font-weight: 500; }
+.facts-modal .facts-modal-card.is-spotify { color: var(--ink); }
+.facts-modal .facts-modal-card.is-spotify > header h3 { color: var(--ink); }
+.facts-modal .facts-modal-card.is-spotify .facts-modal-brand { color: color-mix(in srgb, var(--blue) 58%, var(--ink)); }
+#beyond-cv .facts-stage.has-instagram .facts-cover h3,
+#beyond-cv .facts-stage.has-instagram .facts-cover-kicker { font-family: var(--sans); font-weight: 400; letter-spacing: -.035em; }
+
+/* The cool glass cards take their ink from the active theme, including Music. */
+#beyond-cv .facts-stage .facts-cover-copy h3,
+#beyond-cv .facts-stage > .facts-stage-top,
+#beyond-cv .facts-stage > .facts-highlights li,
+#beyond-cv .facts-stage > .facts-explore { color: var(--ink); }
+#beyond-cv .facts-stage .facts-cover-copy p { color: var(--soft-ink); }
+#beyond-cv .facts-stage .facts-cover-kicker { color: color-mix(in srgb, var(--blue) 65%, var(--ink)); }
+
+#beyond-cv .facts-stage.field-guide-stage {
+  border-color: var(--facts-stroke);
+  background:
+    radial-gradient(ellipse 62% 65% at 80% 14%, color-mix(in srgb, var(--blue) 15%, transparent), transparent 78%),
+    linear-gradient(145deg, color-mix(in srgb, var(--paper) 91%, transparent), var(--facts-glass));
+  box-shadow: 0 30px 70px color-mix(in srgb, var(--ink) 11%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 88%, white);
+}
+#beyond-cv .facts-stage.field-guide-stage.has-youtube {
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 98%, transparent) 0%, color-mix(in srgb, var(--paper) 90%, transparent) 40%, color-mix(in srgb, var(--paper) 42%, transparent) 100%),
+    url('/images/gaming-wallpaper.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+}
+#beyond-cv .facts-stage.has-youtube .field-guide-artwork--youtube { display: none; }
+#beyond-cv .facts-stage.field-guide-stage.has-x {
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 98%, transparent) 0%, color-mix(in srgb, var(--paper) 90%, transparent) 43%, color-mix(in srgb, var(--paper) 39%, transparent) 100%),
+    url('/images/web3-wallpaper.png');
+  background-size: cover, cover;
+  background-position: center, center;
+}
+
+/* The outer card titles share the clean type used in their detail panels. */
+#beyond-cv .field-guide-stage .field-guide-copy h3,
+#beyond-cv .facts-stage .facts-cover-copy h3 {
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: -.045em;
+}
+#beyond-cv .facts-stage.has-spotify .facts-cover-kicker {
+  font-family: 'Kalam', var(--hand);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: -.025em;
+}
+
+/* Five-image accordion: the original cards' detail panels remain intact. */
+#beyond-cv.facts-sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: min(100svh, 820px);
+  padding: clamp(52px, 7svh, 88px) 5% clamp(48px, 7svh, 82px);
+}
+#beyond-cv .facts-note { left: auto; right: 5%; top: clamp(58px, 9svh, 106px); max-width: 290px; text-align: right; }
+#beyond-cv .facts-heading { width: 100%; margin: 0; }
+#beyond-cv .facts-heading h2 { max-width: 580px; }
+#beyond-cv .facts-heading p { max-width: 440px; }
+#beyond-cv .facts-accordion {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  gap: clamp(7px, .85vw, 12px);
+  width: 100%;
+  height: clamp(300px, 43svh, 425px);
+  margin-top: clamp(30px, 5svh, 64px);
+}
+#beyond-cv .facts-accordion-card {
+  position: relative;
+  display: block;
+  flex: .72 1 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--charcoal) 88%, var(--blue));
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  isolation: isolate;
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--ink) 13%, transparent);
+  transition: flex-grow 750ms cubic-bezier(.2, 1, .3, 1), box-shadow 300ms ease;
+}
+#beyond-cv .facts-accordion-card.is-active { flex-grow: 2.7; box-shadow: 0 25px 54px color-mix(in srgb, var(--ink) 22%, transparent); }
+#beyond-cv .facts-accordion-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+#beyond-cv .facts-accordion-image,
+#beyond-cv .facts-accordion-card::after { position: absolute; inset: 0; pointer-events: none; }
+#beyond-cv .facts-accordion-image {
+  z-index: -2;
+  background-image: var(--accordion-image);
+  background-position: center;
+  background-size: cover;
+  filter: grayscale(.25) brightness(.8);
+  transform: scale(1.045);
+  transition: transform 900ms cubic-bezier(.2, 1, .3, 1), filter 750ms cubic-bezier(.2, 1, .3, 1);
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-image { filter: grayscale(0) brightness(.92); transform: scale(1); }
+#beyond-cv .facts-accordion-card::after {
+  content: '';
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(7, 12, 22, .77), rgba(7, 12, 22, .13) 57%, rgba(7, 12, 22, .49));
+}
+#beyond-cv .facts-accordion-card:is(.is-youtube,.is-x)::after { background: linear-gradient(0deg, rgba(9, 18, 34, .77), rgba(9, 18, 34, .2) 60%, rgba(9, 18, 34, .54)); }
+#beyond-cv .facts-accordion-card.is-youtube .facts-accordion-image { background-position: 46% center; }
+#beyond-cv .facts-accordion-card.is-x .facts-accordion-image { background-position: 57% center; }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image { background-position: center 43%; }
+#beyond-cv .facts-accordion-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: clamp(16px, 1.6vw, 25px);
+}
+#beyond-cv .facts-accordion-index { color: rgba(255,255,255,.86); font: 500 11px/1 var(--sans); letter-spacing: .14em; white-space: nowrap; }
+#beyond-cv .facts-accordion-meta { display: flex; align-items: end; justify-content: space-between; gap: 12px; width: 100%; margin-top: auto; }
+#beyond-cv .facts-accordion-title {
+  min-width: 0;
+  color: #fff;
+  font: 400 clamp(22px, 2.5vw, 37px)/1.04 var(--sans);
+  letter-spacing: -.045em;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 350ms ease 130ms, transform 500ms cubic-bezier(.2, 1, .3, 1) 130ms;
+}
+#beyond-cv .facts-accordion-cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 3px;
+  color: #fff;
+  font: 600 11px/1 var(--sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 350ms ease 180ms, transform 500ms cubic-bezier(.2, 1, .3, 1) 180ms;
+}
+#beyond-cv .facts-accordion-cta > span { font-size: 17px; line-height: .6; }
+#beyond-cv .facts-accordion-card.is-active :is(.facts-accordion-title,.facts-accordion-cta) { opacity: 1; transform: translateY(0); }
+#beyond-cv .facts-accordion-vertical {
+  position: absolute;
+  z-index: 2;
+  left: clamp(17px, 1.7vw, 27px);
+  bottom: 20px;
+  color: #fff;
+  font: 600 12px/1 var(--sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  opacity: 1;
+  transition: opacity 250ms ease;
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-vertical { opacity: 0; }
+@media (max-width: 720px) {
+  #beyond-cv.facts-sheet { min-height: 0; padding: 68px 22px 58px; }
+  #beyond-cv .facts-note { top: 19px; right: 22px; font-size: 17px; }
+  #beyond-cv .facts-heading h2 { font-size: clamp(60px, 16vw, 88px); }
+  #beyond-cv .facts-accordion { flex-direction: column; gap: 7px; height: min(66svh, 540px); min-height: 420px; margin-top: 30px; }
+  #beyond-cv .facts-accordion-card { flex-grow: .7; }
+  #beyond-cv .facts-accordion-card.is-active { flex-grow: 3; }
+  #beyond-cv .facts-accordion-content { padding: 13px 16px; }
+  #beyond-cv .facts-accordion-vertical { left: 16px; bottom: 15px; writing-mode: horizontal-tb; transform: none; }
+  #beyond-cv .facts-accordion-title { font-size: clamp(20px, 5.1vw, 29px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #beyond-cv .facts-accordion-card,
+  #beyond-cv .facts-accordion-image,
+  #beyond-cv .facts-accordion-title,
+  #beyond-cv .facts-accordion-cta,
+  #beyond-cv .facts-accordion-vertical { transition-duration: 150ms; transition-delay: 0ms; }
+}
+
+/* Keep the gallery inside a viewport and show full square/portrait artwork. */
+#beyond-cv.facts-sheet { min-height: 0; padding-top: clamp(40px, 5svh, 65px); padding-bottom: clamp(40px, 5svh, 65px); }
+#beyond-cv.facts-sheet { scroll-margin-top: 58px; }
+#beyond-cv .facts-note { top: clamp(47px, 6svh, 75px); }
+#beyond-cv .facts-heading h2 { max-width: none; font-size: clamp(54px, 6vw, 94px); line-height: .9; }
+#beyond-cv .facts-heading .ink-underline { width: min(340px, 32vw); margin-top: 12px; }
+#beyond-cv .facts-heading p { max-width: none; margin-top: 12px; }
+#beyond-cv .facts-accordion { height: clamp(280px, 39svh, 365px); margin-top: clamp(22px, 3.4svh, 40px); }
+#beyond-cv .facts-accordion-select { position: absolute; z-index: 0; inset: 0; width: 100%; border: 0; background: transparent; color: inherit; cursor: pointer; }
+#beyond-cv .facts-accordion-card:focus-within { outline: 3px solid var(--blue); outline-offset: 3px; }
+#beyond-cv .facts-accordion-content { pointer-events: none; }
+#beyond-cv .facts-accordion-cta { position: relative; z-index: 3; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
+#beyond-cv .facts-accordion-cta:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 2px; }
+#beyond-cv .facts-accordion-card.is-x:not(.is-active) .facts-accordion-image { filter: grayscale(.3) brightness(.6); }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image {
+  background-color: #26342e;
+  background-size: auto 93%;
+  background-repeat: no-repeat;
+}
+#beyond-cv .facts-accordion-card.is-instagram .facts-accordion-image {
+  background-color: #303a3b;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+@media (max-width: 720px) {
+  #beyond-cv.facts-sheet { padding: 64px 22px 44px; }
+  #beyond-cv .facts-note { top: 18px; }
+  #beyond-cv .facts-heading h2 { font-size: clamp(49px, 12vw, 78px); }
+  #beyond-cv .facts-heading .ink-underline { width: 56%; }
+  #beyond-cv .facts-accordion { height: min(61svh, 500px); min-height: 395px; margin-top: 24px; }
+}
+
+/* Full artwork remains in view; a second full-bleed layer fills its edges. */
+#beyond-cv .facts-accordion-image {
+  background-image: var(--accordion-image), var(--accordion-image);
+  background-size: contain, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  filter: none;
+  transition: transform 750ms cubic-bezier(.2, 1, .3, 1);
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-image { filter: none; }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image,
+#beyond-cv .facts-accordion-card.is-instagram .facts-accordion-image { background-size: auto 93%, cover; }
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-image { filter: blur(2px); }
+#beyond-cv .facts-accordion-card.is-movies .facts-accordion-image { filter: grayscale(1); }
+#beyond-cv .facts-accordion-card.is-movies.is-active .facts-accordion-image { filter: grayscale(1) blur(2px); }
+#beyond-cv .facts-accordion-card { transition: flex-grow 650ms cubic-bezier(.2, 1, .3, 1); }
+#beyond-cv .facts-accordion-card.is-active { box-shadow: 0 22px 46px color-mix(in srgb, var(--ink) 17%, transparent); }
+#beyond-cv .facts-accordion-details {
+  position: absolute;
+  right: clamp(16px, 1.6vw, 25px);
+  bottom: clamp(68px, 6vw, 82px);
+  left: clamp(16px, 1.6vw, 25px);
+  display: grid;
+  gap: 12px;
+  max-width: 530px;
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 300ms ease, transform 400ms cubic-bezier(.2, 1, .3, 1), visibility 300ms;
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-details { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 130ms; }
+#beyond-cv .facts-accordion-description { max-width: 390px; font: 400 clamp(12px, 1.18vw, 15px)/1.42 var(--sans); text-wrap: pretty; }
+#beyond-cv .facts-accordion-handle { font: 400 clamp(16px, 1.7vw, 21px)/1 'Kalam', var(--hand); letter-spacing: -.03em; }
+#beyond-cv .facts-accordion-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+#beyond-cv .facts-accordion-tags > span { padding: 5px 8px; border: 1px solid rgba(255,255,255,.48); border-radius: 999px; background: rgba(5,11,20,.22); font: 500 10px/1.1 var(--sans); white-space: nowrap; }
+#beyond-cv .facts-accordion-cta { gap: 9px; }
+#beyond-cv .facts-accordion-cta svg { width: 17px; height: 17px; transition: transform 230ms var(--ease-out); }
+#beyond-cv .facts-accordion-cta:hover svg { transform: scale(1.12); }
+#beyond-cv .facts-accordion-image { z-index: 0; transition: transform 750ms cubic-bezier(.2, 1, .3, 1), filter 220ms ease; }
+#beyond-cv .facts-accordion-card::after { z-index: 1; }
+#beyond-cv .facts-accordion-select { z-index: 2; }
+#beyond-cv .facts-accordion-content { z-index: 3; }
+#beyond-cv .facts-accordion-vertical { z-index: 4; }
+#beyond-cv .facts-accordion-card:is(.is-youtube,.is-x,.is-instagram)::after {
+  background: linear-gradient(0deg, rgba(5,10,20,.9), rgba(5,10,20,.5) 53%, rgba(5,10,20,.22));
+}
+#beyond-cv .facts-note { top: clamp(80px, 10svh, 116px); }
+#beyond-cv.facts-sheet { padding-top: clamp(68px, 9svh, 100px); padding-bottom: clamp(68px, 9svh, 100px); }
+:root:not([data-theme='dark']) #beyond-cv.facts-sheet { background: linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--paper) 97%, var(--ink))); }
+:root:not([data-theme='dark']) #beyond-cv.facts-sheet::before { display: none; }
+@media (max-width: 720px) {
+  #beyond-cv.facts-sheet { padding: 68px 22px 56px; }
+  #beyond-cv .facts-note { top: 19px; }
+  #beyond-cv .facts-accordion-details { right: 15px; bottom: 56px; left: 15px; gap: 7px; }
+  #beyond-cv .facts-accordion-description { font-size: 11px; line-height: 1.3; }
+  #beyond-cv .facts-accordion-tags { gap: 4px; }
+  #beyond-cv .facts-accordion-tags > span { padding: 4px 6px; font-size: 9px; }
+}
+
+/* Keep every wallpaper's full composition, with its own softened edge fill. */
+#beyond-cv .facts-accordion-image {
+  overflow: hidden;
+  background-image: none;
+  background-color: color-mix(in srgb, var(--charcoal) 90%, var(--blue));
+  filter: none;
+}
+#beyond-cv .facts-accordion-card.is-active .facts-accordion-image,
+#beyond-cv .facts-accordion-card.is-movies .facts-accordion-image,
+#beyond-cv .facts-accordion-card.is-movies.is-active .facts-accordion-image { filter: none; }
+#beyond-cv .facts-accordion-image::before,
+#beyond-cv .facts-accordion-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--accordion-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+#beyond-cv .facts-accordion-image::before {
+  inset: 0;
+  background-size: cover;
+  filter: saturate(.72) brightness(.68);
+}
+#beyond-cv .facts-accordion-image::after {
+  background-size: contain;
+  mask-image: radial-gradient(ellipse 93% 97% at center, #000 42%, transparent 100%);
+}
+#beyond-cv .facts-accordion-card.is-movies .facts-accordion-image::before,
+#beyond-cv .facts-accordion-card.is-movies .facts-accordion-image::after { filter: grayscale(1); }
+
+/* A wider active panel fits the landscape artwork without a second image seam. */
+#beyond-cv .facts-accordion { max-width: 1240px; }
+#beyond-cv .facts-accordion-card { flex-grow: .55; }
+#beyond-cv .facts-accordion-card.is-active { flex-grow: 5.2; }
+#beyond-cv .facts-accordion-image {
+  background-image: var(--accordion-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+#beyond-cv .facts-accordion-image::before,
+#beyond-cv .facts-accordion-image::after { display: none; }
+#beyond-cv .facts-accordion-card.is-movies .facts-accordion-image,
+#beyond-cv .facts-accordion-card.is-movies.is-active .facts-accordion-image { filter: grayscale(1); }
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image {
+  background-image: linear-gradient(115deg, #182820, #34483a);
+}
+#beyond-cv .facts-accordion-card.is-spotify .facts-accordion-image::after {
+  display: block;
+  left: 40%;
+  background-image: var(--accordion-image);
+  background-size: auto 100%;
+  background-position: right center;
+  mask-image: linear-gradient(90deg, transparent, #000 30%);
+}
+@media (max-width: 720px) {
+  #beyond-cv .facts-accordion-card { flex-grow: .7; }
+  #beyond-cv .facts-accordion-card.is-active { flex-grow: 3; }
+}
