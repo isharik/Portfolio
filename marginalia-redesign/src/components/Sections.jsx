@@ -6,6 +6,7 @@ import { TextRoll } from './ui/TextRoll'
 import VoiceNote from './ui/VoiceNote'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
+import ContributionSkyline from './ui/ContributionSkyline'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
 import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
@@ -541,35 +542,34 @@ export function Projects() {
 }
 
 function ContributionGrid() {
-  const [hovered, setHovered] = useState(null)
-  const months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
-  const activity = (week, day) => {
+  const series = useMemo(() => {
     // Intentional uneven months: the twelve monthly totals add to exactly 626.
     const monthlyTotals = [12, 20, 36, 48, 74, 83, 63, 42, 77, 60, 68, 43]
-    const month = Math.min(11, Math.floor((week * 12) / 52))
-    const startWeek = Math.floor((month * 52) / 12)
-    const weeksInMonth = Math.floor(((month + 1) * 52) / 12) - startWeek
-    const cellsInMonth = weeksInMonth * 7
-    const localCell = (week - startWeek) * 7 + day
-    const total = monthlyTotals[month]
-    const baseLevel = Math.floor(total / cellsInMonth)
-    const remainder = total % cellsInMonth
-    // 17 is coprime to both 28 and 35 cells, giving each month a stable scattered pattern.
-    const scatterRank = (localCell * 17 + 5) % cellsInMonth
-    return baseLevel + (scatterRank < remainder ? 1 : 0)
-  }
-  return <Reveal className="contribution-trace">
-    <div className="contribution-heading"><div><strong>626 contributions <small>in the last year</small></strong></div><a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="Open Sharik's GitHub profile"><GitHubMark className="github-mark" />GitHub activity <span aria-hidden="true">↗</span></a></div>
-    <div className="contribution-calendar" role="grid" aria-label="626 GitHub contributions in the last year">
-      <div className="contribution-days" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-      <div className="contribution-grid-wrap"><div className="contribution-months" aria-hidden="true">{months.map(month => <span key={month}>{month}</span>)}</div><div className="contribution-grid">{Array.from({ length: 52 }, (_, week) => Array.from({ length: 7 }, (_, day) => {
-        const level = activity(week, day)
-        const key = `${week}-${day}`
-        return <button type="button" key={key} className={`contribution-cell level-${level}`} onPointerEnter={() => setHovered({ level, week })} onPointerLeave={() => setHovered(null)} aria-label={`${level ? level : 'No'} contribution${level === 1 ? '' : 's'}`} />
-      }))}</div></div>
-    </div>
-    <div className="contribution-footer"><span>{hovered ? `${hovered.level || 'No'} contribution${hovered?.level === 1 ? '' : 's'}` : 'Hover to inspect'}</span><span><i className="level-1" /><i className="level-2" /><i className="level-3" /><i className="level-4" /></span></div>
-  </Reveal>
+    const densities = [.32, .42, .54, .62, .75, .79, .69, .54, .76, .67, .71, .58]
+    const scatter = (month, cell) => {
+      const value = Math.sin((cell + 1) * 12.9898 + month * 78.233) * 43758.5453
+      return value - Math.floor(value)
+    }
+    const monthPattern = monthlyTotals.map((total, month) => {
+      const weeks = Array.from({ length: 52 }, (_, week) => week).filter(week => Math.floor(week * 12 / 52) === month)
+      const count = weeks.length * 7
+      const active = Array.from({ length: count }, (_, cell) => cell).filter(cell => scatter(month, cell) < densities[month])
+      const base = Math.floor(total / active.length)
+      const extra = total % active.length
+      const values = Array(count).fill(0)
+      active.forEach((cell, rank) => { values[cell] = base + (rank < extra ? 1 : 0) })
+      return { startWeek: weeks[0], values }
+    })
+    const days = Array.from({ length: 52 * 7 }, (_, index) => {
+      const week = Math.floor(index / 7)
+      const day = index % 7
+      const month = Math.min(11, Math.floor((week * 12) / 52))
+      const pattern = monthPattern[month]
+      return pattern.values[(week - pattern.startWeek) * 7 + day]
+    })
+    return [...Array(16).fill(0), ...days]
+  }, [])
+  return <Reveal className="contribution-trace"><ContributionSkyline title="Contributions" data={series} endDate={new Date()} profileUrl={profile.socials.github} volume={0.35} /></Reveal>
 }
 
 function ScrambleProjectLabel({ active, title }) {

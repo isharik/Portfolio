@@ -1,0 +1,77 @@
+.projects-sheet .contribution-trace {
+  width: min(980px, 100%);
+  margin: 54px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.contribution-skyline {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 980px;
+  overflow: hidden;
+  padding: 24px;
+  border-radius: 28px;
+  background: #fff;
+  color: #1d1d1f;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / .05), 0 24px 48px -28px rgb(0 0 0 / .35);
+}
+.contribution-skyline.is-narrow { padding: 16px; }
+.skyline-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.skyline-heading > div:first-child { min-width: 0; }
+.skyline-heading h3 { margin: 0; overflow: hidden; font-size: 22px; font-weight: 600; letter-spacing: -.022em; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.skyline-heading p { margin: 3px 0 0; overflow: hidden; color: #6e6e73; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.skyline-heading p b { color: #1d1d1f; font-weight: 600; font-variant-numeric: tabular-nums; }
+.contribution-skyline.is-narrow .skyline-heading h3 { font-size: 19px; }
+.skyline-switch { position: relative; display: flex; flex: none; padding: 3px; border-radius: 999px; background: #f2f2f4; box-shadow: inset 0 1px 2px rgb(0 0 0 / .06); }
+.skyline-switch button { position: relative; z-index: 0; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 0; border-radius: 999px; background: transparent; color: #6e6e73; font-family: inherit; font-size: 13px; font-weight: 500; line-height: 1.3; cursor: pointer; transition: color 160ms ease; }
+.skyline-switch button[aria-checked='true'], .skyline-switch button:hover { color: #1d1d1f; }
+.skyline-switch button:focus-visible, .skyline-chart:focus-visible, .skyline-bottom button:focus-visible, .skyline-github:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }
+.skyline-switch button > span:first-child { position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / .12), 0 3px 8px -2px rgb(0 0 0 / .12); }
+.skyline-chart { position: relative; height: 140px; margin-top: 16px; border-radius: 18px; outline: none; user-select: none; touch-action: pan-y; }
+.skyline-chart.is-skyline { cursor: grab; }
+.skyline-chart.is-skyline:active { cursor: grabbing; }
+.skyline-chart canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.skyline-tooltip-position { position: absolute; z-index: 10; top: 0; left: 0; pointer-events: none; }
+.skyline-tooltip { padding: 6px 10px; border-radius: 11px; background: rgb(29 29 31 / .9); color: #fff; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .5); backdrop-filter: blur(8px); white-space: nowrap; }
+.skyline-tooltip span { display: block; }
+.skyline-tooltip span:first-child { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.skyline-tooltip span:last-child { color: rgb(255 255 255 / .6); font-size: 11px; }
+.skyline-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-top: 16px; }
+.skyline-bottom > div:first-child { display: flex; flex-wrap: wrap; gap: 8px; }
+.skyline-bottom button { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border: 0; border-radius: 999px; background: #f5f5f7; color: #1d1d1f; font-family: inherit; font-size: 12.5px; font-weight: 500; line-height: 1.3; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.skyline-bottom button:hover { background: #ececef; }
+.skyline-bottom button[aria-pressed='true'] { background: #1d1d1f; color: #fff; }
+.skyline-bottom button > span:first-child { display: grid; flex: none; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #fff; }
+.skyline-bottom button[aria-pressed='true'] > span:first-child { background: rgb(255 255 255 / .15); }
+.skyline-bottom button:nth-child(1) > span:first-child { color: #ff9f0a; }
+.skyline-bottom button:nth-child(2) > span:first-child { color: #ffcc00; }
+.skyline-bottom button:nth-child(3) > span:first-child { color: #30d158; }
+.skyline-bottom button > span:nth-child(2) { color: #6e6e73; }
+.skyline-bottom button[aria-pressed='true'] > span:nth-child(2) { color: rgb(255 255 255 / .7); }
+.skyline-bottom button > span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+.skyline-bottom > div:nth-child(2) { display: inline-flex; align-items: center; gap: 6px; color: #86868b; font-size: 11.5px; }
+.skyline-bottom > div:nth-child(2) span { width: 11px; height: 11px; border-radius: 3px; }
+.skyline-github { margin-left: auto; color: #6e6e73; font-size: 11.5px; text-decoration: none; white-space: nowrap; transition: color 160ms ease; }
+.skyline-github:hover { color: #0071e3; }
+.contribution-skyline .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+:root[data-theme='dark'] .contribution-skyline { background: #1d2128; color: #f4f5f6; box-shadow: 0 0 0 1px rgb(255 255 255 / .09), 0 24px 48px -28px rgb(0 0 0 / .7); }
+:root[data-theme='dark'] .skyline-heading p, :root[data-theme='dark'] .skyline-bottom > div:nth-child(2), :root[data-theme='dark'] .skyline-github { color: #a9b0b8; }
+:root[data-theme='dark'] .skyline-heading p b { color: #f4f5f6; }
+:root[data-theme='dark'] .skyline-switch { background: #30343b; }
+:root[data-theme='dark'] .skyline-switch button { color: #b9c0c8; }
+:root[data-theme='dark'] .skyline-switch button[aria-checked='true'], :root[data-theme='dark'] .skyline-switch button:hover { color: #f4f5f6; }
+:root[data-theme='dark'] .skyline-switch button > span:first-child { background: #454b54; }
+:root[data-theme='dark'] .skyline-bottom button { background: #30343b; color: #f4f5f6; }
+:root[data-theme='dark'] .skyline-bottom button:hover { background: #3b424b; }
+:root[data-theme='dark'] .skyline-bottom button[aria-pressed='true'] { background: #e9edf0; color: #20252b; }
+:root[data-theme='dark'] .skyline-bottom button > span:first-child { background: #454b54; }
+:root[data-theme='dark'] .skyline-bottom button[aria-pressed='true'] > span:first-child { background: #dce1e5; }
+:root[data-theme='dark'] .skyline-bottom button > span:nth-child(2) { color: #b7bec6; }
+:root[data-theme='dark'] .skyline-bottom button[aria-pressed='true'] > span:nth-child(2) { color: #505963; }
+:root[data-theme='dark'] .skyline-github:hover { color: #8bdbaa; }
+@media (max-width: 700px) { .contribution-trace { margin-top: 32px; } }
+@media (max-width: 600px) { .skyline-bottom { justify-content: flex-start; } .skyline-github { margin-left: 0; } }
+@media (max-width: 400px) { .skyline-switch button { padding-inline: 8px; } .skyline-heading p { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { .skyline-switch button, .skyline-bottom button, .skyline-github { transition: none; } }
