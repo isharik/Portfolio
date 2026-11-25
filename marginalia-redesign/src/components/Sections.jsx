@@ -7,6 +7,8 @@ import VoiceNote from './ui/VoiceNote'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
 import ContributionSkyline from './ui/ContributionSkyline'
+import KineticGridBackground from './ui/KineticGridBackground'
+import FloatingPathsBackground from './ui/FloatingPathsBackground'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
 import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
@@ -247,6 +249,7 @@ export function Education() {
   return (
     <>
       <section id="education" data-label="Education" className="sheet education-signal">
+        <FloatingPathsBackground />
         <header className="education-signal-heading">
           <h2>Education</h2>
           <Scribble>2019 → still learning</Scribble>
@@ -470,6 +473,7 @@ export function Experience() {
 }
 
 export function Skills() {
+  const skillsRef = useRef(null)
   const [activeSkill, setActiveSkill] = useState(0)
   const [activeCapability, setActiveCapability] = useState('')
   const supportSkills = [
@@ -481,7 +485,8 @@ export function Skills() {
     'Structured Feedback', 'Annotation & Labeling', 'JavaScript', 'React & Next.js',
   ]
   return (
-    <section id="skills" data-label="Skills" className="sheet paper-sheet skills-sheet">
+    <section id="skills" data-label="Skills" className="sheet paper-sheet skills-sheet" ref={skillsRef}>
+      <KineticGridBackground hostRef={skillsRef} />
       <Reveal className="skills-top">
         <div><h2>Skills</h2><div className="ink-underline short" /></div>
         <Scribble>tools change — judgment compounds</Scribble>

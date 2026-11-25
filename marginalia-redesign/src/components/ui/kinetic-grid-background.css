@@ -1,0 +1,57 @@
+#skills.skills-sheet {
+  isolation: isolate;
+  background-color: var(--paper);
+  background-image: radial-gradient(circle at 75% 32%, color-mix(in srgb, var(--blue) 5%, transparent), transparent 52%);
+  --skills-grid-line: rgba(34,34,36,.13);
+  --skills-grid-node: rgba(34,34,36,.20);
+  --skills-grid-active: rgba(112,124,255,ALPHA);
+  --skills-grid-dot: rgba(34,34,36,.045);
+  --skills-grid-ripple: rgba(112,124,255,ALPHA);
+}
+
+:root[data-theme='dark'] #skills.skills-sheet {
+  background-color: #161618;
+  background-image: none;
+  --skills-grid-line: rgba(255,255,255,.13);
+  --skills-grid-node: rgba(255,255,255,.20);
+  --skills-grid-active: rgba(141,149,255,ALPHA);
+  --skills-grid-dot: rgba(255,255,255,.05);
+  --skills-grid-ripple: rgba(141,149,255,ALPHA);
+}
+
+#skills.skills-sheet > :not(.skills-kinetic-grid) {
+  position: relative;
+  z-index: 1;
+}
+
+.skills-kinetic-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#skills .skill-column {
+  min-width: 0;
+  padding: 16px 18px 18px;
+  border: 1px solid color-mix(in srgb, var(--ink) 11%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+#skills .skill-column > button,
+#skills .skills-copy {
+  color: var(--ink);
+}
+
+#skills .skill-column > button span {
+  color: var(--blue);
+}
+
+#skills .skill-column > button:is(:hover, :focus-visible, .is-highlighted) {
+  color: var(--ink);
+}
