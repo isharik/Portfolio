@@ -12,6 +12,7 @@ import gameShelf from '../gameShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
 import './gaming-shelf.css'
 import './field-guide.css'
+import './education-signal.css'
 
 const gameShelfOrder = [
   'Valorant', 'Far Cry 3', 'Ghost of Tsushima', 'Watch Dogs 2', 'Outer Wilds', 'Counter-Strike 2',
@@ -199,8 +200,8 @@ function QRPattern() {
   useEffect(() => {
     if (!canvasRef.current) return
     QRCode.toCanvas(canvasRef.current, 'https://portfolio-isharik.vercel.app/resume.pdf', {
-      width: 134,
-      margin: 1,
+      width: 300,
+      margin: 0,
       color: { dark: '#171719', light: '#ffffff' },
       errorCorrectionLevel: 'H',
     })
@@ -228,63 +229,49 @@ export function Education() {
 
   return (
     <>
-      <section id="education" data-label="Education" className="sheet education-atlas">
-        <div className="education-atlas-grid" aria-hidden="true" />
-        <header className="education-atlas-heading">
-          <span className="education-atlas-kicker">Learning archive · 2019 — now</span>
+      <section id="education" data-label="Education" className="sheet education-signal">
+        <header className="education-signal-heading">
           <h2>Education</h2>
-          <Scribble className="education-heading-note">learning archive<br />2019 — now ↘</Scribble>
+          <Scribble>2019 → still learning</Scribble>
         </header>
-
-        <div className="education-atlas-stage" role="group" aria-label="Interactive education credentials">
-          {credentials.map((credential, index) => {
-            const image = index === 3 ? '/logos/pharos-mark.png' : credential.logo
-            return (
-              <button
-                className={`education-atlas-card atlas-card-${index} ${activeCredential === index ? 'is-selected' : ''}`}
-                key={credential.title}
-                type="button"
-                aria-pressed={activeCredential === index}
-                onClick={() => setActiveCredential(index)}
-              >
-                <span className="education-atlas-card-index">0{index + 1}</span>
-                <span className="education-atlas-card-art">
-                    {image ? <img src={image} alt="" /> : <span className="education-rail-aws">aws</span>}
-                </span>
-                <span className="education-atlas-card-copy">
-                  <small>{index === 0 ? 'degree / foundation' : 'credential / practice'}</small>
-                  <strong>{credential.title}</strong>
-                  <span className="education-atlas-card-meta">
-                    <em>{credential.org}</em>
-                    <b>{credential.period}</b>
-                  </span>
-                </span>
-                <span className="education-atlas-open">open ↗</span>
-                <span className="education-atlas-card-mark" aria-hidden="true">✦</span>
-              </button>
-            )
-          })}
-
-          <aside className="education-atlas-cv" aria-label="Download curriculum vitae">
-            <span className="education-atlas-cv-pin" aria-hidden="true" />
+        <div className="education-signal-stage" role="group" aria-label="Education and credentials">
+          <button className="education-signal-degree" type="button" onClick={() => setActiveCredential(0)}>
+            <span className="education-signal-number" aria-hidden="true">01</span>
+            <span className="education-signal-degree-content">
+              <span className="education-signal-degree-logo"><img src="/logos/miet-autonomous.jpg" alt="MIET Autonomous" /></span>
+              <strong>{credentials[0].title}</strong>
+              <span className="education-signal-degree-meta"><span>{credentials[0].org} / {credentials[0].period}</span><span>Explore the degree ↗</span></span>
+            </span>
+          </button>
+          <div className="education-signal-directory">
+            {credentials.slice(1).map((credential, offset) => <button className="education-signal-entry" type="button" key={credential.title} onClick={() => setActiveCredential(offset + 1)}>
+              <span className="education-signal-entry-index">0{offset + 2}</span>
+              <span className={`education-signal-entry-logo education-signal-logo-${offset + 1}`}><img src={offset === 2 ? '/logos/pharos-mark.png' : credential.logo} alt="" /></span>
+              <span className="education-signal-entry-copy"><strong>{credential.title}</strong><small>{credential.org} · {credential.period}</small></span>
+              <span className="education-signal-entry-arrow" aria-hidden="true">↗</span>
+            </button>)}
+          </div>
+          <aside className="education-signal-cv" aria-label="Download curriculum vitae">
+            <span>Curriculum Vitae</span>
             <QRPattern />
-            <span><Scribble>curriculum<br />vitae ↗</Scribble><small>the complete record</small></span>
+            <Scribble>scan the full record ↗</Scribble>
           </aside>
-          <span className="education-atlas-note note-one" aria-hidden="true">skills grow<br />through practice</span>
-          <span className="education-atlas-note note-two" aria-hidden="true">built for<br />people ↗</span>
         </div>
       </section>
       {active && createPortal(
         <div className="education-detail-modal" role="presentation" onPointerDown={event => {
           if (event.target === event.currentTarget) setActiveCredential(null)
         }}>
-          <article key={activeCredential} className="education-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
+          <article key={activeCredential} className={`education-detail-sheet${activeCredential > 0 ? ' has-certificate' : ''}${activeCredential === 3 ? ' has-pharos-profile' : ''}`} role="dialog" aria-modal="true" aria-labelledby="education-credential-title" aria-live="polite">
             <header className="education-detail-header education-detail-item"><span>Credential record</span><div><b>0{activeCredential + 1}</b><span>/ 0{credentials.length}</span></div><button type="button" className="education-detail-close" onClick={() => setActiveCredential(null)} aria-label="Close credential details">Close <i aria-hidden="true">×</i></button></header>
             <div className="education-detail-title-row education-detail-item">
               <div className="education-detail-mark">{activeImage ? <img src={activeImage} alt="" /> : <span className="education-detail-aws">aws</span>}</div>
               <div><span>{activeCredential === 0 ? 'Degree / foundation' : 'Credential / practice'}</span><h3 id="education-credential-title">{active.title}</h3></div>
             </div>
             <div className="education-detail-meta education-detail-item"><div><span>Organisation</span><strong>{active.org}</strong></div><div><span>Timeframe</span><strong>{active.period}</strong></div></div>
+            {activeCredential === 1 && <figure className="education-detail-certificate education-detail-item"><img src="/images/micro1-certificate.jpg" alt="Micro1 System Administrator certificate issued to Sharik Hussain on 1 October 2025" /><figcaption>Micro1 · System Administrator · issued 1 October 2025</figcaption></figure>}
+            {activeCredential === 2 && <figure className="education-detail-certificate education-detail-item"><img src="/images/aws-academy-credential.png" alt="AWS Academy Cloud Foundations certificate issued to Sharik Hussain on 21 November 2022" /><figcaption>AWS Academy Cloud Foundations · issued 21 November 2022</figcaption></figure>}
+            {activeCredential === 3 && <figure className="education-detail-certificate education-detail-pharos education-detail-item"><img src="/images/pharos-storyteller-profile.png" alt="Illustrated Echo profile with a green active indicator on a deep blue network background" /><figcaption><span>Pharos profile</span><strong>Echo</strong><small>@echoplex99 · StoryTeller</small><em>Building Stuff · PROS</em><p>Hustlin Here to claim what's Mine</p><div className="education-detail-pharos-roles"><b>Elder Storyteller</b><b>Rising Storyteller</b><b>Observer</b></div></figcaption></figure>}
             <div className="education-detail-focus education-detail-item"><span>What this adds</span><strong>{active.note}</strong><p>{credentialStories[activeCredential]}</p></div>
             <footer className="education-detail-footer education-detail-item"><div className="education-detail-nav"><button type="button" disabled={activeCredential === 0} onClick={() => setActiveCredential(index => index - 1)} aria-label="Previous credential">←</button><span>Browse record</span><button type="button" disabled={activeCredential === credentials.length - 1} onClick={() => setActiveCredential(index => index + 1)} aria-label="Next credential">→</button></div>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}</footer>
           </article>
