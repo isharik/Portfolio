@@ -47,25 +47,6 @@ export default function App() {
     }
   }, [ready])
 
-  useEffect(() => {
-    if (!ready) return
-    const click = new Audio('/sounds/click.wav')
-    const navigation = new Audio('/sounds/navigation.wav')
-    click.preload = 'auto'
-    navigation.preload = 'auto'
-    const play = event => {
-      const target = event.target.closest('button,a,[role="button"]')
-      if (!target) return
-      if (target.closest('.lamp-toggle')) return
-      const source = target.closest('.folio-index') || target.matches('a') ? navigation : click
-      const sound = source.cloneNode()
-      sound.volume = .11
-      sound.play().catch(() => {})
-    }
-    document.addEventListener('pointerdown', play, true)
-    return () => document.removeEventListener('pointerdown', play, true)
-  }, [ready])
-
   if (!ready) return <Preloader onComplete={finishLoading} />
 
   return (

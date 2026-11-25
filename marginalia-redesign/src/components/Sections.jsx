@@ -12,6 +12,7 @@ import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
 import gameShelf from '../gameShelf.json'
 import { credentials, experiences, profile, projects, skillGroups } from '../data'
+import { playUiSound } from '../utils/uiSound'
 import './gaming-shelf.css'
 import './field-guide.css'
 import './education-signal.css'
@@ -251,7 +252,7 @@ export function Education() {
           <Scribble>2019 → still learning</Scribble>
         </header>
         <div className="education-signal-stage" role="group" aria-label="Education and credentials">
-          <button className="education-signal-degree" type="button" onClick={() => setActiveCredential(0)}>
+          <button className="education-signal-degree" type="button" onClick={() => { playUiSound('press'); setActiveCredential(0) }}>
             <span className="education-signal-number" aria-hidden="true">01</span>
             <span className="education-signal-degree-content">
               <span className="education-signal-degree-logo"><img src="/logos/miet-autonomous.jpg" alt="MIET Autonomous" /></span>
@@ -260,7 +261,7 @@ export function Education() {
             </span>
           </button>
           <div className="education-signal-directory">
-            {credentials.slice(1).map((credential, offset) => <button className="education-signal-entry" type="button" key={credential.title} onClick={() => setActiveCredential(offset + 1)}>
+            {credentials.slice(1).map((credential, offset) => <button className="education-signal-entry" type="button" key={credential.title} onClick={() => { playUiSound('press'); setActiveCredential(offset + 1) }}>
               <span className="education-signal-entry-index">0{offset + 2}</span>
               <span className={`education-signal-entry-logo education-signal-logo-${offset + 1}`}><img src={offset === 2 ? '/logos/pharos-mark.png' : credential.logo} alt="" /></span>
               <span className="education-signal-entry-copy"><strong>{credential.title}</strong><small>{credential.org} · {credential.period}</small></span>
@@ -289,7 +290,7 @@ export function Education() {
             {activeCredential === 2 && <figure className="education-detail-certificate education-detail-item"><img src="/images/aws-academy-credential.png" loading="eager" decoding="sync" alt="AWS Academy Cloud Foundations certificate issued to Sharik Hussain on 21 November 2022" /><figcaption>AWS Academy Cloud Foundations · issued 21 November 2022</figcaption></figure>}
             {activeCredential === 3 && <figure className="education-detail-certificate education-detail-pharos education-detail-item"><img src="/images/pharos-storyteller-profile.png" alt="Illustrated Echo profile with a green active indicator on a deep blue network background" /><figcaption><span>Pharos profile</span><strong>Echo</strong><small>@echoplex99 · StoryTeller</small><em>Building Stuff · PROS</em><p>Hustlin Here to claim what's Mine</p><div className="education-detail-pharos-roles"><b>Elder Storyteller</b><b>Rising Storyteller</b><b>Observer</b></div></figcaption></figure>}
             <div className="education-detail-focus education-detail-item"><span>What this adds</span><strong>{active.note}</strong><p>{credentialStories[activeCredential]}</p></div>
-            <footer className="education-detail-footer education-detail-item"><div className="education-detail-nav"><button type="button" disabled={activeCredential === 0} onClick={() => setActiveCredential(index => index - 1)} aria-label="Previous credential">←</button><span>Browse record</span><button type="button" disabled={activeCredential === credentials.length - 1} onClick={() => setActiveCredential(index => index + 1)} aria-label="Next credential">→</button></div>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}</footer>
+            <footer className="education-detail-footer education-detail-item"><div className="education-detail-nav"><button type="button" disabled={activeCredential === 0} onClick={() => { playUiSound('press'); setActiveCredential(index => index - 1) }} aria-label="Previous credential">←</button><span>Browse record</span><button type="button" disabled={activeCredential === credentials.length - 1} onClick={() => { playUiSound('press'); setActiveCredential(index => index + 1) }} aria-label="Next credential">→</button></div>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}</footer>
           </article>
         </div>, document.body)}
     </>
@@ -1223,8 +1224,8 @@ function PortfolioFooter({ theme, onEmail }) {
       timeZone={null}
       contactActions={
         <>
-          <button type="button" className="tpf-contact-primary" aria-haspopup="dialog" onClick={onEmail}>Email me here</button>
-          <a href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer">Schedule a call <span aria-hidden="true">↗</span></a>
+          <button type="button" className="tpf-contact-primary" aria-haspopup="dialog" onClick={() => { playUiSound('press'); onEmail() }}>Email me here</button>
+          <a href="https://calendly.com/sharikhussain99/30min" target="_blank" rel="noreferrer" onClick={() => playUiSound('press')}>Schedule a call <span aria-hidden="true">↗</span></a>
         </>
       }
       socials={[

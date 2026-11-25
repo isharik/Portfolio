@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { playUiSound } from '../utils/uiSound'
 
 const sections = [
   ['home', 'Cover', 'home'], ['about', 'Hello', 'user'], ['education', 'Education', 'education'], ['experience', 'Experience', 'briefcase'],
@@ -25,7 +26,6 @@ export function SiteChrome({ theme, onTheme }) {
   const [open, setOpen] = useState(true)
   const [isScrolledAway, setIsScrolledAway] = useState(false)
   const [isPeekOpen, setIsPeekOpen] = useState(false)
-  const lampSoundRef = useRef(null)
   const lampStartY = useRef(null)
   const lampWasPulled = useRef(false)
   const sectionScroll = useRef(0)
@@ -37,18 +37,11 @@ export function SiteChrome({ theme, onTheme }) {
 
   const followSectionLink = (event, label) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    playUiSound('navigation')
     setActive(label)
     setIsScrolledAway(false)
     setIsPeekOpen(false)
     keepIndexOpenWhileScrolling()
-  }
-
-  const playLampSound = () => {
-    const sound = lampSoundRef.current
-    if (!sound) return
-    sound.volume = .16
-    sound.currentTime = 0
-    sound.play().catch(() => {})
   }
 
   const handleLampPointerDown = event => {
@@ -61,7 +54,7 @@ export function SiteChrome({ theme, onTheme }) {
     lampStartY.current = null
     if (startY !== null && event.clientY - startY > 12) {
       lampWasPulled.current = true
-      playLampSound()
+      playUiSound('toggle')
       onTheme()
     }
   }
@@ -121,18 +114,17 @@ export function SiteChrome({ theme, onTheme }) {
         className={`cv-peek ${isScrolledAway ? 'is-visible' : ''} ${isPeekOpen ? 'is-awake' : ''}`}
         onPointerEnter={() => setIsPeekOpen(true)}
         onFocus={() => setIsPeekOpen(true)}
-        onClick={() => { setIsPeekOpen(true); setOpen(true) }}
+        onClick={() => { playUiSound('navigation'); setIsPeekOpen(true); setOpen(true) }}
         aria-label="Reveal portfolio navigation"
       >
         <span aria-hidden="true">SH</span><b>Sharik Hussain</b>
       </button>
       <header className={`folio-header ${isDormant ? 'is-dormant' : ''} ${isPeekOpen ? 'is-peek-open' : ''}`} onPointerLeave={() => { if (isScrolledAway) setIsPeekOpen(false) }}>
-        <a className="header-year" href="#home">2026</a>
-        <button className="index-button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
+        <a className="header-year" href="#home" onClick={() => playUiSound('navigation')}>2026</a>
+        <button className="index-button" onClick={() => { playUiSound('press'); setOpen(value => !value) }} aria-expanded={open}>
           Curriculum Vitae <span>{open ? '−' : '+'}</span>
         </button>
-        <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
-        <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
+        <a className="header-person" href="#about" onClick={() => playUiSound('navigation')}><i />Sharik Hussain <em>{active}</em></a>
       </header>
       <nav className={`folio-index ${open && !isDormant ? 'is-open' : ''}`} inert={!open || isDormant} aria-label="Portfolio index">
         {sections.map(([id, label, icon]) => (
@@ -147,7 +139,7 @@ export function SiteChrome({ theme, onTheme }) {
           lampWasPulled.current = false
           return
         }
-        playLampSound()
+        playUiSound('toggle')
         onTheme()
       }} aria-label={`Pull down or click to switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>
         <span className="lamp-cap" /><span className="lamp-bulb" /><span className="lamp-chain" /><span className="lamp-pull" />

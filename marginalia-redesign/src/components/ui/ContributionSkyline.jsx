@@ -1,6 +1,7 @@
 "use client";
 import { AnimatePresence, animate, motion, useInView, useMotionValue, useReducedMotion, } from "motion/react";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
+import { playUiSound } from "../../utils/uiSound";
 import "./contribution-skyline.css";
 const ENGINE_KEY = "__uiSoundEngine";
 const engine = () => globalThis[ENGINE_KEY] ??
@@ -363,6 +364,8 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
         cameraAnimation.current?.stop();
         heightAnimation.current?.stop();
         yawAnimation.current?.stop();
+        if (sound)
+            playUiSound(to ? "skylineUp" : "skylineDown", volume);
         if (reduce) {
             P.set(to ? 1 : 0);
             heightPhase.set(to ? 1 : 0);
@@ -379,10 +382,6 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
         });
         if (!to)
             yawAnimation.current = animate(yaw, 0, { duration: 0.9, ease: [0.5, 0, 0.3, 1] });
-        if (to)
-            sfx.note(294, { dur: 0.2, gain: 0.035, glide: 392, bell: 0 });
-        else
-            sfx.note(392, { dur: 0.2, gain: 0.035, glide: 294, bell: 0 });
     };
     // ------------------------------------------------------------ drawing
     const geom = useRef({
