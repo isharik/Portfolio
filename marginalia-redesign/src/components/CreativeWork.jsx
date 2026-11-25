@@ -18,6 +18,54 @@ const editingTools = [
   { name: 'HyperFrames', icon: 'hyperframes.svg' },
 ]
 
+function CreativeClip({ clip, index, onSelect }) {
+  const video = useRef(null)
+  const hovered = useRef(false)
+  const [previewing, setPreviewing] = useState(false)
+
+  const stopPreview = () => {
+    hovered.current = false
+    const player = video.current
+    if (!player) return
+    player.pause()
+    player.currentTime = 0
+    setPreviewing(false)
+  }
+
+  const startPreview = event => {
+    if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    hovered.current = true
+    const player = video.current
+    if (!player) return
+    player.currentTime = 0
+    player.play().catch(() => setPreviewing(false))
+  }
+
+  return (
+    <li>
+      <button type="button" className={`creative-cut ${previewing ? 'is-previewing' : ''}`}
+        aria-haspopup="dialog" onPointerEnter={startPreview} onPointerLeave={stopPreview}
+        onClick={() => { stopPreview(); onSelect(clip) }}>
+        <span className="creative-preview">
+          <img src={`/videos/${clip.file}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
+          <video ref={video} src={`/videos/${clip.file}.mp4`} muted playsInline loop preload="metadata"
+            poster={`/videos/${clip.file}.jpg`} aria-hidden="true" tabIndex={-1}
+            onPlaying={event => { if (hovered.current) setPreviewing(true); else event.currentTarget.pause() }}
+            onPause={() => setPreviewing(false)}
+            onTimeUpdate={event => { if (event.currentTarget.currentTime >= 8) event.currentTarget.currentTime = 0 }} />
+          <span className="creative-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M8 4.5v15L20 12z" /></svg></span>
+          <span className="creative-preview-label" aria-hidden="true">Preview playing</span>
+          <span className="creative-duration">{clip.duration}</span>
+        </span>
+        <span className="creative-caption">
+          <span className="creative-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <span className="creative-title">{clip.title}</span>
+        </span>
+      </button>
+    </li>
+  )
+}
+
 export default function CreativeWork() {
   const dialog = useRef(null)
   const [selected, setSelected] = useState(null)
@@ -33,21 +81,7 @@ export default function CreativeWork() {
         <p className="scribble">Video editing, motion design, and visual storytelling.</p>
       </header>
       <ol className="creative-grid" aria-label="Selected video work">
-        {clips.map((clip, index) => (
-          <li key={clip.file}>
-            <button type="button" className="creative-cut" aria-haspopup="dialog" onClick={() => setSelected(clip)}>
-              <span className="creative-preview">
-                <img src={`/videos/${clip.file}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
-                <span className="creative-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M8 4.5v15L20 12z" /></svg></span>
-                <span className="creative-duration">{clip.duration}</span>
-              </span>
-              <span className="creative-caption">
-                <span className="creative-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                <span className="creative-title">{clip.title}</span>
-              </span>
-            </button>
-          </li>
-        ))}
+        {clips.map((clip, index) => <CreativeClip key={clip.file} clip={clip} index={index} onSelect={setSelected} />)}
       </ol>
       <div className="creative-footer">
         <ul className="creative-tools" aria-label="Editing and creative tools">

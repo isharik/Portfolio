@@ -66,7 +66,7 @@ button { color: inherit; font: inherit; }
 .charcoal-sheet { color: var(--chalk); background-color: var(--charcoal); background-image: radial-gradient(rgba(255,255,255,.055) .65px, transparent .65px); background-size: 4px 4px; }
 .sheet + .sheet { border-top: 1px solid var(--hairline); }
 
-.folio-header { position: fixed; z-index: 100; inset: 0 0 auto; height: 54px; padding: 0 72px 0 34px; display: grid; grid-template-columns: auto auto 142px 1fr auto; gap: 18px; align-items: center; border-bottom: 1px solid var(--hairline); color: var(--ink); background: color-mix(in srgb, var(--paper) 94%, transparent); box-shadow: 0 1px 0 color-mix(in srgb,var(--ink) 4%,transparent); backdrop-filter: blur(15px); }
+.folio-header { position: fixed; z-index: 100; inset: 0 0 auto; height: 54px; padding: 0 72px 0 34px; display: grid; grid-template-columns: auto auto 1fr; gap: 18px; align-items: center; border-bottom: 1px solid var(--hairline); color: var(--ink); background: color-mix(in srgb, var(--paper) 94%, transparent); box-shadow: 0 1px 0 color-mix(in srgb,var(--ink) 4%,transparent); backdrop-filter: blur(15px); }
 .folio-header { will-change: transform,opacity; }
 .folio-header { transform-origin: 7% 0; transition: opacity .24s ease,transform .38s cubic-bezier(.2,.84,.2,1),filter .24s ease; }
 .folio-header.is-dormant { opacity: 0; pointer-events: none; filter: blur(4px); transform: perspective(900px) translateY(-26px) rotateX(7deg) scale(.985); }
@@ -2848,6 +2848,71 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
   .voice-note-dialog[open],.voice-note-art { animation:none; }
 }
 @media (max-width:760px) { .voice-popover { top:62px; left:16px; width:min(390px,calc(100vw - 32px)); grid-template-columns:64px minmax(0,1fr) 38px 24px; gap:10px; }.voice-art-stage { width:62px; height:62px; }.voice-art-stage .voice-vinyl { width:52px; height:52px; }.voice-popover-copy strong { font-size:18px; } }
+
+/* Hello section listening invitation. The player dialog remains the same. */
+.about-voice-row {
+  display: grid;
+  gap: 10px;
+  width: min(340px, 100%);
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+}
+.about-voice-row > span {
+  color: var(--soft-ink);
+  font: 500 12px/1.4 var(--sans);
+}
+.about-voice-row .header-voice-wrap {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  isolation: auto;
+}
+.about-voice-row .header-voice-wrap::before { display: none; }
+.about-voice-row .header-voice {
+  width: 100%;
+  height: 58px;
+  padding: 0 17px;
+  grid-template-columns: 26px 1fr 24px;
+  gap: 11px;
+  border-radius: 14px;
+  border-color: var(--hairline);
+  background: color-mix(in srgb, var(--paper-2) 76%, var(--paper));
+  color: var(--ink);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ink) 7%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 80%, white);
+  font: 600 12px/1 var(--sans);
+  letter-spacing: .035em;
+  text-transform: none;
+  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+}
+.about-voice-row .header-voice i {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  font-size: 9px;
+  font-style: normal;
+}
+.about-voice-row .header-voice b { display: flex; justify-content: center; }
+.about-voice-row .header-voice:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--blue) 55%, var(--hairline));
+  background: color-mix(in srgb, var(--blue) 8%, var(--paper));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.about-voice-row .header-voice:active { transform: translateY(0) scale(.985); }
+@media (max-width:760px) {
+  .about-voice-row { margin-top: 24px; }
+  .about-voice-row .header-voice { grid-template-columns: 26px 1fr 24px; }
+  .about-voice-row .header-voice > b { display: flex; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .about-voice-row .header-voice { transition: none; }
+  .about-voice-row .header-voice:hover,.about-voice-row .header-voice:active { transform: none; }
+}
 @media (prefers-reduced-motion:reduce) { :root[data-theme='dark'] .folio-footer { animation:none; } }
 
 /* Footer copy has its own explicit contrast layer over the sky in dark mode. */

@@ -41,7 +41,7 @@ export default function VoiceNote() {
         setError('')
         play()
       }}>
-        <i aria-hidden="true">▶</i><span>voice note</span><b aria-hidden="true"><u /><u /><u /><u /></b>
+        <i aria-hidden="true">▶</i><span>Play voice note</span><b aria-hidden="true"><u /><u /><u /><u /></b>
       </button>
       <dialog ref={dialog} className="voice-note-dialog" aria-labelledby="voice-note-title" onClick={event => {
         if (event.target === event.currentTarget) dialog.current.close()

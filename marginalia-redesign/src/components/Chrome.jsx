@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import VoiceNote from './ui/VoiceNote'
 
 const sections = [
   ['home', 'Cover', 'home'], ['about', 'Hello', 'user'], ['education', 'Education', 'education'], ['experience', 'Experience', 'briefcase'],
@@ -132,7 +131,6 @@ export function SiteChrome({ theme, onTheme }) {
         <button className="index-button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
           Curriculum Vitae <span>{open ? '−' : '+'}</span>
         </button>
-        <VoiceNote />
         <a className="header-person" href="#about"><i />Sharik Hussain <em>{active}</em></a>
         <audio ref={lampSoundRef} src="/sounds/theme-toggle.wav" preload="auto" />
       </header>

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import QRCode from 'qrcode'
 import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
+import VoiceNote from './ui/VoiceNote'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
@@ -190,6 +191,10 @@ export function About() {
         <p>{profile.summary}</p>
         <p>{profile.intro}</p>
         <Scribble className="circle-note">human judgment matters</Scribble>
+        <div className="about-voice-row">
+          <span>A short introduction, in my own voice</span>
+          <VoiceNote />
+        </div>
       </Reveal>
     </section>
   )
