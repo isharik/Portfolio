@@ -8,7 +8,6 @@ import PushpinTearFooter from './ui/pushpin-tear-footer'
 import ProjectDetail from './ui/ProjectDetail'
 import ContributionSkyline from './ui/ContributionSkyline'
 import KineticGridBackground from './ui/KineticGridBackground'
-import AnimatedEducationBackground from './ui/AnimatedEducationBackground'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
 import musicRotation from '../musicRotation.json'
 import screenShelf from '../screenShelf.json'
@@ -248,8 +247,7 @@ export function Education() {
 
   return (
     <>
-      <section id="education" data-label="Education" className="sheet education-signal">
-        <AnimatedEducationBackground />
+      <section id="education" data-label="Education" className="sheet paper-sheet education-signal">
         <header className="education-signal-heading">
           <h2>Education</h2>
           <Scribble>2019 → still learning</Scribble>

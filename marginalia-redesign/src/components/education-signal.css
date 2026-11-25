@@ -1,4 +1,4 @@
-.education-signal{display:flex;flex-direction:column;justify-content:center;min-height:100svh;padding:clamp(72px,9vh,108px) 5vw clamp(56px,8vh,88px);background:var(--paper)}
+.education-signal{display:flex;flex-direction:column;justify-content:center;min-height:100svh;padding:clamp(72px,9vh,108px) 5vw clamp(56px,8vh,88px)}
 .education-signal-heading{display:flex;align-items:flex-end;gap:clamp(20px,3vw,48px);margin:0 0 clamp(30px,5vh,52px)}
 .education-signal-heading h2{position:relative;margin:0;color:var(--ink);font:clamp(68px,7.6vw,110px)/.86 var(--serif);letter-spacing:-.075em}
 .education-signal-heading h2::after{content:'';position:absolute;left:0;bottom:-15px;width:94px;border-bottom:2px solid var(--ink)}
@@ -98,7 +98,6 @@
 .education-detail-pharos-roles b{transition:background-color 180ms ease,border-color 180ms ease,transform 180ms ease}
 .education-detail-pharos-roles b:hover{background:#5270cd66;border-color:#adbdff;transform:translateY(-2px)}
 @keyframes pharos-profile-reveal{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
-:root[data-theme='dark'] .education-signal{background:#090a0c}
 :root[data-theme='dark'] .education-signal-stage{background:#15171a;box-shadow:0 18px 50px #0008}
 :root[data-theme='dark'] .education-signal-degree{background:#1c1e22}
 :root[data-theme='dark'] .education-signal-directory,
