@@ -2849,19 +2849,25 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
 }
 @media (max-width:760px) { .voice-popover { top:62px; left:16px; width:min(390px,calc(100vw - 32px)); grid-template-columns:64px minmax(0,1fr) 38px 24px; gap:10px; }.voice-art-stage { width:62px; height:62px; }.voice-art-stage .voice-vinyl { width:52px; height:52px; }.voice-popover-copy strong { font-size:18px; } }
 
-/* Hello section listening invitation. The player dialog remains the same. */
-.about-portrait-column { min-width: 0; }
+/* The voice note sits with the Hello heading, as a small listening tab. */
+.about-copy-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  margin-bottom: 18px;
+}
+.about-copy-head h2 { margin: 0; }
 .about-voice-row {
   display: grid;
-  gap: 10px;
-  width: min(330px, 100%);
-  margin: 34px auto 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--hairline);
+  gap: 7px;
+  width: min(178px, 100%);
+  margin: 0;
 }
 .about-voice-row > span {
   color: var(--soft-ink);
-  font: 500 12px/1.4 var(--sans);
+  font: 500 10px/1.2 var(--sans);
 }
 .about-voice-row .header-voice-wrap {
   position: relative;
@@ -2872,16 +2878,16 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
 .about-voice-row .header-voice-wrap::before { display: none; }
 .about-voice-row .header-voice {
   width: 100%;
-  height: 58px;
-  padding: 0 17px;
-  grid-template-columns: 26px 1fr 24px;
-  gap: 11px;
-  border-radius: 14px;
+  height: 40px;
+  padding: 0 10px;
+  grid-template-columns: 22px 1fr 16px;
+  gap: 7px;
+  border-radius: 999px;
   border-color: var(--hairline);
   background: color-mix(in srgb, var(--paper-2) 76%, var(--paper));
   color: var(--ink);
   box-shadow: 0 8px 22px color-mix(in srgb, var(--ink) 7%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 80%, white);
-  font: 600 12px/1 var(--sans);
+  font: 600 10px/1 var(--sans);
   letter-spacing: .035em;
   text-transform: none;
   transition: transform 200ms cubic-bezier(.23, 1, .32, 1), border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
@@ -2889,8 +2895,8 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
 .about-voice-row .header-voice i {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--blue);
   color: var(--paper);
@@ -2906,8 +2912,9 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
 }
 .about-voice-row .header-voice:active { transform: translateY(0) scale(.985); }
 @media (max-width:760px) {
-  .about-voice-row { margin-top: 36px; }
-  .about-voice-row .header-voice { grid-template-columns: 26px 1fr 24px; }
+  .about-copy-head { align-items: end; }
+  .about-voice-row { margin: 0 0 2px; }
+  .about-voice-row .header-voice { grid-template-columns: 22px 1fr 16px; }
   .about-voice-row .header-voice > b { display: flex; }
 }
 @media (prefers-reduced-motion:reduce) {
