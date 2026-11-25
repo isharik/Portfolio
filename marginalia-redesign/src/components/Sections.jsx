@@ -228,6 +228,14 @@ export function Education() {
   const activeImage = activeCredential === 3 ? '/logos/pharos-mark.png' : active?.logo
 
   useEffect(() => {
+    ['/images/micro1-certificate.jpg', '/images/aws-academy-credential.png'].forEach(src => {
+      const image = new Image()
+      image.src = src
+      image.decode?.().catch(() => {})
+    })
+  }, [])
+
+  useEffect(() => {
     if (activeCredential === null) return undefined
     const onKeyDown = event => { if (event.key === 'Escape') setActiveCredential(null) }
     window.addEventListener('keydown', onKeyDown)
@@ -276,8 +284,8 @@ export function Education() {
               <div><span>{activeCredential === 0 ? 'Degree / foundation' : 'Credential / practice'}</span><h3 id="education-credential-title">{active.title}</h3></div>
             </div>
             <div className="education-detail-meta education-detail-item"><div><span>Organisation</span><strong>{active.org}</strong></div><div><span>Timeframe</span><strong>{active.period}</strong></div></div>
-            {activeCredential === 1 && <figure className="education-detail-certificate education-detail-item"><img src="/images/micro1-certificate.jpg" alt="Micro1 System Administrator certificate issued to Sharik Hussain on 1 October 2025" /><figcaption>Micro1 · System Administrator · issued 1 October 2025</figcaption></figure>}
-            {activeCredential === 2 && <figure className="education-detail-certificate education-detail-item"><img src="/images/aws-academy-credential.png" alt="AWS Academy Cloud Foundations certificate issued to Sharik Hussain on 21 November 2022" /><figcaption>AWS Academy Cloud Foundations · issued 21 November 2022</figcaption></figure>}
+            {activeCredential === 1 && <figure className="education-detail-certificate education-detail-item"><img src="/images/micro1-certificate.jpg" loading="eager" decoding="sync" alt="Micro1 System Administrator certificate issued to Sharik Hussain on 1 October 2025" /><figcaption>Micro1 · System Administrator · issued 1 October 2025</figcaption></figure>}
+            {activeCredential === 2 && <figure className="education-detail-certificate education-detail-item"><img src="/images/aws-academy-credential.png" loading="eager" decoding="sync" alt="AWS Academy Cloud Foundations certificate issued to Sharik Hussain on 21 November 2022" /><figcaption>AWS Academy Cloud Foundations · issued 21 November 2022</figcaption></figure>}
             {activeCredential === 3 && <figure className="education-detail-certificate education-detail-pharos education-detail-item"><img src="/images/pharos-storyteller-profile.png" alt="Illustrated Echo profile with a green active indicator on a deep blue network background" /><figcaption><span>Pharos profile</span><strong>Echo</strong><small>@echoplex99 · StoryTeller</small><em>Building Stuff · PROS</em><p>Hustlin Here to claim what's Mine</p><div className="education-detail-pharos-roles"><b>Elder Storyteller</b><b>Rising Storyteller</b><b>Observer</b></div></figcaption></figure>}
             <div className="education-detail-focus education-detail-item"><span>What this adds</span><strong>{active.note}</strong><p>{credentialStories[activeCredential]}</p></div>
             <footer className="education-detail-footer education-detail-item"><div className="education-detail-nav"><button type="button" disabled={activeCredential === 0} onClick={() => setActiveCredential(index => index - 1)} aria-label="Previous credential">←</button><span>Browse record</span><button type="button" disabled={activeCredential === credentials.length - 1} onClick={() => setActiveCredential(index => index + 1)} aria-label="Next credential">→</button></div>{active.href ? <a href={active.href} target="_blank" rel="noreferrer">View credential <span aria-hidden="true">⟡</span></a> : <span className="education-detail-complete">Degree completed <b>✓</b></span>}</footer>

@@ -22,6 +22,9 @@ function CreativeClip({ clip, index, onSelect }) {
   const video = useRef(null)
   const hovered = useRef(false)
   const [previewing, setPreviewing] = useState(false)
+  const [audible, setAudible] = useState(false)
+
+  useLayoutEffect(() => { if (video.current) video.current.muted = true }, [])
 
   const stopPreview = () => {
     hovered.current = false
@@ -31,6 +34,7 @@ function CreativeClip({ clip, index, onSelect }) {
     player.currentTime = 0
     player.muted = true
     setPreviewing(false)
+    setAudible(false)
   }
 
   const startPreview = event => {
@@ -41,23 +45,37 @@ function CreativeClip({ clip, index, onSelect }) {
     player.currentTime = 0
     player.volume = 0.1
     player.muted = false
-    player.play().catch(() => {
+    player.play().then(() => setAudible(!player.muted)).catch(() => {
       if (!hovered.current) return
       // Browsers may block audible autoplay before the first click. Keep the
       // visual preview available there; opening the film enables full audio.
       player.muted = true
+      setAudible(false)
       player.play().catch(() => setPreviewing(false))
     })
   }
 
+  const togglePreviewSound = () => {
+    const player = video.current
+    if (!player) return
+    player.volume = 0.1
+    player.muted = !player.muted
+    setAudible(!player.muted)
+    if (player.paused) {
+      hovered.current = true
+      player.play().catch(() => setPreviewing(false))
+    }
+  }
+
   return (
-    <li>
+    <li className="creative-item" onPointerLeave={stopPreview}>
       <button type="button" className={`creative-cut ${previewing ? 'is-previewing' : ''}`}
-        aria-haspopup="dialog" onPointerEnter={startPreview} onPointerLeave={stopPreview}
+        aria-haspopup="dialog"
+        onPointerEnter={startPreview}
         onClick={() => { stopPreview(); onSelect(clip) }}>
         <span className="creative-preview">
           <img src={`/videos/${clip.file}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
-          <video ref={video} src={`/videos/${clip.file}.mp4`} muted playsInline loop preload="metadata"
+          <video ref={video} src={`/videos/${clip.file}.mp4`} playsInline loop preload="metadata"
             poster={`/videos/${clip.file}.jpg`} aria-hidden="true" tabIndex={-1}
             onPlaying={event => { if (hovered.current) setPreviewing(true); else event.currentTarget.pause() }}
             onPause={() => setPreviewing(false)}
@@ -70,6 +88,13 @@ function CreativeClip({ clip, index, onSelect }) {
           <span className="creative-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           <span className="creative-title">{clip.title}</span>
         </span>
+      </button>
+      <button type="button" className="creative-preview-sound" aria-label={audible ? `Mute ${clip.title} preview` : `Enable ${clip.title} preview sound`}
+        aria-pressed={audible} onClick={togglePreviewSound}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+          {audible ? <><path d="M16 9a4 4 0 0 1 0 6" /><path d="M18.5 6.5a8 8 0 0 1 0 11" /></> : <path d="m17 10 4 4m0-4-4 4" />}
+        </svg>
       </button>
     </li>
   )
@@ -112,7 +137,9 @@ export default function CreativeWork() {
             </header>
             <video controls controlsList="nodownload" playsInline autoPlay
               src={`/videos/${selected.file}.mp4`} poster={`/videos/${selected.file}.jpg`}
-              aria-label={selected.title} onContextMenu={event => event.preventDefault()} />
+              aria-label={selected.title} onLoadedMetadata={event => { event.currentTarget.muted = false; event.currentTarget.volume = 1 }}
+              onPlay={event => { event.currentTarget.muted = false; event.currentTarget.volume = 1 }}
+              onContextMenu={event => event.preventDefault()} />
           </div>
         )}
       </dialog>

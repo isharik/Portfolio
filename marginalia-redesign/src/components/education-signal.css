@@ -61,6 +61,9 @@
 .education-signal-cv{transition:transform 260ms cubic-bezier(.23,1,.32,1),background-color 220ms ease}
 .education-signal-cv:hover{transform:translateY(-3px);background:#fffdf7}
 .education-signal-cv .qr{outline:6px solid #fff;outline-offset:0}
+.education-signal-cv .qr:is(:hover,:focus-visible){transform:none;box-shadow:none}
+.education-signal-cv:focus-within{outline:2px solid var(--blue);outline-offset:3px}
+.education-signal-cv .qr:focus-visible{outline:6px solid #fff;outline-offset:0}
 .education-detail-certificate img{height:auto;max-height:none}
 .education-detail-certificate{margin-bottom:20px}
 .education-detail-certificate figcaption{padding-bottom:7px}

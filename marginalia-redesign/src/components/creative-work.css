@@ -33,6 +33,8 @@
   list-style: none;
 }
 
+.creative-item { position: relative; min-width: 0; }
+
 .creative-cut {
   display: grid;
   width: 100%;
@@ -112,6 +114,31 @@
 }
 
 .creative-cut.is-previewing .creative-preview-label { opacity: 1; transform: translateY(0); }
+
+.creative-preview-sound {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / .46);
+  border-radius: 50%;
+  background: rgb(10 12 18 / .65);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 180ms ease, transform 180ms cubic-bezier(.23, 1, .32, 1), background-color 180ms ease;
+}
+.creative-preview-sound svg { width: 17px; height: 17px; }
+.creative-item:is(:hover,:focus-within) .creative-preview-sound { opacity: 1; transform: translateY(0); }
+.creative-preview-sound:hover { background: rgb(22 28 45 / .88); }
+.creative-preview-sound:focus-visible { opacity: 1; outline: 2px solid #fff; outline-offset: 2px; }
+.creative-preview-sound:active { transform: scale(.94); }
 
 .creative-cut:hover img { transform: scale(1.035); }
 .creative-cut:is(:hover, :focus-visible) .creative-play { background: #292a59; }
@@ -256,10 +283,13 @@ html:has(.creative-dialog[open]) { overflow: hidden; }
   .creative-duration { inset: auto 4px 4px auto; font-size: 10px; }
   .creative-tools li { width: 35px; }
   .creative-tools img { width: 23px; height: 23px; }
+  .creative-preview-sound { top: 6px; right: calc(60% + 6px); width: 28px; height: 28px; opacity: 1; transform: none; }
 }
 
+@media (hover:none) { .creative-preview-sound { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .creative-preview img, .creative-preview video, .creative-play, .creative-preview-label { transition: none; }
+  .creative-preview img, .creative-preview video, .creative-play, .creative-preview-label, .creative-preview-sound { transition: none; }
   .creative-cut:hover img { transform: none; }
   .creative-dialog[open] { animation: none; }
 }
