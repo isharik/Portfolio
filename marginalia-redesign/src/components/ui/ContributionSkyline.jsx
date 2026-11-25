@@ -19,11 +19,18 @@ function unlockAudio() {
     if (!AC)
         return;
     const ctx = new AC();
-    const noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-    const d = noise.getChannelData(0);
-    for (let i = 0; i < d.length; i++)
-        d[i] = Math.random() * 2 - 1;
-    g[ENGINE_KEY] = { ctx, noise };
+    // Keep the first interaction light: the transition tones need no noise buffer.
+    g[ENGINE_KEY] = { ctx, noise: null };
+}
+function noiseBuffer(e) {
+    if (e.noise)
+        return e.noise;
+    const buffer = e.ctx.createBuffer(1, e.ctx.sampleRate, e.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++)
+        data[i] = Math.random() * 2 - 1;
+    e.noise = buffer;
+    return buffer;
 }
 function useSound(enabled, volume) {
     useEffect(() => {
@@ -43,9 +50,11 @@ function useSound(enabled, volume) {
     return useMemo(() => {
         const live = () => {
             const e = engine();
-            return e && on.current && vol.current > 0 && e.ctx.state === "running"
-                ? e
-                : null;
+            if (!e || !on.current || vol.current <= 0)
+                return null;
+            if (e.ctx.state === "suspended")
+                void e.ctx.resume();
+            return e.ctx.state === "closed" ? null : e;
         };
         const env = (ctx, t, peak, attack, dur) => {
             const g = ctx.createGain();
@@ -94,11 +103,11 @@ function useSound(enabled, volume) {
                 const e = live();
                 if (!e)
                     return;
-                const { ctx, noise } = e;
+                const { ctx } = e;
                 const t = ctx.currentTime + 0.01 + (o.at ?? 0);
                 const dur = Math.min(0.95, o.dur ?? 0.4);
                 const src = ctx.createBufferSource();
-                src.buffer = noise;
+                src.buffer = noiseBuffer(e);
                 const bp = ctx.createBiquadFilter();
                 bp.type = "bandpass";
                 bp.Q.value = 1.1;
@@ -117,10 +126,10 @@ function useSound(enabled, volume) {
                 const e = live();
                 if (!e)
                     return;
-                const { ctx, noise } = e;
+                const { ctx } = e;
                 const t = ctx.currentTime + 0.005 + (o.at ?? 0);
                 const src = ctx.createBufferSource();
-                src.buffer = noise;
+                src.buffer = noiseBuffer(e);
                 const bp = ctx.createBiquadFilter();
                 bp.type = "bandpass";
                 bp.frequency.value = o.freq ?? 3200;
@@ -371,9 +380,9 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
         if (!to)
             yawAnimation.current = animate(yaw, 0, { duration: 0.9, ease: [0.5, 0, 0.3, 1] });
         if (to)
-            sfx.note(240, { dur: 0.34, gain: 0.018, glide: 310, bell: 0 });
+            sfx.note(294, { dur: 0.2, gain: 0.035, glide: 392, bell: 0 });
         else
-            sfx.note(310, { dur: 0.3, gain: 0.014, glide: 240, bell: 0 });
+            sfx.note(392, { dur: 0.2, gain: 0.035, glide: 294, bell: 0 });
     };
     // ------------------------------------------------------------ drawing
     const geom = useRef({
@@ -424,8 +433,10 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
             const dt = Math.min(0.05, (now - last) / 1000);
             last = now;
             const st = state.current;
-            const cw = cv.clientWidth;
-            const ch = boxRef.current?.clientHeight ?? flatH;
+            // Reading clientWidth/clientHeight here forces a layout flush after
+            // the animated chart height changes. These values are already known.
+            const cw = w - (narrow ? 32 : 48);
+            const ch = H.get();
             // Keep the backing bitmap at its maximum size. The chart viewport
             // clips the unused area when flat, avoiding a GPU allocation on
             // every frame while the surrounding page changes height.
@@ -707,7 +718,7 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
         const stopH = H.on("change", schedule);
         schedule();
         return () => { cancelAnimationFrame(raf); stopP(); stopYaw(); stopH(); scheduleDraw.current = () => { }; };
-    }, [inView, P, yaw, reduce]);
+    }, [inView, P, yaw, H, reduce, w, narrow, flatH, skyH]);
     useEffect(() => scheduleDraw.current(), [hover, streak, cells, w, dark]);
     const tipEl = useRef(null);
     const tipPos = useRef({ x: 0, y: 0 });
