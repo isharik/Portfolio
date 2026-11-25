@@ -176,25 +176,27 @@ export function Cover() {
 export function About() {
   return (
     <section id="about" data-label="Hello" className="sheet paper-sheet about-sheet">
-      <Reveal className="portrait-notes">
-        <div className="portrait-frame"><img src="/profile-photo.webp" alt="Sharik Hussain" /></div>
-        <PortraitNote className="n1">clear thinker</PortraitNote>
-        <PortraitNote className="n2">detail-oriented</PortraitNote>
-        <PortraitNote className="n3">people-first</PortraitNote>
-        <PortraitNote className="n4">curious</PortraitNote>
-        <PortraitNote className="n5">fast learner</PortraitNote>
-        <PortraitNote className="n6">consistent</PortraitNote>
-      </Reveal>
+      <div className="about-portrait-column">
+        <Reveal className="portrait-notes">
+          <div className="portrait-frame"><img src="/profile-photo.webp" alt="Sharik Hussain" /></div>
+          <PortraitNote className="n1">clear thinker</PortraitNote>
+          <PortraitNote className="n2">detail-oriented</PortraitNote>
+          <PortraitNote className="n3">people-first</PortraitNote>
+          <PortraitNote className="n4">curious</PortraitNote>
+          <PortraitNote className="n5">fast learner</PortraitNote>
+          <PortraitNote className="n6">consistent</PortraitNote>
+        </Reveal>
+        <div className="about-voice-row">
+          <span>A short introduction, in my own voice</span>
+          <VoiceNote />
+        </div>
+      </div>
       <Reveal className="about-copy">
         <h2>Hello.</h2>
         <div className="ink-underline" />
         <p>{profile.summary}</p>
         <p>{profile.intro}</p>
         <Scribble className="circle-note">human judgment matters</Scribble>
-        <div className="about-voice-row">
-          <span>A short introduction, in my own voice</span>
-          <VoiceNote />
-        </div>
       </Reveal>
     </section>
   )

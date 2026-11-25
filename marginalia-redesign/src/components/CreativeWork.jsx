@@ -29,6 +29,7 @@ function CreativeClip({ clip, index, onSelect }) {
     if (!player) return
     player.pause()
     player.currentTime = 0
+    player.muted = true
     setPreviewing(false)
   }
 
@@ -38,7 +39,15 @@ function CreativeClip({ clip, index, onSelect }) {
     const player = video.current
     if (!player) return
     player.currentTime = 0
-    player.play().catch(() => setPreviewing(false))
+    player.volume = 0.1
+    player.muted = false
+    player.play().catch(() => {
+      if (!hovered.current) return
+      // Browsers may block audible autoplay before the first click. Keep the
+      // visual preview available there; opening the film enables full audio.
+      player.muted = true
+      player.play().catch(() => setPreviewing(false))
+    })
   }
 
   return (
