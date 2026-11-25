@@ -335,7 +335,9 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
     const H = useMotionValue(defaultSkyline ? skyH : flatH);
     useEffect(() => {
         // the box's height follows the camera: short and wide when flat, tall when standing
-        const update = () => H.set(flatH + (skyH - flatH) * ease(Math.min(1, P.get() * 1.4)));
+        // Expand the chart early, then let the skyline rise without resizing
+        // the canvas bitmap through the entire transition.
+        const update = () => H.set(flatH + (skyH - flatH) * ease(Math.min(1, P.get() * 3)));
         update();
         return P.on("change", update);
     }, [P, H, flatH, skyH]);
@@ -351,7 +353,7 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
             return;
         }
         animate(P, to ? 1 : 0, {
-            duration: to ? 1.9 : 1.1,
+            duration: to ? 1.25 : 0.9,
             ease: to ? [0.33, 0, 0.2, 1] : [0.5, 0, 0.3, 1],
         });
         if (!to)
@@ -512,6 +514,11 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
                 [0, 1, 0.62],
                 [0, -1, 0.95],
             ];
+            const steadyColors = st.hover == null && !st.streakOn && appear >= 1;
+            const colorTable = steadyColors ? st.palette.map(color => ({
+                roof: shade(color, 1 + 0.08 * e),
+                sides: faces.map(([, , strength]) => shade(color, strength)),
+            })) : null;
             for (const i of order) {
                 const c = cells[i];
                 const want = st.streakOn
@@ -544,12 +551,13 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
                 ];
                 tops[i] = top;
                 const gl = glow.current[i] * appear;
-                const base = mix(st.palette[c.lvl], st.dark ? "#30343b" : "#eceef1", 1 - gl);
+                const base = steadyColors ? st.palette[c.lvl] : mix(st.palette[c.lvl], st.dark ? "#30343b" : "#eceef1", 1 - gl);
                 sides[i] = [];
                 ctx.globalAlpha = appear;
                 // the sides that face us
                 if (hgt > 0.02 && e > 0.01) {
-                    for (const [nx, ny, k] of faces) {
+                    for (let faceIndex = 0; faceIndex < faces.length; faceIndex++) {
+                        const [nx, ny, k] = faces[faceIndex];
                         if (nx * sa + ny * ca <= 0.001)
                             continue;
                         const q = nx === 1
@@ -580,10 +588,9 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
                                         scr(xa, ya, 0),
                                     ];
                         sides[i].push(q);
-                        const g = ctx.createLinearGradient(q[0][0], q[0][1], q[3][0], q[3][1]);
-                        g.addColorStop(0, shade(base, k));
-                        g.addColorStop(1, shade(base, k * 0.8));
-                        ctx.fillStyle = g;
+                        // Solid directional shading preserves the 3D form at
+                        // this tile size without allocating a gradient per face.
+                        ctx.fillStyle = colorTable ? colorTable[c.lvl].sides[faceIndex] : shade(base, k);
                         ctx.beginPath();
                         q.forEach(([x, y], j) => (j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
                         ctx.closePath();
@@ -594,7 +601,7 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
                 const r = (2.6 * (1 - e) + 0.6) * Math.min(1, S / 14);
                 const cx = (top[0][0] + top[2][0]) / 2;
                 const cy = (top[0][1] + top[2][1]) / 2;
-                ctx.fillStyle = shade(base, 1 + 0.08 * e);
+                ctx.fillStyle = colorTable ? colorTable[c.lvl].roof : shade(base, 1 + 0.08 * e);
                 ctx.strokeStyle = ctx.fillStyle;
                 ctx.lineJoin = "round";
                 ctx.lineWidth = r * 2;
