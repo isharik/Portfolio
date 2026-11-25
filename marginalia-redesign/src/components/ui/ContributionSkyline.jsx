@@ -326,6 +326,10 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
     // ------------------------------------------------------------ camera
     const P = useMotionValue(defaultSkyline ? 1 : 0); // 0 flat, 1 skyline
     const yaw = useMotionValue(0); // extra turn from dragging, degrees
+    const heightPhase = useMotionValue(defaultSkyline ? 1 : 0);
+    const cameraAnimation = useRef(null);
+    const heightAnimation = useRef(null);
+    const yawAnimation = useRef(null);
     const flatH = useMemo(() => {
         const left = narrow ? 26 : 32;
         const pitch = (Math.min(w, 980) - (narrow ? 32 : 48) - left) / WEEKS;
@@ -334,13 +338,12 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
     const skyH = narrow ? Math.round(Math.min(280, (w - 32) * 0.56 + 34)) : 330;
     const H = useMotionValue(defaultSkyline ? skyH : flatH);
     useEffect(() => {
-        // the box's height follows the camera: short and wide when flat, tall when standing
-        // Expand the chart early, then let the skyline rise without resizing
-        // the canvas bitmap through the entire transition.
-        const update = () => H.set(flatH + (skyH - flatH) * ease(Math.min(1, P.get() * 3)));
+        // Give the page its own even height transition. Tying this to the
+        // skyline wave made the Grid return collapse all at once near the end.
+        const update = () => H.set(flatH + (skyH - flatH) * heightPhase.get());
         update();
-        return P.on("change", update);
-    }, [P, H, flatH, skyH]);
+        return heightPhase.on("change", update);
+    }, [heightPhase, H, flatH, skyH]);
     const toggle = (to) => {
         if (to === sky)
             return;
@@ -348,16 +351,25 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
         setHover(null);
         hoverIndex.current = null;
         setTip(null);
+        cameraAnimation.current?.stop();
+        heightAnimation.current?.stop();
+        yawAnimation.current?.stop();
         if (reduce) {
             P.set(to ? 1 : 0);
+            heightPhase.set(to ? 1 : 0);
+            if (!to) yaw.set(0);
             return;
         }
-        animate(P, to ? 1 : 0, {
+        cameraAnimation.current = animate(P, to ? 1 : 0, {
             duration: to ? 1.25 : 0.9,
             ease: to ? [0.33, 0, 0.2, 1] : [0.5, 0, 0.3, 1],
         });
+        heightAnimation.current = animate(heightPhase, to ? 1 : 0, {
+            duration: to ? 0.55 : 0.7,
+            ease: [0.22, 1, 0.36, 1],
+        });
         if (!to)
-            animate(yaw, 0, { duration: 1.1, ease: [0.5, 0, 0.3, 1] });
+            yawAnimation.current = animate(yaw, 0, { duration: 0.9, ease: [0.5, 0, 0.3, 1] });
         if (to)
             sfx.note(240, { dur: 0.34, gain: 0.018, glide: 310, bell: 0 });
         else
@@ -413,14 +425,19 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
             last = now;
             const st = state.current;
             const cw = cv.clientWidth;
-            const ch = cv.clientHeight;
+            const ch = boxRef.current?.clientHeight ?? flatH;
+            // Keep the backing bitmap at its maximum size. The chart viewport
+            // clips the unused area when flat, avoiding a GPU allocation on
+            // every frame while the surrounding page changes height.
+            if (cv.style.height !== `${skyH}px`)
+                cv.style.height = `${skyH}px`;
             if (cv.width !== Math.round(cw * dpr) ||
-                cv.height !== Math.round(ch * dpr)) {
+                cv.height !== Math.round(skyH * dpr)) {
                 cv.width = Math.round(cw * dpr);
-                cv.height = Math.round(ch * dpr);
+                cv.height = Math.round(skyH * dpr);
             }
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.clearRect(0, 0, cw, ch);
+            ctx.clearRect(0, 0, cw, skyH);
             const p = P.get();
             const e = ease(p);
             // the camera: a top-down view that tilts back and turns as p goes to 1
@@ -895,7 +912,7 @@ export default function ContributionSkyline({ title = "Contributions", profileUr
       </header>
 
       <motion.div ref={boxRef} tabIndex={0} role="img" aria-label={`${title}: ${annualTotal} ${noun[1]} in the last year. Use the arrow keys to read each visible day.`} className={`skyline-chart ${sky ? "is-skyline" : ""}`} style={{ height: H }} initial={reduce ? false : { opacity: 0, y: 10 }} animate={seen ? { opacity: 1, y: 0 } : undefined} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} onPointerMove={onMove} onPointerDown={onDown} onPointerUp={onUp} onPointerCancel={() => (drag.current = null)} onPointerLeave={(e) => e.pointerType === "mouse" && !drag.current && setHoverCell(null)} onKeyDown={onKey} onBlur={() => setHoverCell(null)}>
-        <canvas ref={cvRef} aria-hidden="true" className="absolute inset-0 h-full w-full"/>
+        <div className="skyline-canvas-viewport"><canvas ref={cvRef} aria-hidden="true"/></div>
         <div ref={tipEl} className="skyline-tooltip-position" style={{
             transform: `translate(${tipPos.current.x}px, ${tipPos.current.y - 8}px) translate(-50%, -100%)`,
         }}>

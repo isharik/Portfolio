@@ -32,7 +32,8 @@
 .skyline-chart { position: relative; height: 140px; margin-top: 16px; border-radius: 18px; outline: none; user-select: none; touch-action: pan-y; }
 .skyline-chart.is-skyline { cursor: grab; }
 .skyline-chart.is-skyline:active { cursor: grabbing; }
-.skyline-chart canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.skyline-canvas-viewport { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.skyline-chart canvas { position: absolute; inset: 0 auto auto 0; display: block; width: 100%; }
 .skyline-tooltip-position { position: absolute; z-index: 10; top: 0; left: 0; pointer-events: none; }
 .skyline-tooltip { padding: 6px 10px; border-radius: 11px; background: rgb(29 29 31 / .9); color: #fff; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .5); backdrop-filter: blur(8px); white-space: nowrap; }
 .skyline-tooltip span { display: block; }
