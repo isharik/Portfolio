@@ -179,23 +179,20 @@ export function Cover() {
 export function About() {
   return (
     <section id="about" data-label="Hello" className="sheet paper-sheet about-sheet">
-      <Reveal className="portrait-notes">
-        <div className="portrait-frame"><img src="/profile-photo.webp" alt="Sharik Hussain" /></div>
-        <PortraitNote className="n1">clear thinker</PortraitNote>
-        <PortraitNote className="n2">detail-oriented</PortraitNote>
-        <PortraitNote className="n3">people-first</PortraitNote>
-        <PortraitNote className="n4">curious</PortraitNote>
-        <PortraitNote className="n5">fast learner</PortraitNote>
-        <PortraitNote className="n6">consistent</PortraitNote>
-      </Reveal>
+      <div className="about-portrait-column">
+        <Reveal className="portrait-notes">
+          <div className="portrait-frame"><img src="/profile-photo.webp" alt="Sharik Hussain" /></div>
+          <PortraitNote className="n1">clear thinker</PortraitNote>
+          <PortraitNote className="n2">detail-oriented</PortraitNote>
+          <PortraitNote className="n3">people-first</PortraitNote>
+          <PortraitNote className="n4">curious</PortraitNote>
+          <PortraitNote className="n5">fast learner</PortraitNote>
+          <PortraitNote className="n6">consistent</PortraitNote>
+        </Reveal>
+        <VoiceNote />
+      </div>
       <Reveal className="about-copy">
-        <div className="about-copy-head">
-          <h2>Hello.</h2>
-          <div className="about-voice-row">
-            <span>A short introduction, in my own voice</span>
-            <VoiceNote />
-          </div>
-        </div>
+        <h2>Hello.</h2>
         <div className="ink-underline" />
         <p>{profile.summary}</p>
         <p>{profile.intro}</p>
@@ -1098,13 +1095,39 @@ export function ThankYou() {
 
 export function Footer({ theme }) {
   const [messageOpen, setMessageOpen] = useState(false)
+  const [messageClosing, setMessageClosing] = useState(false)
   const [messageStatus, setMessageStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [messageSent, setMessageSent] = useState(false)
   const [sendPhase, setSendPhase] = useState('sending')
+  const messageCloseTimer = useRef(null)
+
+  useEffect(() => () => window.clearTimeout(messageCloseTimer.current), [])
+  useEffect(() => {
+    const warmVideo = document.createElement('video')
+    warmVideo.preload = 'auto'
+    warmVideo.muted = true
+    warmVideo.playsInline = true
+    warmVideo.src = '/email-inbox-loop.mp4'
+    warmVideo.load()
+    return () => {
+      warmVideo.pause()
+      warmVideo.removeAttribute('src')
+      warmVideo.load()
+    }
+  }, [])
 
   useEffect(() => {
-    if (!isSending && !messageSent) return undefined
+    if (!messageOpen || isSending || messageSent) return undefined
+    const onKeyDown = event => {
+      if (event.key === 'Escape') closeMessage()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [messageOpen, isSending, messageSent, messageClosing])
+
+  useEffect(() => {
+    if (!messageOpen) return undefined
 
     const previousBodyOverflow = document.body.style.overflow
     const previousHtmlOverflow = document.documentElement.style.overflow
@@ -1115,16 +1138,26 @@ export function Footer({ theme }) {
       document.body.style.overflow = previousBodyOverflow
       document.documentElement.style.overflow = previousHtmlOverflow
     }
-  }, [isSending, messageSent])
+  }, [messageOpen])
 
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds))
-  const closeMessage = () => {
-    setMessageOpen(false)
-    setMessageSent(false)
-    setMessageStatus('')
+  const closeMessage = (immediate = false) => {
+    if (messageClosing) return
+    if (immediate || isSending || messageSent) {
+      setMessageOpen(false)
+      setMessageSent(false)
+      setMessageStatus('')
+      return
+    }
+    setMessageClosing(true)
+    messageCloseTimer.current = window.setTimeout(() => {
+      setMessageOpen(false)
+      setMessageClosing(false)
+      setMessageStatus('')
+    }, 230)
   }
   const returnToPortfolio = () => {
-    closeMessage()
+    closeMessage(true)
     window.setTimeout(() => document.getElementById('home')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
   }
 
@@ -1163,12 +1196,12 @@ export function Footer({ theme }) {
 
   return (
     <>
-      <PortfolioFooter theme={theme} onEmail={() => setMessageOpen(true)} />
+      <PortfolioFooter theme={theme} onEmail={() => { setMessageClosing(false); setMessageOpen(true) }} />
       {messageOpen && ((isSending || messageSent) ? createPortal(<div className={`message-sending-screen${messageSent ? ' is-sent' : ''}`} role="status" aria-live="polite">
         {isSending ? <><MessageSphere phase={sendPhase} size={264} />
           <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
         </> : <div className="message-sent-popover">
-          <button className="message-success-close" type="button" onClick={closeMessage} aria-label="Close message confirmation">×</button>
+          <button className="message-success-close" type="button" onClick={() => closeMessage(true)} aria-label="Close message confirmation">×</button>
           <span className="message-success-mark" aria-hidden="true">✓</span>
           <Scribble>received</Scribble>
           <h3 id="discord-message-title">Message sent</h3>
@@ -1179,33 +1212,43 @@ export function Footer({ theme }) {
           </div>
         </div>}
       </div>, document.body) : createPortal(<div
-        className="discord-dialog-backdrop"
+        className={`mail-dialog-backdrop${messageClosing ? ' is-closing' : ''}`}
         role="presentation"
         onPointerDown={event => {
           if (event.target === event.currentTarget) closeMessage()
         }}
       >
         <section
-          className="discord-dialog"
+          className="mail-dialog"
           role="dialog"
           aria-modal="true"
           aria-labelledby="discord-message-title"
           onPointerDown={event => event.stopPropagation()}
           onClick={event => event.stopPropagation()}
         >
-          <button className="discord-dialog-close" type="button" onPointerDown={event => { event.preventDefault(); event.stopPropagation(); closeMessage() }} onClick={event => { event.stopPropagation(); closeMessage() }} aria-label="Close message form">×</button>
-          <>
-          <Scribble>let’s talk</Scribble>
-          <h3 id="discord-message-title">Send me a message</h3>
-          <p>Tell me what you’re building, hiring for, or hoping to solve. I’ll reply to the email you provide.</p>
-          <form onSubmit={sendMessage} onPointerDown={event => event.stopPropagation()}>
-            <label>Name<input name="name" type="text" required autoComplete="name" maxLength="80" /></label>
-            <label>Email<input name="email" type="email" required autoComplete="email" maxLength="160" /></label>
-            <label>What is this about?<select name="purpose" defaultValue="Opportunity"><option>Opportunity</option><option>Project collaboration</option><option>Customer support / AI</option><option>Just saying hello</option></select></label>
-            <label className="message-field">Message<textarea name="message" required rows="4" maxLength="1500" /><button className="message-send-icon" type="submit" aria-label="Send message" onPointerDown={event => event.stopPropagation()}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5 20 12 4 18.5l2.2-5.2L13 12 6.2 10.7z" /></svg></button></label>
-            <p className="discord-status" aria-live="polite">{messageStatus}</p>
-          </form>
-          </>
+          <button className="mail-dialog-close" type="button" onClick={event => { event.stopPropagation(); closeMessage() }} aria-label="Close message form"><span aria-hidden="true">×</span></button>
+          <div className="mail-art-panel" aria-hidden="true">
+            <video className="mail-art-video" src="/email-inbox-loop.mp4" autoPlay muted loop playsInline preload="auto" />
+            <div className="mail-art-shade" />
+            <div className="mail-art-topline"><span>SHARIK HUSSAIN</span><span>OPEN INBOX</span></div>
+            <div className="mail-art-caption"><span>A DIRECT LINE</span><p>Good things begin with a conversation.</p><i className="mail-art-signature">Sharik ↗</i></div>
+          </div>
+          <div className="mail-writing-panel">
+            <div className="mail-heading-meta"><span>LET’S TALK</span><span>FROM YOUR DESK TO MINE</span></div>
+            <div className="mail-heading"><h3 id="discord-message-title">What’s on your mind?</h3><p>A role, an idea, a problem worth solving. Tell me where to start and I’ll write back.</p></div>
+            <form onSubmit={sendMessage} onPointerDown={event => event.stopPropagation()}>
+              <div className="mail-identifiers">
+                <label><span><i aria-hidden="true">✳</i> YOUR NAME</span><input name="name" type="text" required autoComplete="name" maxLength="80" placeholder="What should I call you?" /></label>
+                <label><span><i aria-hidden="true">@</i> YOUR EMAIL</span><input name="email" type="email" required autoComplete="email" maxLength="160" placeholder="Where can I reply?" /></label>
+              </div>
+              <fieldset className="mail-purpose"><legend><i aria-hidden="true">◇</i> WHAT’S ON YOUR MIND?</legend>
+                {['Opportunity', 'Project collaboration', 'Customer support / AI', 'Just saying hello'].map((purpose, index) => <label key={purpose}><input type="radio" name="purpose" value={purpose} defaultChecked={index === 0} /><span><i aria-hidden="true">{['✦', '◇', '✳', '☼'][index]}</i>{purpose}<b aria-hidden="true">✓</b></span></label>)}
+              </fieldset>
+              <label className="mail-message-field"><span><i aria-hidden="true">✎</i> YOUR NOTE</span><textarea name="message" required rows="3" maxLength="1500" placeholder="Write your message here…" /></label>
+              <div className="mail-form-bottom"><span className="mail-form-aside">A direct line to my inbox <span aria-hidden="true">↗</span></span><button className="mail-send-button" type="submit">Send your note <span aria-hidden="true">↗</span></button></div>
+              <p className="mail-status" aria-live="polite">{messageStatus}</p>
+            </form>
+          </div>
         </section>
       </div>, document.body))}
     </>

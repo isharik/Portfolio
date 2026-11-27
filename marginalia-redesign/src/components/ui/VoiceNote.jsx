@@ -35,13 +35,15 @@ export default function VoiceNote() {
 
   return (
     <div className="header-voice-wrap">
-      <button type="button" className={`header-voice ${playing ? 'is-playing' : ''}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => {
+      <button type="button" className={`hello-voice-card ${playing ? 'is-playing' : ''}`} aria-label="Play voice note" aria-haspopup="dialog" aria-expanded={open} onClick={() => {
         dialog.current.showModal()
         setOpen(true)
         setError('')
         play()
       }}>
-        <i aria-hidden="true">▶</i><span>Play voice note</span><b aria-hidden="true"><u /><u /><u /><u /></b>
+        <span className="hello-voice-record" aria-hidden="true"><img src="/images/voice-vinyl.png" alt="" /></span>
+        <span className="hello-voice-copy"><small>IN MY OWN VOICE <span>· 40 SEC</span></small><strong>Before the résumé, a hello.</strong><em>A short note from Sharik</em></span>
+        <span className="hello-voice-action" aria-hidden="true"><Icon name="play" /></span>
       </button>
       <dialog ref={dialog} className="voice-note-dialog" aria-labelledby="voice-note-title" onClick={event => {
         if (event.target === event.currentTarget) dialog.current.close()
@@ -64,12 +66,12 @@ export default function VoiceNote() {
           <div className="voice-note-controls">
             <button type="button" aria-label="Restart voice note" disabled={!duration} onClick={() => seek(0)}><Icon name="restart" /></button>
             <button type="button" aria-label="Go back 10 seconds" disabled={!duration} onClick={() => seek(time - 10)}><Icon name="back" /></button>
-            <button type="button" className="voice-note-play" aria-label={playing ? 'Pause' : 'Play'} onClick={() => playing ? audio.current.pause() : play()}><Icon name={playing ? 'pause' : 'play'} /></button>
+            <button type="button" className={`voice-note-play ${playing ? 'is-pause' : 'is-play'}`} aria-label={playing ? 'Pause' : 'Play'} onClick={() => playing ? audio.current.pause() : play()}><Icon name={playing ? 'pause' : 'play'} /></button>
             <button type="button" aria-label="Go forward 10 seconds" disabled={!duration} onClick={() => seek(time + 10)}><Icon name="forward" /></button>
             <button type="button" aria-label="Repeat voice note" aria-pressed={repeat} onClick={() => setRepeat(value => !value)}><Icon name="repeat" /></button>
           </div>
           {error && <p role="status">{error}</p>}
-          <audio ref={audio} src="/recruiter-intro.mp3" preload="metadata" loop={repeat}
+          <audio ref={audio} src="/recruiter-intro.wav" preload="metadata" loop={repeat}
             onLoadedMetadata={event => setDuration(event.currentTarget.duration)}
             onTimeUpdate={event => setTime(event.currentTarget.currentTime)}
             onPlay={() => { setPlaying(true); setError('') }}

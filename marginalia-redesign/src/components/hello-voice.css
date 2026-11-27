@@ -1,0 +1,116 @@
+/* A small editorial listening card in the Hello story. */
+.about-portrait-column {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.about-portrait-column .portrait-notes { width: 100%; }
+.about-portrait-column > .header-voice-wrap {
+  position: absolute;
+  right: -28px;
+  bottom: 144px;
+  width: min(100%, 318px);
+  margin: 0;
+  isolation: auto;
+  z-index: 3;
+}
+.about-portrait-column > .header-voice-wrap::before { display: none; }
+.hello-voice-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 88px;
+  padding: 11px 14px 11px 11px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--blue) 27%, var(--hairline));
+  border-radius: 15px;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--blue) 9%, var(--paper)), color-mix(in srgb, var(--paper-2) 62%, var(--paper)) 76%);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 9px 27px color-mix(in srgb, var(--ink) 6%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 75%, white);
+  transition: transform 210ms cubic-bezier(.23, 1, .32, 1), border-color 210ms ease, box-shadow 210ms ease;
+}
+.hello-voice-card::after {
+  content: '';
+  position: absolute;
+  right: 75px;
+  bottom: 0;
+  width: 110px;
+  height: 36px;
+  opacity: .12;
+  background: repeating-linear-gradient(90deg, var(--blue) 0 2px, transparent 2px 8px);
+  mask-image: linear-gradient(to top, #000, transparent);
+  pointer-events: none;
+}
+.hello-voice-record {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid color-mix(in srgb, var(--blue) 28%, var(--hairline));
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--paper) 82%, var(--blue));
+  box-shadow: inset 0 1px color-mix(in srgb, var(--paper) 80%, white);
+}
+.hello-voice-record::after {
+  content: '';
+  position: absolute;
+  inset: 23px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hello-voice-record img {
+  width: 51px;
+  height: 51px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px color-mix(in srgb, var(--ink) 20%, transparent));
+  transition: transform 360ms cubic-bezier(.23, 1, .32, 1);
+}
+.hello-voice-copy { display: grid; min-width: 0; gap: 5px; }
+.hello-voice-copy small { color: var(--blue); font: 700 9px/1.2 var(--sans); letter-spacing: .15em; }
+.hello-voice-copy small span { color: var(--soft-ink); }
+.hello-voice-copy strong { font: 600 clamp(14px, 1.45vw, 17px)/1.15 var(--sans); letter-spacing: -.03em; text-wrap: balance; }
+.hello-voice-copy em { color: var(--soft-ink); font: 11px/1.2 var(--sans); font-style: normal; }
+.hello-voice-action {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  box-shadow: 0 5px 12px color-mix(in srgb, var(--blue) 28%, transparent);
+  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), box-shadow 200ms ease;
+}
+.hello-voice-action svg { width: 19px; height: 19px; transform: translateX(-1px); }
+.hello-voice-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.hello-voice-card:active { transform: scale(.985); }
+.voice-note-controls .voice-note-play.is-play svg { transform: translateX(-1.5px); }
+.voice-note-controls button:disabled { opacity: .4; cursor: not-allowed; }
+@media (hover: hover) and (pointer: fine) {
+  .hello-voice-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--blue) 65%, var(--hairline)); box-shadow: 0 16px 30px color-mix(in srgb, var(--ink) 11%, transparent); }
+  .hello-voice-card:hover .hello-voice-record img { transform: rotate(24deg); }
+  .hello-voice-card:hover .hello-voice-action { transform: scale(1.08); box-shadow: 0 8px 17px color-mix(in srgb, var(--blue) 34%, transparent); }
+}
+@media (max-width: 760px) {
+  .about-portrait-column > .header-voice-wrap { position: relative; inset: auto; width: min(100%, 340px); margin: 32px 0 0; }
+  .hello-voice-card { gap: 12px; }
+}
+@media (max-width: 390px) {
+  .hello-voice-copy strong { font-size: 13px; }
+  .hello-voice-copy small { font-size: 8px; }
+  .hello-voice-copy em { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hello-voice-card, .hello-voice-record img, .hello-voice-action { transition: none; }
+  .hello-voice-card:hover { transform: none; }
+  .hello-voice-card:hover .hello-voice-record img, .hello-voice-card:hover .hello-voice-action { transform: none; }
+}

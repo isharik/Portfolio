@@ -6,9 +6,9 @@ export const profile = {
   email: 'sharikhussain99@gmail.com',
   phone: '+91 60056 22259',
   summary:
-    'I work across customer support, content, and AI—helping people, communities, and products communicate clearly. From resolving real-time customer issues to creating content for emerging ecosystems and supporting AI workflows, I make complex technology easier to understand and use.',
+    'Hi, I’m Sharik. I’m the kind of person who reads the footnote, stays for the follow-up question, and wants to know whether the thing we built actually helped someone.',
   intro:
-    'I am an AI & QA specialist, systems operator, customer advocate, and Web3 storyteller. I care about precise work, clear communication, useful technology, and the human judgment that makes automated systems better.',
+    'That curiosity has taken me from customer conversations to AI evaluation, systems work, and telling stories for emerging technology. Different rooms, same instinct: pay attention to the person on the other side of the screen. I like work where the details matter—and where getting them right makes someone’s day a little easier.',
   socials: {
     github: 'https://github.com/isharik',
     linkedin: 'https://linkedin.com/in/sharikhussain1',
