@@ -143,3 +143,7 @@
   .education-detail-pharos:hover img,.education-detail-pharos-roles b:hover{transform:none}
   .education-detail-pharos figcaption>*{animation:none}
 }
+
+@media(min-width:761px){
+  .education-signal{min-height:calc(100svh + 32px)}
+}

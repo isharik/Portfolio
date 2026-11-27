@@ -314,7 +314,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 
 /* experience — wheel-controlled horizontal journey; native scrolling resumes at either end */
 .experience-sheet { min-height: 0; padding: 0; }
-.experience-pin { position: relative; display: grid; grid-template-rows: auto 306px; overflow: hidden; padding: 56px 5% 56px; }
+.experience-pin { position: relative; display: grid; grid-template-rows: auto 330px; align-content:center; min-height:calc(100svh + 32px); overflow: hidden; padding: 72px 5%; }
 .experience-pin.has-expanded { grid-template-rows: auto 500px; }
 .experience-heading { position: relative; z-index: 2; display: flex; align-items: end; gap: 34px; margin: 0 0 28px; }
 .experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); transform: none; }
@@ -326,7 +326,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .experience-map-line::before,.experience-map-line::after { content: ''; position: absolute; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); transform: translateY(-50%); }
 .experience-map-line::before { left: 0; }.experience-map-line::after { right: 0; }
 .experience-list { position: relative; z-index: 1; display: flex; align-items: center; gap: clamp(30px,4.2vw,76px); width: max-content; margin: 0; padding: 0 2px; transition: transform .86s var(--ease-out); }
-.experience-row { position: relative; flex: 0 0 min(74vw,740px); min-height: 282px; display: grid; grid-template-columns: 34px 42px minmax(0,1fr) auto; grid-template-rows: auto auto minmax(0,1fr); gap: 11px 14px; align-items: start; padding: 29px 32px; border: 1px solid color-mix(in srgb, var(--ink) 19%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--paper) 98%, var(--ink)); color: var(--ink); transition: transform .36s var(--ease-out), background .3s ease, border-color .3s ease, box-shadow .3s ease; cursor: pointer; isolation: isolate; text-rendering: geometricPrecision; font-synthesis: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.experience-row { position: relative; flex: 0 0 min(78vw,790px); min-height: 300px; display: grid; grid-template-columns: 34px 42px minmax(0,1fr) auto; grid-template-rows: auto auto minmax(0,1fr); gap: 11px 14px; align-items: start; padding: 31px 34px; border: 1px solid color-mix(in srgb, var(--ink) 19%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--paper) 98%, var(--ink)); color: var(--ink); transition: transform .36s var(--ease-out), background .3s ease, border-color .3s ease, box-shadow .3s ease; cursor: pointer; isolation: isolate; text-rendering: geometricPrecision; font-synthesis: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .experience-row::after { content: ''; position: absolute; left: 30px; right: 30px; bottom: 20px; height: 2px; border-radius: 999px; background: var(--blue); transform: scaleX(.18); transform-origin: left; opacity: .32; transition: transform 240ms var(--ease-out), opacity 180ms ease; }
 .experience-row.is-scroll-next,.experience-row.is-scroll-past { opacity: 1; transform: translate3d(0, 0, 0); filter: none; }
 .experience-row.is-scroll-focus { transform: translate3d(0, -7px, 0); border-color: color-mix(in srgb, var(--blue) 52%, var(--hairline)); background: color-mix(in srgb, var(--paper) 96%, var(--blue)); box-shadow: 0 14px 26px color-mix(in srgb,var(--ink) 8%,transparent); }
@@ -349,7 +349,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @media (hover: hover) and (pointer: fine) { .experience-row:hover { border-color: color-mix(in srgb, var(--blue) 62%, var(--hairline)); background: color-mix(in srgb, var(--paper) 95%, var(--blue)); } }
 
 /* skills */
-.skills-sheet { min-height: 850px; padding-inline: 5%; display: grid; grid-template-columns: .72fr 1.28fr; grid-template-rows: auto 300px auto 1fr; column-gap: 80px; }
+.skills-sheet { min-height: 790px; padding: 70px 5% 76px; display: grid; grid-template-columns: .72fr 1.28fr; grid-template-rows: auto 270px auto 1fr; column-gap: 80px; }
 .skills-top { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; }
 .skills-top h2 { margin-bottom: 15px; }
 .skills-top .scribble { margin-bottom: 40px; }
@@ -611,7 +611,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .experience-heading .ink-underline { top: auto; bottom: -9px; left: 0; }
   .experience-heading .scribble { display: block; margin: 25px 0; }
   .experience-sheet { min-height: 0; padding: 0; }
-  .experience-pin,.experience-pin.has-expanded { display: block; padding: 68px 22px 36px; }
+  .experience-pin,.experience-pin.has-expanded { display: block; padding: 76px 22px 64px; }
   .experience-map-viewport { display: block; overflow: visible; padding-block: 10px; }
   .experience-map-line { display: none; }
   .experience-list { display: grid; width: auto; gap: 16px; padding-inline: 0; transform: none!important; }
@@ -619,7 +619,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .experience-row p { grid-column: 3; font-size: 13px; }
   .experience-open { grid-column: 3; justify-self: start; }
   .experience-detail { grid-column: 1 / -1; }
-  .skills-sheet { display: block; }
+  .skills-sheet { display: block; padding: 72px 22px 64px; }
   .skills-top { display: block; }
   .skills-top .scribble { display: block; margin: 18px 0 35px; }
   .skill-icons { flex-wrap: wrap; margin-left: 8px; }

@@ -963,3 +963,33 @@
   #beyond-cv .facts-accordion-image,
   #beyond-cv .facts-accordion-details { transition-duration: 100ms; transition-delay: 0ms; }
 }
+
+/* Give the section its own viewport without offsetting the navigation anchor. */
+#beyond-cv.facts-sheet {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100svh + 32px);
+  padding-top: clamp(76px, 10svh, 112px);
+  padding-bottom: clamp(76px, 10svh, 112px);
+  scroll-margin-top: 0;
+}
+#beyond-cv .facts-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 290px);
+  align-items: start;
+  gap: 24px;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+}
+#beyond-cv .facts-heading { grid-column: 1; grid-row: 1; width: 100%; max-width: none; margin: 0; }
+#beyond-cv .facts-note { position: static; grid-column: 2; grid-row: 1; justify-self: end; max-width: 290px; margin: 10px 0 0; text-align: right; }
+#beyond-cv .facts-accordion { height: clamp(300px, 44svh, 410px); }
+@media (max-width: 720px) {
+  #beyond-cv.facts-sheet { padding: 72px 22px 64px; }
+  #beyond-cv .facts-intro { grid-template-columns: 1fr; gap: 10px; }
+  #beyond-cv .facts-heading { grid-column: 1; grid-row: 2; }
+  #beyond-cv .facts-note { grid-column: 1; grid-row: 1; justify-self: start; max-width: none; margin: 0; text-align: left; }
+  #beyond-cv .facts-accordion { height: min(66svh, 540px); }
+}

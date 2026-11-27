@@ -1020,8 +1020,10 @@ export function Facts() {
   const accordionLabels = ['Gaming', 'Web3', 'Movies', 'Music', 'Photography']
   return (
     <section ref={factsRef} id="beyond-cv" data-label="Beyond the CV" className="sheet paper-sheet facts-sheet">
-      <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
-      <Reveal className="facts-heading"><h2>Beyond the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
+      <div className="facts-intro">
+        <Scribble className="facts-note">the things that never fit on a CV ↘</Scribble>
+        <Reveal className="facts-heading"><h2>Beyond the <em>CV</em></h2><div className="ink-underline" /><p>A glimpse into what drives me — beyond work, beyond code.</p></Reveal>
+      </div>
       <div className="facts-accordion" aria-label="Beyond the CV interests" onPointerMove={event => {
         if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
         const previous = pointerRef.current
