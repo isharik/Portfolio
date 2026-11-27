@@ -149,8 +149,8 @@
 }
 
 .education-signal{isolation:isolate}
-.education-signal::before{content:'';position:absolute;z-index:-1;inset:-6px;pointer-events:none;background:url('/images/experience-books.jpg') center / cover no-repeat;filter:grayscale(1) blur(3px);opacity:.23;mask-image:linear-gradient(180deg,transparent,#000 13%,#000 87%,transparent)}
-:root[data-theme='dark'] .education-signal::before{filter:grayscale(1) blur(3px) brightness(1.3);opacity:.4}
+.education-signal::before{content:'';position:absolute;z-index:-1;inset:-6px;pointer-events:none;background:url('/images/experience-books.jpg') center / cover no-repeat;filter:blur(3px);opacity:.23;mask-image:linear-gradient(180deg,transparent,#000 13%,#000 87%,transparent)}
+:root[data-theme='dark'] .education-signal::before{opacity:.4}
 
 /* Let the record share the surrounding paper palette in light mode. */
 :root:not([data-theme='dark']) #education .education-signal-stage{

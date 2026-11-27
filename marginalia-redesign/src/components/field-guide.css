@@ -468,11 +468,11 @@
   z-index: -1;
   inset: -6px;
   background: url('/images/beyond-landscape.png') center 60% / cover no-repeat;
-  filter: grayscale(1) blur(2px) contrast(1.08);
+  filter: blur(2px);
   opacity: .43;
   pointer-events: none;
 }
-:root[data-theme='dark'] #beyond-cv.facts-sheet::before { filter: grayscale(1) invert(1) blur(2px) contrast(1.08); opacity: .34; }
+:root[data-theme='dark'] #beyond-cv.facts-sheet::before { opacity: .2; }
 #beyond-cv .facts-heading { position: relative; }
 #beyond-cv .facts-carousel { gap: 16px 23px; }
 #beyond-cv .facts-stage {
