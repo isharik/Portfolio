@@ -42,7 +42,7 @@ export default function VoiceNote() {
         play()
       }}>
         <span className="hello-voice-record" aria-hidden="true"><img src="/images/voice-vinyl.png" alt="" /></span>
-        <span className="hello-voice-copy"><small>IN MY OWN VOICE <span>· 40 SEC</span></small><strong>Before the résumé, a hello.</strong><em>A short note from Sharik</em></span>
+        <span className="hello-voice-copy"><strong>Listen to Sharik</strong><small>00:40 · voice note</small></span>
         <span className="hello-voice-action" aria-hidden="true"><Icon name="play" /></span>
       </button>
       <dialog ref={dialog} className="voice-note-dialog" aria-labelledby="voice-note-title" onClick={event => {

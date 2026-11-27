@@ -1,116 +1,88 @@
-/* A small editorial listening card in the Hello story. */
-.about-portrait-column {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  width: 100%;
-  min-width: 0;
-}
-.about-portrait-column .portrait-notes { width: 100%; }
-.about-portrait-column > .header-voice-wrap {
+/* The audio lives in its own quiet space below the Hello composition. */
+.about-sheet { position: relative; }
+.about-sheet > .header-voice-wrap {
   position: absolute;
-  right: -28px;
-  bottom: 144px;
-  width: min(100%, 318px);
+  left: 50%;
+  bottom: 31px;
+  width: 248px;
   margin: 0;
   isolation: auto;
+  transform: translateX(-50%);
   z-index: 3;
 }
-.about-portrait-column > .header-voice-wrap::before { display: none; }
+.about-sheet > .header-voice-wrap::before { display: none; }
 .hello-voice-card {
-  position: relative;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr) 42px;
+  grid-template-columns: 36px minmax(0, 1fr) 34px;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   width: 100%;
-  min-height: 88px;
-  padding: 11px 14px 11px 11px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--blue) 27%, var(--hairline));
-  border-radius: 15px;
-  background: linear-gradient(110deg, color-mix(in srgb, var(--blue) 9%, var(--paper)), color-mix(in srgb, var(--paper-2) 62%, var(--paper)) 76%);
+  height: 58px;
+  padding: 7px 9px;
+  border: 1px solid color-mix(in srgb, var(--blue) 25%, var(--hairline));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 89%, var(--blue));
   color: var(--ink);
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 9px 27px color-mix(in srgb, var(--ink) 6%, transparent), inset 0 1px color-mix(in srgb, var(--paper) 75%, white);
-  transition: transform 210ms cubic-bezier(.23, 1, .32, 1), border-color 210ms ease, box-shadow 210ms ease;
-}
-.hello-voice-card::after {
-  content: '';
-  position: absolute;
-  right: 75px;
-  bottom: 0;
-  width: 110px;
-  height: 36px;
-  opacity: .12;
-  background: repeating-linear-gradient(90deg, var(--blue) 0 2px, transparent 2px 8px);
-  mask-image: linear-gradient(to top, #000, transparent);
-  pointer-events: none;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 8%, transparent);
+  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), border-color 200ms ease, box-shadow 200ms ease;
 }
 .hello-voice-record {
   position: relative;
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  border: 1px solid color-mix(in srgb, var(--blue) 28%, var(--hairline));
-  border-radius: 11px;
-  background: color-mix(in srgb, var(--paper) 82%, var(--blue));
-  box-shadow: inset 0 1px color-mix(in srgb, var(--paper) 80%, white);
-}
-.hello-voice-record::after {
-  content: '';
-  position: absolute;
-  inset: 23px;
-  border: 2px solid var(--paper);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  pointer-events: none;
+  background: color-mix(in srgb, var(--paper) 78%, var(--blue));
 }
-.hello-voice-record img {
-  width: 51px;
-  height: 51px;
-  object-fit: contain;
-  filter: drop-shadow(0 3px 5px color-mix(in srgb, var(--ink) 20%, transparent));
-  transition: transform 360ms cubic-bezier(.23, 1, .32, 1);
-}
-.hello-voice-copy { display: grid; min-width: 0; gap: 5px; }
-.hello-voice-copy small { color: var(--blue); font: 700 9px/1.2 var(--sans); letter-spacing: .15em; }
-.hello-voice-copy small span { color: var(--soft-ink); }
-.hello-voice-copy strong { font: 600 clamp(14px, 1.45vw, 17px)/1.15 var(--sans); letter-spacing: -.03em; text-wrap: balance; }
-.hello-voice-copy em { color: var(--soft-ink); font: 11px/1.2 var(--sans); font-style: normal; }
-.hello-voice-action {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--blue);
-  color: var(--paper);
-  box-shadow: 0 5px 12px color-mix(in srgb, var(--blue) 28%, transparent);
-  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), box-shadow 200ms ease;
-}
-.hello-voice-action svg { width: 19px; height: 19px; transform: translateX(-1px); }
-.hello-voice-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.hello-voice-card:active { transform: scale(.985); }
+.hello-voice-record img { width: 34px; height: 34px; object-fit: contain; transition: transform 320ms cubic-bezier(.23, 1, .32, 1); }
+.hello-voice-copy { display: grid; min-width: 0; gap: 3px; }
+.hello-voice-copy strong { font: 600 12px/1.1 var(--sans); letter-spacing: -.015em; white-space: nowrap; }
+.hello-voice-copy small { color: var(--soft-ink); font: 10px/1 var(--sans); letter-spacing: .015em; white-space: nowrap; }
+.hello-voice-action { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: var(--paper); transition: transform 180ms cubic-bezier(.23, 1, .32, 1); }
+.hello-voice-action svg { width: 16px; height: 16px; transform: translateX(-1px); }
+.hello-voice-card:focus-visible, .portrait-frame:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.hello-voice-card:active { transform: scale(.97); }
 .voice-note-controls .voice-note-play.is-play svg { transform: translateX(-1.5px); }
 .voice-note-controls button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* The portrait remains unobstructed; its handwritten notes answer the hover. */
+.portrait-notes .portrait-frame {
+  appearance: none;
+  box-sizing: border-box;
+  background: var(--paper);
+  color: inherit;
+  cursor: pointer;
+  transition: transform 260ms cubic-bezier(.23, 1, .32, 1), box-shadow 260ms ease;
+}
+.portrait-notes .portrait-frame:is(:hover, :focus-visible, [aria-pressed="true"]) {
+  transform: rotate(0deg) scale(1.018);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+.portrait-notes .note { transition: scale 260ms cubic-bezier(.23, 1, .32, 1), text-shadow 260ms ease; }
+.portrait-notes:has(.portrait-frame:is(:hover, :focus-visible, [aria-pressed="true"])) .note { scale: 1.09; text-shadow: 0 4px 16px color-mix(in srgb, var(--blue) 28%, transparent); }
 @media (hover: hover) and (pointer: fine) {
-  .hello-voice-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--blue) 65%, var(--hairline)); box-shadow: 0 16px 30px color-mix(in srgb, var(--ink) 11%, transparent); }
-  .hello-voice-card:hover .hello-voice-record img { transform: rotate(24deg); }
-  .hello-voice-card:hover .hello-voice-action { transform: scale(1.08); box-shadow: 0 8px 17px color-mix(in srgb, var(--blue) 34%, transparent); }
+  .hello-voice-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--blue) 62%, var(--hairline)); box-shadow: 0 12px 27px color-mix(in srgb, var(--ink) 13%, transparent); }
+  .hello-voice-card:hover .hello-voice-record img { transform: rotate(28deg); }
+  .hello-voice-card:hover .hello-voice-action { transform: scale(1.08); }
 }
 @media (max-width: 760px) {
-  .about-portrait-column > .header-voice-wrap { position: relative; inset: auto; width: min(100%, 340px); margin: 32px 0 0; }
-  .hello-voice-card { gap: 12px; }
-}
-@media (max-width: 390px) {
-  .hello-voice-copy strong { font-size: 13px; }
-  .hello-voice-copy small { font-size: 8px; }
-  .hello-voice-copy em { font-size: 10px; }
+  .about-sheet > .header-voice-wrap {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    grid-column: 1;
+    justify-self: center;
+    width: 248px;
+    margin: 12px auto 0;
+    transform: none;
+  }
+  .portrait-notes .portrait-frame { padding: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hello-voice-card, .hello-voice-record img, .hello-voice-action { transition: none; }
-  .hello-voice-card:hover { transform: none; }
-  .hello-voice-card:hover .hello-voice-record img, .hello-voice-card:hover .hello-voice-action { transform: none; }
+  .hello-voice-card, .hello-voice-record img, .hello-voice-action, .portrait-notes .portrait-frame, .portrait-notes .note { transition: none; }
+  .hello-voice-card:hover, .portrait-notes .portrait-frame:is(:hover, :focus-visible, [aria-pressed="true"]) { transform: none; }
+  .portrait-notes:has(.portrait-frame:is(:hover, :focus-visible, [aria-pressed="true"])) .note { scale: 1; }
 }

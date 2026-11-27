@@ -6,6 +6,7 @@ const clips = [
   { title: 'Pharos Network', file: 'pharos-direct-transition', duration: '1:04' },
   { title: 'A2A', file: 'pharos-a2a', duration: '0:40' },
   { title: 'Curve Volt Value', file: 'world-to-value', duration: '0:44' },
+  { title: 'Human', file: 'human', duration: '0:47', videoStill: true },
 ]
 const editingTools = [
   { name: 'Plotr', icon: 'plotr.jpg' },
@@ -31,7 +32,7 @@ function CreativeClip({ clip, index, onSelect }) {
     const player = video.current
     if (!player) return
     player.pause()
-    player.currentTime = 0
+    player.currentTime = clip.videoStill ? 4 : 0
     player.muted = true
     setPreviewing(false)
     setAudible(false)
@@ -74,9 +75,10 @@ function CreativeClip({ clip, index, onSelect }) {
         onPointerEnter={startPreview}
         onClick={() => { stopPreview(); onSelect(clip) }}>
         <span className="creative-preview">
-          <img src={`/videos/${clip.file}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
-          <video ref={video} src={`/videos/${clip.file}.mp4`} playsInline loop preload="metadata"
-            poster={`/videos/${clip.file}.jpg`} aria-hidden="true" tabIndex={-1}
+          {!clip.videoStill && <img src={`/videos/${clip.file}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />}
+          <video ref={video} className={clip.videoStill ? 'creative-video-still' : ''} src={`/videos/${clip.file}.mp4`} playsInline loop preload="metadata"
+            poster={clip.videoStill ? undefined : `/videos/${clip.file}.jpg`} aria-hidden="true" tabIndex={-1}
+            onLoadedMetadata={event => { if (clip.videoStill && !hovered.current) event.currentTarget.currentTime = 4 }}
             onPlaying={event => { if (hovered.current) setPreviewing(true); else event.currentTarget.pause() }}
             onPause={() => setPreviewing(false)}
             onTimeUpdate={event => { if (event.currentTarget.currentTime >= 8) event.currentTarget.currentTime = 0 }} />
@@ -136,7 +138,7 @@ export default function CreativeWork() {
               <button type="button" onClick={() => dialog.current.close()} aria-label="Close video">×</button>
             </header>
             <video controls controlsList="nodownload" playsInline autoPlay
-              src={`/videos/${selected.file}.mp4`} poster={`/videos/${selected.file}.jpg`}
+              src={`/videos/${selected.file}.mp4`} poster={selected.videoStill ? undefined : `/videos/${selected.file}.jpg`}
               aria-label={selected.title} onLoadedMetadata={event => { event.currentTarget.muted = false; event.currentTarget.volume = 1 }}
               onPlay={event => { event.currentTarget.muted = false; event.currentTarget.volume = 1 }}
               onContextMenu={event => event.preventDefault()} />
