@@ -314,7 +314,10 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 
 /* experience — wheel-controlled horizontal journey; native scrolling resumes at either end */
 .experience-sheet { min-height: 0; padding: 0; }
-.experience-pin { position: relative; display: grid; grid-template-rows: auto 330px; align-content:center; min-height:calc(100svh + 32px); overflow: hidden; padding: 72px 5%; }
+#experience.experience-sheet { padding-inline: 0; }
+.experience-pin { position: relative; display: grid; grid-template-rows: auto 330px; align-content:center; min-height:calc(100svh + 32px); overflow: hidden; padding: 72px 5%; isolation: isolate; }
+.experience-pin::before { content: ''; position: absolute; z-index: -1; inset: 0; pointer-events: none; background: url('/images/experience-books.jpg') center / cover no-repeat; filter: grayscale(.82) saturate(.32) contrast(1.06); opacity: .16; mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent); }
+:root[data-theme='dark'] .experience-pin::before { filter: grayscale(.84) saturate(.3) brightness(1.32); opacity: .33; }
 .experience-pin.has-expanded { grid-template-rows: auto 500px; }
 .experience-heading { position: relative; z-index: 2; display: flex; align-items: end; gap: 34px; margin: 0 0 28px; }
 .experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); transform: none; }
@@ -349,7 +352,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 @media (hover: hover) and (pointer: fine) { .experience-row:hover { border-color: color-mix(in srgb, var(--blue) 62%, var(--hairline)); background: color-mix(in srgb, var(--paper) 95%, var(--blue)); } }
 
 /* skills */
-.skills-sheet { min-height: 790px; padding: 70px 5% 76px; display: grid; grid-template-columns: .72fr 1.28fr; grid-template-rows: auto 270px auto 1fr; column-gap: 80px; }
+.skills-sheet { min-height: 790px; padding: 70px 5% 76px; display: grid; grid-template-columns: .72fr 1.28fr; grid-template-rows: auto 300px auto 1fr; column-gap: 80px; }
 .skills-top { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; }
 .skills-top h2 { margin-bottom: 15px; }
 .skills-top .scribble { margin-bottom: 40px; }
@@ -361,14 +364,14 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .skill-icons .scribble { position: absolute; left: 18px; bottom: 0; }
 .skill-popover { position: absolute; left: 18px; bottom: 29px; display: flex; flex-direction: column; width: min(390px,94%); padding: 8px 12px; border-left: 2px solid var(--blue); opacity: .78; }
 .skill-popover b { font-size: 11px; }.skill-popover span { color: var(--soft-ink); font-size: 10px; line-height: 1.35; }
-.skill-books { justify-self: end; align-self: start; position: relative; width: min(420px, 88%); padding-top: 60px; margin: 0 4% 28px 0; }
+.skill-books { justify-self: end; align-self: start; position: relative; width: min(420px, 88%); padding-top: 48px; margin: 0 4% 28px 0; }
 .skill-books > .scribble { position: absolute; right: 0; top: 0; }
 .coffee-cup { position: absolute; left: 23%; top: 12px; width: 42px; height: 28px; border: 3px solid var(--blue); border-top: 0; border-radius: 4px 4px 18px 18px; box-shadow: inset 0 2px 0 color-mix(in srgb,var(--blue) 45%,transparent); transform: rotate(-3deg); }
 .coffee-cup::before { content: ''; position: absolute; left: -7px; right: -9px; bottom: -8px; height: 8px; border-bottom: 3px solid var(--blue); border-radius: 0 0 50% 50%; transform: rotate(2deg); }
 .coffee-cup::after { content: ''; position: absolute; right: -13px; top: 5px; width: 15px; height: 13px; border: 3px solid var(--blue); border-left: 0; border-radius: 0 10px 10px 0; }
 .coffee-cup i,.coffee-cup b,.coffee-cup u { position: absolute; bottom: 31px; width: 2px; height: 14px; background: var(--blue); border-radius: 50%; transform: rotate(-8deg); }
 .coffee-cup i { left: 8px; }.coffee-cup b { left: 20px; height: 18px; transform: rotate(7deg); }.coffee-cup u { left: 31px; height: 12px; text-decoration: none; }
-.book { position: relative; height: 39px; margin: 4px auto; display: grid; place-items: center; overflow: hidden; border-radius: 5px 8px 6px 4px; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border: 1px solid rgba(0,0,0,.25); box-shadow: 5px 5px 0 rgba(0,0,0,.09),inset 0 1px rgba(255,255,255,.45),inset 0 -4px rgba(0,0,0,.08); cursor: default; will-change: transform; transition: transform .38s cubic-bezier(.2,.85,.2,1),box-shadow .38s ease,filter .38s ease; }
+.book { position: relative; height: 36px; margin: 3px auto; display: grid; place-items: center; overflow: hidden; border-radius: 5px 8px 6px 4px; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border: 1px solid rgba(0,0,0,.25); box-shadow: 5px 5px 0 rgba(0,0,0,.09),inset 0 1px rgba(255,255,255,.45),inset 0 -4px rgba(0,0,0,.08); cursor: default; will-change: transform; transition: transform .38s cubic-bezier(.2,.85,.2,1),box-shadow .38s ease,filter .38s ease; }
 .book::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg,rgba(255,255,255,.22),transparent 30%,transparent 70%,rgba(255,255,255,.13)); pointer-events: none; }
 .book-0 { width: 87%; background: #242427; color: #fff; transform: rotate(.7deg); } .book-1 { width: 78%; background: #f0eee8; color: #222; transform: rotate(-.8deg); } .book-2 { width: 95%; background: #dda83c; color: #222; transform: rotate(2deg); } .book-3 { width: 86%; background: #35435d; color: #fff; transform: rotate(-1deg); } .book-4 { width: 91%; background: #cd503f; color: #fff; transform: rotate(1deg); }
 .skill-books:hover .book-0 { transform: translate(-13px,-8px) rotate(-2.5deg); }
@@ -624,7 +627,7 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
   .skills-top .scribble { display: block; margin: 18px 0 35px; }
   .skill-icons { flex-wrap: wrap; margin-left: 8px; }
   .skill-popover { bottom: 22px; }
-  .skill-books { margin: 55px auto; }
+  .skill-books { margin: 40px auto 65px; }
   .skills-copy { margin-top: 35px; }
   .skill-columns { grid-template-columns: 1fr; gap: 28px; }
   .toolkit-note { position: static; display: block; margin-top: 32px; }
