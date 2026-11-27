@@ -2823,17 +2823,16 @@ html:has(.voice-note-dialog[open],.project-detail-dialog[open]) { overflow:hidde
   --project-base:color-mix(in srgb,var(--project-tone) 24%,var(--paper));
   --project-glow:color-mix(in srgb,var(--project-accent) 27%,transparent);
 }
-.project-detail-frame { width:min(1180px,100%); margin:auto; padding:0 clamp(20px,5vw,66px) 52px; }
+.project-detail-frame { width:min(1380px,100%); margin:auto; padding:0 clamp(20px,5vw,66px) 32px; }
 .project-detail-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; border-bottom:1px solid var(--hairline); font:12px var(--mono); }
 .project-detail-bar button { min-height:40px; padding:0 14px; border:1px solid var(--hairline); border-radius:999px; background:var(--paper-2); cursor:pointer; white-space:nowrap; }
-.project-detail-content { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:24px; margin-top:clamp(28px,6vh,64px); }
+.project-detail-content { display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr); align-items:start; gap:clamp(18px,2.4vw,30px); margin-top:clamp(22px,4vh,38px); }
 .project-detail-intro h2 { margin:9px 0 16px; font-size:clamp(44px,6vw,84px); line-height:.92; }
 .project-detail-intro p { max-width:54ch; color:var(--soft-ink); font-size:15px; line-height:1.55; }
 .project-detail-link { display:inline-flex; gap:8px; padding:9px 14px; border:1px solid var(--hairline); border-radius:999px; font-size:14px; }
 .project-detail-link:hover { border-color:var(--blue); }
-.project-detail-image { margin:0; padding:10px; border:1px solid var(--hairline); border-radius:14px; background:var(--paper-2); }
-.project-detail-image img { display:block; width:100%; max-height:360px; object-fit:contain; border-radius:8px; }
-.project-detail-image figcaption { padding:9px 4px 0; color:var(--soft-ink); font:11px var(--mono); }
+.project-detail-image { margin:0; padding:7px; border:1px solid var(--hairline); border-radius:14px; background:var(--paper-2); box-shadow:0 16px 38px color-mix(in srgb,var(--ink) 9%,transparent); }
+.project-detail-image img { display:block; width:100%; max-height:min(40vh,390px); object-fit:contain; border-radius:8px; }
 .project-detail-flow { grid-column:1 / -1; }
 .project-detail-content h3 { margin:0 0 10px; font:22px var(--serif); }
 .project-detail-flow ol { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0; padding:0; list-style:none; counter-reset:flow; }

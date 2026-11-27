@@ -5,7 +5,7 @@ import { Reveal } from './Chrome'
 import { TextRoll } from './ui/TextRoll'
 import VoiceNote from './ui/VoiceNote'
 import PushpinTearFooter from './ui/pushpin-tear-footer'
-import ProjectDetail from './ui/ProjectDetail'
+import ProjectDetail, { projectDetailImages } from './ui/ProjectDetail'
 import ContributionSkyline from './ui/ContributionSkyline'
 import KineticGridBackground from './ui/KineticGridBackground'
 import FactsMediaPreview, { SpotifyMark } from './ui/FactsMediaPreview'
@@ -513,7 +513,8 @@ export function Projects() {
   const [focusedProject, setFocusedProject] = useState(null)
   const projectSection = useRef(null)
 
-  useEffect(() => warmImagesNear(projectSection.current, projects.map(project => project.image)), [])
+  useEffect(() => warmImagesNear(projectSection.current, projects.flatMap(project =>
+    [project.image, projectDetailImages[project.title]].filter(Boolean))), [])
 
   return (
     <section ref={projectSection} id="projects" data-label="Projects" className="sheet paper-sheet projects-sheet">

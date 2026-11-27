@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
+export const projectDetailImages = {
+  Proxima: '/projects/proxima-detail.png',
+  'Onchain Wizard': '/projects/wizard-detail.png',
+  'Pulse OS': '/projects/pulse-detail.png',
+  'Prosper Atlas': '/projects/prosper-detail.png',
+}
+
 const projectFlows = {
   Proxima: {
     theme: 'proxima',
@@ -71,8 +78,7 @@ export default function ProjectDetail({ project, onClose }) {
             exit={reducedMotion ? undefined : { y: 34, scale: .96 }}
             transition={{ duration: reducedMotion ? 0 : .36, ease: [.23, 1, .32, 1] }}
           >
-            <img src={project.image} alt={`${project.title} interface`} />
-            <figcaption>Project preview</figcaption>
+            <img src={projectDetailImages[project.title] || project.image} alt={`${project.title} interface`} />
           </motion.figure>
           <section className="project-detail-flow">
             <h3>User flow</h3>
