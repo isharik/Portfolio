@@ -1105,22 +1105,39 @@ export function Footer({ theme }) {
   const [isSending, setIsSending] = useState(false)
   const [messageSent, setMessageSent] = useState(false)
   const [sendPhase, setSendPhase] = useState('sending')
+  const [inboxVideoUrl, setInboxVideoUrl] = useState('')
+  const [activeVideoUrl, setActiveVideoUrl] = useState('/email-inbox-loop.mp4')
   const messageCloseTimer = useRef(null)
+  const mailVideoRef = useRef(null)
 
   useEffect(() => () => window.clearTimeout(messageCloseTimer.current), [])
   useEffect(() => {
-    const warmVideo = document.createElement('video')
-    warmVideo.preload = 'auto'
-    warmVideo.muted = true
-    warmVideo.playsInline = true
-    warmVideo.src = '/email-inbox-loop.mp4'
-    warmVideo.load()
+    const controller = new AbortController()
+    let objectUrl = ''
+    fetch('/email-inbox-loop.mp4', { signal: controller.signal, cache: 'force-cache' })
+      .then(response => {
+        if (!response.ok) throw new Error('Video preload failed')
+        return response.blob()
+      })
+      .then(blob => {
+        if (controller.signal.aborted) return
+        objectUrl = URL.createObjectURL(blob)
+        setInboxVideoUrl(objectUrl)
+      })
+      .catch(() => {})
     return () => {
-      warmVideo.pause()
-      warmVideo.removeAttribute('src')
-      warmVideo.load()
+      controller.abort()
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [])
+
+  useEffect(() => {
+    if (!messageOpen || isSending || messageSent) return
+    const video = mailVideoRef.current
+    if (!video) return
+    video.currentTime = 0
+    video.play().catch(() => {})
+  }, [messageOpen, isSending, messageSent])
 
   useEffect(() => {
     if (!messageOpen || isSending || messageSent) return undefined
@@ -1201,7 +1218,7 @@ export function Footer({ theme }) {
 
   return (
     <>
-      <PortfolioFooter theme={theme} onEmail={() => { setMessageClosing(false); setMessageOpen(true) }} />
+      <PortfolioFooter theme={theme} onEmail={() => { setMessageClosing(false); setActiveVideoUrl(inboxVideoUrl || '/email-inbox-loop.mp4'); setMessageOpen(true) }} />
       {messageOpen && ((isSending || messageSent) ? createPortal(<div className={`message-sending-screen${messageSent ? ' is-sent' : ''}`} role="status" aria-live="polite">
         {isSending ? <><MessageSphere phase={sendPhase} size={264} />
           <p>Sending message <span className="sending-dots" aria-hidden="true"><i /> <i /> <i /></span></p>
@@ -1233,7 +1250,7 @@ export function Footer({ theme }) {
         >
           <button className="mail-dialog-close" type="button" onClick={event => { event.stopPropagation(); closeMessage() }} aria-label="Close message form"><span aria-hidden="true">×</span></button>
           <div className="mail-art-panel" aria-hidden="true">
-            <video className="mail-art-video" src="/email-inbox-loop.mp4" autoPlay muted loop playsInline preload="auto" />
+            <video ref={mailVideoRef} className="mail-art-video" src={activeVideoUrl} poster="/email-inbox-poster.jpg" autoPlay muted loop playsInline preload="auto" />
             <div className="mail-art-shade" />
             <div className="mail-art-topline"><span>SHARIK HUSSAIN</span><span>OPEN INBOX</span></div>
             <div className="mail-art-caption"><span>A DIRECT LINE</span><p>Good things begin with a conversation.</p><i className="mail-art-signature">Sharik ↗</i></div>

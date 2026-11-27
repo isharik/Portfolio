@@ -57,7 +57,7 @@
   min-height: 590px;
   overflow: hidden;
   padding: 31px;
-  background: #101827;
+  background: #101827 url('/email-inbox-poster.jpg') center / cover no-repeat;
   color: #fff;
   isolation: isolate;
 }
