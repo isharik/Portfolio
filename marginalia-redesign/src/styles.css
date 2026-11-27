@@ -316,8 +316,8 @@ h2 { font-size: clamp(74px, 9vw, 132px); line-height: .85; margin-bottom: 28px; 
 .experience-sheet { min-height: 0; padding: 0; }
 #experience.experience-sheet { padding-inline: 0; }
 .experience-pin { position: relative; display: grid; grid-template-rows: auto 330px; align-content:center; min-height:calc(100svh + 32px); overflow: hidden; padding: 72px 5%; isolation: isolate; }
-.experience-pin::before { content: ''; position: absolute; z-index: -1; inset: 0; pointer-events: none; background: url('/images/experience-books.jpg') center / cover no-repeat; filter: grayscale(.82) saturate(.32) contrast(1.06); opacity: .16; mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent); }
-:root[data-theme='dark'] .experience-pin::before { filter: grayscale(.84) saturate(.3) brightness(1.32); opacity: .33; }
+.experience-pin::before { content: ''; position: absolute; z-index: -1; inset: -6px; pointer-events: none; background: url('/images/experience-severance.jpg') center / cover no-repeat; filter: grayscale(1) blur(3px); opacity: .24; mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent); }
+:root[data-theme='dark'] .experience-pin::before { filter: grayscale(1) blur(3px) brightness(1.35); opacity: .36; }
 .experience-pin.has-expanded { grid-template-rows: auto 500px; }
 .experience-heading { position: relative; z-index: 2; display: flex; align-items: end; gap: 34px; margin: 0 0 28px; }
 .experience-heading h2 { margin-bottom: 0; font-size: clamp(68px,7.6vw,110px); transform: none; }

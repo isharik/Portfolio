@@ -459,23 +459,20 @@
 #beyond-cv.facts-sheet {
   --facts-glass: color-mix(in srgb, var(--paper) 78%, transparent);
   --facts-stroke: color-mix(in srgb, var(--blue) 20%, var(--hairline));
-  background:
-    radial-gradient(ellipse 45% 62% at 72% 39%, color-mix(in srgb, var(--blue) 19%, transparent), transparent 74%),
-    radial-gradient(ellipse 31% 38% at 10% 85%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 78%),
-    linear-gradient(140deg, color-mix(in srgb, var(--paper) 94%, white), color-mix(in srgb, var(--paper) 91%, var(--blue)) 58%, var(--paper));
+  background: var(--paper);
+  isolation: isolate;
 }
 #beyond-cv.facts-sheet::before {
   content: '';
   position: absolute;
-  width: min(60vw, 850px);
-  aspect-ratio: 1;
-  right: -17%;
-  top: -34%;
-  border: 1px solid color-mix(in srgb, var(--blue) 13%, transparent);
-  border-radius: 50%;
-  box-shadow: 0 0 0 72px color-mix(in srgb, var(--blue) 2%, transparent), 0 0 0 145px color-mix(in srgb, var(--blue) 2%, transparent);
+  z-index: -1;
+  inset: -6px;
+  background: url('/images/beyond-landscape.png') center / cover no-repeat;
+  filter: grayscale(1) blur(3px);
+  opacity: .26;
   pointer-events: none;
 }
+:root[data-theme='dark'] #beyond-cv.facts-sheet::before { filter: grayscale(1) invert(1) blur(3px); opacity: .23; }
 #beyond-cv .facts-heading { position: relative; }
 #beyond-cv .facts-carousel { gap: 16px 23px; }
 #beyond-cv .facts-stage {
@@ -510,7 +507,6 @@
 }
 #beyond-cv .facts-controls > button:hover:not(:disabled),#beyond-cv .facts-controls > button:focus-visible { box-shadow: 0 12px 24px color-mix(in srgb, var(--blue) 16%, transparent); }
 @media (max-width: 700px) {
-  #beyond-cv.facts-sheet::before { width: 85vw; right: -44%; top: 12%; }
   #beyond-cv .facts-carousel { gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { #beyond-cv .facts-stage,#beyond-cv .facts-stage > .facts-highlights li { transition: none; } }
@@ -818,8 +814,7 @@
 }
 #beyond-cv .facts-note { top: clamp(80px, 10svh, 116px); }
 #beyond-cv.facts-sheet { padding-top: clamp(68px, 9svh, 100px); padding-bottom: clamp(68px, 9svh, 100px); }
-:root:not([data-theme='dark']) #beyond-cv.facts-sheet { background: linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--paper) 97%, var(--ink))); }
-:root:not([data-theme='dark']) #beyond-cv.facts-sheet::before { display: none; }
+:root:not([data-theme='dark']) #beyond-cv.facts-sheet { background: var(--paper); }
 @media (max-width: 720px) {
   #beyond-cv.facts-sheet { padding: 68px 22px 56px; }
   #beyond-cv .facts-note { top: 19px; }
