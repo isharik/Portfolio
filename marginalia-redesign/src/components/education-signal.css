@@ -151,3 +151,32 @@
 .education-signal{isolation:isolate}
 .education-signal::before{content:'';position:absolute;z-index:-1;inset:-6px;pointer-events:none;background:url('/images/experience-books.jpg') center / cover no-repeat;filter:grayscale(1) blur(3px);opacity:.23;mask-image:linear-gradient(180deg,transparent,#000 13%,#000 87%,transparent)}
 :root[data-theme='dark'] .education-signal::before{filter:grayscale(1) blur(3px) brightness(1.3);opacity:.4}
+
+/* Let the record share the surrounding paper palette in light mode. */
+:root:not([data-theme='dark']) #education .education-signal-stage{
+  background:color-mix(in srgb,var(--paper) 92%,var(--ink));
+  color:var(--ink);
+  border-color:var(--hairline);
+  box-shadow:0 22px 48px color-mix(in srgb,var(--ink) 12%,transparent);
+}
+:root:not([data-theme='dark']) #education .education-signal-degree{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--paper) 94%,var(--blue)),var(--paper) 62%);
+  color:var(--ink);
+  border-color:var(--hairline);
+}
+:root:not([data-theme='dark']) #education .education-signal-degree-logo{color:var(--ink)}
+:root:not([data-theme='dark']) #education .education-signal-number{-webkit-text-stroke-color:color-mix(in srgb,var(--ink) 22%,transparent)}
+:root:not([data-theme='dark']) #education .education-signal-degree-meta span:last-child{color:color-mix(in srgb,var(--blue) 56%,var(--ink))}
+:root:not([data-theme='dark']) #education .education-signal-directory{
+  --directory-ink:var(--ink);
+  --directory-soft:var(--soft-ink);
+  background:var(--paper);
+  border-color:var(--hairline);
+  box-shadow:0 8px 24px color-mix(in srgb,var(--ink) 7%,transparent);
+}
+:root:not([data-theme='dark']) #education .education-signal-cv{
+  background:color-mix(in srgb,var(--paper) 95%,var(--blue));
+  color:var(--ink);
+  box-shadow:0 8px 24px color-mix(in srgb,var(--ink) 7%,transparent);
+}
+:root:not([data-theme='dark']) #education .education-signal-cv:hover{background:var(--paper)}
